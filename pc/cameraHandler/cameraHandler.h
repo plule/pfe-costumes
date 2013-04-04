@@ -7,11 +7,14 @@
 
 #include "QCamera.h"
 
-class CameraHandler
+class CameraHandler: public QObject
 {
+Q_OBJECT
 public:
 	static int init();
-    static int count_cameras();
+	static int close();
+    static int getNbCameras();
+	static int getCameras(QCamera ***cameras);
     static int refreshCameraList();
 
 private:
@@ -22,6 +25,7 @@ private:
     static CameraAbilitiesList* abilities;
     static bool initialized;
 	static QCamera* cameras[MAX_CAMERA];
+	static int nCameras;
 	static GPContext* context;
 };
 

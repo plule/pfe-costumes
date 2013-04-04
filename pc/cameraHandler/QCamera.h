@@ -12,6 +12,7 @@ class QCamera : public QObject
  public:
     QCamera();
     QCamera(const char *model, const char *port, GPContext *context, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
+	virtual ~QCamera();
 
 	QString getSummary();
     int capture();
