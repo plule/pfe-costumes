@@ -3,21 +3,20 @@
 
 #include "cameraHandler.h"
 
-GPPortInfoList* CameraHandler::portinfolist = NULL;
-GPContext* CameraHandler::context = NULL;
-CameraAbilitiesList* CameraHandler::abilities = NULL;
-bool CameraHandler::initialized = false;
-QCamera* CameraHandler::cameras[MAX_CAMERA] = {NULL};
-int CameraHandler::nCameras = 0;
-
 static void idle_func(GPContext *context, void *data)
 {
 //	qDebug()<<"ctxt idle";
 }
 
+void CameraHandler::error(const char *error)
+{
+	emit error_s(error);
+}
+
 static void error_func(GPContext *context, const char *format, va_list args, void *data)
 {
 	qDebug() << "ctxt error : " << format;
+//	CameraHandler::error(format);
 }
 
 static void status_func(GPContext *context, const char *format, va_list args, void *data)
@@ -64,6 +63,8 @@ int CameraHandler::handleError(int error, QString msg)
 {
 	qDebug() << msg;
     qDebug() << gp_result_as_string(error);
+	if(error < GP_OK)
+		throw "handler fail";
     return error;
 }
 
@@ -91,46 +92,45 @@ int CameraHandler::refreshCameraList()
 		}
 	}
 
-    if(!initialized){
-        init();
-    } else {
-        ret = gp_list_new(&list);
-        if(ret < GP_OK) return handleError(ret, "gp_list_new");
-        nCameras = autodetect(list, context);
-		if(nCameras > MAX_CAMERA)
-			nCameras = MAX_CAMERA;
-        for(int i = 0; i < nCameras; i++) {
-			/* Get camera name and port name*/
-            gp_list_get_name(list, i, &name);
-            gp_list_get_value(list, i, &port);
-
-			/* Create the camera object from the name and the port */
-			cameras[i] = new QCamera(name, port, context, abilities, portinfolist);
-		}
+	ret = gp_list_new(&list);
+	if(ret < GP_OK) return handleError(ret, "gp_list_new");
+	nCameras = autodetect(list, context);
+	if(nCameras > MAX_CAMERA)
+		nCameras = MAX_CAMERA;
+	for(int i = 0; i < nCameras; i++) {
+		/* Get camera name and port name*/
+		gp_list_get_name(list, i, &name);
+		gp_list_get_value(list, i, &port);
+		
+		/* Create the camera object from the name and the port */
+		cameras[i] = new QCamera(name, port, context, abilities, portinfolist);
 	}
 	return 0;
 }
 
-int CameraHandler::init()
+CameraHandler::CameraHandler()
 {
     int ret;
     qDebug() << "Initialize camera handler." << endl;
 
+	nCameras = 0;
+	for(int i=0; i<MAX_CAMERA; i++)
+		cameras[i] = NULL;
     context = gp_context_new();
 
     /* Port initialization */
     ret = gp_port_info_list_new(&portinfolist);
-    if(ret < GP_OK) return handleError(ret, "gp_port_info_list_new");
+    if(ret < GP_OK) handleError(ret, "gp_port_info_list_new");
     ret = gp_port_info_list_load(portinfolist);
-    if(ret < GP_OK) return handleError(ret, "gp_port_info_list_load");
+    if(ret < GP_OK) handleError(ret, "gp_port_info_list_load");
     ret = gp_port_info_list_count(portinfolist);
-    if(ret < GP_OK) return handleError(ret, "gp_port_info_list_count");
+    if(ret < GP_OK) handleError(ret, "gp_port_info_list_count");
 
     /* Camera abilities initialization */
     ret = gp_abilities_list_new(&abilities);
-    if(ret < GP_OK) return handleError(ret, "gp_abilities_list_new");
+    if(ret < GP_OK) handleError(ret, "gp_abilities_list_new");
     ret = gp_abilities_list_load(abilities, context);
-    if(ret < GP_OK) return handleError(ret, "gp_abilities_list_load");
+    if(ret < GP_OK) handleError(ret, "gp_abilities_list_load");
 
 	gp_context_set_idle_func (context, idle_func, NULL);
 	gp_context_set_progress_funcs (context, progress_start_func, progress_update_func, progress_stop_func, NULL);
@@ -139,30 +139,21 @@ int CameraHandler::init()
 //	gp_context_set_question_func (context, question_func, NULL);
 //	gp_context_set_cancel_func (context, cancel_func, NULL);
 	gp_context_set_message_func (context, message_func, NULL);
-    initialized = true;
 	refreshCameraList();
-	gp_context_message(context, "hello hello");
-	return 0;
 }
 
-int CameraHandler::close()
+CameraHandler::~CameraHandler()
 {
 	for(int i = 0; i < getNbCameras(); i++) {
 		delete cameras[i];
 		cameras[i] = NULL;
 	}
-	return 0; // TODO detect error
 }
 
 int CameraHandler::autodetect(CameraList *list, GPContext *context)
 {
 	int			ret, i;
 	CameraList		*xlist = NULL;
-    if(!initialized) {
-        ret = init();
-        if(ret < GP_OK)
-            return ret;
-    }
         
 	ret = gp_list_new (&xlist);
     if(ret < GP_OK) return handleError(ret, "gp_list_new");

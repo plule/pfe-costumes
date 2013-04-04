@@ -9,24 +9,27 @@
 
 class CameraHandler: public QObject
 {
-Q_OBJECT
+	Q_OBJECT
 public:
-	static int init();
-	static int close();
-    static int getNbCameras();
-	static int getCameras(QCamera ***cameras);
-    static int refreshCameraList();
-
+	CameraHandler();
+	~CameraHandler();
+	int getNbCameras();
+	int getCameras(QCamera ***cameras);
+    int refreshCameraList();
+	void error(const char *error);
+	
 private:
-	static int autodetect(CameraList *list, GPContext *context);
-	static int handleError(int error, QString msg);
+	int autodetect(CameraList *list, GPContext *context);
+	int handleError(int error, QString msg);
+	
+    GPPortInfoList* portinfolist;
+    CameraAbilitiesList* abilities;
+	QCamera* cameras[MAX_CAMERA];
+	int nCameras;
+	GPContext* context;
 
-    static GPPortInfoList* portinfolist;
-    static CameraAbilitiesList* abilities;
-    static bool initialized;
-	static QCamera* cameras[MAX_CAMERA];
-	static int nCameras;
-	static GPContext* context;
+signals:
+	void error_s(const char *error);
 };
 
 #endif

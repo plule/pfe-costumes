@@ -8,12 +8,10 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 	QCamera **cameras;
-    qDebug() << "hello world!" << endl;
-    CameraHandler::init();
-    qDebug() << CameraHandler::getNbCameras() << endl;
-	if(CameraHandler::getCameras(&cameras) >= 1) {
+	CameraHandler *handler = new CameraHandler();
+    qDebug() << handler->getNbCameras() << endl;
+	if(handler->getCameras(&cameras) >= 1) {
 		cameras[0]->capture();
 	}
-	CameraHandler::close();
 //    return a.exec();
 }
