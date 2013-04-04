@@ -2,8 +2,8 @@ DESTDIR = ../bin
 INCLUDEPATH += ..
 VPATH = ..
 
-SOURCES += master/main.cpp cameraHandler/cameraHandler.cpp
-HEADERS += cameraHandler/cameraHandler.h
+SOURCES += master/main.cpp cameraHandler/cameraHandler.cpp cameraHandler/QCamera.cpp
+HEADERS += cameraHandler/cameraHandler.h cameraHandler/QCamera.h
 
 CONFIG += qt warn_on release
 
