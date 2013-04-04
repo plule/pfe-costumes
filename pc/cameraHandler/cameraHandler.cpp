@@ -4,6 +4,7 @@
 #include "cameraHandler.h"
 
 GPPortInfoList* CameraHandler::portinfolist = NULL;
+GPContext* CameraHandler::context = NULL;
 CameraAbilitiesList* CameraHandler::abilities = NULL;
 bool CameraHandler::initialized = false;
 QCamera* CameraHandler::cameras[MAX_CAMERA] = {NULL};
@@ -18,7 +19,6 @@ int CameraHandler::handleError(int error, QString msg)
 int CameraHandler::refreshCameraList()
 {
     CameraList *list;
-    GPContext *context;
     const char *name, *port;
     int ret;
     int nbcam;
@@ -45,7 +45,8 @@ int CameraHandler::refreshCameraList()
             gp_list_get_value(list, i, &port);
 			
 			/* Create the camera object from the name and the port */
-			cameras[i] = new QCamera(name, port, abilities, portinfolist);
+			cameras[i] = new QCamera(name, port, context, abilities, portinfolist);
+			qDebug() << cameras[i]->getSummary();
 		}
 	}
 	return 0;

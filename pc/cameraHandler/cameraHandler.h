@@ -22,6 +22,7 @@ private:
     static CameraAbilitiesList* abilities;
     static bool initialized;
 	static QCamera* cameras[MAX_CAMERA];
+	static GPContext* context;
 };
 
 #endif

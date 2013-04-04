@@ -4,7 +4,7 @@
 int QCamera::handleError(int error, QString msg)
 {
 	qDebug() << msg;
-    qDebug(gp_result_as_string(error));
+    qDebug() << gp_result_as_string(error);
 	throw "Failed to init cam";
     return error;
 }
@@ -16,11 +16,7 @@ QCamera::QCamera()
 
 int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist)
 {
-    CameraAbilities abilities;
-    GPPortInfo portinfo;
-    Camera *camera;
     int ret, model_index, port_index;
-
     if((ret = gp_camera_new(&camera)) < GP_OK)
 		return handleError(ret, "gp_camera_new");
 	if ((model_index = gp_abilities_list_lookup_model(abilitiesList, model)) < GP_OK)
@@ -38,9 +34,17 @@ int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesLis
 	return 0;
 }
 
-QCamera::QCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist)
+QCamera::QCamera(const char *model, const char *port, GPContext *a_context, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist)
 {
+	context = a_context;
 	buildCamera(model, port, abilitiesList, portinfolist);
+}
+
+QString QCamera::getSummary()
+{
+	CameraText cameratext;
+	gp_camera_get_summary(camera, &cameratext, context);
+	return QString(cameratext.text);
 }
 
 int QCamera::capture()
