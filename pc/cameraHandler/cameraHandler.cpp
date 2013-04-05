@@ -3,59 +3,11 @@
 
 #include "cameraHandler.h"
 
-static void idle_func(GPContext *context, void *data)
+CameraHandler CameraHandler::m_instance=CameraHandler();
+
+CameraHandler& CameraHandler::Instance()
 {
-//	qDebug()<<"ctxt idle";
-}
-
-void CameraHandler::error(const char *error)
-{
-	emit error_s(error);
-}
-
-static void error_func(GPContext *context, const char *format, va_list args, void *data)
-{
-	qDebug() << "ctxt error : " << format;
-//	CameraHandler::error(format);
-}
-
-static void status_func(GPContext *context, const char *format, va_list args, void *data)
-{
-	qDebug() << "ctxt status : " << format;
-}
-
-static void message_func(GPContext *context, const char *format, va_list args, void *data)
-{
-	qDebug() << "ctxt message : " << format;
-}
-
-/*
-  TODO : deal with answer
-*/
-/*static GPContextFeedback question_func(GPContext *context, const char *format, va_list args, void *data)
-{
-
-}*/
-
-/*static GPContextFeedback cancel_func(GPContext *context, void *data)
-{
-
-}*/
-
-static unsigned int progress_start_func(GPContext *context, float target, const char *format, va_list args, void *data)
-{
-	qDebug() << "ctxt start : target(" << target << ") format (" << format << ")";
-	return 0;// TODO : ?
-}
-
-static void progress_update_func(GPContext *context, unsigned int id, float current, void *data)
-{
-	qDebug() << "ctxt progress : id(" << id << ") current (" << current << ")";
-}
-
-static void progress_stop_func(GPContext *context, unsigned int id, void *data)
-{
-	qDebug() << "ctxt stop : " << id;
+	return m_instance;
 }
 
 
@@ -103,7 +55,7 @@ int CameraHandler::refreshCameraList()
 		gp_list_get_value(list, i, &port);
 		
 		/* Create the camera object from the name and the port */
-		cameras[i] = new QCamera(name, port, context, abilities, portinfolist);
+		cameras[i] = new QCamera(name, port, abilities, portinfolist);
 	}
 	return 0;
 }
@@ -132,13 +84,6 @@ CameraHandler::CameraHandler()
     ret = gp_abilities_list_load(abilities, context);
     if(ret < GP_OK) handleError(ret, "gp_abilities_list_load");
 
-	gp_context_set_idle_func (context, idle_func, NULL);
-	gp_context_set_progress_funcs (context, progress_start_func, progress_update_func, progress_stop_func, NULL);
-	gp_context_set_error_func(context, error_func, NULL);
-	gp_context_set_status_func (context, status_func, NULL);
-//	gp_context_set_question_func (context, question_func, NULL);
-//	gp_context_set_cancel_func (context, cancel_func, NULL);
-	gp_context_set_message_func (context, message_func, NULL);
 	refreshCameraList();
 }
 

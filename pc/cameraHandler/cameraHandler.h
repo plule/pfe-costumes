@@ -13,15 +13,18 @@ class CameraHandler: public QObject
 public:
 	CameraHandler();
 	~CameraHandler();
+	static CameraHandler& Instance();
 	int getNbCameras();
 	int getCameras(QCamera ***cameras);
     int refreshCameraList();
-	void error(const char *error);
 	
 private:
+	CameraHandler& operator= (const CameraHandler&){return m_instance;}
+    CameraHandler (const CameraHandler&):QObject(){}
 	int autodetect(CameraList *list, GPContext *context);
 	int handleError(int error, QString msg);
-	
+
+	static CameraHandler m_instance;
     GPPortInfoList* portinfolist;
     CameraAbilitiesList* abilities;
 	QCamera* cameras[MAX_CAMERA];
@@ -29,7 +32,8 @@ private:
 	GPContext* context;
 
 signals:
-	void error_s(const char *error);
+	void error(const char *error);
+	void idle();
 };
 
 #endif
