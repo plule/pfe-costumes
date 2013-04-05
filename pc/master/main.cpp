@@ -21,10 +21,11 @@ int main(int argc, char *argv[])
 		QObject::connect(cameras[i], SIGNAL(status(const char*,const char*)), logger, SLOT(message(const char*,const char*)));
 		QObject::connect(cameras[i], SIGNAL(message(const char*,const char*)), logger, SLOT(message(const char*,const char*)));
 		QObject::connect(cameras[i], SIGNAL(progress_update(int,float,const char*)), logger, SLOT(progress_update(int,float,const char*)));
+		QObject::connect(cameras[i], SIGNAL(progress_start(int,const char*, float, const char*)), logger, SLOT(progress_start(int,const char*, float, const char*)));
 	}
 		
 	if(handler->getCameras(&cameras) >= 1) {
-		cameras[0]->capture();
+		cameras[0]->captureToFile("test.jpg");
 	}
 //    return a.exec();
 }

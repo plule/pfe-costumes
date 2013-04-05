@@ -19,3 +19,7 @@ void SlotLog::message(const char *message, const char *camera) {
 void SlotLog::progress_update(int id, float current, const char *camera) {
 	qDebug() << "Progress : " << current << " (" << camera << ")";
 }
+
+void SlotLog::progress_start(int id, const char *task, float target, const char *camera) {
+	qDebug() << "Start task : " << camera << " " << task;
+}

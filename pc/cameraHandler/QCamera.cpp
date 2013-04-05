@@ -1,4 +1,7 @@
 #include "QCamera.h"
+ #include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 void idle_func(GPContext *context, void *data)
 {
@@ -72,7 +75,6 @@ int QCamera::handleError(int error, QString msg)
 {
 	qDebug() << msg;
     qDebug() << gp_result_as_string(error);
-	throw "Failed to init cam";
     return error;
 }
 
@@ -147,8 +149,25 @@ int QCamera::capture()
 	int ret;
 	strcpy(camera_file_path.folder, "/");
 	strcpy(camera_file_path.name, "test.jpg");
-	qDebug() << context;
 	ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
-	qDebug() << gp_result_as_string(ret);
 	return ret;
+}
+
+int QCamera::captureToFile(const char *name)
+{
+	CameraFilePath camera_file_path;
+	CameraFile *file;
+	int ret;
+	int fd;
+	fd = open(name, O_CREAT | O_WRONLY, 0644);
+	
+	if((ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context)) < GP_OK)
+		return handleError(ret, "capture");
+	if((ret = gp_file_new_from_fd(&file, fd) < GP_OK))
+	   return handleError(ret, "file new");
+	if((ret = gp_camera_file_get(camera, camera_file_path.folder, camera_file_path.name, GP_FILE_TYPE_NORMAL, file, context)) < GP_OK)
+		return handleError(ret, "file get");
+	if((ret = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name, context)) < GP_OK)
+		return handleError(ret, "file rm");
+	return 0;
 }

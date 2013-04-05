@@ -16,6 +16,7 @@ public slots:
 	void idle(const char *camera);
 	void message(const char *message, const char *camera);
 	void progress_update(int id, float current, const char *camera);
+	void progress_start(int id, const char *task, float target, const char *camera);
 };
 
 
