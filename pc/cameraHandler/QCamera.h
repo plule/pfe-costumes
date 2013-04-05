@@ -18,6 +18,7 @@ public:
 	QString getSummary();
     int capture();
 	int captureToFile(const char *path);
+	int captureToFile(QFile *file);
 	CameraAbilities getAbilities();
 
 protected:

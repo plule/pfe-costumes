@@ -150,17 +150,16 @@ int QCamera::capture()
 	return ret;
 }
 
-int QCamera::captureToFile(const char *name)
+int QCamera::captureToFile(QFile *localFile)
 {
 	CameraFilePath camera_file_path;
 	CameraFile *file;
-	QFile localFile(name);
 	int ret;
 	int fd;
 
-	if(!localFile.open(QIODevice::WriteOnly))
+	if(!localFile->open(QIODevice::WriteOnly))
 		return -1;
-	fd = localFile.handle();
+	fd = localFile->handle();
 
 	if((ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context)) < GP_OK)
 		return handleError(ret, "capture");
@@ -171,4 +170,12 @@ int QCamera::captureToFile(const char *name)
 	if((ret = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name, context)) < GP_OK)
 		return handleError(ret, "file rm");
 	return 0;
+}
+
+int QCamera::captureToFile(const char *name)
+{
+	QFile *localFile = new QFile(name);
+	int ret=captureToFile(localFile);
+	delete localFile;
+	return ret;
 }
