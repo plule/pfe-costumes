@@ -140,13 +140,17 @@ QString QCamera::getSummary()
 	return QString(cameratext.text);
 }
 
-int QCamera::capture()
+int QCamera::captureToCamera(QString *cameraPath)
 {
 	CameraFilePath camera_file_path;
 	int ret;
-	strcpy(camera_file_path.folder, "/");
-	strcpy(camera_file_path.name, "test.jpg");
+	// TODO : ensure memory is set to card
 	ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
+	if(ret < GP_OK)
+		return handleError(ret, "gp_camera_capture");
+	cameraPath->clear();
+	cameraPath->append(camera_file_path.folder);
+	cameraPath->append(camera_file_path.name);
 	return ret;
 }
 
@@ -156,7 +160,7 @@ int QCamera::captureToFile(QFile *localFile)
 	CameraFile *file;
 	int ret;
 	int fd;
-
+	// TODO : ensure memory is set to RAM ?
 	if(!localFile->open(QIODevice::WriteOnly))
 		return -1;
 	fd = localFile->handle();
@@ -172,6 +176,11 @@ int QCamera::captureToFile(QFile *localFile)
 	return 0;
 }
 
+int QCamera::captureToFile(QString path)
+{
+	return captureToFile(path.toLocal8Bit().data());
+}
+
 int QCamera::captureToFile(const char *name)
 {
 	QFile *localFile = new QFile(name);
@@ -179,3 +188,4 @@ int QCamera::captureToFile(const char *name)
 	delete localFile;
 	return ret;
 }
+

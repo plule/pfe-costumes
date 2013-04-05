@@ -25,7 +25,10 @@ int main(int argc, char *argv[])
 	}
 		
 	if(handler->getCameras(&cameras) >= 1) {
-		cameras[0]->captureToFile("test.jpg");
+		//cameras[0]->captureToFile("test.jpg");
+		QString cameraPath;
+		cameras[0]->captureToCamera(&cameraPath);
+		qDebug() << cameraPath;
 	}
 //    return a.exec();
 }

@@ -16,10 +16,13 @@ public:
 	virtual ~QCamera();
 
 	QString getSummary();
-    int capture();
+	QString getAbout();
+	CameraAbilities getAbilities();
+
+    int captureToCamera(QString *camerapath);
 	int captureToFile(const char *path);
 	int captureToFile(QFile *file);
-	CameraAbilities getAbilities();
+	int captureToFile(QString path);
 
 protected:
 	friend void error_func(GPContext *context, const char *format, va_list args, void *data);
