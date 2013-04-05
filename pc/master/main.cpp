@@ -1,15 +1,16 @@
-#include <QtCore/QCoreApplication>
+#include <QApplication>
 #include <QDebug>
 #include <QObject>
 
+#include "mainwindow.h"
 #include "cameraHandler/cameraHandler.h"
 #include "cameraHandler/QCamera.h"
 #include "common/SlotLog.h"
  
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-	QCamera **cameras;
+    QApplication a(argc, argv);
+/*	QCamera **cameras;
 	SlotLog *logger = new SlotLog();
 	CameraHandler *handler = &CameraHandler::Instance();
 	int nCameras;
@@ -25,10 +26,12 @@ int main(int argc, char *argv[])
 	}
 		
 	if(handler->getCameras(&cameras) >= 1) {
-		//cameras[0]->captureToFile("test.jpg");
-		QString cameraPath;
-		cameras[0]->captureToCamera(&cameraPath);
-		qDebug() << cameraPath;
-	}
-//    return a.exec();
+		cameras[0]->captureToFile("test.jpg");
+//		QString cameraPath;
+//		cameras[0]->captureToCamera(&cameraPath);
+//		qDebug() << cameraPath;
+    }*/
+    MainWindow w;
+    w.show();
+    return a.exec();
 }

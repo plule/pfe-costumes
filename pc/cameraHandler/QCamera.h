@@ -5,7 +5,10 @@
 #include <QString>
 #include <QDebug>
 #include <QFile>
+#include <QTimer>
 #include <gphoto2/gphoto2-camera.h>
+
+#define TIMEOUT 10
 
 class QCamera : public QObject
 {
@@ -42,6 +45,9 @@ private:
 
 	int handleError(int error, QString msg);
 	int buildCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
+
+private slots:
+	void timeout();
 
 signals:
 	void idle(const char *camera);

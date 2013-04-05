@@ -154,12 +154,21 @@ int QCamera::captureToCamera(QString *cameraPath)
 	return ret;
 }
 
+void QCamera::timeout()
+{
+	qDebug() << "timeout";
+}
+
 int QCamera::captureToFile(QFile *localFile)
 {
 	CameraFilePath camera_file_path;
 	CameraFile *file;
 	int ret;
 	int fd;
+	QTimer *timer = new QTimer(this);
+	qDebug() << "timeoutset";
+	connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
+	timer->start(10);
 	// TODO : ensure memory is set to RAM ?
 	if(!localFile->open(QIODevice::WriteOnly))
 		return -1;
@@ -173,6 +182,7 @@ int QCamera::captureToFile(QFile *localFile)
 		return handleError(ret, "file get");
 	if((ret = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name, context)) < GP_OK)
 		return handleError(ret, "file rm");
+
 	return 0;
 }
 
