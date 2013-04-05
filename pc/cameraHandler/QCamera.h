@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QDebug>
+#include <QFile>
 #include <gphoto2/gphoto2-camera.h>
 
 class QCamera : public QObject

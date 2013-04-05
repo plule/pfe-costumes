@@ -1,7 +1,4 @@
 #include "QCamera.h"
- #include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 
 void idle_func(GPContext *context, void *data)
 {
@@ -157,10 +154,14 @@ int QCamera::captureToFile(const char *name)
 {
 	CameraFilePath camera_file_path;
 	CameraFile *file;
+	QFile localFile(name);
 	int ret;
 	int fd;
-	fd = open(name, O_CREAT | O_WRONLY, 0644);
-	
+
+	if(!localFile.open(QIODevice::WriteOnly))
+		return -1;
+	fd = localFile.handle();
+
 	if((ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context)) < GP_OK)
 		return handleError(ret, "capture");
 	if((ret = gp_file_new_from_fd(&file, fd) < GP_OK))
