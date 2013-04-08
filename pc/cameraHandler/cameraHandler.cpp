@@ -70,6 +70,7 @@ void CameraHandler::init()
         cameras[i] = new QCamera(name, port, abilities, portinfolist);
         cameras[i]->moveToThread(&cameraThread);
     }
+    emit message(QString::number(nCameras) + " camera(s) found.");
 }
 
 void CameraHandler::deinit()
@@ -97,7 +98,6 @@ CameraHandler::CameraHandler()
 	for(int i=0; i<MAX_CAMERA; i++)
 		cameras[i] = NULL;
     cameraThread.start();
-    init();
 }
 
 CameraHandler::~CameraHandler()

@@ -40,6 +40,7 @@ private:
 
 signals:
     void refreshed();
+    void message(QString message);
 };
 
 #endif

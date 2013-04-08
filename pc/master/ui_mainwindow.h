@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Apr 8 14:48:34 2013
+** Created: Mon Apr 8 17:10:40 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -15,8 +15,10 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenuBar>
+#include <QtGui/QProgressBar>
 #include <QtGui/QPushButton>
 #include <QtGui/QStatusBar>
 #include <QtGui/QWidget>
@@ -29,6 +31,8 @@ public:
     QWidget *centralwidget;
     QPushButton *captureButton;
     QPushButton *refreshButton;
+    QProgressBar *workBar;
+    QLabel *workLabel;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -45,6 +49,13 @@ public:
         refreshButton = new QPushButton(centralwidget);
         refreshButton->setObjectName(QString::fromUtf8("refreshButton"));
         refreshButton->setGeometry(QRect(30, 70, 87, 27));
+        workBar = new QProgressBar(centralwidget);
+        workBar->setObjectName(QString::fromUtf8("workBar"));
+        workBar->setGeometry(QRect(10, 520, 781, 23));
+        workBar->setValue(24);
+        workLabel = new QLabel(centralwidget);
+        workLabel->setObjectName(QString::fromUtf8("workLabel"));
+        workLabel->setGeometry(QRect(10, 490, 781, 17));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -64,6 +75,7 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
         captureButton->setText(QApplication::translate("MainWindow", "Capture", 0, QApplication::UnicodeUTF8));
         refreshButton->setText(QApplication::translate("MainWindow", "Refresh", 0, QApplication::UnicodeUTF8));
+        workLabel->setText(QApplication::translate("MainWindow", "TextLabel", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
