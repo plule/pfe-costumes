@@ -160,18 +160,17 @@ QString QCamera::getSummary()
 	return QString(cameratext.text);
 }
 
-int QCamera::captureToCamera(QString *cameraPath)
+void QCamera::captureToCamera(QString *cameraPath)
 {
 	CameraFilePath camera_file_path;
 	int ret;
 	// TODO : ensure memory is set to card
 	ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
 	if(ret < GP_OK)
-		return handleError(ret, "gp_camera_capture");
+        handleError(ret, "gp_camera_capture");
 	cameraPath->clear();
 	cameraPath->append(camera_file_path.folder);
 	cameraPath->append(camera_file_path.name);
-	return ret;
 }
 
 void QCamera::timeout()
@@ -179,7 +178,7 @@ void QCamera::timeout()
 	qDebug() << "timeout";
 }
 
-int QCamera::captureToFile(QFile *localFile)
+void QCamera::captureToFile(QFile *localFile)
 {
 	CameraFilePath camera_file_path;
 	CameraFile *file;
@@ -191,31 +190,37 @@ int QCamera::captureToFile(QFile *localFile)
     timer->start(TIMEOUT);
 	// TODO : ensure memory is set to RAM ?
 	if(!localFile->open(QIODevice::WriteOnly))
-		return -1;
+        return;
 	fd = localFile->handle();
 
-	if((ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context)) < GP_OK)
-		return handleError(ret, "capture");
-	if((ret = gp_file_new_from_fd(&file, fd) < GP_OK))
-	   return handleError(ret, "file new");
-	if((ret = gp_camera_file_get(camera, camera_file_path.folder, camera_file_path.name, GP_FILE_TYPE_NORMAL, file, context)) < GP_OK)
-		return handleError(ret, "file get");
-	if((ret = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name, context)) < GP_OK)
-		return handleError(ret, "file rm");
-	
-	return 0;
+    if((ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context)) < GP_OK){
+        handleError(ret, "capture");
+        return;
+    }
+    if((ret = gp_file_new_from_fd(&file, fd) < GP_OK)){
+       handleError(ret, "file new");
+       return;
+    }
+    if((ret = gp_camera_file_get(camera, camera_file_path.folder, camera_file_path.name, GP_FILE_TYPE_NORMAL, file, context)) < GP_OK){
+        handleError(ret, "file get");
+        return;
+    }
+    if((ret = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name, context)) < GP_OK){
+        handleError(ret, "file rm");
+    }
+    delete timer;
+    return;
 }
 
-int QCamera::captureToFile(QString path)
+void QCamera::captureToFile(QString path)
 {
-	return captureToFile(path.toLocal8Bit().data());
+    qDebug()<<path;
+    captureToFile(path.toLocal8Bit().data());
 }
 
-int QCamera::captureToFile(const char *name)
+void QCamera::captureToFile(const char *name)
 {
 	QFile *localFile = new QFile(name);
-	int ret=captureToFile(localFile);
+    captureToFile(localFile);
 	delete localFile;
-	return ret;
 }
-

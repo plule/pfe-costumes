@@ -1,14 +1,11 @@
-#include <QDebug>
-#include <QList>
-
 #include "cameraHandler.h"
 
-CameraHandler CameraHandler::m_instance=CameraHandler();
+//CameraHandler CameraHandler::m_instance=CameraHandler();
 
-CameraHandler& CameraHandler::Instance()
+/*CameraHandler& CameraHandler::Instance()
 {
 	return m_instance;
-}
+}*/
 
 
 int CameraHandler::handleError(int error, QString msg)
@@ -71,6 +68,7 @@ void CameraHandler::init()
 
         /* Create the camera object from the name and the port */
         cameras[i] = new QCamera(name, port, abilities, portinfolist);
+        cameras[i]->moveToThread(&cameraThread);
     }
 }
 
@@ -98,6 +96,7 @@ CameraHandler::CameraHandler()
 	nCameras = 0;
 	for(int i=0; i<MAX_CAMERA; i++)
 		cameras[i] = NULL;
+    cameraThread.start();
     init();
 }
 

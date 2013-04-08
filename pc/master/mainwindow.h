@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QDebug>
+#include <QMetaObject>
 #include "cameraHandler/cameraHandler.h"
 #include "cameraHandler/QCamera.h"
 #include "common/SlotLog.h"

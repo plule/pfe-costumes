@@ -5,6 +5,7 @@
 #include <QString>
 #include <QDebug>
 #include <QFile>
+#include <QThread>
 #include <QTimer>
 #include <gphoto2/gphoto2-camera.h>
 
@@ -22,10 +23,6 @@ public:
 	QString getAbout();
 	CameraAbilities getAbilities();
 
-    int captureToCamera(QString *camerapath);
-	int captureToFile(const char *path);
-	int captureToFile(QFile *file);
-	int captureToFile(QString path);
 
 protected:
     friend void error_func(GPContext *context, const char *format, va_list args, void *data);
@@ -45,6 +42,12 @@ private:
 
 	int handleError(int error, QString msg);
 	int buildCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
+
+public slots:
+    void captureToCamera(QString *camerapath);
+    void captureToFile(const char *path);
+    void captureToFile(QFile *file);
+    void captureToFile(QString path);
 
 private slots:
 	void timeout();

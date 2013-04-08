@@ -7,7 +7,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     QCamera **cameras;
     logger = new SlotLog();
-    handler = &CameraHandler::Instance();
+    handler = new CameraHandler();//&CameraHandler::Instance();
+
     int nCameras;
     nCameras = handler->getCameras(&cameras);
     for(int i=0; i < nCameras; i++) {
@@ -36,7 +37,8 @@ void MainWindow::on_captureButton_clicked()
 {
     QCamera **cameras;
     if(handler->getCameras(&cameras) >= 1)
-        cameras[0]->captureToFile("test.jpg");
+        qDebug() << QMetaObject::invokeMethod(cameras[0], "captureToFile", Qt::QueuedConnection, Q_ARG(QString, "test.jpg"));
+        //cameras[0]->captureToFile("test.jpg");
 }
 
 void MainWindow::on_refreshButton_clicked()
