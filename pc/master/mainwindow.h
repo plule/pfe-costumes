@@ -22,9 +22,9 @@ public slots:
     void refresh();
     
 private slots:
-    void on_pushButton_clicked();
+    void on_captureButton_clicked();
 
-    void on_pushButton_2_clicked();
+    void on_refreshButton_clicked();
 
 private:
     Ui::MainWindow *ui;

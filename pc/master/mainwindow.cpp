@@ -27,18 +27,19 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::refresh()
 {
-    QCamera **cameras;
-    if(handler->getCameras(&cameras) >= 1) {
-        cameras[0]->captureToFile("test.jpg");
-        //		QString cameraPath;
-        //		cameras[0]->captureToCamera(&cameraPath);
-        //		qDebug() << cameraPath;
-    }
+    qDebug() << handler->getNbCameras();
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_captureButton_clicked()
+{
+    QCamera **cameras;
+    if(handler->getCameras(&cameras) >= 1)
+        cameras[0]->captureToFile("test.jpg");
+}
+
+void MainWindow::on_refreshButton_clicked()
 {
     QCamera **cameras;
     handler->refreshCameraList();
@@ -50,9 +51,4 @@ void MainWindow::on_pushButton_2_clicked()
         connect(cameras[i], SIGNAL(progress_update(int,float,QString)), logger, SLOT(progress_update(int,float,QString)));
         connect(cameras[i], SIGNAL(progress_start(int,QString, float, QString)), logger, SLOT(progress_start(int,QString, float, QString)));
     }
-}
-
-void MainWindow::refresh()
-{
-    qDebug() << handler->getNbCameras();
 }
