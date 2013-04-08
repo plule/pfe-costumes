@@ -2,7 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <QDebug>
+#include "cameraHandler/cameraHandler.h"
+#include "cameraHandler/QCamera.h"
+#include "common/SlotLog.h"
 namespace Ui {
 class MainWindow;
 }
@@ -20,6 +23,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    CameraHandler *handler;
+    SlotLog *logger;
 };
 
 #endif // MAINWINDOW_H

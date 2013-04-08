@@ -182,7 +182,7 @@ int QCamera::captureToFile(QFile *localFile)
 		return handleError(ret, "file get");
 	if((ret = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name, context)) < GP_OK)
 		return handleError(ret, "file rm");
-
+	
 	return 0;
 }
 
