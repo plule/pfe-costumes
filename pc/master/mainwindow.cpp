@@ -40,7 +40,16 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
+    QCamera **cameras;
     handler->refreshCameraList();
+    for(int i=0; i < handler->getCameras(&cameras); i++) {
+        connect(cameras[i], SIGNAL(error(QString, QString)), logger, SLOT(error(QString, QString)));
+        connect(cameras[i], SIGNAL(idle(QString)), logger, SLOT(idle(QString)));
+        connect(cameras[i], SIGNAL(status(QString,QString)), logger, SLOT(message(QString,QString)));
+        connect(cameras[i], SIGNAL(message(QString,QString)), logger, SLOT(message(QString,QString)));
+        connect(cameras[i], SIGNAL(progress_update(int,float,QString)), logger, SLOT(progress_update(int,float,QString)));
+        connect(cameras[i], SIGNAL(progress_start(int,QString, float, QString)), logger, SLOT(progress_start(int,QString, float, QString)));
+    }
 }
 
 void MainWindow::refresh()

@@ -33,60 +33,72 @@ int CameraHandler::getCameras(QCamera ***cameras)
 
 int CameraHandler::refreshCameraList()
 {
-    CameraList *list;
-    const char *name, *port;
-    int ret;
+    deinit();
+    init();
 
-	for(int i = 0; i < MAX_CAMERA; i++) {
-		if(cameras[i] != NULL) {
-			delete cameras[i];
-			cameras[i] = NULL;
-		}
-	}
-
-	ret = gp_list_new(&list);
-	if(ret < GP_OK) return handleError(ret, "gp_list_new");
-	nCameras = autodetect(list, context);
-	if(nCameras > MAX_CAMERA)
-		nCameras = MAX_CAMERA;
-	for(int i = 0; i < nCameras; i++) {
-		/* Get camera name and port name*/
-		gp_list_get_name(list, i, &name);
-		gp_list_get_value(list, i, &port);
-		
-		/* Create the camera object from the name and the port */
-		cameras[i] = new QCamera(name, port, abilities, portinfolist);
-	}
-    qDebug() << nCameras;
     emit refreshed();
 	return 0;
 }
 
-CameraHandler::CameraHandler()
+void CameraHandler::init()
+{
+    CameraList *list;
+    const char *name, *port;
+    int ret;
+    context = gp_context_new();
+
+    /* Port initialization */
+    if ((ret = gp_port_info_list_new(&portinfolist)) < GP_OK) handleError(ret, "gp_port_info_list_new");
+    if ((ret = gp_port_info_list_load(portinfolist)) < GP_OK) handleError(ret, "gp_port_info_list_load");
+    if ((ret = gp_port_info_list_count(portinfolist)) < GP_OK) handleError(ret, "gp_port_info_list_count");
+
+    /* Camera abilities initialization */
+    if ((ret = gp_abilities_list_new(&abilities)) < GP_OK) handleError(ret, "gp_abilities_list_new");
+    if ((ret = gp_abilities_list_load(abilities, context)) < GP_OK) handleError(ret, "gp_abilities_list_load");
+
+    /* Camera listing */
+    if ((ret = gp_list_new(&list)) < GP_OK) handleError(ret, "gp_list_new");
+
+
+    nCameras = autodetect(list, context);
+
+    if(nCameras > MAX_CAMERA)
+        nCameras = MAX_CAMERA;
+    for(int i = 0; i < nCameras; i++) {
+        /* Get camera name and port name*/
+        gp_list_get_name(list, i, &name);
+        gp_list_get_value(list, i, &port);
+
+        /* Create the camera object from the name and the port */
+        cameras[i] = new QCamera(name, port, abilities, portinfolist);
+    }
+}
+
+void CameraHandler::deinit()
 {
     int ret;
+
+    for(int i = 0; i < MAX_CAMERA; i++) {
+        if(cameras[i] != NULL) {
+            delete cameras[i];
+            cameras[i] = NULL;
+        }
+    }
+
+    if((ret = gp_abilities_list_free(abilities)) < GP_OK) handleError(ret, "gp_abilities_list_free");
+    if((ret = gp_port_info_list_free(portinfolist)) < GP_OK) handleError(ret, "gp_port_info_list_free");
+
+    gp_context_unref(context);
+}
+
+CameraHandler::CameraHandler()
+{
     qDebug() << "Initialize camera handler." << endl;
 
 	nCameras = 0;
 	for(int i=0; i<MAX_CAMERA; i++)
 		cameras[i] = NULL;
-    context = gp_context_new();
-
-    /* Port initialization */
-    ret = gp_port_info_list_new(&portinfolist);
-    if(ret < GP_OK) handleError(ret, "gp_port_info_list_new");
-    ret = gp_port_info_list_load(portinfolist);
-    if(ret < GP_OK) handleError(ret, "gp_port_info_list_load");
-    ret = gp_port_info_list_count(portinfolist);
-    if(ret < GP_OK) handleError(ret, "gp_port_info_list_count");
-
-    /* Camera abilities initialization */
-    ret = gp_abilities_list_new(&abilities);
-    if(ret < GP_OK) handleError(ret, "gp_abilities_list_new");
-    ret = gp_abilities_list_load(abilities, context);
-    if(ret < GP_OK) handleError(ret, "gp_abilities_list_load");
-
-	refreshCameraList();
+    init();
 }
 
 CameraHandler::~CameraHandler()
