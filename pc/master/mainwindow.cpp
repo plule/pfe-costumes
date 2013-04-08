@@ -9,16 +9,16 @@ MainWindow::MainWindow(QWidget *parent) :
     logger = new SlotLog();
     handler = &CameraHandler::Instance();
     int nCameras;
-    qDebug() << handler->getNbCameras() << endl;
     nCameras = handler->getCameras(&cameras);
     for(int i=0; i < nCameras; i++) {
-        QObject::connect(cameras[i], SIGNAL(error(const char*, const char*)), logger, SLOT(error(const char*, const char*)));
-        QObject::connect(cameras[i], SIGNAL(idle(const char*)), logger, SLOT(idle(const char*)));
-        QObject::connect(cameras[i], SIGNAL(status(const char*,const char*)), logger, SLOT(message(const char*,const char*)));
-        QObject::connect(cameras[i], SIGNAL(message(const char*,const char*)), logger, SLOT(message(const char*,const char*)));
-        QObject::connect(cameras[i], SIGNAL(progress_update(int,float,const char*)), logger, SLOT(progress_update(int,float,const char*)));
-        QObject::connect(cameras[i], SIGNAL(progress_start(int,const char*, float, const char*)), logger, SLOT(progress_start(int,const char*, float, const char*)));
+        connect(cameras[i], SIGNAL(error(QString, QString)), logger, SLOT(error(QString, QString)));
+        connect(cameras[i], SIGNAL(idle(QString)), logger, SLOT(idle(QString)));
+        connect(cameras[i], SIGNAL(status(QString,QString)), logger, SLOT(message(QString,QString)));
+        connect(cameras[i], SIGNAL(message(QString,QString)), logger, SLOT(message(QString,QString)));
+        connect(cameras[i], SIGNAL(progress_update(int,float,QString)), logger, SLOT(progress_update(int,float,QString)));
+        connect(cameras[i], SIGNAL(progress_start(int,QString, float, QString)), logger, SLOT(progress_start(int,QString, float, QString)));
     }
+    connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
     ui->setupUi(this);
 }
 
@@ -36,4 +36,14 @@ void MainWindow::on_pushButton_clicked()
         //		cameras[0]->captureToCamera(&cameraPath);
         //		qDebug() << cameraPath;
     }
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    handler->refreshCameraList();
+}
+
+void MainWindow::refresh()
+{
+    qDebug() << handler->getNbCameras();
 }

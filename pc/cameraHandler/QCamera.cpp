@@ -4,31 +4,46 @@ void idle_func(GPContext *context, void *data)
 {
 	(void)context;
 	QCamera* camera = static_cast<QCamera*>(data);
-	emit camera->idle(camera->getAbilities().model);
+    emit camera->idle(QString(camera->getAbilities().model));
 }
 
-void error_func(GPContext *context, const char *format, va_list args, void *data)
+void
+#ifdef __GNUC__
+__attribute__((__format__(printf,2,0)))
+#endif
+error_func(GPContext *context, const char *format, va_list args, void *data)
 {
-	(void)args;
 	(void)context;
-	QCamera* camera = static_cast<QCamera*>(data);
-	emit camera->error(format, camera->getAbilities().model);
+    QString error_msg;
+    error_msg.vsprintf(format, args);
+    QCamera* camera = static_cast<QCamera*>(data);
+    emit camera->error(error_msg, QString(camera->getAbilities().model));
 }
 
-void status_func(GPContext *context, const char *format, va_list args, void *data)
+void
+#ifdef __GNUC__
+__attribute__((__format__(printf,2,0)))
+#endif
+status_func(GPContext *context, const char *format, va_list args, void *data)
 {
-	(void)args;
 	(void)context;
-	QCamera* camera = static_cast<QCamera*>(data);
-	emit camera->status(format, camera->getAbilities().model);
+    QString status;
+    status.vsprintf(format, args);
+    QCamera* camera = static_cast<QCamera*>(data);
+    emit camera->status(status, QString(camera->getAbilities().model));
 }
 
-void message_func(GPContext *context, const char *format, va_list args, void *data)
+void
+#ifdef __GNUC__
+__attribute__((__format__(printf,2,0)))
+#endif
+message_func(GPContext *context, const char *format, va_list args, void *data)
 {
-	(void)args;
 	(void)context;
+    QString message;
+    message.vsprintf(format, args);
 	QCamera* camera = static_cast<QCamera*>(data);
-	emit camera->message(format, camera->getAbilities().model);
+    emit camera->message(message, QString(camera->getAbilities().model));
 }
 
 /*
@@ -44,13 +59,18 @@ void message_func(GPContext *context, const char *format, va_list args, void *da
 
 }*/
 
-unsigned int progress_start_func(GPContext *context, float target, const char *format, va_list args, void *data)
+unsigned int
+#ifdef __GNUC__
+__attribute__((__format__(printf,3,0)))
+#endif
+progress_start_func(GPContext *context, float target, const char *format, va_list args, void *data)
 {
 	(void)context;
-	(void)args;
+    QString task;
+    task.vsprintf(format, args);
 	int id = 0; // TODO : Assigner un identifiant unique
 	QCamera* camera = static_cast<QCamera*>(data);
-	emit camera->progress_start(id, format, target, camera->getAbilities().model);
+    emit camera->progress_start(id, task, target, QString(camera->getAbilities().model));
 	return id;
 }
 
@@ -58,14 +78,14 @@ void progress_update_func(GPContext *context, unsigned int id, float current, vo
 {
 	(void)context;
 	QCamera* camera = static_cast<QCamera*>(data);
-	emit camera->progress_update(id, current, camera->getAbilities().model);
+    emit camera->progress_update(id, current, QString(camera->getAbilities().model));
 }
 
 void progress_stop_func(GPContext *context, unsigned int id, void *data)
 {
 	(void)context;
 	QCamera* camera = static_cast<QCamera*>(data);
-	emit camera->progress_stop(id, camera->getAbilities().model);
+    emit camera->progress_stop(id, QString(camera->getAbilities().model));
 }
 
 int QCamera::handleError(int error, QString msg)
@@ -166,9 +186,9 @@ int QCamera::captureToFile(QFile *localFile)
 	int ret;
 	int fd;
 	QTimer *timer = new QTimer(this);
-	qDebug() << "timeoutset";
+    timer->setSingleShot(true);
 	connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
-	timer->start(10);
+    timer->start(TIMEOUT);
 	// TODO : ensure memory is set to RAM ?
 	if(!localFile->open(QIODevice::WriteOnly))
 		return -1;

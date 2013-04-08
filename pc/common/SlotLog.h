@@ -11,12 +11,12 @@ public:
 	virtual ~SlotLog(){};
 
 public slots:
-	void error(const char *error);
-	void error(const char *error, const char *responsible);
-	void idle(const char *camera);
-	void message(const char *message, const char *camera);
-	void progress_update(int id, float current, const char *camera);
-	void progress_start(int id, const char *task, float target, const char *camera);
+    void error(QString error);
+    void error(QString error, QString responsible);
+    void idle(QString camera);
+    void message(QString message, QString camera);
+    void progress_update(int id, float current, QString camera);
+    void progress_start(int id, QString task, float target, QString camera);
 };
 
 

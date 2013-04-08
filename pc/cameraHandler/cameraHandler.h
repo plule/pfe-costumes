@@ -32,8 +32,7 @@ private:
 	GPContext* context;
 
 signals:
-	void error(const char *error);
-	void idle();
+    void refreshed();
 };
 
 #endif

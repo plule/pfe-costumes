@@ -57,6 +57,8 @@ int CameraHandler::refreshCameraList()
 		/* Create the camera object from the name and the port */
 		cameras[i] = new QCamera(name, port, abilities, portinfolist);
 	}
+    qDebug() << nCameras;
+    emit refreshed();
 	return 0;
 }
 
