@@ -219,11 +219,13 @@ void QCamera::captureToFile(QString path)
 {
     qDebug()<<path;
     captureToFile(path.toLocal8Bit().data());
+    emit captured(path);
 }
 
 void QCamera::captureToFile(const char *name)
 {
 	QFile *localFile = new QFile(name);
     captureToFile(localFile);
+    emit captured(QString(name));
 	delete localFile;
 }

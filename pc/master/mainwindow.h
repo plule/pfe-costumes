@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QDebug>
 #include <QMetaObject>
+#include <QDir>
+#include <QPixmap>
+#include <QLabel>
 #include "cameraHandler/cameraHandler.h"
 #include "cameraHandler/QCamera.h"
 #include "common/SlotLog.h"
@@ -23,6 +26,7 @@ public slots:
     void refresh();
     void startWork(QString work, int target);
     void updateStatusBar(QString message);
+    void displayPicture(QString path);
     
 private slots:
     void on_captureButton_clicked();
@@ -33,6 +37,9 @@ private:
     Ui::MainWindow *ui;
     CameraHandler *handler;
     SlotLog *logger;
+    QLabel *picLabel;
+
+    void doConnections();
 };
 
 #endif // MAINWINDOW_H

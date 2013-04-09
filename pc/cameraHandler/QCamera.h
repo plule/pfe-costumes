@@ -61,6 +61,7 @@ signals:
     void progress_start(QString task, int target);
     void progress_update(int current);
     void progress_stop();
+    void captured(QString path);
 };
 
 #endif

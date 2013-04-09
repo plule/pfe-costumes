@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue Apr 9 09:01:34 2013
+** Created: Tue Apr 9 11:48:03 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -14,12 +14,15 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenuBar>
 #include <QtGui/QProgressBar>
 #include <QtGui/QPushButton>
+#include <QtGui/QSpacerItem>
 #include <QtGui/QStatusBar>
+#include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -28,8 +31,13 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
+    QVBoxLayout *verticalLayout_2;
+    QHBoxLayout *mainLayout;
+    QVBoxLayout *picLayout;
+    QVBoxLayout *controlLayout;
     QPushButton *captureButton;
     QPushButton *refreshButton;
+    QSpacerItem *verticalSpacer;
     QProgressBar *workBar;
     QMenuBar *menubar;
     QStatusBar *statusbar;
@@ -41,16 +49,45 @@ public:
         MainWindow->resize(800, 600);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
+        verticalLayout_2 = new QVBoxLayout(centralwidget);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        mainLayout = new QHBoxLayout();
+        mainLayout->setObjectName(QString::fromUtf8("mainLayout"));
+        picLayout = new QVBoxLayout();
+        picLayout->setObjectName(QString::fromUtf8("picLayout"));
+
+        mainLayout->addLayout(picLayout);
+
+        controlLayout = new QVBoxLayout();
+        controlLayout->setObjectName(QString::fromUtf8("controlLayout"));
+        controlLayout->setSizeConstraint(QLayout::SetMinimumSize);
         captureButton = new QPushButton(centralwidget);
         captureButton->setObjectName(QString::fromUtf8("captureButton"));
-        captureButton->setGeometry(QRect(30, 30, 87, 27));
+
+        controlLayout->addWidget(captureButton);
+
         refreshButton = new QPushButton(centralwidget);
         refreshButton->setObjectName(QString::fromUtf8("refreshButton"));
-        refreshButton->setGeometry(QRect(30, 70, 87, 27));
+        refreshButton->setEnabled(true);
+
+        controlLayout->addWidget(refreshButton);
+
+        verticalSpacer = new QSpacerItem(10, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        controlLayout->addItem(verticalSpacer);
+
+
+        mainLayout->addLayout(controlLayout);
+
+
+        verticalLayout_2->addLayout(mainLayout);
+
         workBar = new QProgressBar(centralwidget);
         workBar->setObjectName(QString::fromUtf8("workBar"));
-        workBar->setGeometry(QRect(10, 520, 781, 23));
         workBar->setValue(0);
+
+        verticalLayout_2->addWidget(workBar);
+
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
