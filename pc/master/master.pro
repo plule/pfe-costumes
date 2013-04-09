@@ -3,9 +3,11 @@ INCLUDEPATH += ..
 VPATH = ..
 
 SOURCES += master/main.cpp cameraHandler/cameraHandler.cpp cameraHandler/QCamera.cpp common/SlotLog.cpp \	
-    mainwindow.cpp
+    mainwindow.cpp \
+    qphotodisplayer.cpp
 HEADERS += cameraHandler/cameraHandler.h cameraHandler/QCamera.h common/SlotLog.h \
-    mainwindow.h
+    mainwindow.h \
+    qphotodisplayer.h
 
 CONFIG += qt warn_on release
 

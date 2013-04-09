@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QPixmap>
 #include <QLabel>
+#include "qphotodisplayer.h"
 #include "cameraHandler/cameraHandler.h"
 #include "cameraHandler/QCamera.h"
 #include "common/SlotLog.h"
@@ -37,7 +38,7 @@ private:
     Ui::MainWindow *ui;
     CameraHandler *handler;
     SlotLog *logger;
-    QLabel *picLabel;
+    QPhotoDisplayer *displayer;
 
     void doConnections();
 };

@@ -7,13 +7,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     QCamera **cameras;
     logger = new SlotLog();
-    handler = new CameraHandler();//&CameraHandler::Instance();
-
+    handler = new CameraHandler();
     ui->setupUi(this);
-    picLabel = new QLabel(ui->centralwidget);
-    picLabel->setScaledContents(true);
-    picLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    ui->picLayout->addWidget(picLabel);
+    displayer = new QPhotoDisplayer(ui->centralwidget);
+    displayer->resize(800,600);
+    displayer->setMinimumSize(300,200);
+    ui->picLayout->addWidget(displayer);
     ui->centralwidget->adjustSize();
 
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
@@ -51,7 +50,8 @@ void MainWindow::updateStatusBar(QString message)
 void MainWindow::displayPicture(QString path)
 {
     QPixmap pic(path);
-    picLabel->setPixmap(pic);
+    if(!pic.isNull())
+        displayer->setPixmap(pic);
 }
 
 void MainWindow::on_captureButton_clicked()
@@ -59,8 +59,7 @@ void MainWindow::on_captureButton_clicked()
     QCamera **cameras;
     QString path = QDir::temp().absoluteFilePath("test.jpg");
     if(handler->getCameras(&cameras) >= 1)
-        qDebug() << QMetaObject::invokeMethod(cameras[0], "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
-        //cameras[0]->captureToFile("test.jpg");
+        QMetaObject::invokeMethod(cameras[0], "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
 }
 
 void MainWindow::on_refreshButton_clicked()
