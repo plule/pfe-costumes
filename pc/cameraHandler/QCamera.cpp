@@ -90,8 +90,7 @@ void progress_stop_func(GPContext *context, unsigned int id, void *data)
 
 int QCamera::handleError(int error, QString msg)
 {
-	qDebug() << msg;
-    qDebug() << gp_result_as_string(error);
+    emit(gp_result_as_string(error));
     return error;
 }
 
@@ -176,56 +175,47 @@ void QCamera::captureToCamera(QString *cameraPath)
 	cameraPath->append(camera_file_path.name);
 }
 
-void QCamera::timeout()
-{
-	qDebug() << "timeout";
-}
-
-void QCamera::captureToFile(QFile *localFile)
+int QCamera::captureToFile(QFile *localFile)
 {
 	CameraFilePath camera_file_path;
 	CameraFile *file;
 	int ret;
 	int fd;
-	QTimer *timer = new QTimer(this);
-    timer->setSingleShot(true);
-	connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
-    timer->start(TIMEOUT);
+
 	// TODO : ensure memory is set to RAM ?
 	if(!localFile->open(QIODevice::WriteOnly))
-        return;
+        return -1;
 	fd = localFile->handle();
 
     if((ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context)) < GP_OK){
         handleError(ret, "capture");
-        return;
+        return ret;
     }
     if((ret = gp_file_new_from_fd(&file, fd) < GP_OK)){
        handleError(ret, "file new");
-       return;
+       return ret;
     }
     if((ret = gp_camera_file_get(camera, camera_file_path.folder, camera_file_path.name, GP_FILE_TYPE_NORMAL, file, context)) < GP_OK){
         handleError(ret, "file get");
-        return;
+        return ret;
     }
     if((ret = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name, context)) < GP_OK){
         handleError(ret, "file rm");
+        return ret;
     }
-    delete timer;
-    return;
+    return 1;
 }
 
 void QCamera::captureToFile(QString path)
 {
-    qDebug()<<path;
-    captureToFile(path.toLocal8Bit().data());
-    emit captured(path);
+    QFile localFile(path);
+    if (captureToFile(&localFile) == 1)
+        emit captured(path);
 }
 
 void QCamera::captureToFile(const char *name)
 {
-	QFile *localFile = new QFile(name);
-    captureToFile(localFile);
-    emit captured(QString(name));
-	delete localFile;
+    QFile localFile(name);
+    if (captureToFile(&localFile) == 1)
+        emit captured(QString(name));
 }

@@ -1,13 +1,5 @@
 #include "cameraHandler.h"
 
-//CameraHandler CameraHandler::m_instance=CameraHandler();
-
-/*CameraHandler& CameraHandler::Instance()
-{
-	return m_instance;
-}*/
-
-
 int CameraHandler::handleError(int error, QString msg)
 {
 	qDebug() << msg;

@@ -54,12 +54,26 @@ void MainWindow::displayPicture(QString path)
         displayer->setPixmap(pic);
 }
 
+void MainWindow::timeout()
+{
+    statusBar()->showMessage("Lost camera.");
+}
+
 void MainWindow::on_captureButton_clicked()
 {
     QCamera **cameras;
-    QString path = QDir::temp().absoluteFilePath("test.jpg");
     if(handler->getCameras(&cameras) >= 1)
-        QMetaObject::invokeMethod(cameras[0], "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
+    {
+        QCamera *camera = cameras[0];
+        QString path = QDir::temp().absoluteFilePath("test.jpg");
+        QTimer *timer = new QTimer(this);
+        timer->setSingleShot(true);
+        timer->setInterval(10000);
+        connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
+        connect(camera, SIGNAL(captured(QString)), timer, SLOT(stop()));
+        timer->start();
+        QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
+    }
 }
 
 void MainWindow::on_refreshButton_clicked()
@@ -83,5 +97,7 @@ void MainWindow::doConnections()
         connect(cameras[i], SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
         connect(cameras[i], SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
         connect(cameras[i], SIGNAL(captured(QString)), this, SLOT(displayPicture(QString)));
+
+        connect(cameras[i], SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
     }
 }

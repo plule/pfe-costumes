@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QPixmap>
 #include <QLabel>
+#include <QTimer>
 #include "qphotodisplayer.h"
 #include "cameraHandler/cameraHandler.h"
 #include "cameraHandler/QCamera.h"
@@ -33,6 +34,7 @@ private slots:
     void on_captureButton_clicked();
 
     void on_refreshButton_clicked();
+    void timeout();
 
 private:
     Ui::MainWindow *ui;

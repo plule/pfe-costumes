@@ -7,9 +7,8 @@
 #include <QFile>
 #include <QThread>
 #include <QTimer>
+#include <QApplication>
 #include <gphoto2/gphoto2-camera.h>
-
-#define TIMEOUT 10000
 
 class QCamera : public QObject
 {
@@ -32,6 +31,7 @@ protected:
 	friend unsigned int progress_start_func(GPContext *context, float target, const char *format, va_list args, void *data);
 	friend void progress_update_func(GPContext *context, unsigned int id, float current, void *data);
 	friend void progress_stop_func(GPContext *context, unsigned int id, void *data);
+    int captureToFile(QFile *file);
 	
 private:
     Camera *camera;
@@ -46,11 +46,7 @@ private:
 public slots:
     void captureToCamera(QString *camerapath);
     void captureToFile(const char *path);
-    void captureToFile(QFile *file);
     void captureToFile(QString path);
-
-private slots:
-	void timeout();
 
 signals:
     void idle();
