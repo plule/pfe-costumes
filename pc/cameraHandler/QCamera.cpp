@@ -4,7 +4,7 @@ void idle_func(GPContext *context, void *data)
 {
 	(void)context;
 	QCamera* camera = static_cast<QCamera*>(data);
-    emit camera->idle(QString(camera->getAbilities().model));
+    emit camera->idle();
 }
 
 void
@@ -17,7 +17,7 @@ error_func(GPContext *context, const char *format, va_list args, void *data)
     QString error_msg;
     error_msg.vsprintf(format, args);
     QCamera* camera = static_cast<QCamera*>(data);
-    emit camera->error(error_msg, QString(camera->getAbilities().model));
+    emit camera->error(error_msg);
 }
 
 void
@@ -30,7 +30,7 @@ status_func(GPContext *context, const char *format, va_list args, void *data)
     QString status;
     status.vsprintf(format, args);
     QCamera* camera = static_cast<QCamera*>(data);
-    emit camera->status(status, QString(camera->getAbilities().model));
+    emit camera->status(status);
 }
 
 void
@@ -43,7 +43,7 @@ message_func(GPContext *context, const char *format, va_list args, void *data)
     QString message;
     message.vsprintf(format, args);
 	QCamera* camera = static_cast<QCamera*>(data);
-    emit camera->message(message, QString(camera->getAbilities().model));
+    emit camera->message(message);
 }
 
 /*
@@ -70,7 +70,7 @@ progress_start_func(GPContext *context, float target, const char *format, va_lis
     task.vsprintf(format, args);
 	int id = 0; // TODO : Assigner un identifiant unique
 	QCamera* camera = static_cast<QCamera*>(data);
-    emit camera->progress_start(id, task, target, QString(camera->getAbilities().model));
+    emit camera->progress_start(task, target);
 	return id;
 }
 
@@ -78,14 +78,14 @@ void progress_update_func(GPContext *context, unsigned int id, float current, vo
 {
 	(void)context;
 	QCamera* camera = static_cast<QCamera*>(data);
-    emit camera->progress_update(id, current, QString(camera->getAbilities().model));
+    emit camera->progress_update(int(current));
 }
 
 void progress_stop_func(GPContext *context, unsigned int id, void *data)
 {
 	(void)context;
 	QCamera* camera = static_cast<QCamera*>(data);
-    emit camera->progress_stop(id, QString(camera->getAbilities().model));
+    emit camera->progress_stop();
 }
 
 int QCamera::handleError(int error, QString msg)
@@ -151,6 +151,9 @@ QCamera::QCamera(const char *model, const char *port, CameraAbilitiesList *abili
 //	gp_context_set_cancel_func (context, cancel_func, this);
 	gp_context_set_message_func (context, message_func, this);
 	buildCamera(model, port, abilitiesList, portinfolist);
+    qDebug() << model;
+    this->setObjectName(QString(model));
+    qDebug() << this->objectName();
 }
 
 QString QCamera::getSummary()

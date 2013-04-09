@@ -12,11 +12,10 @@ public:
 
 public slots:
     void error(QString error);
-    void error(QString error, QString responsible);
-    void idle(QString camera);
-    void message(QString message, QString camera);
-    void progress_update(int id, float current, QString camera);
-    void progress_start(int id, QString task, float target, QString camera);
+    void idle();
+    void message(QString message);
+    void progress_update(int current);
+    void progress_start(QString task, int target);
 };
 
 

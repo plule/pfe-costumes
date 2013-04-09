@@ -53,14 +53,14 @@ private slots:
 	void timeout();
 
 signals:
-    void idle(QString camera);
+    void idle();
 //	void info(const char *info, const char *camera);
-    void error(QString error, QString camera);
-    void status(QString status, QString camera);
-    void message(QString message, QString camera);
-    void progress_start(int id, QString task, float target, QString camera);
-    void progress_update(int id, float current, QString camera);
-    void progress_stop(int id, QString camera);
+    void error(QString error);
+    void status(QString status);
+    void message(QString message);
+    void progress_start(QString task, int target);
+    void progress_update(int current);
+    void progress_stop();
 };
 
 #endif

@@ -21,9 +21,7 @@ public:
 
 public slots:
     void refresh();
-    void startWork(int id, QString work, float target, QString worker);
-    void updateWork(int id, float current, QString worker);
-    void updateStatusBar(QString message, QString sender);
+    void startWork(QString work, int target);
     void updateStatusBar(QString message);
     
 private slots:
