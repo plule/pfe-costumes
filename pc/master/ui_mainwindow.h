@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Apr 10 16:18:07 2013
+** Created: Wed Apr 10 16:38:05 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -27,6 +27,7 @@
 #include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
 #include <QtGui/QStatusBar>
+#include <QtGui/QTabWidget>
 #include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
@@ -38,6 +39,11 @@ class Ui_MainWindow
 public:
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout_2;
+    QTabWidget *tabWidget;
+    QWidget *preparationTab;
+    QWidget *adjustmentTab;
+    QWidget *CaptureTab;
+    QVBoxLayout *verticalLayout_6;
     QHBoxLayout *mainLayout;
     QVBoxLayout *picLayout;
     QVBoxLayout *controlLayout;
@@ -78,6 +84,18 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout_2 = new QVBoxLayout(centralwidget);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        tabWidget = new QTabWidget(centralwidget);
+        tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
+        preparationTab = new QWidget();
+        preparationTab->setObjectName(QString::fromUtf8("preparationTab"));
+        tabWidget->addTab(preparationTab, QString());
+        adjustmentTab = new QWidget();
+        adjustmentTab->setObjectName(QString::fromUtf8("adjustmentTab"));
+        tabWidget->addTab(adjustmentTab, QString());
+        CaptureTab = new QWidget();
+        CaptureTab->setObjectName(QString::fromUtf8("CaptureTab"));
+        verticalLayout_6 = new QVBoxLayout(CaptureTab);
+        verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
         mainLayout = new QHBoxLayout();
         mainLayout->setObjectName(QString::fromUtf8("mainLayout"));
         picLayout = new QVBoxLayout();
@@ -89,13 +107,13 @@ public:
         controlLayout = new QVBoxLayout();
         controlLayout->setObjectName(QString::fromUtf8("controlLayout"));
         controlLayout->setSizeConstraint(QLayout::SetMinimumSize);
-        refreshButton = new QPushButton(centralwidget);
+        refreshButton = new QPushButton(CaptureTab);
         refreshButton->setObjectName(QString::fromUtf8("refreshButton"));
         refreshButton->setEnabled(true);
 
         controlLayout->addWidget(refreshButton);
 
-        massCaptureBox = new QGroupBox(centralwidget);
+        massCaptureBox = new QGroupBox(CaptureTab);
         massCaptureBox->setObjectName(QString::fromUtf8("massCaptureBox"));
         verticalLayout = new QVBoxLayout(massCaptureBox);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -134,7 +152,7 @@ public:
 
         controlLayout->addWidget(massCaptureBox);
 
-        singleCaptureGroup = new QGroupBox(centralwidget);
+        singleCaptureGroup = new QGroupBox(CaptureTab);
         singleCaptureGroup->setObjectName(QString::fromUtf8("singleCaptureGroup"));
         verticalLayout_3 = new QVBoxLayout(singleCaptureGroup);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
@@ -146,7 +164,7 @@ public:
 
         controlLayout->addWidget(singleCaptureGroup);
 
-        viewGroup = new QGroupBox(centralwidget);
+        viewGroup = new QGroupBox(CaptureTab);
         viewGroup->setObjectName(QString::fromUtf8("viewGroup"));
         verticalLayout_4 = new QVBoxLayout(viewGroup);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
@@ -183,7 +201,7 @@ public:
 
         controlLayout->addWidget(viewGroup);
 
-        controlGroup = new QGroupBox(centralwidget);
+        controlGroup = new QGroupBox(CaptureTab);
         controlGroup->setObjectName(QString::fromUtf8("controlGroup"));
         verticalLayout_5 = new QVBoxLayout(controlGroup);
         verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
@@ -208,13 +226,17 @@ public:
         mainLayout->addLayout(controlLayout);
 
 
-        verticalLayout_2->addLayout(mainLayout);
+        verticalLayout_6->addLayout(mainLayout);
 
-        workBar = new QProgressBar(centralwidget);
+        workBar = new QProgressBar(CaptureTab);
         workBar->setObjectName(QString::fromUtf8("workBar"));
         workBar->setValue(0);
 
-        verticalLayout_2->addWidget(workBar);
+        verticalLayout_6->addWidget(workBar);
+
+        tabWidget->addTab(CaptureTab, QString());
+
+        verticalLayout_2->addWidget(tabWidget);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
@@ -229,6 +251,11 @@ public:
         MainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
 
         retranslateUi(MainWindow);
+        QObject::connect(dial, SIGNAL(valueChanged(int)), spinBox, SLOT(setValue(int)));
+        QObject::connect(spinBox, SIGNAL(valueChanged(int)), dial, SLOT(setValue(int)));
+
+        tabWidget->setCurrentIndex(2);
+
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -236,6 +263,8 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(preparationTab), QApplication::translate("MainWindow", "Pr\303\251paration", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(adjustmentTab), QApplication::translate("MainWindow", "Ajustement", 0, QApplication::UnicodeUTF8));
         refreshButton->setText(QApplication::translate("MainWindow", "Rafra\303\256chir", 0, QApplication::UnicodeUTF8));
         massCaptureBox->setTitle(QApplication::translate("MainWindow", "Captures multiples", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("MainWindow", "Lancer les captures", 0, QApplication::UnicodeUTF8));
@@ -249,6 +278,7 @@ public:
         viewToModelButton->setText(QApplication::translate("MainWindow", "Appliquer rotation", 0, QApplication::UnicodeUTF8));
         autoRotateCheckBox->setText(QApplication::translate("MainWindow", "Tourner automatiquement avant prise de vue", 0, QApplication::UnicodeUTF8));
         workBar->setFormat(QString());
+        tabWidget->setTabText(tabWidget->indexOf(CaptureTab), QApplication::translate("MainWindow", "Capture", 0, QApplication::UnicodeUTF8));
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
