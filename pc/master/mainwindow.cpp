@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     logger = new SlotLog();
     handler = new CameraHandler();
     ui->setupUi(this);
-    displayer = new QPhotoDisplayer(ui->centralwidget);
+    displayer = new QTurntable(ui->centralwidget);
     displayer->resize(800,600);
     displayer->setMinimumSize(300,200);
     ui->picLayout->addWidget(displayer);
@@ -20,6 +20,14 @@ MainWindow::MainWindow(QWidget *parent) :
     handler->getCameras(&cameras);
     doConnections();
     connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
+    for(int i=1; i<=8; ++i)
+    {
+        QPixmap pic(QString("/home/xubuntu/PFE/monkeys/%1.jpg").arg(i));
+        if(!pic.isNull())
+            displayer->addPixmap(pic);
+    }
+    //displayPicture("/home/xubuntu/PFE/monkeys/2.jpg");
+
 }
 
 MainWindow::~MainWindow()
@@ -51,7 +59,7 @@ void MainWindow::displayPicture(QString path)
 {
     QPixmap pic(path);
     if(!pic.isNull())
-        displayer->setPixmap(pic);
+        displayer->addPixmap(pic);
 }
 
 void MainWindow::timeout()

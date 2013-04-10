@@ -17,7 +17,7 @@ int CameraHandler::getNbCameras()
 int CameraHandler::getCameras(QCamera ***cameras)
 {
 	(*cameras) = CameraHandler::cameras;
-	return nCameras;
+    return nCameras;
 }
 
 int CameraHandler::refreshCameraList()
