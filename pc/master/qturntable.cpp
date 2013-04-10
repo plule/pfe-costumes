@@ -37,6 +37,19 @@ void QTurntable::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
+void QTurntable::mousePressEvent ( QMouseEvent * event )
+{
+    xclick = event->x();
+    clickFrame = getAngle();
+}
+
+void QTurntable::mouseMoveEvent(QMouseEvent *event)
+{
+    clickFrame += (event->x()-xclick);
+    setAngle(clickFrame);
+    xclick = event->x();
+}
+
 void QTurntable::addPixmap (const QPixmap & pix)
 {
     pixmaps.append(pix);
@@ -97,7 +110,8 @@ void QTurntable::setCustomController(QAbstractSlider *ext_controller)
     if(ext_controller) {
         ui->slider->setVisible(false);
         controller = ext_controller;
-        connect(controller, SIGNAL(valueChanged(int)), this, SLOT(on_slider_valueChanged(int)));
+        connect(controller, SIGNAL(valueChanged(int)), this, SLOT(setView(int)));
+        connect(this, SIGNAL(viewChanged(int)), controller, SLOT(setValue(int)));
         update_controller();
     } else {
         ui->slider->setVisible(true);
@@ -106,8 +120,26 @@ void QTurntable::setCustomController(QAbstractSlider *ext_controller)
     }
 }
 
+void QTurntable::setView(int view)
+{
+    int lastPixmap = currentPixmap;
+    currentPixmap = ((view%pixmaps.size())+pixmaps.size())%pixmaps.size();
+    this->update();
+    if(lastPixmap != currentPixmap)
+        emit viewChanged(currentPixmap);
+}
+
+void QTurntable::setAngle(int angle)
+{
+    setView(pixmaps.size() * angle / 360);
+}
+
+int QTurntable::getAngle()
+{
+    return currentPixmap * 360 / pixmaps.size();
+}
+
 void QTurntable::on_slider_valueChanged(int value)
 {
-    currentPixmap = value;
-    this->update();
+    setView(value);
 }

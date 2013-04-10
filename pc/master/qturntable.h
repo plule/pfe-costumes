@@ -6,6 +6,7 @@
 #include <QList>
 #include <QPixmap>
 #include <QDebug>
+#include <QMouseEvent>
 
 namespace Ui {
 class QTurntable;
@@ -21,6 +22,7 @@ public:
 
     virtual void showController(bool show);
     virtual void setCustomController(QAbstractSlider *controller);
+    int getAngle();
 
 public slots:
     virtual void addPixmap (const QPixmap &);
@@ -29,9 +31,16 @@ public slots:
     virtual void setPixmap(int index, QString path);
     virtual void setCurrentPixmap(QPixmap & pixmap);
     virtual void setCurrentPixmap(QString path);
+    virtual void setView(int view);
+    virtual void setAngle(int angle);
+
+signals:
+    virtual void viewChanged(int view);
 
 protected:
     virtual void paintEvent ( QPaintEvent * event );
+    virtual void mouseMoveEvent(QMouseEvent *event);
+    virtual void mousePressEvent ( QMouseEvent * event );
     
 private slots:
     void on_slider_valueChanged(int value);
@@ -46,6 +55,7 @@ private:
 
     int lastWidth,lastHeight,lastCurrent;
     bool needRedraw;
+    int xclick, clickFrame;
 };
 
 #endif // QTURNTABLE_H

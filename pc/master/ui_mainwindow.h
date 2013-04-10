@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Apr 10 16:53:44 2013
+** Created: Wed Apr 10 17:10:47 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -132,6 +132,7 @@ public:
 
         fromInput = new QSpinBox(massCaptureBox);
         fromInput->setObjectName(QString::fromUtf8("fromInput"));
+        fromInput->setMaximum(360);
 
         horizontalLayout->addWidget(fromInput);
 
@@ -143,6 +144,8 @@ public:
 
         toInput = new QSpinBox(massCaptureBox);
         toInput->setObjectName(QString::fromUtf8("toInput"));
+        toInput->setMaximum(360);
+        toInput->setValue(360);
 
         horizontalLayout->addWidget(toInput);
 
@@ -274,7 +277,9 @@ public:
         massCaptureBox->setTitle(QApplication::translate("MainWindow", "Captures multiples", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("MainWindow", "Lancer les captures", 0, QApplication::UnicodeUTF8));
         fromLabel->setText(QApplication::translate("MainWindow", "De : ", 0, QApplication::UnicodeUTF8));
+        fromInput->setSuffix(QApplication::translate("MainWindow", "\302\260", 0, QApplication::UnicodeUTF8));
         toLabel->setText(QApplication::translate("MainWindow", "\303\200 : ", 0, QApplication::UnicodeUTF8));
+        toInput->setSuffix(QApplication::translate("MainWindow", "\302\260", 0, QApplication::UnicodeUTF8));
         singleCaptureGroup->setTitle(QApplication::translate("MainWindow", "Capture unique", 0, QApplication::UnicodeUTF8));
         captureButton->setText(QApplication::translate("MainWindow", "(Re)capturer la vue actuelle", 0, QApplication::UnicodeUTF8));
         viewGroup->setTitle(QApplication::translate("MainWindow", "Vue", 0, QApplication::UnicodeUTF8));
