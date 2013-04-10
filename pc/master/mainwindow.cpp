@@ -22,17 +22,11 @@ MainWindow::MainWindow(QWidget *parent) :
     handler->getCameras(&cameras);
     doConnections();
     connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
-    displayer->setNumber(8);
-    for(int i=1; i<=8; ++i)
+    displayer->setNumber(36);
+    for(int i=1; i<=36; ++i)
     {
-        //QPixmap pic();
-        //displayer->setPixmap(i, QString("/home/xubuntu/PFE/monkeys/%1.jpg").arg(i));
-        /*if(!pic.isNull())
-            displayer->setPixmap(i-1, pic);*/
-            //displayer->addPixmap(pic);
+        displayer->setPixmap(i-1, QString("/home/xubuntu/PFE/monkeys/%1.png").arg(i));
     }
-    //displayPicture("/home/xubuntu/PFE/monkeys/2.jpg");
-
 }
 
 MainWindow::~MainWindow()

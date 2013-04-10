@@ -22,8 +22,11 @@ int CameraHandler::getCameras(QCamera ***cameras)
 
 int CameraHandler::refreshCameraList()
 {
+    qDebug() << "refresh";
     deinit();
+    qDebug() << "deinit done";
     init();
+    qDebug() << "reinit done";
 
     emit refreshed();
 	return 0;
@@ -36,15 +39,20 @@ void CameraHandler::init()
     int ret;
     context = gp_context_new();
 
+    qDebug() << "init ports...";
     /* Port initialization */
     if ((ret = gp_port_info_list_new(&portinfolist)) < GP_OK) handleError(ret, "gp_port_info_list_new");
+    qDebug() << "new done...";
     if ((ret = gp_port_info_list_load(portinfolist)) < GP_OK) handleError(ret, "gp_port_info_list_load");
+    qDebug() << "load done...";
     if ((ret = gp_port_info_list_count(portinfolist)) < GP_OK) handleError(ret, "gp_port_info_list_count");
 
+    qDebug() << "init abilities...";
     /* Camera abilities initialization */
     if ((ret = gp_abilities_list_new(&abilities)) < GP_OK) handleError(ret, "gp_abilities_list_new");
     if ((ret = gp_abilities_list_load(abilities, context)) < GP_OK) handleError(ret, "gp_abilities_list_load");
 
+    qDebug() << "list cameras...";
     /* Camera listing */
     if ((ret = gp_list_new(&list)) < GP_OK) handleError(ret, "gp_list_new");
 

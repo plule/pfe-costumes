@@ -43,6 +43,8 @@ private:
     QAbstractSlider *controller;
     QVector<QPixmap> pixmaps;
     int currentPixmap;
+
+    int lastWidth,lastHeight,lastCurrent;
 };
 
 #endif // QTURNTABLE_H

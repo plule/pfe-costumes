@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Apr 10 10:49:29 2013
+** Created: Wed Apr 10 15:05:32 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -85,7 +85,8 @@ public:
         sizePolicy.setHeightForWidth(dial->sizePolicy().hasHeightForWidth());
         dial->setSizePolicy(sizePolicy);
         dial->setMinimumSize(QSize(50, 50));
-        dial->setWrapping(false);
+        dial->setWrapping(true);
+        dial->setNotchesVisible(true);
 
         controlLayout->addWidget(dial);
 

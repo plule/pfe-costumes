@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'qturntable.ui'
 **
-** Created: Wed Apr 10 10:01:29 2013
+** Created: Wed Apr 10 15:05:32 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

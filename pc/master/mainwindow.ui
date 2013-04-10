@@ -61,7 +61,10 @@
            </size>
           </property>
           <property name="wrapping">
-           <bool>false</bool>
+           <bool>true</bool>
+          </property>
+          <property name="notchesVisible">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

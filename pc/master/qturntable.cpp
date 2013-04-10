@@ -9,6 +9,9 @@ QTurntable::QTurntable(QWidget *parent) :
     currentPixmap = 0;
     //pixmaps = new QVector<QPixmap>();
     controller = ui->slider;
+    lastWidth = -1;
+    lastHeight = -1;
+    lastCurrent = -1;
 }
 
 QTurntable::~QTurntable()
@@ -18,11 +21,17 @@ QTurntable::~QTurntable()
 
 void QTurntable::paintEvent(QPaintEvent *event)
 {
-    QPixmap current = pixmaps.value(currentPixmap);
-    if(!current.isNull())
-        this->ui->displayer->setPixmap(current.scaled(ui->displayer->width(), ui->displayer->height(), Qt::KeepAspectRatio));
-    else
-        this->ui->displayer->clear();
+    if(currentPixmap != lastCurrent || ui->displayer->width() != lastWidth || ui->displayer->height() != lastHeight)
+    {
+        QPixmap current = pixmaps.value(currentPixmap);
+        if(!current.isNull())
+            this->ui->displayer->setPixmap(current.scaled(ui->displayer->width(), ui->displayer->height(), Qt::KeepAspectRatio));
+        else
+            this->ui->displayer->clear();
+        lastCurrent = currentPixmap;
+        lastWidth = ui->displayer->width();
+        lastHeight = ui->displayer->height();
+    }
     QWidget::paintEvent(event);
 }
 
@@ -72,7 +81,10 @@ void QTurntable::on_slider_sliderMoved(int position)
 void QTurntable::update_controller()
 {
     controller->setMinimum(0);
-    controller->setMaximum(pixmaps.size()-1);
+    if(pixmaps.size() > 0)
+        controller->setMaximum(pixmaps.size()-1);
+    else
+        controller->setMaximum(0);
 }
 
 void QTurntable::showController(bool show)
