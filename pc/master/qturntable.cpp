@@ -12,6 +12,7 @@ QTurntable::QTurntable(QWidget *parent) :
     lastWidth = -1;
     lastHeight = -1;
     lastCurrent = -1;
+    needRedraw = false;
 }
 
 QTurntable::~QTurntable()
@@ -21,7 +22,7 @@ QTurntable::~QTurntable()
 
 void QTurntable::paintEvent(QPaintEvent *event)
 {
-    if(currentPixmap != lastCurrent || ui->displayer->width() != lastWidth || ui->displayer->height() != lastHeight)
+    if(needRedraw || currentPixmap != lastCurrent || ui->displayer->width() != lastWidth || ui->displayer->height() != lastHeight)
     {
         QPixmap current = pixmaps.value(currentPixmap);
         if(!current.isNull())
@@ -31,6 +32,7 @@ void QTurntable::paintEvent(QPaintEvent *event)
         lastCurrent = currentPixmap;
         lastWidth = ui->displayer->width();
         lastHeight = ui->displayer->height();
+        needRedraw = false;
     }
     QWidget::paintEvent(event);
 }
@@ -53,7 +55,10 @@ void QTurntable::setPixmap(int index, QPixmap & pixmap)
         setNumber(index+1);
     pixmaps[index] = pixmap;
     if(index == currentPixmap)
+    {
+        needRedraw = true;
         this->update();
+    }
 }
 
 void QTurntable::setPixmap(int index, QString path)

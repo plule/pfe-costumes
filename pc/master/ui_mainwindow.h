@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Apr 10 16:38:05 2013
+** Created: Wed Apr 10 16:53:44 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -249,6 +249,11 @@ public:
         toolBar = new QToolBar(MainWindow);
         toolBar->setObjectName(QString::fromUtf8("toolBar"));
         MainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
+#ifndef QT_NO_SHORTCUT
+        fromLabel->setBuddy(fromInput);
+        toLabel->setBuddy(toInput);
+        label->setBuddy(spinBox);
+#endif // QT_NO_SHORTCUT
 
         retranslateUi(MainWindow);
         QObject::connect(dial, SIGNAL(valueChanged(int)), spinBox, SLOT(setValue(int)));
@@ -276,7 +281,7 @@ public:
         label->setText(QApplication::translate("MainWindow", "(y\302\260)", 0, QApplication::UnicodeUTF8));
         controlGroup->setTitle(QApplication::translate("MainWindow", "Contr\303\264le", 0, QApplication::UnicodeUTF8));
         viewToModelButton->setText(QApplication::translate("MainWindow", "Appliquer rotation", 0, QApplication::UnicodeUTF8));
-        autoRotateCheckBox->setText(QApplication::translate("MainWindow", "Tourner automatiquement avant prise de vue", 0, QApplication::UnicodeUTF8));
+        autoRotateCheckBox->setText(QApplication::translate("MainWindow", "Tourner automatiquement", 0, QApplication::UnicodeUTF8));
         workBar->setFormat(QString());
         tabWidget->setTabText(tabWidget->indexOf(CaptureTab), QApplication::translate("MainWindow", "Capture", 0, QApplication::UnicodeUTF8));
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", 0, QApplication::UnicodeUTF8));

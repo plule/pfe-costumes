@@ -45,6 +45,7 @@ private:
     int currentPixmap;
 
     int lastWidth,lastHeight,lastCurrent;
+    bool needRedraw;
 };
 
 #endif // QTURNTABLE_H

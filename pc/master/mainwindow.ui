@@ -82,10 +82,20 @@
                    <property name="alignment">
                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                    </property>
+                   <property name="buddy">
+                    <cstring>fromInput</cstring>
+                   </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QSpinBox" name="fromInput"/>
+                  <widget class="QSpinBox" name="fromInput">
+                   <property name="suffix">
+                    <string>°</string>
+                   </property>
+                   <property name="maximum">
+                    <number>360</number>
+                   </property>
+                  </widget>
                  </item>
                  <item>
                   <widget class="QLabel" name="toLabel">
@@ -95,10 +105,20 @@
                    <property name="alignment">
                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                    </property>
+                   <property name="buddy">
+                    <cstring>toInput</cstring>
+                   </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QSpinBox" name="toInput"/>
+                  <widget class="QSpinBox" name="toInput">
+                   <property name="suffix">
+                    <string>°</string>
+                   </property>
+                   <property name="maximum">
+                    <number>360</number>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </item>
@@ -165,6 +185,9 @@
                    <property name="text">
                     <string>(y°)</string>
                    </property>
+                   <property name="buddy">
+                    <cstring>spinBox</cstring>
+                   </property>
                   </widget>
                  </item>
                 </layout>
@@ -188,7 +211,7 @@
                <item>
                 <widget class="QCheckBox" name="autoRotateCheckBox">
                  <property name="text">
-                  <string>Tourner automatiquement avant prise de vue</string>
+                  <string>Tourner automatiquement</string>
                  </property>
                 </widget>
                </item>
