@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'qturntable.ui'
 **
-** Created: Wed Apr 10 15:05:32 2013
+** Created: Wed Apr 10 15:43:19 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -38,6 +38,10 @@ public:
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         displayer = new QLabel(QTurntable);
         displayer->setObjectName(QString::fromUtf8("displayer"));
+        displayer->setFrameShape(QFrame::Box);
+        displayer->setFrameShadow(QFrame::Sunken);
+        displayer->setAlignment(Qt::AlignCenter);
+        displayer->setMargin(5);
 
         verticalLayout->addWidget(displayer);
 

@@ -72,15 +72,10 @@ void QTurntable::setCurrentPixmap(QString path)
     setPixmap(currentPixmap, path);
 }
 
-void QTurntable::on_slider_sliderMoved(int position)
-{
-    currentPixmap = position;
-    this->update();
-}
-
 void QTurntable::update_controller()
 {
     controller->setMinimum(0);
+    controller->setSingleStep(1);
     if(pixmaps.size() > 0)
         controller->setMaximum(pixmaps.size()-1);
     else
@@ -97,11 +92,17 @@ void QTurntable::setCustomController(QAbstractSlider *ext_controller)
     if(ext_controller) {
         ui->slider->setVisible(false);
         controller = ext_controller;
-        connect(controller, SIGNAL(sliderMoved(int)), this, SLOT(on_slider_sliderMoved(int)));
+        connect(controller, SIGNAL(valueChanged(int)), this, SLOT(on_slider_valueChanged(int)));
         update_controller();
     } else {
         ui->slider->setVisible(true);
         controller = ui->slider;
         update_controller();
     }
+}
+
+void QTurntable::on_slider_valueChanged(int value)
+{
+    currentPixmap = value;
+    this->update();
 }

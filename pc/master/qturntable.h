@@ -34,7 +34,7 @@ protected:
     virtual void paintEvent ( QPaintEvent * event );
     
 private slots:
-    void on_slider_sliderMoved(int position);
+    void on_slider_valueChanged(int value);
 
 private:
     void update_controller();
