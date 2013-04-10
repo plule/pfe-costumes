@@ -2,7 +2,9 @@
 #define QTURNTABLE_H
 
 #include <QWidget>
+#include <QAbstractSlider>
 #include <QList>
+#include <QPixmap>
 #include <QDebug>
 
 namespace Ui {
@@ -17,8 +19,16 @@ public:
     explicit QTurntable(QWidget *parent = 0);
     ~QTurntable();
 
+    virtual void showController(bool show);
+    virtual void setCustomController(QAbstractSlider *controller);
+
 public slots:
     virtual void addPixmap (const QPixmap &);
+    virtual void setNumber(int);
+    virtual void setPixmap(int index, QPixmap & pixmap);
+    virtual void setPixmap(int index, QString path);
+    virtual void setCurrentPixmap(QPixmap & pixmap);
+    virtual void setCurrentPixmap(QString path);
 
 protected:
     virtual void paintEvent ( QPaintEvent * event );
@@ -27,8 +37,11 @@ private slots:
     void on_slider_sliderMoved(int position);
 
 private:
+    void update_controller();
+
     Ui::QTurntable *ui;
-    QList<QPixmap> *pixmaps;
+    QAbstractSlider *controller;
+    QVector<QPixmap> pixmaps;
     int currentPixmap;
 };
 

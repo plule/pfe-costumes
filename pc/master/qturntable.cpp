@@ -7,7 +7,8 @@ QTurntable::QTurntable(QWidget *parent) :
 {
     ui->setupUi(this);
     currentPixmap = 0;
-    pixmaps = new QList<QPixmap>();
+    //pixmaps = new QVector<QPixmap>();
+    controller = ui->slider;
 }
 
 QTurntable::~QTurntable()
@@ -17,19 +18,78 @@ QTurntable::~QTurntable()
 
 void QTurntable::paintEvent(QPaintEvent *event)
 {
-    QPixmap current = pixmaps->value(currentPixmap);
+    QPixmap current = pixmaps.value(currentPixmap);
     if(!current.isNull())
         this->ui->displayer->setPixmap(current.scaled(ui->displayer->width(), ui->displayer->height(), Qt::KeepAspectRatio));
+    else
+        this->ui->displayer->clear();
     QWidget::paintEvent(event);
 }
 
 void QTurntable::addPixmap (const QPixmap & pix)
 {
-    pixmaps->append(pix);
-    ui->slider->setMaximum(pixmaps->length()-1);
+    pixmaps.append(pix);
+    update_controller();
+}
+
+void QTurntable::setNumber(int number)
+{
+    pixmaps.resize(number);
+    update_controller();
+}
+
+void QTurntable::setPixmap(int index, QPixmap & pixmap)
+{
+    if(index > pixmaps.size())
+        setNumber(index+1);
+    pixmaps[index] = pixmap;
+    if(index == currentPixmap)
+        this->update();
+}
+
+void QTurntable::setPixmap(int index, QString path)
+{
+    QPixmap pic(path);
+    setPixmap(index, pic);
+}
+
+void QTurntable::setCurrentPixmap(QPixmap &pixmap)
+{
+    setPixmap(currentPixmap, pixmap);
+}
+
+void QTurntable::setCurrentPixmap(QString path)
+{
+    setPixmap(currentPixmap, path);
 }
 
 void QTurntable::on_slider_sliderMoved(int position)
 {
     currentPixmap = position;
+    this->update();
+}
+
+void QTurntable::update_controller()
+{
+    controller->setMinimum(0);
+    controller->setMaximum(pixmaps.size()-1);
+}
+
+void QTurntable::showController(bool show)
+{
+    this->ui->slider->setVisible(show);
+}
+
+void QTurntable::setCustomController(QAbstractSlider *ext_controller)
+{
+    if(ext_controller) {
+        ui->slider->setVisible(false);
+        controller = ext_controller;
+        connect(controller, SIGNAL(sliderMoved(int)), this, SLOT(on_slider_sliderMoved(int)));
+        update_controller();
+    } else {
+        ui->slider->setVisible(true);
+        controller = ui->slider;
+        update_controller();
+    }
 }

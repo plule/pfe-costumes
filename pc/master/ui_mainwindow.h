@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Apr 10 09:45:36 2013
+** Created: Wed Apr 10 10:49:29 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -14,6 +14,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QDial>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QMainWindow>
@@ -38,6 +39,7 @@ public:
     QVBoxLayout *controlLayout;
     QPushButton *captureButton;
     QPushButton *refreshButton;
+    QDial *dial;
     QSpacerItem *verticalSpacer;
     QProgressBar *workBar;
     QMenuBar *menubar;
@@ -57,6 +59,7 @@ public:
         mainLayout->setObjectName(QString::fromUtf8("mainLayout"));
         picLayout = new QVBoxLayout();
         picLayout->setObjectName(QString::fromUtf8("picLayout"));
+        picLayout->setSizeConstraint(QLayout::SetMaximumSize);
 
         mainLayout->addLayout(picLayout);
 
@@ -73,6 +76,18 @@ public:
         refreshButton->setEnabled(true);
 
         controlLayout->addWidget(refreshButton);
+
+        dial = new QDial(centralwidget);
+        dial->setObjectName(QString::fromUtf8("dial"));
+        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(dial->sizePolicy().hasHeightForWidth());
+        dial->setSizePolicy(sizePolicy);
+        dial->setMinimumSize(QSize(50, 50));
+        dial->setWrapping(false);
+
+        controlLayout->addWidget(dial);
 
         verticalSpacer = new QSpacerItem(10, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 

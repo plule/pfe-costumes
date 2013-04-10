@@ -10,8 +10,10 @@ MainWindow::MainWindow(QWidget *parent) :
     handler = new CameraHandler();
     ui->setupUi(this);
     displayer = new QTurntable(ui->centralwidget);
+    displayer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     displayer->resize(800,600);
     displayer->setMinimumSize(300,200);
+    displayer->setCustomController(ui->dial);
     ui->picLayout->addWidget(displayer);
     ui->centralwidget->adjustSize();
 
@@ -20,11 +22,14 @@ MainWindow::MainWindow(QWidget *parent) :
     handler->getCameras(&cameras);
     doConnections();
     connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
+    displayer->setNumber(8);
     for(int i=1; i<=8; ++i)
     {
-        QPixmap pic(QString("/home/xubuntu/PFE/monkeys/%1.jpg").arg(i));
-        if(!pic.isNull())
-            displayer->addPixmap(pic);
+        //QPixmap pic();
+        //displayer->setPixmap(i, QString("/home/xubuntu/PFE/monkeys/%1.jpg").arg(i));
+        /*if(!pic.isNull())
+            displayer->setPixmap(i-1, pic);*/
+            //displayer->addPixmap(pic);
     }
     //displayPicture("/home/xubuntu/PFE/monkeys/2.jpg");
 
@@ -104,7 +109,8 @@ void MainWindow::doConnections()
 
         connect(cameras[i], SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
         connect(cameras[i], SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
-        connect(cameras[i], SIGNAL(captured(QString)), this, SLOT(displayPicture(QString)));
+        //connect(cameras[i], SIGNAL(captured(QString)), this, SLOT(displayPicture(QString)));
+        connect(cameras[i], SIGNAL(captured(QString)), this->displayer, SLOT(setCurrentPixmap(QString)));
 
         connect(cameras[i], SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
     }
