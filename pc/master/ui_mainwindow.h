@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Apr 10 17:10:47 2013
+** Created: Thu Apr 11 16:14:19 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -59,6 +59,7 @@ public:
     QGroupBox *singleCaptureGroup;
     QVBoxLayout *verticalLayout_3;
     QPushButton *captureButton;
+    QCheckBox *autofocusCheckBox;
     QGroupBox *viewGroup;
     QVBoxLayout *verticalLayout_4;
     QDial *dial;
@@ -163,6 +164,11 @@ public:
         captureButton->setObjectName(QString::fromUtf8("captureButton"));
 
         verticalLayout_3->addWidget(captureButton);
+
+        autofocusCheckBox = new QCheckBox(singleCaptureGroup);
+        autofocusCheckBox->setObjectName(QString::fromUtf8("autofocusCheckBox"));
+
+        verticalLayout_3->addWidget(autofocusCheckBox);
 
 
         controlLayout->addWidget(singleCaptureGroup);
@@ -282,6 +288,7 @@ public:
         toInput->setSuffix(QApplication::translate("MainWindow", "\302\260", 0, QApplication::UnicodeUTF8));
         singleCaptureGroup->setTitle(QApplication::translate("MainWindow", "Capture unique", 0, QApplication::UnicodeUTF8));
         captureButton->setText(QApplication::translate("MainWindow", "(Re)capturer la vue actuelle", 0, QApplication::UnicodeUTF8));
+        autofocusCheckBox->setText(QApplication::translate("MainWindow", "Autofocus", 0, QApplication::UnicodeUTF8));
         viewGroup->setTitle(QApplication::translate("MainWindow", "Vue", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "(y\302\260)", 0, QApplication::UnicodeUTF8));
         controlGroup->setTitle(QApplication::translate("MainWindow", "Contr\303\264le", 0, QApplication::UnicodeUTF8));

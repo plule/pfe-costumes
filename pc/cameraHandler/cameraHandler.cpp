@@ -32,7 +32,7 @@ int CameraHandler::refreshCameraList()
 	return 0;
 }
 
-void CameraHandler::init()
+int CameraHandler::init()
 {
     CameraList *list;
     const char *name, *port;
@@ -41,20 +41,20 @@ void CameraHandler::init()
 
     qDebug() << "init ports...";
     /* Port initialization */
-    if ((ret = gp_port_info_list_new(&portinfolist)) < GP_OK) handleError(ret, "gp_port_info_list_new");
+    if ((ret = gp_port_info_list_new(&portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_new");
     qDebug() << "new done...";
-    if ((ret = gp_port_info_list_load(portinfolist)) < GP_OK) handleError(ret, "gp_port_info_list_load");
+    if ((ret = gp_port_info_list_load(portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_load");
     qDebug() << "load done...";
-    if ((ret = gp_port_info_list_count(portinfolist)) < GP_OK) handleError(ret, "gp_port_info_list_count");
+    if ((ret = gp_port_info_list_count(portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_count");
 
     qDebug() << "init abilities...";
     /* Camera abilities initialization */
-    if ((ret = gp_abilities_list_new(&abilities)) < GP_OK) handleError(ret, "gp_abilities_list_new");
-    if ((ret = gp_abilities_list_load(abilities, context)) < GP_OK) handleError(ret, "gp_abilities_list_load");
+    if ((ret = gp_abilities_list_new(&abilities)) < GP_OK) return handleError(ret, "gp_abilities_list_new");
+    if ((ret = gp_abilities_list_load(abilities, context)) < GP_OK) return handleError(ret, "gp_abilities_list_load");
 
     qDebug() << "list cameras...";
     /* Camera listing */
-    if ((ret = gp_list_new(&list)) < GP_OK) handleError(ret, "gp_list_new");
+    if ((ret = gp_list_new(&list)) < GP_OK) return handleError(ret, "gp_list_new");
 
 
     nCameras = autodetect(list, context);
@@ -73,7 +73,7 @@ void CameraHandler::init()
     emit message(QString::number(nCameras) + " camera(s) found.");
 }
 
-void CameraHandler::deinit()
+int CameraHandler::deinit()
 {
     int ret;
 
@@ -84,8 +84,8 @@ void CameraHandler::deinit()
         }
     }
 
-    if((ret = gp_abilities_list_free(abilities)) < GP_OK) handleError(ret, "gp_abilities_list_free");
-    if((ret = gp_port_info_list_free(portinfolist)) < GP_OK) handleError(ret, "gp_port_info_list_free");
+    if((ret = gp_abilities_list_free(abilities)) < GP_OK) return handleError(ret, "gp_abilities_list_free");
+    if((ret = gp_port_info_list_free(portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_free");
 
     gp_context_unref(context);
 }

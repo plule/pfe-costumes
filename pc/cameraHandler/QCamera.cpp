@@ -7,6 +7,7 @@ void idle_func(GPContext *context, void *data)
     emit camera->idle();
 }
 
+#ifdef LEGACY_GPHOTO
 void
 #ifdef __GNUC__
 __attribute__((__format__(printf,2,0)))
@@ -16,10 +17,15 @@ error_func(GPContext *context, const char *format, va_list args, void *data)
 	(void)context;
     QString error_msg;
     error_msg.vsprintf(format, args);
+#else
+void error_func(GPContext *context, const char *error_msg, void *data)
+{
+#endif
     QCamera* camera = static_cast<QCamera*>(data);
     emit camera->error(error_msg);
 }
 
+#ifdef LEGACY_GPHOTO
 void
 #ifdef __GNUC__
 __attribute__((__format__(printf,2,0)))
@@ -29,10 +35,15 @@ status_func(GPContext *context, const char *format, va_list args, void *data)
 	(void)context;
     QString status;
     status.vsprintf(format, args);
+#else
+void status_func(GPContext *context, const char *status, void *data)
+{
+#endif
     QCamera* camera = static_cast<QCamera*>(data);
     emit camera->status(status);
 }
 
+#ifdef LEGACY_GPHOTO
 void
 #ifdef __GNUC__
 __attribute__((__format__(printf,2,0)))
@@ -42,6 +53,10 @@ message_func(GPContext *context, const char *format, va_list args, void *data)
 	(void)context;
     QString message;
     message.vsprintf(format, args);
+#else
+void message_func(GPContext *context, const char *message, void *data)
+{
+#endif
 	QCamera* camera = static_cast<QCamera*>(data);
     emit camera->message(message);
 }
@@ -59,6 +74,7 @@ message_func(GPContext *context, const char *format, va_list args, void *data)
 
 }*/
 
+#ifdef LEGACY_GPHOTO
 unsigned int
 #ifdef __GNUC__
 __attribute__((__format__(printf,3,0)))
@@ -68,6 +84,10 @@ progress_start_func(GPContext *context, float target, const char *format, va_lis
 	(void)context;
     QString task;
     task.vsprintf(format, args);
+#else
+unsigned int progress_start_func(GPContext *context, float target, const char *task, void *data)
+{
+#endif
 	int id = 0; // TODO : Assigner un identifiant unique
 	QCamera* camera = static_cast<QCamera*>(data);
     emit camera->progress_start(task, target);
@@ -90,7 +110,7 @@ void progress_stop_func(GPContext *context, unsigned int id, void *data)
 
 int QCamera::handleError(int error, QString msg)
 {
-    emit(gp_result_as_string(error));
+    qDebug() << QString(gp_result_as_string(error)) + " : " + msg;
     return error;
 }
 
@@ -169,7 +189,10 @@ void QCamera::captureToCamera(QString *cameraPath)
 	// TODO : ensure memory is set to card
 	ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
 	if(ret < GP_OK)
+    {
         handleError(ret, "gp_camera_capture");
+        return;
+    }
 	cameraPath->clear();
 	cameraPath->append(camera_file_path.folder);
 	cameraPath->append(camera_file_path.name);
@@ -187,22 +210,14 @@ int QCamera::captureToFile(QFile *localFile)
         return -1;
 	fd = localFile->handle();
 
-    if((ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context)) < GP_OK){
-        handleError(ret, "capture");
-        return ret;
-    }
-    if((ret = gp_file_new_from_fd(&file, fd) < GP_OK)){
-       handleError(ret, "file new");
-       return ret;
-    }
-    if((ret = gp_camera_file_get(camera, camera_file_path.folder, camera_file_path.name, GP_FILE_TYPE_NORMAL, file, context)) < GP_OK){
-        handleError(ret, "file get");
-        return ret;
-    }
-    if((ret = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name, context)) < GP_OK){
-        handleError(ret, "file rm");
-        return ret;
-    }
+    if((ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context)) < GP_OK)
+        return handleError(ret, "capture");
+    if((ret = gp_file_new_from_fd(&file, fd) < GP_OK))
+       return handleError(ret, "file new");
+    if((ret = gp_camera_file_get(camera, camera_file_path.folder, camera_file_path.name, GP_FILE_TYPE_NORMAL, file, context)) < GP_OK)
+        return handleError(ret, "file get");
+    if((ret = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name, context)) < GP_OK)
+        return handleError(ret, "file rm");
     return 1;
 }
 

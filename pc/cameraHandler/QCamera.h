@@ -24,20 +24,27 @@ public:
 
 
 protected:
-    friend void error_func(GPContext *context, const char *format, va_list args, void *data);
     friend void idle_func(GPContext *context, void *data);
-	friend void status_func(GPContext *context, const char *format, va_list args, void *data);
-	friend void message_func(GPContext *context, const char *format, va_list args, void *data);
-	friend unsigned int progress_start_func(GPContext *context, float target, const char *format, va_list args, void *data);
-	friend void progress_update_func(GPContext *context, unsigned int id, float current, void *data);
-	friend void progress_stop_func(GPContext *context, unsigned int id, void *data);
+    friend void progress_update_func(GPContext *context, unsigned int id, float current, void *data);
+    friend void progress_stop_func(GPContext *context, unsigned int id, void *data);
+#ifdef LEGACY_GPHOTO
+    friend void error_func(GPContext *context, const char *format, va_list args, void *data);
+    friend void status_func(GPContext *context, const char *format, va_list args, void *data);
+    friend void message_func(GPContext *context, const char *format, va_list args, void *data);
+    friend unsigned int progress_start_func(GPContext *context, float target, const char *format, va_list args, void *data);
+#else
+    friend void error_func(GPContext *context, const char *, void *data);
+    friend void status_func(GPContext *context, const char *, void *data);
+    friend void message_func(GPContext *context, const char *, void *data);
+    friend unsigned int progress_start_func(GPContext *context, float target, const char *, void *data);
+#endif
     int captureToFile(QFile *file);
 	
 private:
     Camera *camera;
 	GPContext *context;
 	CameraAbilities abilities;
-	GPPortInfo portinfo;
+    GPPortInfo portinfo;
 	
 
 	int handleError(int error, QString msg);

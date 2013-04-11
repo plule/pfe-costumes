@@ -21,8 +21,9 @@ public:
 	int getNbCameras();
 	int getCameras(QCamera ***cameras);
     int refreshCameraList();
-    void init();
-    void deinit();
+    int init();
+    int deinit();
+
 	
 private:
     //CameraHandler& operator= (const CameraHandler&){return m_instance;}
