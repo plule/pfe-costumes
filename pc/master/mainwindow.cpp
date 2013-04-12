@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralwidget->adjustSize();
 
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
+
     handler->init();
     handler->getCameras(&cameras);
     doConnections();
@@ -62,9 +63,17 @@ void MainWindow::displayPicture(QString path)
         displayer->addPixmap(pic);
 }
 
+void MainWindow::displayError(QString error)
+{
+    QErrorMessage msg;
+    msg.showMessage(error);
+    msg.exec();
+}
+
 void MainWindow::timeout()
 {
     statusBar()->showMessage("Lost camera.");
+    this->displayError("Lost camera... You should try to disconnect and reconnect it.");
 }
 
 void MainWindow::on_captureButton_clicked()
@@ -79,8 +88,11 @@ void MainWindow::on_captureButton_clicked()
         timer->setInterval(10000);
         connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
         connect(camera, SIGNAL(captured(QString)), timer, SLOT(stop()));
+        connect(camera, SIGNAL(operation_failed(QString)), timer, SLOT(stop()));
         timer->start();
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
+    } else {
+        this->displayError("No camera connected");
     }
 }
 
@@ -108,5 +120,6 @@ void MainWindow::doConnections()
         connect(cameras[i], SIGNAL(captured(QString)), this->displayer, SLOT(setCurrentPixmap(QString)));
 
         connect(cameras[i], SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
+        connect(cameras[i], SIGNAL(operation_failed(QString)), this, SLOT(displayError(QString)));
     }
 }

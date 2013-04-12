@@ -244,7 +244,7 @@ void QCamera::captureToFile(QString path, int nbTry)
         }
         Sleeper().sleep(1);
     }
-    emit operation_failed("Could not capture image after " + QString(nbTry) + " times.");
+    emit operation_failed(QString("Could not capture image after ") + QString::number(nbTry) + " times.");
 }
 
 void QCamera::captureToFile(const char *name, int nbTry)

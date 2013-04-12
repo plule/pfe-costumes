@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QTimer>
 #include <QList>
+#include <QErrorMessage>
 #include "qphotodisplayer.h"
 #include "qturntable.h"
 #include "cameraHandler/cameraHandler.h"
@@ -31,6 +32,7 @@ public slots:
     void startWork(QString work, int target);
     void updateStatusBar(QString message);
     void displayPicture(QString path);
+    void displayError(QString error);
     
 private slots:
     void on_captureButton_clicked();
@@ -43,8 +45,8 @@ private:
     QPhoto::CameraHandler *handler;
     SlotLog *logger;
     QTurntable *displayer;
-    //QPhotoDisplayer *displayer;
     QList<QPixmap> *pics;
+    QErrorMessage errorMessage;
 
     void doConnections();
 };
