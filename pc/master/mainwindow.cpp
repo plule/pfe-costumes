@@ -83,13 +83,6 @@ void MainWindow::on_captureButton_clicked()
     {
         QPhoto::QCamera *camera = cameras[0];
         QString path = QDir::temp().absoluteFilePath("test.jpg");
-        QTimer *timer = new QTimer(this);
-        timer->setSingleShot(true);
-        timer->setInterval(10000);
-        connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
-        connect(camera, SIGNAL(captured(QString)), timer, SLOT(stop()));
-        connect(camera, SIGNAL(operation_failed(QString)), timer, SLOT(stop()));
-        timer->start();
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
         this->displayError("No camera connected");
@@ -121,5 +114,6 @@ void MainWindow::doConnections()
 
         connect(cameras[i], SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
         connect(cameras[i], SIGNAL(operation_failed(QString)), this, SLOT(displayError(QString)));
+        connect(cameras[i]->getWatchdog(), SIGNAL(timeout()), this, SLOT(timeout()));
     }
 }

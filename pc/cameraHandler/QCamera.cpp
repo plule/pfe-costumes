@@ -119,19 +119,26 @@ int QCamera::handleError(int error, QString msg)
 
 CameraAbilities QCamera::getAbilities()
 {
-	return abilities;
+    return abilities;
+}
+
+QTimer *QCamera::getWatchdog()
+{
+    return watchdog;
 }
 
 QCamera::QCamera()
 {
 	camera = NULL;
 	context = NULL;
+    // TODO : init thread and watchdog ?
 }
 
 QCamera::~QCamera()
 {
 	if(camera)
 		gp_camera_exit(camera, context);
+    delete watchdog;
     camThread.exit();
     camThread.wait(); // TODO : dangerous ??
 }
@@ -140,28 +147,20 @@ int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesLis
 {
     int ret, model_index, port_index;
 	/* Create the camera object */
-    if((ret = gp_camera_new(&camera)) < GP_OK)
-		return handleError(ret, "gp_camera_new");
+    R_GP_CALL(ret, gp_camera_new, &camera);
 
 	/* Assign the abilities */
-	if ((model_index = gp_abilities_list_lookup_model(abilitiesList, model)) < GP_OK)
-		return handleError(model_index, "gp_abilities_list_lookup_model");
-	if ((ret = gp_abilities_list_get_abilities(abilitiesList, model_index, &abilities)) < GP_OK)
-		return handleError(ret, "gp_abilities_list_get_abilities");
-	if ((ret = gp_camera_set_abilities(camera, abilities)) < GP_OK)
-		return handleError(ret, "gp_camera_set_abilities");
+    R_GP_CALL(model_index, gp_abilities_list_lookup_model, abilitiesList, model);
+    R_GP_CALL(ret, gp_abilities_list_get_abilities, abilitiesList, model_index, &abilities);
+    R_GP_CALL(ret, gp_camera_set_abilities, camera, abilities);
 
 	/* Assign to a port */
-	if ((port_index = gp_port_info_list_lookup_path(portinfolist, port)) < GP_OK)
-		return handleError(ret, "gp_port_info_list_lookup_path");
-	if ((ret = gp_port_info_list_get_info(portinfolist, port_index, &portinfo)) < GP_OK)
-		return handleError(ret, "gp_port_info_list_get_info");
-	if ((ret = gp_camera_set_port_info(camera, portinfo)) < GP_OK)
-		return handleError(ret, "gp_camera_set_port_info");
+    R_GP_CALL(port_index, gp_port_info_list_lookup_path, portinfolist, port);
+    R_GP_CALL(ret, gp_port_info_list_get_info, portinfolist, port_index, &portinfo);
+    R_GP_CALL(ret, gp_camera_set_port_info, camera, portinfo);
 
 	/* Init the connection */
-    if ((ret = gp_camera_init(camera, context)) < GP_OK)
-        return handleError(ret, "gp_camera_init");
+    R_GP_CALL(ret, gp_camera_init, camera, context);
     return GP_OK;
 }
 
@@ -179,6 +178,11 @@ QCamera::QCamera(const char *model, const char *port, CameraAbilitiesList *abili
 
     if((ret = buildCamera(model, port, abilitiesList, portinfolist)) != GP_OK)
         throw CameraException(QString("Failed to connect to camera : ") + QString(gp_result_as_string(ret)));
+    watchdog = new QTimer(QApplication::instance()->thread());
+    watchdog->setSingleShot(true);
+    watchdog->setInterval(3000);
+    connect(this, SIGNAL(camera_answered()), watchdog, SLOT(stop()));
+    connect(this, SIGNAL(wait_for_camera_answer()), watchdog, SLOT(start()));
     camThread.start();
     this->moveToThread(&camThread);
     this->setObjectName(QString(model));
@@ -196,12 +200,7 @@ void QCamera::captureToCamera(QString *cameraPath)
 	CameraFilePath camera_file_path;
 	int ret;
 	// TODO : ensure memory is set to card
-	ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
-	if(ret < GP_OK)
-    {
-        handleError(ret, "gp_camera_capture");
-        return;
-    }
+    R_GP_CALL(ret, gp_camera_capture, camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
 	cameraPath->clear();
 	cameraPath->append(camera_file_path.folder);
 	cameraPath->append(camera_file_path.name);
@@ -214,32 +213,34 @@ int QCamera::captureToFile(QFile *localFile)
 	int ret;
 	int fd;
 
-	// TODO : ensure memory is set to RAM ?
-
-    if((ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context)) < GP_OK)
-        return handleError(ret, "capture");
+    R_GP_CALL(ret, gp_camera_capture, camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
 
     if(!localFile->open(QIODevice::WriteOnly))
         return -1; // TODO : own error
     fd = localFile->handle();
 
-    if((ret = gp_file_new_from_fd(&file, fd) < GP_OK)) {
+    GP_CALL(ret, gp_file_new_from_fd, &file, fd);
+    if (ret < GP_OK) {
         localFile->close();
         return handleError(ret, "file new");
     }
-    if((ret = gp_camera_file_get(camera, camera_file_path.folder, camera_file_path.name, GP_FILE_TYPE_NORMAL, file, context)) < GP_OK) {
+
+    GP_CALL(ret, gp_camera_file_get, camera, camera_file_path.folder, camera_file_path.name, GP_FILE_TYPE_NORMAL, file, context);
+    if(ret < GP_OK) {
         localFile->close();
         return handleError(ret, "file get");
     }
+
     localFile->close();
-    if((ret = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name, context)) < GP_OK)
-        return handleError(ret, "file rm");
+
+    R_GP_CALL(ret, gp_camera_file_delete, camera, camera_file_path.folder, camera_file_path.name, context);
     return GP_OK;
 }
 
 void QCamera::captureToFile(QString path, int nbTry)
 {
     QFile localFile(path);
+
     for(int i = 0; i < nbTry; i++) {
         if (captureToFile(&localFile) == GP_OK) {
             emit captured(path);

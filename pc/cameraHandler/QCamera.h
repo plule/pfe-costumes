@@ -12,6 +12,13 @@
 
 #include "cameraexception.h"
 
+#define GP_CALL(ret, fn, ...) emit wait_for_camera_answer();\
+    ret = fn(__VA_ARGS__);\
+    emit camera_answered();
+
+#define R_GP_CALL(ret, fn, ...) GP_CALL(ret, fn, __VA_ARGS__);\
+    if(ret < GP_OK) {return handleError(ret, #fn );}
+
 namespace QPhoto
 {
 
@@ -29,6 +36,7 @@ public:
     QString getSummary();
     QString getAbout();
     CameraAbilities getAbilities();
+    QTimer *getWatchdog();
 
 
 protected:
@@ -54,6 +62,7 @@ private:
     CameraAbilities abilities;
     GPPortInfo portinfo;
     QThread camThread;
+    QTimer *watchdog;
 
 
     int handleError(int error, QString msg);
@@ -75,6 +84,8 @@ signals:
     void progress_stop();
     void captured(QString path);
     void operation_failed(QString msg);
+    void camera_answered();
+    void wait_for_camera_answer();
 };
 
 class Sleeper : public QThread { // The horror...
