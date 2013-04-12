@@ -40,7 +40,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    CameraHandler *handler;
+    QPhoto::CameraHandler *handler;
     SlotLog *logger;
     QTurntable *displayer;
     //QPhotoDisplayer *displayer;

@@ -1,11 +1,12 @@
 #include "cameraHandler.h"
 
+namespace QPhoto
+{
+
 int CameraHandler::handleError(int error, QString msg)
 {
-	qDebug() << msg;
+    qDebug() << msg;
     qDebug() << gp_result_as_string(error);
-	if(error < GP_OK)
-		throw "handler fail";
     return error;
 }
 
@@ -22,11 +23,8 @@ int CameraHandler::getCameras(QCamera ***cameras)
 
 int CameraHandler::refreshCameraList()
 {
-    qDebug() << "refresh";
     deinit();
-    qDebug() << "deinit done";
     init();
-    qDebug() << "reinit done";
 
     emit refreshed();
 	return 0;
@@ -39,20 +37,15 @@ int CameraHandler::init()
     int ret;
     context = gp_context_new();
 
-    qDebug() << "init ports...";
     /* Port initialization */
     if ((ret = gp_port_info_list_new(&portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_new");
-    qDebug() << "new done...";
     if ((ret = gp_port_info_list_load(portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_load");
-    qDebug() << "load done...";
     if ((ret = gp_port_info_list_count(portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_count");
 
-    qDebug() << "init abilities...";
     /* Camera abilities initialization */
     if ((ret = gp_abilities_list_new(&abilities)) < GP_OK) return handleError(ret, "gp_abilities_list_new");
     if ((ret = gp_abilities_list_load(abilities, context)) < GP_OK) return handleError(ret, "gp_abilities_list_load");
 
-    qDebug() << "list cameras...";
     /* Camera listing */
     if ((ret = gp_list_new(&list)) < GP_OK) return handleError(ret, "gp_list_new");
 
@@ -92,8 +85,6 @@ int CameraHandler::deinit()
 
 CameraHandler::CameraHandler()
 {
-    qDebug() << "Initialize camera handler." << endl;
-
 	nCameras = 0;
 	for(int i=0; i<MAX_CAMERA; i++)
 		cameras[i] = NULL;
@@ -133,4 +124,6 @@ int CameraHandler::autodetect(CameraList *list, GPContext *context)
 
 	gp_list_free (xlist);
 	return gp_list_count(list);
+}
+
 }

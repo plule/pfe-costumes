@@ -5,9 +5,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    QCamera **cameras;
+    QPhoto::QCamera **cameras;
     logger = new SlotLog();
-    handler = new CameraHandler();
+    handler = new QPhoto::CameraHandler();
     ui->setupUi(this);
     displayer = new QTurntable(ui->centralwidget);
     displayer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -68,10 +68,10 @@ void MainWindow::timeout()
 
 void MainWindow::on_captureButton_clicked()
 {
-    QCamera **cameras;
+    QPhoto::QCamera **cameras;
     if(handler->getCameras(&cameras) >= 1)
     {
-        QCamera *camera = cameras[0];
+        QPhoto::QCamera *camera = cameras[0];
         QString path = QDir::temp().absoluteFilePath("test.jpg");
         QTimer *timer = new QTimer(this);
         timer->setSingleShot(true);
@@ -91,7 +91,7 @@ void MainWindow::on_refreshButton_clicked()
 
 void MainWindow::doConnections()
 {
-    QCamera **cameras;
+    QPhoto::QCamera **cameras;
     int nConnections = handler->getCameras(&cameras);
     for(int i=0; i < nConnections; i++) {
         connect(cameras[i], SIGNAL(error(QString)), logger, SLOT(error(QString)));

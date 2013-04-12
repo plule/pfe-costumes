@@ -1,5 +1,7 @@
 #include "cameraexception.h"
 
+namespace QPhoto
+{
 CameraException::CameraException(QString msg)
 {
     m_msg = msg;
@@ -9,4 +11,5 @@ CameraException::CameraException(QString msg)
 const char *CameraException::what() const throw()
 {
     return m_msg.toStdString().c_str();
+}
 }

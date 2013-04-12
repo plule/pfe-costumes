@@ -9,19 +9,54 @@
 
 #include <gphoto2/gphoto2-camera.h>
 
+#include "cameraexception.h"
 #include "QCamera.h"
 
+namespace QPhoto
+{
+
+/**
+ * @brief The CameraHandler class allow handling of a set of QCamera object (detecting cameras, building them,...)
+ */
 class CameraHandler: public QObject
 {
 	Q_OBJECT
 public:
+    /**
+     * @brief CameraHandler constructor. Do not connect or detect anything. init() must be called
+     */
 	CameraHandler();
 	~CameraHandler();
-	static CameraHandler& Instance();
+
+    /**
+     * @brief getNbCameras
+     * @return number of detected cameras
+     */
 	int getNbCameras();
+
+    /**
+     * @brief getCameras
+     * @param cameras list to be filled
+     * @return number of detected cameras
+     */
 	int getCameras(QCamera ***cameras);
+
+    /**
+     * @brief refreshCameraList relaunch the autodectection process
+     * @return number of cameras
+     */
     int refreshCameraList();
+
+    /**
+     * @brief init autodetect the cameras
+     * @return error code ? todo
+     */
     int init();
+
+    /**
+     * @brief deinit frees the camera, disconnecting them
+     * @return error code ? todo
+     */
     int deinit();
 
 	
@@ -43,5 +78,5 @@ signals:
     void refreshed();
     void message(QString message);
 };
-
+}
 #endif

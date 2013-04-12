@@ -1,5 +1,8 @@
 #include "QCamera.h"
 
+namespace QPhoto
+{
+
 void idle_func(GPContext *context, void *data)
 {
 	(void)context;
@@ -155,12 +158,14 @@ int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesLis
 		return handleError(ret, "gp_camera_set_port_info");
 
 	/* Init the connection */
-	gp_camera_init(camera, context);
-	return 0;
+    if ((ret = gp_camera_init(camera, context)) < GP_OK)
+        return handleError(ret, "gp_camera_init");
+    return GP_OK;
 }
 
 QCamera::QCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist)
 {
+    int ret;
 	context = gp_context_new();
 	gp_context_set_idle_func (context, idle_func, this);
 	gp_context_set_progress_funcs (context, progress_start_func, progress_update_func, progress_stop_func, this);
@@ -169,10 +174,11 @@ QCamera::QCamera(const char *model, const char *port, CameraAbilitiesList *abili
 //	gp_context_set_question_func (context, question_func, this);
 //	gp_context_set_cancel_func (context, cancel_func, this);
 	gp_context_set_message_func (context, message_func, this);
-	buildCamera(model, port, abilitiesList, portinfolist);
-    qDebug() << model;
+
+    if((ret = buildCamera(model, port, abilitiesList, portinfolist)) != GP_OK)
+        throw CameraException(QString("Failed to connect to camera : ") + QString(gp_result_as_string(ret)));
+
     this->setObjectName(QString(model));
-    qDebug() << this->objectName();
 }
 
 QString QCamera::getSummary()
@@ -206,31 +212,45 @@ int QCamera::captureToFile(QFile *localFile)
 	int fd;
 
 	// TODO : ensure memory is set to RAM ?
-	if(!localFile->open(QIODevice::WriteOnly))
-        return -1;
-	fd = localFile->handle();
 
     if((ret = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context)) < GP_OK)
         return handleError(ret, "capture");
-    if((ret = gp_file_new_from_fd(&file, fd) < GP_OK))
-       return handleError(ret, "file new");
-    if((ret = gp_camera_file_get(camera, camera_file_path.folder, camera_file_path.name, GP_FILE_TYPE_NORMAL, file, context)) < GP_OK)
+
+    if(!localFile->open(QIODevice::WriteOnly))
+        return -1; // TODO : own error
+    fd = localFile->handle();
+
+    if((ret = gp_file_new_from_fd(&file, fd) < GP_OK)) {
+        localFile->close();
+        return handleError(ret, "file new");
+    }
+    if((ret = gp_camera_file_get(camera, camera_file_path.folder, camera_file_path.name, GP_FILE_TYPE_NORMAL, file, context)) < GP_OK) {
+        localFile->close();
         return handleError(ret, "file get");
+    }
+    localFile->close();
     if((ret = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name, context)) < GP_OK)
         return handleError(ret, "file rm");
-    return 1;
+    return GP_OK;
 }
 
 void QCamera::captureToFile(QString path)
 {
     QFile localFile(path);
-    if (captureToFile(&localFile) == 1)
-        emit captured(path);
+    int ret;
+    for (int i = 0; i < 3; i++){
+        if ((ret = captureToFile(&localFile)) == GP_OK)
+            emit captured(path);
+    }
 }
 
 void QCamera::captureToFile(const char *name)
 {
     QFile localFile(name);
-    if (captureToFile(&localFile) == 1)
-        emit captured(QString(name));
+    int ret;
+    for(int i = 0; i < 3; i++) {
+        if ((ret = captureToFile(&localFile)) == GP_OK)
+            emit captured(QString(name));
+    }
+}
 }

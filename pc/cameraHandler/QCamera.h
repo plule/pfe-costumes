@@ -10,17 +10,25 @@
 #include <QApplication>
 #include <gphoto2/gphoto2-camera.h>
 
+#include "cameraexception.h"
+
+namespace QPhoto
+{
+
+/**
+ * @brief The QCamera class handles a single camera
+ */
 class QCamera : public QObject
 {
     Q_OBJECT
 public:
     QCamera();
     QCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
-	virtual ~QCamera();
+    virtual ~QCamera();
 
-	QString getSummary();
-	QString getAbout();
-	CameraAbilities getAbilities();
+    QString getSummary();
+    QString getAbout();
+    CameraAbilities getAbilities();
 
 
 protected:
@@ -39,16 +47,16 @@ protected:
     friend unsigned int progress_start_func(GPContext *context, float target, const char *, void *data);
 #endif
     int captureToFile(QFile *file);
-	
+
 private:
     Camera *camera;
-	GPContext *context;
-	CameraAbilities abilities;
+    GPContext *context;
+    CameraAbilities abilities;
     GPPortInfo portinfo;
-	
 
-	int handleError(int error, QString msg);
-	int buildCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
+
+    int handleError(int error, QString msg);
+    int buildCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
 
 public slots:
     void captureToCamera(QString *camerapath);
@@ -57,7 +65,7 @@ public slots:
 
 signals:
     void idle();
-//	void info(const char *info, const char *camera);
+    //	void info(const char *info, const char *camera);
     void error(QString error);
     void status(QString status);
     void message(QString message);
@@ -67,4 +75,5 @@ signals:
     void captured(QString path);
 };
 
+}
 #endif
