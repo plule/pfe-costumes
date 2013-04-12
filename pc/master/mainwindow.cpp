@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete handler;
 }
 
 void MainWindow::refresh()

@@ -64,6 +64,7 @@ int CameraHandler::init()
         cameras[i]->moveToThread(&cameraThread);
     }
     emit message(QString::number(nCameras) + " camera(s) found.");
+    return GP_OK;
 }
 
 int CameraHandler::deinit()
@@ -81,6 +82,8 @@ int CameraHandler::deinit()
     if((ret = gp_port_info_list_free(portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_free");
 
     gp_context_unref(context);
+
+    return GP_OK;
 }
 
 CameraHandler::CameraHandler()
@@ -97,6 +100,8 @@ CameraHandler::~CameraHandler()
 		delete cameras[i];
 		cameras[i] = NULL;
 	}
+    cameraThread.exit();
+    cameraThread.wait();
 }
 
 int CameraHandler::autodetect(CameraList *list, GPContext *context)

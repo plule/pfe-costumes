@@ -60,8 +60,8 @@ private:
 
 public slots:
     void captureToCamera(QString *camerapath);
-    void captureToFile(const char *path);
-    void captureToFile(QString path);
+    void captureToFile(const char *path, int nbTry=3);
+    void captureToFile(QString path, int nbTry=3);
 
 signals:
     void idle();
@@ -73,7 +73,12 @@ signals:
     void progress_update(int current);
     void progress_stop();
     void captured(QString path);
+    void operation_failed(QString msg);
 };
 
+class Sleeper : public QThread { // The horror...
+public:
+   void sleep(int ms) { QThread::sleep(ms); }
+};
 }
 #endif

@@ -79,4 +79,5 @@ signals:
     void message(QString message);
 };
 }
+
 #endif

@@ -234,23 +234,21 @@ int QCamera::captureToFile(QFile *localFile)
     return GP_OK;
 }
 
-void QCamera::captureToFile(QString path)
+void QCamera::captureToFile(QString path, int nbTry)
 {
     QFile localFile(path);
-    int ret;
-    for (int i = 0; i < 3; i++){
-        if ((ret = captureToFile(&localFile)) == GP_OK)
+    for(int i = 0; i < nbTry; i++) {
+        if (captureToFile(&localFile) == GP_OK) {
             emit captured(path);
+            return;
+        }
+        Sleeper().sleep(1);
     }
+    emit operation_failed("Could not capture image after " + QString(nbTry) + " times.");
 }
 
-void QCamera::captureToFile(const char *name)
+void QCamera::captureToFile(const char *name, int nbTry)
 {
-    QFile localFile(name);
-    int ret;
-    for(int i = 0; i < 3; i++) {
-        if ((ret = captureToFile(&localFile)) == GP_OK)
-            emit captured(QString(name));
-    }
+    captureToFile(QString(name), nbTry);
 }
 }
