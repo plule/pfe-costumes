@@ -72,7 +72,6 @@ private:
 	QCamera* cameras[MAX_CAMERA];
 	int nCameras;
 	GPContext* context;
-    QThread cameraThread;
 
 signals:
     void refreshed();

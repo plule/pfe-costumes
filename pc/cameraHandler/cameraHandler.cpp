@@ -61,7 +61,6 @@ int CameraHandler::init()
 
         /* Create the camera object from the name and the port */
         cameras[i] = new QCamera(name, port, abilities, portinfolist);
-        cameras[i]->moveToThread(&cameraThread);
     }
     emit message(QString::number(nCameras) + " camera(s) found.");
     return GP_OK;
@@ -91,7 +90,6 @@ CameraHandler::CameraHandler()
 	nCameras = 0;
 	for(int i=0; i<MAX_CAMERA; i++)
 		cameras[i] = NULL;
-    cameraThread.start();
 }
 
 CameraHandler::~CameraHandler()
@@ -100,8 +98,6 @@ CameraHandler::~CameraHandler()
 		delete cameras[i];
 		cameras[i] = NULL;
 	}
-    cameraThread.exit();
-    cameraThread.wait();
 }
 
 int CameraHandler::autodetect(CameraList *list, GPContext *context)

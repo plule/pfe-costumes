@@ -53,6 +53,7 @@ private:
     GPContext *context;
     CameraAbilities abilities;
     GPPortInfo portinfo;
+    QThread camThread;
 
 
     int handleError(int error, QString msg);

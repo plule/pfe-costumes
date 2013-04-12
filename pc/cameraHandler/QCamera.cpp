@@ -132,6 +132,8 @@ QCamera::~QCamera()
 {
 	if(camera)
 		gp_camera_exit(camera, context);
+    camThread.exit();
+    camThread.wait(); // TODO : dangerous ??
 }
 
 int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist)
@@ -177,7 +179,8 @@ QCamera::QCamera(const char *model, const char *port, CameraAbilitiesList *abili
 
     if((ret = buildCamera(model, port, abilitiesList, portinfolist)) != GP_OK)
         throw CameraException(QString("Failed to connect to camera : ") + QString(gp_result_as_string(ret)));
-
+    camThread.start();
+    this->moveToThread(&camThread);
     this->setObjectName(QString(model));
 }
 
