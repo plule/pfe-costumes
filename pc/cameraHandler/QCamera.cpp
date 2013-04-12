@@ -17,13 +17,13 @@ __attribute__((__format__(printf,2,0)))
 #endif
 error_func(GPContext *context, const char *format, va_list args, void *data)
 {
-	(void)context;
     QString error_msg;
     error_msg.vsprintf(format, args);
 #else
 void error_func(GPContext *context, const char *error_msg, void *data)
 {
 #endif
+    (void)context;
     QCamera* camera = static_cast<QCamera*>(data);
     emit camera->error(error_msg);
 }
@@ -35,13 +35,13 @@ __attribute__((__format__(printf,2,0)))
 #endif
 status_func(GPContext *context, const char *format, va_list args, void *data)
 {
-	(void)context;
     QString status;
     status.vsprintf(format, args);
 #else
 void status_func(GPContext *context, const char *status, void *data)
 {
 #endif
+    (void)context;
     QCamera* camera = static_cast<QCamera*>(data);
     emit camera->status(status);
 }
@@ -53,13 +53,13 @@ __attribute__((__format__(printf,2,0)))
 #endif
 message_func(GPContext *context, const char *format, va_list args, void *data)
 {
-	(void)context;
     QString message;
     message.vsprintf(format, args);
 #else
 void message_func(GPContext *context, const char *message, void *data)
 {
 #endif
+    (void)context;
 	QCamera* camera = static_cast<QCamera*>(data);
     emit camera->message(message);
 }
@@ -84,13 +84,13 @@ __attribute__((__format__(printf,3,0)))
 #endif
 progress_start_func(GPContext *context, float target, const char *format, va_list args, void *data)
 {
-	(void)context;
     QString task;
     task.vsprintf(format, args);
 #else
 unsigned int progress_start_func(GPContext *context, float target, const char *task, void *data)
 {
 #endif
+    (void)context;
 	int id = 0; // TODO : Assigner un identifiant unique
 	QCamera* camera = static_cast<QCamera*>(data);
     emit camera->progress_start(task, target);
@@ -100,6 +100,7 @@ unsigned int progress_start_func(GPContext *context, float target, const char *t
 void progress_update_func(GPContext *context, unsigned int id, float current, void *data)
 {
 	(void)context;
+    (void)id; // TODO utiliser l'id
 	QCamera* camera = static_cast<QCamera*>(data);
     emit camera->progress_update(int(current));
 }
@@ -107,6 +108,7 @@ void progress_update_func(GPContext *context, unsigned int id, float current, vo
 void progress_stop_func(GPContext *context, unsigned int id, void *data)
 {
 	(void)context;
+    (void)id; // TODO utiliser l'id
 	QCamera* camera = static_cast<QCamera*>(data);
     emit camera->progress_stop();
 }
@@ -200,7 +202,8 @@ void QCamera::captureToCamera(QString *cameraPath)
 	CameraFilePath camera_file_path;
 	int ret;
 	// TODO : ensure memory is set to card
-    R_GP_CALL(ret, gp_camera_capture, camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
+    GP_CALL(ret, gp_camera_capture, camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
+    if(ret < GP_OK) return;
 	cameraPath->clear();
 	cameraPath->append(camera_file_path.folder);
 	cameraPath->append(camera_file_path.name);
