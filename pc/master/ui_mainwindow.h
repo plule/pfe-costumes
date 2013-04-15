@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Apr 15 11:38:51 2013
+** Created: Mon Apr 15 17:12:39 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -24,6 +24,7 @@
 #include <QtGui/QMenuBar>
 #include <QtGui/QProgressBar>
 #include <QtGui/QPushButton>
+#include <QtGui/QSlider>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
 #include <QtGui/QStatusBar>
@@ -51,6 +52,7 @@ public:
     QHBoxLayout *horizontalLayout_3;
     QPushButton *fitButton;
     QPushButton *resetScaleButton;
+    QSpacerItem *horizontalSpacer;
     QVBoxLayout *controlLayout;
     QPushButton *refreshButton;
     QPushButton *suzanneButton;
@@ -68,7 +70,9 @@ public:
     QCheckBox *autofocusCheckBox;
     QGroupBox *viewGroup;
     QVBoxLayout *verticalLayout_4;
+    QHBoxLayout *horizontalLayout_4;
     QDial *dial;
+    QSlider *zoomSlider;
     QHBoxLayout *horizontalLayout_2;
     QSpinBox *spinBox;
     QLabel *label;
@@ -129,6 +133,10 @@ public:
         resetScaleButton->setObjectName(QString::fromUtf8("resetScaleButton"));
 
         horizontalLayout_3->addWidget(resetScaleButton);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer);
 
 
         picLayout->addLayout(horizontalLayout_3);
@@ -213,6 +221,8 @@ public:
         viewGroup->setObjectName(QString::fromUtf8("viewGroup"));
         verticalLayout_4 = new QVBoxLayout(viewGroup);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
         dial = new QDial(viewGroup);
         dial->setObjectName(QString::fromUtf8("dial"));
         QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -226,7 +236,18 @@ public:
         dial->setNotchTarget(2);
         dial->setNotchesVisible(true);
 
-        verticalLayout_4->addWidget(dial);
+        horizontalLayout_4->addWidget(dial);
+
+        zoomSlider = new QSlider(viewGroup);
+        zoomSlider->setObjectName(QString::fromUtf8("zoomSlider"));
+        zoomSlider->setMinimum(1);
+        zoomSlider->setMaximum(200);
+        zoomSlider->setOrientation(Qt::Vertical);
+
+        horizontalLayout_4->addWidget(zoomSlider);
+
+
+        verticalLayout_4->addLayout(horizontalLayout_4);
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
@@ -307,6 +328,8 @@ public:
         QObject::connect(spinBox, SIGNAL(valueChanged(int)), turntable, SLOT(setView(int)));
         QObject::connect(fitButton, SIGNAL(pressed()), turntable, SLOT(fitInView()));
         QObject::connect(resetScaleButton, SIGNAL(pressed()), turntable, SLOT(resetScale()));
+        QObject::connect(zoomSlider, SIGNAL(valueChanged(int)), turntable, SLOT(setZoom(int)));
+        QObject::connect(turntable, SIGNAL(zoomChanged(int)), zoomSlider, SLOT(setValue(int)));
 
         tabWidget->setCurrentIndex(2);
 
@@ -319,7 +342,7 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(preparationTab), QApplication::translate("MainWindow", "Pr\303\251paration", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(adjustmentTab), QApplication::translate("MainWindow", "Ajustement", 0, QApplication::UnicodeUTF8));
-        fitButton->setText(QApplication::translate("MainWindow", "fit", 0, QApplication::UnicodeUTF8));
+        fitButton->setText(QApplication::translate("MainWindow", "Ajuster \303\240 la fen\303\252tre", 0, QApplication::UnicodeUTF8));
         resetScaleButton->setText(QApplication::translate("MainWindow", "1:1", 0, QApplication::UnicodeUTF8));
         refreshButton->setText(QApplication::translate("MainWindow", "Rafra\303\256chir", 0, QApplication::UnicodeUTF8));
         suzanneButton->setText(QApplication::translate("MainWindow", "Suzanne", 0, QApplication::UnicodeUTF8));

@@ -66,7 +66,7 @@
               <item>
                <widget class="QPushButton" name="fitButton">
                 <property name="text">
-                 <string>fit</string>
+                 <string>Ajuster à la fenêtre</string>
                 </property>
                </widget>
               </item>
@@ -76,6 +76,19 @@
                  <string>1:1</string>
                 </property>
                </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </item>
@@ -202,32 +215,49 @@
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_4">
                <item>
-                <widget class="QDial" name="dial">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>50</width>
-                   <height>50</height>
-                  </size>
-                 </property>
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="wrapping">
-                  <bool>true</bool>
-                 </property>
-                 <property name="notchTarget">
-                  <double>2.000000000000000</double>
-                 </property>
-                 <property name="notchesVisible">
-                  <bool>true</bool>
-                 </property>
-                </widget>
+                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                 <item>
+                  <widget class="QDial" name="dial">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>50</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="wrapping">
+                    <bool>true</bool>
+                   </property>
+                   <property name="notchTarget">
+                    <double>2.000000000000000</double>
+                   </property>
+                   <property name="notchesVisible">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSlider" name="zoomSlider">
+                   <property name="minimum">
+                    <number>1</number>
+                   </property>
+                   <property name="maximum">
+                    <number>200</number>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -334,9 +364,11 @@
    <extends>QGraphicsView</extends>
    <header location="global">qturntable.h</header>
    <slots>
+    <signal>zoomChanged(int)</signal>
     <slot>setView(int)</slot>
     <slot>fitInView()</slot>
     <slot>resetScale()</slot>
+    <slot>setZoom(int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -349,8 +381,8 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>859</x>
-     <y>424</y>
+     <x>831</x>
+     <y>439</y>
     </hint>
     <hint type="destinationlabel">
      <x>762</x>
@@ -369,8 +401,8 @@
      <y>458</y>
     </hint>
     <hint type="destinationlabel">
-     <x>859</x>
-     <y>424</y>
+     <x>831</x>
+     <y>439</y>
     </hint>
    </hints>
   </connection>
@@ -413,8 +445,8 @@
    <slot>fitInView()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>330</x>
-     <y>571</y>
+     <x>153</x>
+     <y>588</y>
     </hint>
     <hint type="destinationlabel">
      <x>327</x>
@@ -429,12 +461,44 @@
    <slot>resetScale()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>423</x>
-     <y>570</y>
+     <x>244</x>
+     <y>588</y>
     </hint>
     <hint type="destinationlabel">
      <x>422</x>
      <y>522</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>zoomSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>turntable</receiver>
+   <slot>setZoom(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>842</x>
+     <y>408</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>522</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>turntable</sender>
+   <signal>zoomChanged(int)</signal>
+   <receiver>zoomSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>539</x>
+     <y>333</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>853</x>
+     <y>398</y>
     </hint>
    </hints>
   </connection>

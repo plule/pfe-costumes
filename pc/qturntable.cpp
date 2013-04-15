@@ -6,7 +6,10 @@ QTurntable::QTurntable(QWidget *parent) :
     this->setScene(new QGraphicsScene());
     m_current_pixmap = this->scene()->addPixmap(QPixmap());
     m_current = 0;
-    m_zoom = 0;
+    m_zoom = 1;
+    m_zoom_step = 1.25;
+    m_min_zoom = 1;
+    m_max_zoom = 200;
 }
 
 void QTurntable::wheelEvent(QWheelEvent *e)
@@ -17,14 +20,43 @@ void QTurntable::wheelEvent(QWheelEvent *e)
         e->ignore();
         return;
     }
-    qreal sc = pow(1.25, numSteps); // I use scale factor 1.25
-    this->zoom(sc);
+    //qreal sc = pow(1.25, numSteps); // I use scale factor 1.25
+    this->zoom(numSteps);
     e->accept();
 }
 
-void QTurntable::zoom(qreal factor)
+void QTurntable::zoom(int factor)
 {
-    scale(factor, factor);
+    qreal dfactor = pow(m_zoom_step, factor);
+    if(transform().m11()*dfactor*100 > m_max_zoom)
+        dfactor = (m_max_zoom)/(transform().m11()*100);
+    if(transform().m11()*dfactor*100 < m_min_zoom)
+        dfactor = (m_min_zoom)/(transform().m11()*100);
+    scale(dfactor,dfactor);
+    if(m_zoom != computeZoom()) {
+        m_zoom = computeZoom();
+        emit zoomChanged(m_zoom);
+    }
+}
+
+int QTurntable::computeZoom()
+{
+//    qreal pzoom = log(transform().m11()) / log(m_zoom_step);
+//    return round((pzoom+1)*100);
+    qreal sc = transform().m11();
+    return sc*100;
+}
+
+void QTurntable::setZoom(int zoom)
+{
+    if(zoom != m_zoom) {
+        qreal sc = (qreal)zoom / 100.0;
+        resetMatrix();
+        scale(sc,sc);
+        m_zoom = zoom;
+        emit zoomChanged(m_zoom);
+
+    }
 }
 
 void QTurntable::addPixmap(const QPixmap & pixmap)
@@ -80,9 +112,16 @@ void QTurntable::setAngle(int angle)
 void QTurntable::fitInView()
 {
     QGraphicsView::fitInView(this->items()[0], Qt::KeepAspectRatio);
+    //int new_zoom = pow(m_zoom_step, 1.0/(double)transform().m11())*100;
+    int new_zoom = computeZoom();
+    if(new_zoom != m_zoom){
+        m_zoom = new_zoom;
+        emit zoomChanged(m_zoom);
+    }
 }
 
 void QTurntable::resetScale()
 {
     QGraphicsView::resetMatrix();
+    m_zoom = 100;
 }

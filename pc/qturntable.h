@@ -14,9 +14,9 @@ class QTurntable : public QGraphicsView
 public:
     explicit QTurntable(QWidget *parent = 0);
     virtual void wheelEvent(QWheelEvent *event);
-    void zoom(qreal factor);
     
 signals:
+    void zoomChanged(int zoom);
     
 public slots:
     virtual void addPixmap (const QPixmap &);
@@ -29,12 +29,18 @@ public slots:
     virtual void setAngle(int angle);
     virtual void fitInView();
     virtual void resetScale();
+    virtual void setZoom(int zoom);
+    virtual void zoom(int factor);
     
 
 private:
+    int computeZoom();
+
     QVector<QPixmap> m_pixmaps;
     int m_current;
-    double m_zoom;
+    int m_zoom;
+    int m_min_zoom,m_max_zoom;
+    double m_zoom_step;
     QGraphicsPixmapItem *m_current_pixmap;
 };
 
