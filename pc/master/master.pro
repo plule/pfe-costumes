@@ -20,3 +20,5 @@ LIBS += -lgphoto2 -lgphoto2_port
 FORMS += \
     mainwindow.ui \
     qturntable.ui
+
+TRANSLATIONS = master_fr.ts

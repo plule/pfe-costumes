@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include <QDebug>
 #include <QMouseEvent>
+#include <math.h>
 
 namespace Ui {
 class QTurntable;
@@ -41,6 +42,7 @@ protected:
     virtual void paintEvent ( QPaintEvent * event );
     virtual void mouseMoveEvent(QMouseEvent *event);
     virtual void mousePressEvent ( QMouseEvent * event );
+    virtual void wheelEvent(QWheelEvent * event);
     
 private slots:
     void on_slider_valueChanged(int value);
@@ -52,6 +54,7 @@ private:
     QAbstractSlider *controller;
     QVector<QPixmap> pixmaps;
     int currentPixmap;
+    float zoomFactor;
 
     int lastWidth,lastHeight,lastCurrent;
     bool needRedraw;

@@ -12,6 +12,7 @@ QTurntable::QTurntable(QWidget *parent) :
     lastWidth = -1;
     lastHeight = -1;
     lastCurrent = -1;
+    zoomFactor = 0;
     needRedraw = false;
 }
 
@@ -26,7 +27,7 @@ void QTurntable::paintEvent(QPaintEvent *event)
     {
         QPixmap current = pixmaps.value(currentPixmap);
         if(!current.isNull())
-            this->ui->displayer->setPixmap(current.scaled(ui->displayer->width(), ui->displayer->height(), Qt::KeepAspectRatio));
+            this->ui->displayer->setPixmap(current.scaled(ui->displayer->width()*exp(zoomFactor), ui->displayer->height()*exp(zoomFactor), Qt::KeepAspectRatio));
         else
             this->ui->displayer->clear();
         lastCurrent = currentPixmap;
@@ -41,6 +42,15 @@ void QTurntable::mousePressEvent ( QMouseEvent * event )
 {
     xclick = event->x();
     clickFrame = getAngle();
+    event->accept();
+}
+
+void QTurntable::wheelEvent(QWheelEvent *event)
+{
+    zoomFactor+=((float)event->delta())/1000.0;
+    needRedraw = true;
+    this->update();
+    event->delta();
 }
 
 void QTurntable::mouseMoveEvent(QMouseEvent *event)

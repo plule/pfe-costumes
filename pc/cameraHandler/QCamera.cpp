@@ -201,7 +201,7 @@ void QCamera::captureToCamera(QString *cameraPath)
 {
 	CameraFilePath camera_file_path;
 	int ret;
-	// TODO : ensure memory is set to card
+    // TODO : ensure memory is set to card
     GP_CALL(ret, gp_camera_capture, camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
     if(ret < GP_OK) return;
 	cameraPath->clear();
@@ -243,15 +243,15 @@ int QCamera::captureToFile(QFile *localFile)
 void QCamera::captureToFile(QString path, int nbTry)
 {
     QFile localFile(path);
-
     for(int i = 0; i < nbTry; i++) {
-        if (captureToFile(&localFile) == GP_OK) {
+        int ret = captureToFile(&localFile);
+        if( ret == GP_OK) {
             emit captured(path);
             return;
         }
         Sleeper().sleep(1);
     }
-    emit operation_failed(QString("Could not capture image after ") + QString::number(nbTry) + " times.");
+    emit operation_failed(tr("Could not capture image after %n try(es)", "", nbTry));
 }
 
 void QCamera::captureToFile(const char *name, int nbTry)

@@ -72,8 +72,8 @@ void MainWindow::displayError(QString error)
 
 void MainWindow::timeout()
 {
-    statusBar()->showMessage("Lost camera.");
-    this->displayError("Lost camera... You should try to disconnect and reconnect it.");
+    statusBar()->showMessage(tr("Lost camera."));
+    this->displayError(tr("Lost camera... You should try to disconnect and reconnect it."));
 }
 
 void MainWindow::on_captureButton_clicked()
@@ -85,7 +85,7 @@ void MainWindow::on_captureButton_clicked()
         QString path = QDir::temp().absoluteFilePath("test.jpg");
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
-        this->displayError("No camera connected");
+        this->displayError(tr("No camera connected"));
     }
 }
 
