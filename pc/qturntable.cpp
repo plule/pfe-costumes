@@ -18,11 +18,11 @@ void QTurntable::wheelEvent(QWheelEvent *e)
         return;
     }
     qreal sc = pow(1.25, numSteps); // I use scale factor 1.25
-    this->zoom(sc, mapToScene(e->pos()));
+    this->zoom(sc);
     e->accept();
 }
 
-void QTurntable::zoom(qreal factor, QPointF centerPoint)
+void QTurntable::zoom(qreal factor)
 {
     scale(factor, factor);
 }
@@ -66,8 +66,10 @@ void QTurntable::setCurrentPixmap(QString path)
 
 void QTurntable::setView(int view)
 {
-    m_current = view;
-    m_current_pixmap->setPixmap(m_pixmaps[m_current]);
+    if(view < m_pixmaps.size()) {
+        m_current = view;
+        m_current_pixmap->setPixmap(m_pixmaps[m_current]);
+    }
 }
 
 void QTurntable::setAngle(int angle)

@@ -14,7 +14,7 @@ class QTurntable : public QGraphicsView
 public:
     explicit QTurntable(QWidget *parent = 0);
     virtual void wheelEvent(QWheelEvent *event);
-    void zoom(qreal factor, QPointF centerPoint);
+    void zoom(qreal factor);
     
 signals:
     
