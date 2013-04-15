@@ -5,12 +5,16 @@
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QDebug>
+#include <QWheelEvent>
+#include "math.h"
 
 class QTurntable : public QGraphicsView
 {
     Q_OBJECT
 public:
     explicit QTurntable(QWidget *parent = 0);
+    virtual void wheelEvent(QWheelEvent *event);
+    void zoom(qreal factor, QPointF centerPoint);
     
 signals:
     
@@ -28,6 +32,7 @@ public slots:
 private:
     QVector<QPixmap> m_pixmaps;
     int m_current;
+    double m_zoom;
     QGraphicsPixmapItem *m_current_pixmap;
 };
 

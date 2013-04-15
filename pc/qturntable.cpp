@@ -6,6 +6,25 @@ QTurntable::QTurntable(QWidget *parent) :
     this->setScene(new QGraphicsScene());
     m_current_pixmap = this->scene()->addPixmap(QPixmap());
     m_current = 0;
+    m_zoom = 0;
+}
+
+void QTurntable::wheelEvent(QWheelEvent *e)
+{
+    int numSteps = e->delta() / 15 / 8;
+
+    if (numSteps == 0) {
+        e->ignore();
+        return;
+    }
+    qreal sc = pow(1.25, numSteps); // I use scale factor 1.25
+    this->zoom(sc, mapToScene(e->pos()));
+    e->accept();
+}
+
+void QTurntable::zoom(qreal factor, QPointF centerPoint)
+{
+    scale(factor, factor);
 }
 
 void QTurntable::addPixmap(const QPixmap & pixmap)
