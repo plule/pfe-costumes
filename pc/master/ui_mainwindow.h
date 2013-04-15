@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Apr 15 09:44:12 2013
+** Created: Mon Apr 15 10:42:40 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -50,6 +50,7 @@ public:
     QTurntable *turntable;
     QVBoxLayout *controlLayout;
     QPushButton *refreshButton;
+    QPushButton *suzanneButton;
     QGroupBox *massCaptureBox;
     QVBoxLayout *verticalLayout;
     QPushButton *pushButton;
@@ -120,6 +121,11 @@ public:
         refreshButton->setEnabled(true);
 
         controlLayout->addWidget(refreshButton);
+
+        suzanneButton = new QPushButton(CaptureTab);
+        suzanneButton->setObjectName(QString::fromUtf8("suzanneButton"));
+
+        controlLayout->addWidget(suzanneButton);
 
         massCaptureBox = new QGroupBox(CaptureTab);
         massCaptureBox->setObjectName(QString::fromUtf8("massCaptureBox"));
@@ -275,6 +281,7 @@ public:
         QObject::connect(dial, SIGNAL(valueChanged(int)), spinBox, SLOT(setValue(int)));
         QObject::connect(spinBox, SIGNAL(valueChanged(int)), dial, SLOT(setValue(int)));
         QObject::connect(dial, SIGNAL(sliderMoved(int)), turntable, SLOT(setView(int)));
+        QObject::connect(spinBox, SIGNAL(valueChanged(int)), turntable, SLOT(setView(int)));
 
         tabWidget->setCurrentIndex(2);
 
@@ -288,6 +295,7 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(preparationTab), QApplication::translate("MainWindow", "Pr\303\251paration", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(adjustmentTab), QApplication::translate("MainWindow", "Ajustement", 0, QApplication::UnicodeUTF8));
         refreshButton->setText(QApplication::translate("MainWindow", "Rafra\303\256chir", 0, QApplication::UnicodeUTF8));
+        suzanneButton->setText(QApplication::translate("MainWindow", "Suzanne", 0, QApplication::UnicodeUTF8));
         massCaptureBox->setTitle(QApplication::translate("MainWindow", "Captures multiples", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("MainWindow", "Lancer les captures", 0, QApplication::UnicodeUTF8));
         fromLabel->setText(QApplication::translate("MainWindow", "De : ", 0, QApplication::UnicodeUTF8));

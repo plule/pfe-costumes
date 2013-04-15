@@ -63,6 +63,13 @@
              </widget>
             </item>
             <item>
+             <widget class="QPushButton" name="suzanneButton">
+              <property name="text">
+               <string>Suzanne</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QGroupBox" name="massCaptureBox">
               <property name="title">
                <string>Captures multiples</string>
@@ -344,6 +351,22 @@
     <hint type="destinationlabel">
      <x>417</x>
      <y>347</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>turntable</receiver>
+   <slot>setView(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>692</x>
+     <y>466</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>541</x>
+     <y>445</y>
     </hint>
    </hints>
   </connection>

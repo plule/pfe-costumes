@@ -23,12 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->turntable->setNumber(36);
     ui->dial->setMinimum(0);
     ui->dial->setMaximum(35);
-    for(int i=1; i<=36; ++i)
-    {
-        ui->turntable->setPixmap(i-1, QString("/home/xubuntu/PFE/monkeys/%1.png").arg(i));
-        /*QPixmap px("/home/xubuntu/PFE/monkeys/1.png");
-        ui->turntable->setPixmap(px);*/
-    }
 }
 
 MainWindow::~MainWindow()
@@ -116,5 +110,15 @@ void MainWindow::doConnections()
         connect(cameras[i], SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
         connect(cameras[i], SIGNAL(operation_failed(QString)), this, SLOT(displayError(QString)));
         connect(cameras[i]->getWatchdog(), SIGNAL(timeout()), this, SLOT(timeout()));
+    }
+}
+
+void MainWindow::on_suzanneButton_pressed()
+{
+    this->startWork(tr("Loading views"), 36);
+    for(int i=1; i<=36; ++i)
+    {
+        ui->turntable->setPixmap(i-1, QString("/home/xubuntu/PFE/monkeys/%1.jpg").arg(i));
+        this->ui->workBar->setValue(i);
     }
 }

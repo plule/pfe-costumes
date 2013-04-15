@@ -5,6 +5,7 @@ QTurntable::QTurntable(QWidget *parent) :
 {
     this->setScene(new QGraphicsScene());
     m_current_pixmap = this->scene()->addPixmap(QPixmap());
+    m_current = 0;
 }
 
 void QTurntable::addPixmap(const QPixmap & pixmap)
@@ -24,7 +25,7 @@ void QTurntable::setPixmap(int index, QPixmap &pixmap)
     m_pixmaps[index] = pixmap;
     if(index == m_current)
     {
-        m_current_pixmap->setPixmap(m_pixmaps[m_current]);
+        setView(index);
     }
 }
 

@@ -40,6 +40,8 @@ private slots:
     void on_refreshButton_clicked();
     void timeout();
 
+    void on_suzanneButton_pressed();
+
 private:
     Ui::MainWindow *ui;
     QPhoto::CameraHandler *handler;
