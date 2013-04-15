@@ -61,6 +61,24 @@
               </property>
              </widget>
             </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QPushButton" name="fitButton">
+                <property name="text">
+                 <string>fit</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="resetScaleButton">
+                <property name="text">
+                 <string>1:1</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
            </layout>
           </item>
           <item>
@@ -317,6 +335,8 @@
    <header location="global">qturntable.h</header>
    <slots>
     <slot>setView(int)</slot>
+    <slot>fitInView()</slot>
+    <slot>resetScale()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -383,6 +403,38 @@
     <hint type="destinationlabel">
      <x>541</x>
      <y>445</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fitButton</sender>
+   <signal>pressed()</signal>
+   <receiver>turntable</receiver>
+   <slot>fitInView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>330</x>
+     <y>571</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>327</x>
+     <y>445</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>resetScaleButton</sender>
+   <signal>pressed()</signal>
+   <receiver>turntable</receiver>
+   <slot>resetScale()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>423</x>
+     <y>570</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>422</x>
+     <y>522</y>
     </hint>
    </hints>
   </connection>

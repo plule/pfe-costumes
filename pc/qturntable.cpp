@@ -74,3 +74,13 @@ void QTurntable::setAngle(int angle)
 {
     setView(m_pixmaps.size() * angle / 360);
 }
+
+void QTurntable::fitInView()
+{
+    QGraphicsView::fitInView(this->items()[0], Qt::KeepAspectRatio);
+}
+
+void QTurntable::resetScale()
+{
+    QGraphicsView::resetMatrix();
+}

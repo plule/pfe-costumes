@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Apr 15 11:22:40 2013
+** Created: Mon Apr 15 11:38:51 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -48,6 +48,9 @@ public:
     QHBoxLayout *mainLayout;
     QVBoxLayout *picLayout;
     QTurntable *turntable;
+    QHBoxLayout *horizontalLayout_3;
+    QPushButton *fitButton;
+    QPushButton *resetScaleButton;
     QVBoxLayout *controlLayout;
     QPushButton *refreshButton;
     QPushButton *suzanneButton;
@@ -114,6 +117,21 @@ public:
         turntable->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
         picLayout->addWidget(turntable);
+
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        fitButton = new QPushButton(CaptureTab);
+        fitButton->setObjectName(QString::fromUtf8("fitButton"));
+
+        horizontalLayout_3->addWidget(fitButton);
+
+        resetScaleButton = new QPushButton(CaptureTab);
+        resetScaleButton->setObjectName(QString::fromUtf8("resetScaleButton"));
+
+        horizontalLayout_3->addWidget(resetScaleButton);
+
+
+        picLayout->addLayout(horizontalLayout_3);
 
 
         mainLayout->addLayout(picLayout);
@@ -287,6 +305,8 @@ public:
         QObject::connect(spinBox, SIGNAL(valueChanged(int)), dial, SLOT(setValue(int)));
         QObject::connect(dial, SIGNAL(sliderMoved(int)), turntable, SLOT(setView(int)));
         QObject::connect(spinBox, SIGNAL(valueChanged(int)), turntable, SLOT(setView(int)));
+        QObject::connect(fitButton, SIGNAL(pressed()), turntable, SLOT(fitInView()));
+        QObject::connect(resetScaleButton, SIGNAL(pressed()), turntable, SLOT(resetScale()));
 
         tabWidget->setCurrentIndex(2);
 
@@ -299,6 +319,8 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(preparationTab), QApplication::translate("MainWindow", "Pr\303\251paration", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(adjustmentTab), QApplication::translate("MainWindow", "Ajustement", 0, QApplication::UnicodeUTF8));
+        fitButton->setText(QApplication::translate("MainWindow", "fit", 0, QApplication::UnicodeUTF8));
+        resetScaleButton->setText(QApplication::translate("MainWindow", "1:1", 0, QApplication::UnicodeUTF8));
         refreshButton->setText(QApplication::translate("MainWindow", "Rafra\303\256chir", 0, QApplication::UnicodeUTF8));
         suzanneButton->setText(QApplication::translate("MainWindow", "Suzanne", 0, QApplication::UnicodeUTF8));
         massCaptureBox->setTitle(QApplication::translate("MainWindow", "Captures multiples", 0, QApplication::UnicodeUTF8));

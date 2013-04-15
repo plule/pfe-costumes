@@ -27,6 +27,8 @@ public slots:
     virtual void setCurrentPixmap(QString path);
     virtual void setView(int view);
     virtual void setAngle(int angle);
+    virtual void fitInView();
+    virtual void resetScale();
     
 
 private:

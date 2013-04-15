@@ -121,4 +121,5 @@ void MainWindow::on_suzanneButton_pressed()
         ui->turntable->setPixmap(i-1, QString("/home/xubuntu/PFE/monkeys/%1.jpg").arg(i));
         this->ui->workBar->setValue(i);
     }
+    ui->turntable->fitInView();
 }
