@@ -5,7 +5,7 @@ QTurntable::QTurntable(QWidget *parent) :
 {
     this->setScene(new QGraphicsScene());
     m_current_pixmap = this->scene()->addPixmap(QPixmap());
-    m_current = 0;
+    m_current = -1;
     m_zoom = 1;
     m_zoom_step = 1.25;
     m_min_zoom = 1;
@@ -23,6 +23,16 @@ void QTurntable::wheelEvent(QWheelEvent *e)
     //qreal sc = pow(1.25, numSteps); // I use scale factor 1.25
     this->zoom(numSteps);
     e->accept();
+}
+
+int QTurntable::getZoomStep()
+{
+    return 360 / m_pixmaps.size();
+}
+
+int QTurntable::getAngleStep()
+{
+    return 3;
 }
 
 void QTurntable::zoom(int factor)
@@ -76,7 +86,7 @@ void QTurntable::setPixmap(int index, QPixmap &pixmap)
     m_pixmaps[index] = pixmap;
     if(index == m_current)
     {
-        setView(index);
+        m_current_pixmap->setPixmap(pixmap);
     }
 }
 
@@ -98,15 +108,16 @@ void QTurntable::setCurrentPixmap(QString path)
 
 void QTurntable::setView(int view)
 {
-    if(view < m_pixmaps.size()) {
+    if(view < m_pixmaps.size() && view != m_current) {
         m_current = view;
         m_current_pixmap->setPixmap(m_pixmaps[m_current]);
+        emit angleChanged(360 * m_current / m_pixmaps.size());
     }
 }
 
 void QTurntable::setAngle(int angle)
 {
-    setView(m_pixmaps.size() * angle / 360);
+    setView(round(((double)m_pixmaps.size() * (double)angle) / 360.0));
 }
 
 void QTurntable::fitInView()

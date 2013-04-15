@@ -21,8 +21,6 @@ MainWindow::MainWindow(QWidget *parent) :
     doConnections();
     connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
     ui->turntable->setNumber(36);
-    ui->dial->setMinimum(0);
-    ui->dial->setMaximum(35);
 }
 
 MainWindow::~MainWindow()
@@ -121,5 +119,7 @@ void MainWindow::on_suzanneButton_pressed()
         ui->turntable->setPixmap(i-1, QString("/home/xubuntu/PFE/monkeys/%1.jpg").arg(i));
         this->ui->workBar->setValue(i);
     }
+    ui->turntable->setView(0);
     ui->turntable->fitInView();
+    ui->angleBox->setSingleStep(ui->turntable->getAngleStep());
 }

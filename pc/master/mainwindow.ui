@@ -213,9 +213,9 @@
               <property name="title">
                <string>Vue</string>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_4">
+              <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <layout class="QVBoxLayout" name="angleLayout">
                  <item>
                   <widget class="QDial" name="dial">
                    <property name="sizePolicy">
@@ -230,6 +230,12 @@
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="minimum">
+                    <number>0</number>
+                   </property>
+                   <property name="maximum">
+                    <number>359</number>
+                   </property>
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
                    </property>
@@ -237,13 +243,36 @@
                     <bool>true</bool>
                    </property>
                    <property name="notchTarget">
-                    <double>2.000000000000000</double>
+                    <double>10.000000000000000</double>
                    </property>
                    <property name="notchesVisible">
                     <bool>true</bool>
                    </property>
                   </widget>
                  </item>
+                 <item>
+                  <widget class="QSpinBox" name="angleBox">
+                   <property name="wrapping">
+                    <bool>true</bool>
+                   </property>
+                   <property name="readOnly">
+                    <bool>false</bool>
+                   </property>
+                   <property name="suffix">
+                    <string>°</string>
+                   </property>
+                   <property name="minimum">
+                    <number>0</number>
+                   </property>
+                   <property name="maximum">
+                    <number>359</number>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="zoomLayout">
                  <item>
                   <widget class="QSlider" name="zoomSlider">
                    <property name="minimum">
@@ -257,20 +286,16 @@
                    </property>
                   </widget>
                  </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_2">
                  <item>
-                  <widget class="QSpinBox" name="spinBox"/>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label">
-                   <property name="text">
-                    <string>(y°)</string>
+                  <widget class="QSpinBox" name="zoomBox">
+                   <property name="suffix">
+                    <string>%</string>
                    </property>
-                   <property name="buddy">
-                    <cstring>spinBox</cstring>
+                   <property name="minimum">
+                    <number>1</number>
+                   </property>
+                   <property name="maximum">
+                    <number>200</number>
                    </property>
                   </widget>
                  </item>
@@ -365,79 +390,17 @@
    <header location="global">qturntable.h</header>
    <slots>
     <signal>zoomChanged(int)</signal>
+    <signal>angleChanged(int)</signal>
     <slot>setView(int)</slot>
     <slot>fitInView()</slot>
     <slot>resetScale()</slot>
     <slot>setZoom(int)</slot>
+    <slot>setAngle(int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
  <resources/>
  <connections>
-  <connection>
-   <sender>dial</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBox</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>831</x>
-     <y>439</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>762</x>
-     <y>458</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>dial</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>762</x>
-     <y>458</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>831</x>
-     <y>439</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>dial</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>turntable</receiver>
-   <slot>setView(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>759</x>
-     <y>393</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>417</x>
-     <y>347</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>turntable</receiver>
-   <slot>setView(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>692</x>
-     <y>466</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>541</x>
-     <y>445</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>fitButton</sender>
    <signal>pressed()</signal>
@@ -471,18 +434,98 @@
    </hints>
   </connection>
   <connection>
+   <sender>dial</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>turntable</receiver>
+   <slot>setAngle(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>736</x>
+     <y>407</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>597</x>
+     <y>412</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>angleBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>turntable</receiver>
+   <slot>setAngle(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>695</x>
+     <y>463</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>628</x>
+     <y>466</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>turntable</sender>
+   <signal>angleChanged(int)</signal>
+   <receiver>dial</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>534</x>
+     <y>362</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>734</x>
+     <y>399</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>turntable</sender>
+   <signal>angleChanged(int)</signal>
+   <receiver>angleBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>528</x>
+     <y>514</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>683</x>
+     <y>460</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>zoomSlider</sender>
    <signal>valueChanged(int)</signal>
    <receiver>turntable</receiver>
    <slot>setZoom(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>842</x>
-     <y>408</y>
+     <x>788</x>
+     <y>429</y>
     </hint>
     <hint type="destinationlabel">
-     <x>522</x>
-     <y>242</y>
+     <x>583</x>
+     <y>332</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>zoomBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>turntable</receiver>
+   <slot>setZoom(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>827</x>
+     <y>465</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>449</x>
+     <y>443</y>
     </hint>
    </hints>
   </connection>
@@ -493,12 +536,28 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>539</x>
-     <y>333</y>
+     <x>548</x>
+     <y>301</y>
     </hint>
     <hint type="destinationlabel">
-     <x>853</x>
+     <x>791</x>
      <y>398</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>turntable</sender>
+   <signal>zoomChanged(int)</signal>
+   <receiver>zoomBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>511</x>
+     <y>442</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>845</x>
+     <y>464</y>
     </hint>
    </hints>
   </connection>

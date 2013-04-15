@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Apr 15 17:12:39 2013
+** Created: Mon Apr 15 17:34:49 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -69,13 +69,13 @@ public:
     QPushButton *captureButton;
     QCheckBox *autofocusCheckBox;
     QGroupBox *viewGroup;
-    QVBoxLayout *verticalLayout_4;
-    QHBoxLayout *horizontalLayout_4;
+    QHBoxLayout *horizontalLayout_5;
+    QVBoxLayout *angleLayout;
     QDial *dial;
+    QSpinBox *angleBox;
+    QVBoxLayout *zoomLayout;
     QSlider *zoomSlider;
-    QHBoxLayout *horizontalLayout_2;
-    QSpinBox *spinBox;
-    QLabel *label;
+    QSpinBox *zoomBox;
     QGroupBox *controlGroup;
     QVBoxLayout *verticalLayout_5;
     QPushButton *viewToModelButton;
@@ -219,10 +219,10 @@ public:
 
         viewGroup = new QGroupBox(CaptureTab);
         viewGroup->setObjectName(QString::fromUtf8("viewGroup"));
-        verticalLayout_4 = new QVBoxLayout(viewGroup);
-        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-        horizontalLayout_4 = new QHBoxLayout();
-        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        horizontalLayout_5 = new QHBoxLayout(viewGroup);
+        horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
+        angleLayout = new QVBoxLayout();
+        angleLayout->setObjectName(QString::fromUtf8("angleLayout"));
         dial = new QDial(viewGroup);
         dial->setObjectName(QString::fromUtf8("dial"));
         QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -231,38 +231,46 @@ public:
         sizePolicy.setHeightForWidth(dial->sizePolicy().hasHeightForWidth());
         dial->setSizePolicy(sizePolicy);
         dial->setMinimumSize(QSize(50, 50));
+        dial->setMinimum(0);
+        dial->setMaximum(359);
         dial->setOrientation(Qt::Horizontal);
         dial->setWrapping(true);
-        dial->setNotchTarget(2);
+        dial->setNotchTarget(10);
         dial->setNotchesVisible(true);
 
-        horizontalLayout_4->addWidget(dial);
+        angleLayout->addWidget(dial);
 
+        angleBox = new QSpinBox(viewGroup);
+        angleBox->setObjectName(QString::fromUtf8("angleBox"));
+        angleBox->setWrapping(true);
+        angleBox->setReadOnly(false);
+        angleBox->setMinimum(0);
+        angleBox->setMaximum(359);
+
+        angleLayout->addWidget(angleBox);
+
+
+        horizontalLayout_5->addLayout(angleLayout);
+
+        zoomLayout = new QVBoxLayout();
+        zoomLayout->setObjectName(QString::fromUtf8("zoomLayout"));
         zoomSlider = new QSlider(viewGroup);
         zoomSlider->setObjectName(QString::fromUtf8("zoomSlider"));
         zoomSlider->setMinimum(1);
         zoomSlider->setMaximum(200);
         zoomSlider->setOrientation(Qt::Vertical);
 
-        horizontalLayout_4->addWidget(zoomSlider);
+        zoomLayout->addWidget(zoomSlider);
+
+        zoomBox = new QSpinBox(viewGroup);
+        zoomBox->setObjectName(QString::fromUtf8("zoomBox"));
+        zoomBox->setMinimum(1);
+        zoomBox->setMaximum(200);
+
+        zoomLayout->addWidget(zoomBox);
 
 
-        verticalLayout_4->addLayout(horizontalLayout_4);
-
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        spinBox = new QSpinBox(viewGroup);
-        spinBox->setObjectName(QString::fromUtf8("spinBox"));
-
-        horizontalLayout_2->addWidget(spinBox);
-
-        label = new QLabel(viewGroup);
-        label->setObjectName(QString::fromUtf8("label"));
-
-        horizontalLayout_2->addWidget(label);
-
-
-        verticalLayout_4->addLayout(horizontalLayout_2);
+        horizontalLayout_5->addLayout(zoomLayout);
 
 
         controlLayout->addWidget(viewGroup);
@@ -318,18 +326,19 @@ public:
 #ifndef QT_NO_SHORTCUT
         fromLabel->setBuddy(fromInput);
         toLabel->setBuddy(toInput);
-        label->setBuddy(spinBox);
 #endif // QT_NO_SHORTCUT
 
         retranslateUi(MainWindow);
-        QObject::connect(dial, SIGNAL(valueChanged(int)), spinBox, SLOT(setValue(int)));
-        QObject::connect(spinBox, SIGNAL(valueChanged(int)), dial, SLOT(setValue(int)));
-        QObject::connect(dial, SIGNAL(sliderMoved(int)), turntable, SLOT(setView(int)));
-        QObject::connect(spinBox, SIGNAL(valueChanged(int)), turntable, SLOT(setView(int)));
         QObject::connect(fitButton, SIGNAL(pressed()), turntable, SLOT(fitInView()));
         QObject::connect(resetScaleButton, SIGNAL(pressed()), turntable, SLOT(resetScale()));
+        QObject::connect(dial, SIGNAL(valueChanged(int)), turntable, SLOT(setAngle(int)));
+        QObject::connect(angleBox, SIGNAL(valueChanged(int)), turntable, SLOT(setAngle(int)));
+        QObject::connect(turntable, SIGNAL(angleChanged(int)), dial, SLOT(setValue(int)));
+        QObject::connect(turntable, SIGNAL(angleChanged(int)), angleBox, SLOT(setValue(int)));
         QObject::connect(zoomSlider, SIGNAL(valueChanged(int)), turntable, SLOT(setZoom(int)));
+        QObject::connect(zoomBox, SIGNAL(valueChanged(int)), turntable, SLOT(setZoom(int)));
         QObject::connect(turntable, SIGNAL(zoomChanged(int)), zoomSlider, SLOT(setValue(int)));
+        QObject::connect(turntable, SIGNAL(zoomChanged(int)), zoomBox, SLOT(setValue(int)));
 
         tabWidget->setCurrentIndex(2);
 
@@ -356,7 +365,8 @@ public:
         captureButton->setText(QApplication::translate("MainWindow", "(Re)capturer la vue actuelle", 0, QApplication::UnicodeUTF8));
         autofocusCheckBox->setText(QApplication::translate("MainWindow", "Autofocus", 0, QApplication::UnicodeUTF8));
         viewGroup->setTitle(QApplication::translate("MainWindow", "Vue", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("MainWindow", "(y\302\260)", 0, QApplication::UnicodeUTF8));
+        angleBox->setSuffix(QApplication::translate("MainWindow", "\302\260", 0, QApplication::UnicodeUTF8));
+        zoomBox->setSuffix(QApplication::translate("MainWindow", "%", 0, QApplication::UnicodeUTF8));
         controlGroup->setTitle(QApplication::translate("MainWindow", "Contr\303\264le", 0, QApplication::UnicodeUTF8));
         viewToModelButton->setText(QApplication::translate("MainWindow", "Appliquer rotation", 0, QApplication::UnicodeUTF8));
         autoRotateCheckBox->setText(QApplication::translate("MainWindow", "Tourner automatiquement", 0, QApplication::UnicodeUTF8));
