@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 #include <math.h>
 
+/*
 namespace Ui {
 class QTurntable;
 }
@@ -62,3 +63,4 @@ private:
 };
 
 #endif // QTURNTABLE_H
+*/

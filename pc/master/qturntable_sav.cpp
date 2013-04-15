@@ -1,7 +1,6 @@
 #include "qturntable.h"
-#include "ui_qturntable.h"
 
-QTurntable::QTurntable(QWidget *parent) :
+/*QTurntable::QTurntable(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QTurntable)
 {
@@ -153,3 +152,4 @@ void QTurntable::on_slider_valueChanged(int value)
 {
     setView(value);
 }
+*/

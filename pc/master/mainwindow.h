@@ -44,7 +44,7 @@ private:
     Ui::MainWindow *ui;
     QPhoto::CameraHandler *handler;
     SlotLog *logger;
-    QTurntable *displayer;
+    //QTurntable *displayer;
     QList<QPixmap> *pics;
     QErrorMessage errorMessage;
 

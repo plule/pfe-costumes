@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu Apr 11 16:14:19 2013
+** Created: Mon Apr 15 09:44:12 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -31,6 +31,7 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
+#include <qturntable.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -46,6 +47,7 @@ public:
     QVBoxLayout *verticalLayout_6;
     QHBoxLayout *mainLayout;
     QVBoxLayout *picLayout;
+    QTurntable *turntable;
     QVBoxLayout *controlLayout;
     QPushButton *refreshButton;
     QGroupBox *massCaptureBox;
@@ -102,6 +104,11 @@ public:
         picLayout = new QVBoxLayout();
         picLayout->setObjectName(QString::fromUtf8("picLayout"));
         picLayout->setSizeConstraint(QLayout::SetMaximumSize);
+        turntable = new QTurntable(CaptureTab);
+        turntable->setObjectName(QString::fromUtf8("turntable"));
+
+        picLayout->addWidget(turntable);
+
 
         mainLayout->addLayout(picLayout);
 
@@ -267,6 +274,7 @@ public:
         retranslateUi(MainWindow);
         QObject::connect(dial, SIGNAL(valueChanged(int)), spinBox, SLOT(setValue(int)));
         QObject::connect(spinBox, SIGNAL(valueChanged(int)), dial, SLOT(setValue(int)));
+        QObject::connect(dial, SIGNAL(sliderMoved(int)), turntable, SLOT(setView(int)));
 
         tabWidget->setCurrentIndex(2);
 

@@ -9,12 +9,9 @@ MainWindow::MainWindow(QWidget *parent) :
     logger = new SlotLog();
     handler = new QPhoto::CameraHandler();
     ui->setupUi(this);
-    displayer = new QTurntable(ui->centralwidget);
-    displayer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    displayer->resize(800,600);
-    displayer->setMinimumSize(300,200);
-    displayer->setCustomController(ui->dial);
-    ui->picLayout->addWidget(displayer);
+    ui->turntable->resize(800,600);
+//    ui->turntable->setMinimumSize(300,200);
+//    ui->turntable->setCustomController(ui->dial);
     ui->centralwidget->adjustSize();
 
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
@@ -23,10 +20,14 @@ MainWindow::MainWindow(QWidget *parent) :
     handler->getCameras(&cameras);
     doConnections();
     connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
-    displayer->setNumber(36);
+    ui->turntable->setNumber(36);
+    ui->dial->setMinimum(0);
+    ui->dial->setMaximum(35);
     for(int i=1; i<=36; ++i)
     {
-        displayer->setPixmap(i-1, QString("/home/xubuntu/PFE/monkeys/%1.png").arg(i));
+        ui->turntable->setPixmap(i-1, QString("/home/xubuntu/PFE/monkeys/%1.png").arg(i));
+        /*QPixmap px("/home/xubuntu/PFE/monkeys/1.png");
+        ui->turntable->setPixmap(px);*/
     }
 }
 
@@ -58,9 +59,9 @@ void MainWindow::updateStatusBar(QString message)
 
 void MainWindow::displayPicture(QString path)
 {
-    QPixmap pic(path);
-    if(!pic.isNull())
-        displayer->addPixmap(pic);
+//    QPixmap pic(path);
+//    if(!pic.isNull())
+//        ui->turntable->addPixmap(pic);
 }
 
 void MainWindow::displayError(QString error)
@@ -110,7 +111,7 @@ void MainWindow::doConnections()
         connect(cameras[i], SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
         connect(cameras[i], SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
         //connect(cameras[i], SIGNAL(captured(QString)), this, SLOT(displayPicture(QString)));
-        connect(cameras[i], SIGNAL(captured(QString)), this->displayer, SLOT(setCurrentPixmap(QString)));
+        connect(cameras[i], SIGNAL(captured(QString)), this->ui->turntable, SLOT(setCurrentPixmap(QString)));
 
         connect(cameras[i], SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
         connect(cameras[i], SIGNAL(operation_failed(QString)), this, SLOT(displayError(QString)));
