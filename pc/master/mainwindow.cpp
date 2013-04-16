@@ -10,8 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
     handler = new QPhoto::CameraHandler();
     ui->setupUi(this);
     ui->turntable->resize(800,600);
-//    ui->turntable->setMinimumSize(300,200);
-//    ui->turntable->setCustomController(ui->dial);
     ui->centralwidget->adjustSize();
 
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
@@ -47,13 +45,6 @@ void MainWindow::updateStatusBar(QString message)
         this->statusBar()->showMessage(sender()->objectName() + " : " + message);
     else
         this->statusBar()->showMessage(message);
-}
-
-void MainWindow::displayPicture(QString path)
-{
-//    QPixmap pic(path);
-//    if(!pic.isNull())
-//        ui->turntable->addPixmap(pic);
 }
 
 void MainWindow::displayError(QString error)
@@ -102,7 +93,6 @@ void MainWindow::doConnections()
 
         connect(cameras[i], SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
         connect(cameras[i], SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
-        //connect(cameras[i], SIGNAL(captured(QString)), this, SLOT(displayPicture(QString)));
         connect(cameras[i], SIGNAL(captured(QString)), this->ui->turntable, SLOT(setCurrentPixmap(QString)));
 
         connect(cameras[i], SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));

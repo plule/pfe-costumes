@@ -17,5 +17,6 @@ void SlotLog::progress_update(int current) {
 }
 
 void SlotLog::progress_start(QString task, int target) {
+    (void)target;
     qDebug() << "Slot start task : " << sender()->objectName() << " : " << task;
 }

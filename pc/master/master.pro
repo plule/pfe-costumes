@@ -1,15 +1,15 @@
 #DESTDIR = ../bin
-INCLUDEPATH += ..
+INCLUDEPATH += .. ../common
 VPATH = ..
 
 SOURCES += master/main.cpp cameraHandler/cameraHandler.cpp cameraHandler/QCamera.cpp common/SlotLog.cpp \	
     mainwindow.cpp \
     ../cameraHandler/cameraexception.cpp \
-    ../qturntable.cpp
+    ../common/qturntable.cpp
 HEADERS += cameraHandler/cameraHandler.h cameraHandler/QCamera.h common/SlotLog.h \
     mainwindow.h \
     ../cameraHandler/cameraexception.h \
-    ../qturntable.h
+    ../common/qturntable.h
 
 CONFIG += qt warn_on release
 

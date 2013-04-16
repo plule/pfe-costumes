@@ -182,7 +182,7 @@ QCamera::QCamera(const char *model, const char *port, CameraAbilitiesList *abili
         throw CameraException(QString("Failed to connect to camera : ") + QString(gp_result_as_string(ret)));
     watchdog = new QTimer(QApplication::instance()->thread());
     watchdog->setSingleShot(true);
-    watchdog->setInterval(3000);
+    watchdog->setInterval(5000);
     connect(this, SIGNAL(camera_answered()), watchdog, SLOT(stop()));
     connect(this, SIGNAL(wait_for_camera_answer()), watchdog, SLOT(start()));
     camThread.start();

@@ -20,7 +20,6 @@ void QTurntable::wheelEvent(QWheelEvent *e)
         e->ignore();
         return;
     }
-    //qreal sc = pow(1.25, numSteps); // I use scale factor 1.25
     this->zoom(numSteps);
     e->accept();
 }
@@ -51,8 +50,6 @@ void QTurntable::zoom(int factor)
 
 int QTurntable::computeZoom()
 {
-//    qreal pzoom = log(transform().m11()) / log(m_zoom_step);
-//    return round((pzoom+1)*100);
     qreal sc = transform().m11();
     return sc*100;
 }
@@ -123,7 +120,6 @@ void QTurntable::setAngle(int angle)
 void QTurntable::fitInView()
 {
     QGraphicsView::fitInView(this->items()[0], Qt::KeepAspectRatio);
-    //int new_zoom = pow(m_zoom_step, 1.0/(double)transform().m11())*100;
     int new_zoom = computeZoom();
     if(new_zoom != m_zoom){
         m_zoom = new_zoom;
