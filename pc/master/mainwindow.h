@@ -10,7 +10,6 @@
 #include <QTimer>
 #include <QList>
 #include <QErrorMessage>
-#include "qphotodisplayer.h"
 #include "qturntable.h"
 #include "cameraHandler/cameraHandler.h"
 #include "cameraHandler/QCamera.h"
