@@ -13,16 +13,15 @@ int main(int argc, char *argv[])
 
     QTranslator translator;
     QLocale locale;
-    foreach(QString strlocale, locale.uiLanguages()) {
+
+    translator.load(QDir(a.applicationDirPath()).filePath("master_fr"));
+    a.installTranslator(&translator);
+    /*foreach(QString strlocale, locale.uiLanguages()) {
         if(translator.load(QDir(a.applicationDirPath()).filePath("master_"+strlocale))) {
             a.installTranslator(&translator);
             break;
         }
-    }
-
-    /*QTranslator translator;
-    translator.load(QString("master_") + locale);
-    a.installTranslator(&translator);*/
+    }*/
 
     MainWindow w;
     w.show();
