@@ -14,6 +14,7 @@
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
 #include "common/slotlog.h"
+
 namespace Ui {
 class MainWindow;
 }
