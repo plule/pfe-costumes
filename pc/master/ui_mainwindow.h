@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Apr 15 17:34:49 2013
+** Created: Tue Apr 16 09:26:36 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -349,27 +349,27 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
-        tabWidget->setTabText(tabWidget->indexOf(preparationTab), QApplication::translate("MainWindow", "Pr\303\251paration", 0, QApplication::UnicodeUTF8));
-        tabWidget->setTabText(tabWidget->indexOf(adjustmentTab), QApplication::translate("MainWindow", "Ajustement", 0, QApplication::UnicodeUTF8));
-        fitButton->setText(QApplication::translate("MainWindow", "Ajuster \303\240 la fen\303\252tre", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(preparationTab), QApplication::translate("MainWindow", "Preparation", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(adjustmentTab), QApplication::translate("MainWindow", "Adjustment", 0, QApplication::UnicodeUTF8));
+        fitButton->setText(QApplication::translate("MainWindow", "Fit to window", 0, QApplication::UnicodeUTF8));
         resetScaleButton->setText(QApplication::translate("MainWindow", "1:1", 0, QApplication::UnicodeUTF8));
-        refreshButton->setText(QApplication::translate("MainWindow", "Rafra\303\256chir", 0, QApplication::UnicodeUTF8));
+        refreshButton->setText(QApplication::translate("MainWindow", "Refresh", 0, QApplication::UnicodeUTF8));
         suzanneButton->setText(QApplication::translate("MainWindow", "Suzanne", 0, QApplication::UnicodeUTF8));
-        massCaptureBox->setTitle(QApplication::translate("MainWindow", "Captures multiples", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "Lancer les captures", 0, QApplication::UnicodeUTF8));
-        fromLabel->setText(QApplication::translate("MainWindow", "De : ", 0, QApplication::UnicodeUTF8));
+        massCaptureBox->setTitle(QApplication::translate("MainWindow", "Mass capture", 0, QApplication::UnicodeUTF8));
+        pushButton->setText(QApplication::translate("MainWindow", "Launch mass capture", 0, QApplication::UnicodeUTF8));
+        fromLabel->setText(QApplication::translate("MainWindow", "From : ", 0, QApplication::UnicodeUTF8));
         fromInput->setSuffix(QApplication::translate("MainWindow", "\302\260", 0, QApplication::UnicodeUTF8));
-        toLabel->setText(QApplication::translate("MainWindow", "\303\200 : ", 0, QApplication::UnicodeUTF8));
+        toLabel->setText(QApplication::translate("MainWindow", "To : ", 0, QApplication::UnicodeUTF8));
         toInput->setSuffix(QApplication::translate("MainWindow", "\302\260", 0, QApplication::UnicodeUTF8));
-        singleCaptureGroup->setTitle(QApplication::translate("MainWindow", "Capture unique", 0, QApplication::UnicodeUTF8));
-        captureButton->setText(QApplication::translate("MainWindow", "(Re)capturer la vue actuelle", 0, QApplication::UnicodeUTF8));
+        singleCaptureGroup->setTitle(QApplication::translate("MainWindow", "Single capture", 0, QApplication::UnicodeUTF8));
+        captureButton->setText(QApplication::translate("MainWindow", "(Re)capture current view", 0, QApplication::UnicodeUTF8));
         autofocusCheckBox->setText(QApplication::translate("MainWindow", "Autofocus", 0, QApplication::UnicodeUTF8));
-        viewGroup->setTitle(QApplication::translate("MainWindow", "Vue", 0, QApplication::UnicodeUTF8));
+        viewGroup->setTitle(QApplication::translate("MainWindow", "View", 0, QApplication::UnicodeUTF8));
         angleBox->setSuffix(QApplication::translate("MainWindow", "\302\260", 0, QApplication::UnicodeUTF8));
         zoomBox->setSuffix(QApplication::translate("MainWindow", "%", 0, QApplication::UnicodeUTF8));
-        controlGroup->setTitle(QApplication::translate("MainWindow", "Contr\303\264le", 0, QApplication::UnicodeUTF8));
-        viewToModelButton->setText(QApplication::translate("MainWindow", "Appliquer rotation", 0, QApplication::UnicodeUTF8));
-        autoRotateCheckBox->setText(QApplication::translate("MainWindow", "Tourner automatiquement", 0, QApplication::UnicodeUTF8));
+        controlGroup->setTitle(QApplication::translate("MainWindow", "Control", 0, QApplication::UnicodeUTF8));
+        viewToModelButton->setText(QApplication::translate("MainWindow", "Apply rotation", 0, QApplication::UnicodeUTF8));
+        autoRotateCheckBox->setText(QApplication::translate("MainWindow", "Automatic rotation", 0, QApplication::UnicodeUTF8));
         workBar->setFormat(QString());
         tabWidget->setTabText(tabWidget->indexOf(CaptureTab), QApplication::translate("MainWindow", "Capture", 0, QApplication::UnicodeUTF8));
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", 0, QApplication::UnicodeUTF8));

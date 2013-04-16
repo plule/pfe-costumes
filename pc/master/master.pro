@@ -1,4 +1,4 @@
-DESTDIR = ../bin
+#DESTDIR = ../bin
 INCLUDEPATH += ..
 VPATH = ..
 

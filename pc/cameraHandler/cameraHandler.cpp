@@ -62,7 +62,7 @@ int CameraHandler::init()
         /* Create the camera object from the name and the port */
         cameras[i] = new QCamera(name, port, abilities, portinfolist);
     }
-    emit message(QString::number(nCameras) + " camera(s) found.");
+    emit message(tr("%n camera(s) found.", "", nCameras));
     return GP_OK;
 }
 

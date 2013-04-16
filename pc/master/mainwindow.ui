@@ -22,12 +22,12 @@
       </property>
       <widget class="QWidget" name="preparationTab">
        <attribute name="title">
-        <string>Préparation</string>
+        <string>Preparation</string>
        </attribute>
       </widget>
       <widget class="QWidget" name="adjustmentTab">
        <attribute name="title">
-        <string>Ajustement</string>
+        <string>Adjustment</string>
        </attribute>
       </widget>
       <widget class="QWidget" name="CaptureTab">
@@ -66,7 +66,7 @@
               <item>
                <widget class="QPushButton" name="fitButton">
                 <property name="text">
-                 <string>Ajuster à la fenêtre</string>
+                 <string>Fit to window</string>
                 </property>
                </widget>
               </item>
@@ -105,7 +105,7 @@
                <bool>true</bool>
               </property>
               <property name="text">
-               <string>Rafraîchir</string>
+               <string>Refresh</string>
               </property>
              </widget>
             </item>
@@ -119,13 +119,13 @@
             <item>
              <widget class="QGroupBox" name="massCaptureBox">
               <property name="title">
-               <string>Captures multiples</string>
+               <string>Mass capture</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout">
                <item>
                 <widget class="QPushButton" name="pushButton">
                  <property name="text">
-                  <string>Lancer les captures</string>
+                  <string>Launch mass capture</string>
                  </property>
                 </widget>
                </item>
@@ -134,7 +134,7 @@
                  <item>
                   <widget class="QLabel" name="fromLabel">
                    <property name="text">
-                    <string>De : </string>
+                    <string>From : </string>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -157,7 +157,7 @@
                  <item>
                   <widget class="QLabel" name="toLabel">
                    <property name="text">
-                    <string>À : </string>
+                    <string>To : </string>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -188,13 +188,13 @@
             <item>
              <widget class="QGroupBox" name="singleCaptureGroup">
               <property name="title">
-               <string>Capture unique</string>
+               <string>Single capture</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_3">
                <item>
                 <widget class="QPushButton" name="captureButton">
                  <property name="text">
-                  <string>(Re)capturer la vue actuelle</string>
+                  <string>(Re)capture current view</string>
                  </property>
                 </widget>
                </item>
@@ -211,7 +211,7 @@
             <item>
              <widget class="QGroupBox" name="viewGroup">
               <property name="title">
-               <string>Vue</string>
+               <string>View</string>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
@@ -307,20 +307,20 @@
             <item>
              <widget class="QGroupBox" name="controlGroup">
               <property name="title">
-               <string>Contrôle</string>
+               <string>Control</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_5">
                <item>
                 <widget class="QPushButton" name="viewToModelButton">
                  <property name="text">
-                  <string>Appliquer rotation</string>
+                  <string>Apply rotation</string>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="QCheckBox" name="autoRotateCheckBox">
                  <property name="text">
-                  <string>Tourner automatiquement</string>
+                  <string>Automatic rotation</string>
                  </property>
                 </widget>
                </item>
