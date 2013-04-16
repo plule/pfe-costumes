@@ -2,11 +2,16 @@
 INCLUDEPATH += .. ../common
 VPATH = ..
 
-SOURCES += master/main.cpp cameraHandler/cameraHandler.cpp cameraHandler/QCamera.cpp common/SlotLog.cpp \	
+SOURCES += master/main.cpp \
+    camerahandler/camerahandler.cpp \
+    camerahandler/qcamera.cpp \
+    common/slotlog.cpp \
     mainwindow.cpp \
-    ../cameraHandler/cameraexception.cpp \
+    ../camerahandler/cameraexception.cpp \
     ../common/qturntable.cpp
-HEADERS += cameraHandler/cameraHandler.h cameraHandler/QCamera.h common/SlotLog.h \
+HEADERS += camerahandler/camerahandler.h \
+    camerahandler/qcamera.h \
+    common/slotlog.h \
     mainwindow.h \
     ../cameraHandler/cameraexception.h \
     ../common/qturntable.h

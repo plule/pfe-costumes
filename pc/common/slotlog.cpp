@@ -1,4 +1,4 @@
-#include "SlotLog.h"
+#include "slotlog.h"
 
 void SlotLog::error(QString error) {
     qDebug() << "Slot error : " << sender()->objectName() << " : " << error;

@@ -1,4 +1,4 @@
-#include "QCamera.h"
+#include "qcamera.h"
 
 namespace QPhoto
 {

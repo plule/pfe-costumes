@@ -11,9 +11,9 @@
 #include <QList>
 #include <QErrorMessage>
 #include "common/qturntable.h"
-#include "cameraHandler/cameraHandler.h"
-#include "cameraHandler/QCamera.h"
-#include "common/SlotLog.h"
+#include "camerahandler/camerahandler.h"
+#include "camerahandler/qcamera.h"
+#include "common/slotlog.h"
 namespace Ui {
 class MainWindow;
 }
