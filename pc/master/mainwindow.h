@@ -12,10 +12,16 @@
 #include <QErrorMessage>
 #include <QSettings>
 #include <QStringList>
+#include <QFormLayout>
+#include <QMap>
+#include <QLineEdit>
+#include <QSpinBox>
+#include <QTextEdit>
 #include "common/qturntable.h"
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
 #include "common/slotlog.h"
+#include "common/costume.h"
 
 #define GROUP_INFO "costume_informations"
 
@@ -51,8 +57,10 @@ private:
     SlotLog *logger;
     QList<QPixmap> *pics;
     QErrorMessage errorMessage;
+    QMap<QString, QWidget*> infoWidgets;
 
     void doConnections();
+    void initInfoLayout(QFormLayout *layout, const QList<Costume_info> infoList);
 };
 
 #endif // MAINWINDOW_H

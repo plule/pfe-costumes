@@ -2,6 +2,59 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR">
 <context>
+    <name>Costume</name>
+    <message>
+        <location filename="../common/costume.cpp" line="14"/>
+        <source>Piece Director</source>
+        <translation>Metteur en scène</translation>
+    </message>
+    <message>
+        <location filename="../common/costume.cpp" line="15"/>
+        <source>Piece Name</source>
+        <translation>Nom de la pièce</translation>
+    </message>
+    <message>
+        <location filename="../common/costume.cpp" line="16"/>
+        <source>Piece Writer</source>
+        <translation>Auteur de la pièce</translation>
+    </message>
+    <message>
+        <location filename="../common/costume.cpp" line="17"/>
+        <source>Piece Type</source>
+        <translation>Type de pièce</translation>
+    </message>
+    <message>
+        <location filename="../common/costume.cpp" line="18"/>
+        <source>Character Name</source>
+        <translation>Nom du personnage</translation>
+    </message>
+    <message>
+        <location filename="../common/costume.cpp" line="19"/>
+        <source>Worn by : </source>
+        <translation>Porté par : </translation>
+    </message>
+    <message>
+        <location filename="../common/costume.cpp" line="20"/>
+        <source>Year</source>
+        <translation>Année</translation>
+    </message>
+    <message>
+        <location filename="../common/costume.cpp" line="21"/>
+        <source>Designer</source>
+        <translation>Costumier</translation>
+    </message>
+    <message>
+        <location filename="../common/costume.cpp" line="22"/>
+        <source>Collection</source>
+        <translation>Collection</translation>
+    </message>
+    <message>
+        <location filename="../common/costume.cpp" line="23"/>
+        <source>Description</source>
+        <translation>Description</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="14"/>
@@ -118,82 +171,71 @@
         <translation>Informations</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="372"/>
         <source>Director</source>
-        <translation>Metteur en scène</translation>
+        <translation type="obsolete">Metteur en scène</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="382"/>
         <source>Piece</source>
-        <translation>Pièce</translation>
+        <translation type="obsolete">Pièce</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="392"/>
         <source>Character Name</source>
-        <translation>Nom du personnage</translation>
+        <translation type="obsolete">Nom du personnage</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="406"/>
         <source>Worn by</source>
-        <translation>Porté par</translation>
+        <translation type="obsolete">Porté par</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="416"/>
         <source>Year</source>
-        <translation>Année</translation>
+        <translation type="obsolete">Année</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="436"/>
         <source>Designer</source>
-        <translation>Costumier</translation>
+        <translation type="obsolete">Costumier</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="446"/>
         <source>Collection</source>
-        <translation>Collection</translation>
+        <translation type="obsolete">Collection</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="456"/>
         <source>Description</source>
-        <translation>Description</translation>
+        <translation type="obsolete">Description</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="466"/>
         <source>Type</source>
-        <translation>Type de pièce</translation>
+        <translation type="obsolete">Type de pièce</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="476"/>
         <source>Writer</source>
-        <translation>Auteur</translation>
+        <translation type="obsolete">Auteur</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="488"/>
         <source>Save</source>
-        <translation>Sauvegarder</translation>
+        <translation type="obsolete">Sauvegarder</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="511"/>
+        <location filename="mainwindow.ui" line="386"/>
         <source>toolBar</source>
         <translation>Barre d&apos;état</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="58"/>
+        <location filename="mainwindow.cpp" line="61"/>
         <source>Lost camera.</source>
         <translation>L&apos;appareil photo ne répond plus.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="59"/>
+        <location filename="mainwindow.cpp" line="62"/>
         <source>Lost camera... You should try to disconnect and reconnect it.</source>
         <translation>L&apos;appareil photo ne répond plus, vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="71"/>
+        <location filename="mainwindow.cpp" line="74"/>
         <source>No camera connected</source>
         <translation>Aucun appareil photo détecté</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="105"/>
+        <location filename="mainwindow.cpp" line="129"/>
         <source>Loading views</source>
         <translation>Chargement des vues</translation>
     </message>

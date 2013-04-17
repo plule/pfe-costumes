@@ -360,134 +360,9 @@
        <attribute name="title">
         <string>Informations</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
+       <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
-         <layout class="QFormLayout" name="infoLayout">
-          <property name="fieldGrowthPolicy">
-           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-          </property>
-          <item row="0" column="0">
-           <widget class="QLabel" name="infoDirectorLabel">
-            <property name="text">
-             <string>Director</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="infoDirector"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="infoPieceLabel">
-            <property name="text">
-             <string>Piece</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="infoPiece"/>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="infoCharacterLabel">
-            <property name="text">
-             <string>Character Name</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QLineEdit" name="infoCharacter">
-            <property name="placeholderText">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="infoWearerLabel">
-            <property name="text">
-             <string>Worn by</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QLineEdit" name="infoWearer"/>
-          </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="infoYearLabel">
-            <property name="text">
-             <string>Year</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QSpinBox" name="infoYear">
-            <property name="minimum">
-             <number>-9999</number>
-            </property>
-            <property name="maximum">
-             <number>9999</number>
-            </property>
-            <property name="value">
-             <number>2000</number>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="infoDesignerLabel">
-            <property name="text">
-             <string>Designer</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="1">
-           <widget class="QLineEdit" name="infoDesigner"/>
-          </item>
-          <item row="8" column="0">
-           <widget class="QLabel" name="infoCollectionLabel">
-            <property name="text">
-             <string>Collection</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="1">
-           <widget class="QLineEdit" name="infoCollection"/>
-          </item>
-          <item row="9" column="0">
-           <widget class="QLabel" name="infoDescriptionLabel">
-            <property name="text">
-             <string>Description</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="1">
-           <widget class="QTextEdit" name="infoDescription"/>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="infoTypeLabel">
-            <property name="text">
-             <string>Type</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="infoType"/>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="infoWriterLabel">
-            <property name="text">
-             <string>Writer</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="infoWriter"/>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="saveButton">
-          <property name="text">
-           <string>Save</string>
-          </property>
-         </widget>
+         <layout class="QFormLayout" name="infoLayout"/>
         </item>
        </layout>
       </widget>
@@ -537,34 +412,18 @@
  <resources/>
  <connections>
   <connection>
-   <sender>fitButton</sender>
-   <signal>pressed()</signal>
-   <receiver>turntable</receiver>
-   <slot>fitInView()</slot>
+   <sender>turntable</sender>
+   <signal>angleChanged(int)</signal>
+   <receiver>dial</receiver>
+   <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>153</x>
-     <y>588</y>
+     <x>534</x>
+     <y>362</y>
     </hint>
     <hint type="destinationlabel">
-     <x>327</x>
-     <y>445</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>resetScaleButton</sender>
-   <signal>pressed()</signal>
-   <receiver>turntable</receiver>
-   <slot>resetScale()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>244</x>
-     <y>588</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>422</x>
-     <y>522</y>
+     <x>734</x>
+     <y>399</y>
     </hint>
    </hints>
   </connection>
@@ -581,6 +440,22 @@
     <hint type="destinationlabel">
      <x>597</x>
      <y>412</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>turntable</sender>
+   <signal>zoomChanged(int)</signal>
+   <receiver>zoomSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>548</x>
+     <y>301</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>791</x>
+     <y>398</y>
     </hint>
    </hints>
   </connection>
@@ -603,22 +478,6 @@
   <connection>
    <sender>turntable</sender>
    <signal>angleChanged(int)</signal>
-   <receiver>dial</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>534</x>
-     <y>362</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>734</x>
-     <y>399</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>turntable</sender>
-   <signal>angleChanged(int)</signal>
    <receiver>angleBox</receiver>
    <slot>setValue(int)</slot>
    <hints>
@@ -629,22 +488,6 @@
     <hint type="destinationlabel">
      <x>683</x>
      <y>460</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>zoomSlider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>turntable</receiver>
-   <slot>setZoom(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>788</x>
-     <y>429</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>583</x>
-     <y>332</y>
     </hint>
    </hints>
   </connection>
@@ -667,22 +510,6 @@
   <connection>
    <sender>turntable</sender>
    <signal>zoomChanged(int)</signal>
-   <receiver>zoomSlider</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>548</x>
-     <y>301</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>791</x>
-     <y>398</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>turntable</sender>
-   <signal>zoomChanged(int)</signal>
    <receiver>zoomBox</receiver>
    <slot>setValue(int)</slot>
    <hints>
@@ -693,6 +520,54 @@
     <hint type="destinationlabel">
      <x>845</x>
      <y>464</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>zoomSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>turntable</receiver>
+   <slot>setZoom(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>788</x>
+     <y>429</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>583</x>
+     <y>332</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>resetScaleButton</sender>
+   <signal>pressed()</signal>
+   <receiver>turntable</receiver>
+   <slot>resetScale()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>211</x>
+     <y>588</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>422</x>
+     <y>522</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fitButton</sender>
+   <signal>pressed()</signal>
+   <receiver>turntable</receiver>
+   <slot>fitInView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>120</x>
+     <y>588</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>327</x>
+     <y>445</y>
     </hint>
    </hints>
   </connection>

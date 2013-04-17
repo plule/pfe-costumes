@@ -12,6 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->turntable->resize(800,600);
     ui->centralwidget->adjustSize();
 
+    Costume::InitDefaultInfos(); // hack because tr() won't work out of the class
+    initInfoLayout(ui->infoLayout, Costume::default_infos);
+
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
     connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
 
@@ -97,6 +100,27 @@ void MainWindow::doConnections()
         connect(cameras[i], SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
         connect(cameras[i], SIGNAL(operation_failed(QString)), this, SLOT(displayError(QString)));
         connect(cameras[i]->getWatchdog(), SIGNAL(timeout()), this, SLOT(timeout()));
+    }
+}
+
+void MainWindow::initInfoLayout(QFormLayout *layout, const QList<Costume_info> infoList)
+{
+    foreach(Costume_info info, infoList)
+    {
+        QWidget *widget = 0;
+        if(info.type == ShortString)
+            widget = new QLineEdit(this);
+        else if(info.type == Number)
+            widget = new QSpinBox(this);
+        else if(info.type == LongString)
+            widget = new QTextEdit(this);
+        else
+            qWarning() << QString("Unknown field type for field ") + info.name;
+
+        if(widget != 0) {
+            infoWidgets.insert(info.key, widget);
+            layout->addRow(info.name, widget);
+        }
     }
 }
 

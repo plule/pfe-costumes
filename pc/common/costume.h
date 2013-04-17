@@ -25,14 +25,15 @@ class Costume : public QObject
 {
     Q_OBJECT
 
-    static const QList<Costume_info> default_infos;
 public:
     explicit Costume(QObject *parent = 0);
+    static void InitDefaultInfos();
     QVariant getInfo(QString key);
     Costume_info getCompleteInfo(QString key);
     Costume_info getCompleteDefaultInfo(QString key);
     QList<Costume_info> getInformations();
     bool setInformation(QString key, QVariant value);
+    static QList<Costume_info> default_infos;
 
     
 signals:
