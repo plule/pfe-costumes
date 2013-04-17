@@ -2,6 +2,8 @@
 INCLUDEPATH += .. ../common
 VPATH = ..
 
+QT += sql
+
 SOURCES += master/main.cpp \
     camerahandler/camerahandler.cpp \
     camerahandler/qcamera.cpp \

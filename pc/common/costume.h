@@ -2,6 +2,7 @@
 #define COSTUME_H
 
 #include <QObject>
+#include <QMap>
 #include <QVariant>
 
 enum Costume_info_type {
@@ -13,13 +14,15 @@ enum Costume_info_type {
 };
 
 struct Costume_info {
-    QString key;
     Costume_info_type type;
     QString name;
-    QVariant value;
-    Costume_info( QString k, Costume_info_type t, QString n, QVariant v ) : key(k), type(t), name(n), value(v) {}
-    Costume_info( QString k, Costume_info_type t, QString n) : key(k), type(t), name(n) {}
+    int order;
+    static int last_order;
+    Costume_info( Costume_info_type t, QString n) : type(t), name(n) {order = last_order++;}
     Costume_info() {type = Invalid;}
+    friend bool operator<(const Costume_info& left, const Costume_info& right){
+        return left.order < right.order;
+    }
 };
 
 class Costume : public QObject
@@ -30,11 +33,10 @@ public:
     explicit Costume(QObject *parent = 0);
     static void InitDefaultInfos();
     QVariant getInfo(QString key);
-    Costume_info getCompleteInfo(QString key);
-    Costume_info getCompleteDefaultInfo(QString key);
-    QList<Costume_info> getInformations();
-    bool setInformation(QString key, QVariant value);
-    static QList<Costume_info> default_infos;
+    Costume_info getInfoType(QString key);
+    QMap<QString, QVariant> getInfos();
+    bool setInfo(QString key, QVariant value);
+    static QMap<QString, Costume_info> valid_informations;
 
     
 signals:
@@ -42,7 +44,9 @@ signals:
 public slots:
 
 private:
-    QList<Costume_info> informations;
+
+    //QList<Costume_info> informations;
+    QMap<QString, QVariant> informations;
 };
 
 #endif // COSTUME_H

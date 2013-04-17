@@ -7,19 +7,20 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     logger = new SlotLog();
     handler = new QPhoto::CameraHandler();
-
     ui->setupUi(this);
     ui->turntable->resize(800,600);
     ui->centralwidget->adjustSize();
 
     Costume::InitDefaultInfos(); // hack because tr() won't work out of the class
-    initInfoLayout(ui->infoLayout, Costume::default_infos);
+    initInfoLayout(ui->infoLayout, Costume::valid_informations);
 
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
     connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
 
     handler->init();
     doConnections();
+    qDebug() << collection.init(QFileDialog::getOpenFileName(this, tr("Open collection"), QDir::home().absolutePath()));
+    collection.createCollectionTable();
     ui->turntable->setNumber(36);
 }
 
@@ -102,11 +103,21 @@ void MainWindow::doConnections()
         connect(cameras[i]->getWatchdog(), SIGNAL(timeout()), this, SLOT(timeout()));
     }
 }
+typedef QPair<Costume_info,QString> info_for_sort;
 
-void MainWindow::initInfoLayout(QFormLayout *layout, const QList<Costume_info> infoList)
+void MainWindow::initInfoLayout(QFormLayout *layout, QMap<QString, Costume_info> valid_informations)
 {
-    foreach(Costume_info info, infoList)
+    QList<QPair<Costume_info, QString> > orderedInfos;
+
+    foreach(QString key, valid_informations.keys())
+        orderedInfos << QPair<Costume_info, QString>(valid_informations.value(key), key);
+
+    qSort(orderedInfos);
+
+    foreach(info_for_sort pair, orderedInfos)
     {
+        Costume_info info = pair.first;
+        QString key = pair.second;
         QWidget *widget = 0;
         if(info.type == ShortString)
             widget = new QLineEdit(this);
@@ -125,12 +136,12 @@ void MainWindow::initInfoLayout(QFormLayout *layout, const QList<Costume_info> i
             // TODO better multi-file picker
 
             layout->addRow(info.name, button);
-            infoWidgets.insert(info.key, dialog);
+            infoWidgets.insert(key, dialog);
         } else
             qWarning() << QString("Unknown field type for field ") + info.name;
 
         if(widget != 0) {
-            infoWidgets.insert(info.key, widget);
+            infoWidgets.insert(key, widget);
             layout->addRow(info.name, widget);
         }
     }

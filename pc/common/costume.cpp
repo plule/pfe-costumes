@@ -1,69 +1,50 @@
 #include "costume.h"
 
-QList<Costume_info> Costume::default_infos = QList<Costume_info>();
+QMap<QString, Costume_info> Costume::valid_informations;
+int Costume_info::last_order;
 
 Costume::Costume(QObject *parent) :
     QObject(parent)
 {
-    informations = QList<Costume_info>(default_infos);
 }
 
 void Costume::InitDefaultInfos()
 {
-    default_infos = QList<Costume_info>()
-            << Costume_info("director", ShortString, tr("Piece Director"))
-            << Costume_info("piece", ShortString, tr("Piece Name"))
-            << Costume_info("writer", ShortString, tr("Piece Writer"))
-            << Costume_info("piece_type", ShortString, tr("Piece Type"))
-            << Costume_info("character", ShortString, tr("Character Name"))
-            << Costume_info("wearer", ShortString, tr("Worn by : "))
-            << Costume_info("year", Number, tr("Year"))
-            << Costume_info("designer", ShortString, tr("Designer"))
-            << Costume_info("collection", ShortString, tr("Collection"))
-            << Costume_info("description", LongString, tr("Description"))
-            << Costume_info("visual", Files, tr("Additional visuals"))
-               ;
+    Costume_info::last_order = 0;
+    valid_informations = QMap<QString, Costume_info>();
+    valid_informations.insert("director", Costume_info(ShortString, tr("Piece Director")));
+    valid_informations.insert("piece", Costume_info(ShortString, tr("Piece Name")));
+    valid_informations.insert("writer", Costume_info(ShortString, tr("Piece Writer")));
+    valid_informations.insert("piece_type", Costume_info(ShortString, tr("Piece Type")));
+    valid_informations.insert("character", Costume_info(ShortString, tr("Character Name")));
+    valid_informations.insert("wearer", Costume_info(ShortString, tr("Worn by : ")));
+    valid_informations.insert("year", Costume_info(Number, tr("Year")));
+    valid_informations.insert("designer", Costume_info(ShortString, tr("Designer")));
+    valid_informations.insert("collection", Costume_info(ShortString, tr("Collection")));
+    valid_informations.insert("description", Costume_info(LongString, tr("Description")));
+    valid_informations.insert("visual", Costume_info(Files, tr("Additional visuals")));
 }
 
 QVariant Costume::getInfo(QString key)
 {
-    foreach(Costume_info info, informations) {
-        if(key == info.key)
-            return info.value;
-    }
-    return QVariant();
+    return informations.value(key, QVariant());
 }
 
-Costume_info Costume::getCompleteInfo(QString key)
+Costume_info Costume::getInfoType(QString key)
 {
-    foreach(Costume_info info, informations) {
-        if(key == info.key)
-            return info;
-    }
-    return Costume_info();
+    return valid_informations.value(key, Costume_info());
 }
 
-Costume_info Costume::getCompleteDefaultInfo(QString key)
-{
-    foreach(Costume_info info, default_infos) {
-        if(key == info.key)
-            return info;
-    }
-    return Costume_info();
-}
-
-QList<Costume_info> Costume::getInformations()
+QMap<QString, QVariant> Costume::getInfos()
 {
     return informations;
 }
 
-bool Costume::setInformation(QString key, QVariant value)
+bool Costume::setInfo(QString key, QVariant value)
 {
-    foreach(Costume_info info, informations) {
-        if(key == info.key) {
-            info.value = value;
-            return true;
-        }
+    if(valid_informations.keys().contains(key)) {
+        informations.insert(key, value);
+        return true;
     }
     return false;
 }

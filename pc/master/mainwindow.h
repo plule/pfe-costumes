@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QTimer>
 #include <QList>
+#include <QPair>
 #include <QErrorMessage>
 #include <QSettings>
 #include <QStringList>
@@ -25,6 +26,7 @@
 #include "camerahandler/qcamera.h"
 #include "common/slotlog.h"
 #include "common/costume.h"
+#include "common/collectionmanager.h"
 
 #define GROUP_INFO "costume_informations"
 
@@ -61,9 +63,10 @@ private:
     QList<QPixmap> *pics;
     QErrorMessage errorMessage;
     QMap<QString, QWidget*> infoWidgets;
+    CollectionManager collection;
 
     void doConnections();
-    void initInfoLayout(QFormLayout *layout, const QList<Costume_info> infoList);
+    void initInfoLayout(QFormLayout *layout, QMap<QString, Costume_info> valid_informations);
 };
 
 #endif // MAINWINDOW_H

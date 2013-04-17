@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    a.setApplicationName("pfe-costumes");
     QTranslator translator;
     QLocale locale;
 
