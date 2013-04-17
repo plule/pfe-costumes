@@ -171,50 +171,6 @@
         <translation>Informations</translation>
     </message>
     <message>
-        <source>Director</source>
-        <translation type="obsolete">Metteur en scène</translation>
-    </message>
-    <message>
-        <source>Piece</source>
-        <translation type="obsolete">Pièce</translation>
-    </message>
-    <message>
-        <source>Character Name</source>
-        <translation type="obsolete">Nom du personnage</translation>
-    </message>
-    <message>
-        <source>Worn by</source>
-        <translation type="obsolete">Porté par</translation>
-    </message>
-    <message>
-        <source>Year</source>
-        <translation type="obsolete">Année</translation>
-    </message>
-    <message>
-        <source>Designer</source>
-        <translation type="obsolete">Costumier</translation>
-    </message>
-    <message>
-        <source>Collection</source>
-        <translation type="obsolete">Collection</translation>
-    </message>
-    <message>
-        <source>Description</source>
-        <translation type="obsolete">Description</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation type="obsolete">Type de pièce</translation>
-    </message>
-    <message>
-        <source>Writer</source>
-        <translation type="obsolete">Auteur</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation type="obsolete">Sauvegarder</translation>
-    </message>
-    <message>
         <location filename="mainwindow.ui" line="386"/>
         <source>toolBar</source>
         <translation>Barre d&apos;état</translation>
