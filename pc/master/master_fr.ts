@@ -53,6 +53,11 @@
         <source>Description</source>
         <translation>Description</translation>
     </message>
+    <message>
+        <location filename="../common/costume.cpp" line="24"/>
+        <source>Additional visuals</source>
+        <translation>Visuels supplémentaires</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -191,7 +196,12 @@
         <translation>Aucun appareil photo détecté</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="129"/>
+        <location filename="mainwindow.cpp" line="122"/>
+        <source>Choose file(s)</source>
+        <translation>Selectionner des fichiers</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="141"/>
         <source>Loading views</source>
         <translation>Chargement des vues</translation>
     </message>

@@ -114,7 +114,19 @@ void MainWindow::initInfoLayout(QFormLayout *layout, const QList<Costume_info> i
             widget = new QSpinBox(this);
         else if(info.type == LongString)
             widget = new QTextEdit(this);
-        else
+        else if(info.type == Files){
+            QFileDialog *dialog = new QFileDialog(this);
+            dialog->setDirectory(QDir::home());
+            dialog->setFileMode(QFileDialog::ExistingFiles);
+            QPushButton *button = new QPushButton(this);
+            button->setText(tr("Choose file(s)"));
+            connect(button, SIGNAL(clicked()), dialog, SLOT(open()));
+            // TODO display selected file(s)
+            // TODO better multi-file picker
+
+            layout->addRow(info.name, button);
+            infoWidgets.insert(info.key, dialog);
+        } else
             qWarning() << QString("Unknown field type for field ") + info.name;
 
         if(widget != 0) {

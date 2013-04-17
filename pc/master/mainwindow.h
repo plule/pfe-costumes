@@ -13,10 +13,13 @@
 #include <QSettings>
 #include <QStringList>
 #include <QFormLayout>
+#include <QLayout>
 #include <QMap>
 #include <QLineEdit>
 #include <QSpinBox>
 #include <QTextEdit>
+#include <QFileDialog>
+#include <QPushButton>
 #include "common/qturntable.h"
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
