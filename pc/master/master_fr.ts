@@ -113,27 +113,87 @@
         <translation>Rotation automatique</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="376"/>
+        <location filename="mainwindow.ui" line="361"/>
+        <source>Informations</source>
+        <translation>Informations</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="372"/>
+        <source>Director</source>
+        <translation>Metteur en scène</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="382"/>
+        <source>Piece</source>
+        <translation>Pièce</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="392"/>
+        <source>Character Name</source>
+        <translation>Nom du personnage</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="406"/>
+        <source>Worn by</source>
+        <translation>Porté par</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="416"/>
+        <source>Year</source>
+        <translation>Année</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="436"/>
+        <source>Designer</source>
+        <translation>Costumier</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="446"/>
+        <source>Collection</source>
+        <translation>Collection</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="456"/>
+        <source>Description</source>
+        <translation>Description</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="466"/>
+        <source>Type</source>
+        <translation>Type de pièce</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="476"/>
+        <source>Writer</source>
+        <translation>Auteur</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="488"/>
+        <source>Save</source>
+        <translation>Sauvegarder</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="511"/>
         <source>toolBar</source>
         <translation>Barre d&apos;état</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="68"/>
+        <location filename="mainwindow.cpp" line="58"/>
         <source>Lost camera.</source>
         <translation>L&apos;appareil photo ne répond plus.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="69"/>
+        <location filename="mainwindow.cpp" line="59"/>
         <source>Lost camera... You should try to disconnect and reconnect it.</source>
         <translation>L&apos;appareil photo ne répond plus, vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="81"/>
+        <location filename="mainwindow.cpp" line="71"/>
         <source>No camera connected</source>
         <translation>Aucun appareil photo détecté</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="116"/>
+        <location filename="mainwindow.cpp" line="105"/>
         <source>Loading views</source>
         <translation>Chargement des vues</translation>
     </message>
@@ -141,7 +201,7 @@
 <context>
     <name>QPhoto::CameraHandler</name>
     <message numerus="yes">
-        <location filename="../cameraHandler/cameraHandler.cpp" line="65"/>
+        <location filename="../camerahandler/camerahandler.cpp" line="65"/>
         <source>%n camera(s) found.</source>
         <translation>
             <numerusform>%n appareil photo trouvé.</numerusform>
@@ -152,7 +212,7 @@
 <context>
     <name>QPhoto::QCamera</name>
     <message numerus="yes">
-        <location filename="../cameraHandler/QCamera.cpp" line="254"/>
+        <location filename="../camerahandler/qcamera.cpp" line="254"/>
         <source>Could not capture image after %n try(es)</source>
         <translation>
             <numerusform>Impossible de capturer l&apos;image après %n essai</numerusform>

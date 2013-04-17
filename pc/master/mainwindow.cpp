@@ -5,19 +5,18 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    QPhoto::QCamera **cameras;
     logger = new SlotLog();
     handler = new QPhoto::CameraHandler();
+
     ui->setupUi(this);
     ui->turntable->resize(800,600);
     ui->centralwidget->adjustSize();
 
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
+    connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
 
     handler->init();
-    handler->getCameras(&cameras);
     doConnections();
-    connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
     ui->turntable->setNumber(36);
 }
 

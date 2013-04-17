@@ -10,10 +10,14 @@
 #include <QTimer>
 #include <QList>
 #include <QErrorMessage>
+#include <QSettings>
+#include <QStringList>
 #include "common/qturntable.h"
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
 #include "common/slotlog.h"
+
+#define GROUP_INFO "costume_informations"
 
 namespace Ui {
 class MainWindow;
