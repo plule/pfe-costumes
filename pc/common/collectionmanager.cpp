@@ -23,43 +23,47 @@ bool CollectionManager::createCollectionTable()
 {
     QString query = "create table collection (id integer primary key";
     QSqlQuery sqlquery;
-    /*foreach(Costume_info info, Costume::default_infos) {
-        QString type = "";
-        if(info.type == ShortString)
-            type = "varchar(256)";
-        else if(info.type == LongString)
-            type = "varchar(4096)";
-        else if(info.type == Number)
-            type = "integer";
-        else if(info.type == Files)
-            qWarning() << "File storage unimplemented yet";
-        else
-            qWarning()<< "Warning unknown sql storage type for " + info.key;
+    foreach(QString key, Costume::valid_informations.keys()) {
+        Costume_info info = Costume::valid_informations.value(key);
 
-        if(type != "") {
-            query.append(", " + info.key + " " + type);
+        if(Costume::sql_types.keys().contains(info.type)) {
+            QString type = Costume::sql_types.value(info.type);
+            query.append(", " + key + " " + type);
+        } else {
+            qWarning() << "Field \"" + key + "\" is not supported for storage in the database.";
         }
     }
+
     query.append(")");
     qDebug() << query;
     bool ret = sqlquery.exec(query);
     if(!ret)
         qDebug() << sqlquery.lastError();
-    return ret;*/
+    return false;
 }
 
-bool CollectionManager::addCostume(Costume costume)
+bool CollectionManager::saveCostume(Costume costume)
 {
-    QSqlQuery query;
-    query.prepare("INSERT INTO collection ("+keySqlList()+")"
-                  "VALUES ("+keyValueList()+")");
-    QStringList validKeys = keyList();
-//    foreach(Costume_info info, costume.getInformations()) {
-//        if(validKeys.contains(info.key)) {
-//            query.bindValue(":"+info.key, info.value);
-//        }
-//    }
-//    return query.exec();
+    if(!costume.isValid()) {
+        qWarning() << "Could not save uncomplete costume";
+        return false;
+    } else if(costume.getId() == -1) { // New costume
+        QSqlQuery query;
+        query.prepare("INSERT INTO collection ("+keySqlList()+")"
+                      "VALUES ("+keyValueList()+")");
+        foreach(QString key, Costume::valid_informations.keys()) {
+            query.bindValue(":"+key, costume.getInfo(key));
+        }
+        if(query.exec())
+            return true;
+        else {
+            qWarning() << query.lastError();
+            return false;
+        }
+    } else { // Update existing costume
+        qWarning() << "Updating costume not supported yet.";
+        return false;
+    }
 }
 
 QString CollectionManager::keySqlList()
@@ -74,9 +78,5 @@ QString CollectionManager::keyValueList()
 
 QStringList CollectionManager::keyList()
 {
-    QStringList ret;
-//    foreach(Costume_info info, Costume::default_infos)
-//        if(info.type == ShortString || info.type == LongString || info.type == Number)
-//            ret.append(info.key);
-//    return ret;
+    return Costume::valid_informations.keys();
 }

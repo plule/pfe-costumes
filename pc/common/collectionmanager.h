@@ -20,7 +20,7 @@ public:
     ~CollectionManager();
     bool init(QString collectionPath);
     bool createCollectionTable();
-    bool addCostume(Costume costume);
+    bool saveCostume(Costume costume);
     
 signals:
     

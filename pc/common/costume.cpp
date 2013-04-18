@@ -1,11 +1,19 @@
 #include "costume.h"
 
 QMap<QString, Costume_info> Costume::valid_informations;
+QMap<Costume_info_type, QString> Costume::sql_types;
 int Costume_info::last_order;
 
-Costume::Costume(QObject *parent) :
+Costume::Costume(QObject *parent) : QObject(parent)
+{
+    id = -1;
+}
+
+Costume::Costume(long id, QMap<QString, QVariant> informations, QObject *parent) :
     QObject(parent)
 {
+    this->id = id;
+    this->informations = informations;
 }
 
 void Costume::InitDefaultInfos()
@@ -23,6 +31,10 @@ void Costume::InitDefaultInfos()
     valid_informations.insert("collection", Costume_info(ShortString, tr("Collection")));
     valid_informations.insert("description", Costume_info(LongString, tr("Description")));
     valid_informations.insert("visual", Costume_info(Files, tr("Additional visuals")));
+
+    sql_types.insert(ShortString, "varchar(256)");
+    sql_types.insert(LongString, "varchar(4096)");
+    sql_types.insert(Number, "integer");
 }
 
 QVariant Costume::getInfo(QString key)
@@ -47,4 +59,33 @@ bool Costume::setInfo(QString key, QVariant value)
         return true;
     }
     return false;
+}
+
+bool Costume::isValid()
+{
+    foreach(QString key, valid_informations.keys()) {
+        if(valid_informations.value(key).mandatory && !informations.contains(key))
+            return false;
+    }
+    return true;
+}
+
+QString Costume::toString()
+{
+    QString ret = "Costume " + QString::number(id) + "\n";
+    foreach(QString key, informations.keys()) {
+        Costume_info info = valid_informations.value(key);
+        ret += "  " + key + ":" + informations.value(key).toString() + "\n";
+    }
+    return ret;
+}
+
+long Costume::getId()
+{
+    return id;
+}
+
+void Costume::setId(long id)
+{
+    this->id = id;
 }
