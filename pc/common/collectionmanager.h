@@ -9,6 +9,9 @@
 #include <QDir>
 #include <QDebug>
 #include <QStringList>
+#include <QSqlTableModel>
+#include <QSqlRecord>
+#include <QSqlField>
 
 #include "common/costume.h"
 
@@ -20,18 +23,19 @@ public:
     ~CollectionManager();
     bool init(QString collectionPath);
     bool createCollectionTable();
-    bool saveCostume(Costume costume);
+    bool saveCostume(Costume *costume);
+    QSqlTableModel* getCollectionModel();
     
 signals:
     
 public slots:
 
 private:
-    QString keySqlList();
-    QString keyValueList();
-    QStringList keyList();
+    QString keySqlList(QStringList keys);
+    QString keyValueList(QStringList keys);
 
     QSqlDatabase db;
+    QSqlTableModel *collection;
     
 };
 

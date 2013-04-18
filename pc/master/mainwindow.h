@@ -18,7 +18,7 @@
 #include <QMap>
 #include <QLineEdit>
 #include <QSpinBox>
-#include <QTextEdit>
+#include <QPlainTextEdit>
 #include <QFileDialog>
 #include <QPushButton>
 #include "common/qturntable.h"
@@ -47,6 +47,7 @@ public slots:
     void startWork(QString work, int target);
     void updateStatusBar(QString message);
     void displayError(QString error);
+    void saveCostume();
     
 private slots:
     void on_captureButton_clicked();

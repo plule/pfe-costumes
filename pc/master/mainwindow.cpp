@@ -19,8 +19,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     handler->init();
     doConnections();
-    qDebug() << collection.init(QFileDialog::getOpenFileName(this, tr("Open collection"), QDir::home().absolutePath()));
-    collection.createCollectionTable();
+    if(collection.init(QFileDialog::getOpenFileName(this, tr("Open collection"), QDir::home().absolutePath()))) {
+        collection.createCollectionTable();
+        QSqlTableModel *model = collection.getCollectionModel();
+
+        model->setTable("collection");
+        model->select();
+        ui->collectionTable->setModel(model);
+        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
+    }
+
+
     ui->turntable->setNumber(36);
 }
 
@@ -121,10 +130,12 @@ void MainWindow::initInfoLayout(QFormLayout *layout, QMap<QString, Costume_info>
         QWidget *widget = 0;
         if(info.type == ShortString)
             widget = new QLineEdit(this);
-        else if(info.type == Number)
+        else if(info.type == Number) {
             widget = new QSpinBox(this);
-        else if(info.type == LongString)
-            widget = new QTextEdit(this);
+            ((QSpinBox*)widget)->setMaximum(9999);
+            ((QSpinBox*)widget)->setMinimum(-9999);
+        } else if(info.type == LongString)
+            widget = new QPlainTextEdit(this);
         else if(info.type == Files){
             QFileDialog *dialog = new QFileDialog(this);
             dialog->setDirectory(QDir::home());
@@ -146,6 +157,29 @@ void MainWindow::initInfoLayout(QFormLayout *layout, QMap<QString, Costume_info>
         }
     }
 }
+
+
+void MainWindow::saveCostume()
+{
+    Costume costume;
+    foreach(QString key, infoWidgets.keys()) {
+        Costume_info info = Costume::valid_informations.value(key);
+        if(info.type == ShortString) {
+            QLineEdit *widget = (QLineEdit*)infoWidgets.value(key);
+            if(widget->text() != "")
+                costume.setInfo(key, widget->text());
+        } else if(info.type == LongString) {
+            QPlainTextEdit *widget = (QPlainTextEdit*)infoWidgets.value(key);
+            if(widget->toPlainText() != "")
+                costume.setInfo(key, widget->toPlainText());
+        } else if(info.type == Number) {
+            QSpinBox *widget = (QSpinBox*)infoWidgets.value(key);
+            costume.setInfo(key, widget->value());
+        }
+    }
+    collection.saveCostume(&costume);
+}
+
 
 void MainWindow::on_suzanneButton_pressed()
 {

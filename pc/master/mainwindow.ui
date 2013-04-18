@@ -18,8 +18,18 @@
     <item>
      <widget class="QTabWidget" name="tab">
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
+      <widget class="QWidget" name="collectionTab">
+       <attribute name="title">
+        <string>Collection</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QTableView" name="collectionTable"/>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="preparationTab">
        <attribute name="title">
         <string>Preparation</string>
@@ -362,7 +372,42 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
-         <layout class="QFormLayout" name="infoLayout"/>
+         <layout class="QFormLayout" name="infoLayout">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+         </layout>
+        </item>
+        <item>
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="saveButton">
+            <property name="text">
+             <string>saveButton</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -571,5 +616,24 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>saveButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveCostume()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>820</x>
+     <y>499</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>889</x>
+     <y>486</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>saveCostume()</slot>
+ </slots>
 </ui>
