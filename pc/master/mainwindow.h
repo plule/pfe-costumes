@@ -21,6 +21,7 @@
 #include <QPlainTextEdit>
 #include <QFileDialog>
 #include <QPushButton>
+#include <QItemSelectionModel>
 #include "common/qturntable.h"
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
@@ -48,6 +49,9 @@ public slots:
     void updateStatusBar(QString message);
     void displayError(QString error);
     void saveCostume();
+    void loadCostume(Costume *costume);
+    void loadSelectedCostume();
+    void removeSelectedRows();
     
 private slots:
     void on_captureButton_clicked();

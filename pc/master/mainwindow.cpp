@@ -29,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent) :
         connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
     }
 
-
     ui->turntable->setNumber(36);
 }
 
@@ -178,6 +177,38 @@ void MainWindow::saveCostume()
         }
     }
     collection.saveCostume(&costume);
+}
+
+void MainWindow::loadCostume(Costume *costume)
+{
+    foreach(QString key, costume->getInfos().keys()) {
+        Costume_info info = Costume::valid_informations.value(key);
+        QVariant value = costume->getInfo(key);
+        if(info.type == ShortString) {
+            QLineEdit *widget = (QLineEdit*)infoWidgets.value(key);
+            widget->setText(value.toString());
+        } else if(info.type == LongString) {
+            QPlainTextEdit *widget = (QPlainTextEdit*)infoWidgets.value(key);
+            widget->setPlainText(value.toString());
+        } else if(info.type == Number) {
+            QSpinBox *widget = (QSpinBox*)infoWidgets.value(key);
+            widget->setValue(value.toInt());
+        }
+    }
+}
+
+void MainWindow::loadSelectedCostume()
+{
+    QModelIndex index = ui->collectionTable->selectionModel()->selectedIndexes().first();
+    Costume *costume = collection.loadCostume(collection.getCollectionModel()->record(index.row()));
+    loadCostume(costume);
+}
+
+void MainWindow::removeSelectedRows()
+{
+    qDebug()<<this->ui->collectionTable->selectionModel()->selectedIndexes();
+    foreach (QModelIndex i, this->ui->collectionTable->selectionModel()->selectedIndexes())
+        collection.getCollectionModel()->removeRow(i.row());
 }
 
 

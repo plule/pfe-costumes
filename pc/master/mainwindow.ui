@@ -26,7 +26,45 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <widget class="QTableView" name="collectionTable"/>
+         <widget class="QTableView" name="collectionTable">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+          <property name="gridStyle">
+           <enum>Qt::DashLine</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="loadButton">
+            <property name="text">
+             <string>Load costume</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="removeButton">
+            <property name="text">
+             <string>Remove</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -463,12 +501,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>534</x>
-     <y>362</y>
+     <x>119</x>
+     <y>118</y>
     </hint>
     <hint type="destinationlabel">
-     <x>734</x>
-     <y>399</y>
+     <x>765</x>
+     <y>433</y>
     </hint>
    </hints>
   </connection>
@@ -479,12 +517,12 @@
    <slot>setAngle(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>736</x>
-     <y>407</y>
+     <x>765</x>
+     <y>433</y>
     </hint>
     <hint type="destinationlabel">
-     <x>597</x>
-     <y>412</y>
+     <x>119</x>
+     <y>118</y>
     </hint>
    </hints>
   </connection>
@@ -495,12 +533,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>548</x>
-     <y>301</y>
+     <x>119</x>
+     <y>118</y>
     </hint>
     <hint type="destinationlabel">
-     <x>791</x>
-     <y>398</y>
+     <x>794</x>
+     <y>413</y>
     </hint>
    </hints>
   </connection>
@@ -511,12 +549,12 @@
    <slot>setAngle(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>695</x>
-     <y>463</y>
+     <x>765</x>
+     <y>474</y>
     </hint>
     <hint type="destinationlabel">
-     <x>628</x>
-     <y>466</y>
+     <x>119</x>
+     <y>118</y>
     </hint>
    </hints>
   </connection>
@@ -527,12 +565,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>528</x>
-     <y>514</y>
+     <x>119</x>
+     <y>118</y>
     </hint>
     <hint type="destinationlabel">
-     <x>683</x>
-     <y>460</y>
+     <x>765</x>
+     <y>474</y>
     </hint>
    </hints>
   </connection>
@@ -543,12 +581,12 @@
    <slot>setZoom(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>827</x>
-     <y>465</y>
+     <x>858</x>
+     <y>474</y>
     </hint>
     <hint type="destinationlabel">
-     <x>449</x>
-     <y>443</y>
+     <x>119</x>
+     <y>118</y>
     </hint>
    </hints>
   </connection>
@@ -559,12 +597,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>511</x>
-     <y>442</y>
+     <x>119</x>
+     <y>118</y>
     </hint>
     <hint type="destinationlabel">
-     <x>845</x>
-     <y>464</y>
+     <x>858</x>
+     <y>474</y>
     </hint>
    </hints>
   </connection>
@@ -575,12 +613,12 @@
    <slot>setZoom(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>788</x>
-     <y>429</y>
+     <x>794</x>
+     <y>413</y>
     </hint>
     <hint type="destinationlabel">
-     <x>583</x>
-     <y>332</y>
+     <x>119</x>
+     <y>118</y>
     </hint>
    </hints>
   </connection>
@@ -595,8 +633,8 @@
      <y>588</y>
     </hint>
     <hint type="destinationlabel">
-     <x>422</x>
-     <y>522</y>
+     <x>119</x>
+     <y>118</y>
     </hint>
    </hints>
   </connection>
@@ -611,8 +649,8 @@
      <y>588</y>
     </hint>
     <hint type="destinationlabel">
-     <x>327</x>
-     <y>445</y>
+     <x>119</x>
+     <y>118</y>
     </hint>
    </hints>
   </connection>
@@ -623,8 +661,8 @@
    <slot>saveCostume()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>820</x>
-     <y>499</y>
+     <x>869</x>
+     <y>506</y>
     </hint>
     <hint type="destinationlabel">
      <x>889</x>
@@ -632,8 +670,43 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>removeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>removeSelectedRows()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>815</x>
+     <y>613</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>886</x>
+     <y>557</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>loadButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>loadSelectedCostume()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>699</x>
+     <y>604</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>712</x>
+     <y>639</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>saveCostume()</slot>
+  <slot>removeSelectedRows()</slot>
+  <slot>loadCostume(int)</slot>
+  <slot>loadSelectedCostume()</slot>
  </slots>
 </ui>

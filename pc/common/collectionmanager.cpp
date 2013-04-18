@@ -50,7 +50,6 @@ bool CollectionManager::saveCostume(Costume *costume)
         qWarning() << "Could not save uncomplete costume";
         return false;
     } else if(costume->getId() == -1) { // New costume
-        //collection->insertRow(0);
         QMap<QString, QVariant> infos = costume->getInfos();
         QSqlRecord record;
         foreach(QString key, infos.keys()) {
@@ -64,6 +63,26 @@ bool CollectionManager::saveCostume(Costume *costume)
         qWarning() << "Update not implemented yet.";
         return false;
     }
+}
+
+Costume *CollectionManager::loadCostume(int id)
+{
+    qWarning() << "loadcostume(id) ne marche pas";
+    QSqlTableModel model(this, db);
+    model.setFilter("id="+QString::number(id));
+    model.select();
+    QSqlRecord record = model.record(1); // todo ne marche pas
+    return loadCostume(record);
+}
+
+Costume *CollectionManager::loadCostume(QSqlRecord record)
+{
+    Costume *costume = new Costume();
+    costume->setId(record.value("id").toInt());
+    foreach(QString key, Costume::valid_informations.keys())
+        costume->setInfo(key, record.value(key));
+    qDebug()<<costume->toString();
+    return costume;
 }
 
 QSqlTableModel *CollectionManager::getCollectionModel()

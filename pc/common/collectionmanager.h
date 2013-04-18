@@ -24,6 +24,8 @@ public:
     bool init(QString collectionPath);
     bool createCollectionTable();
     bool saveCostume(Costume *costume);
+    Costume *loadCostume(int id);
+    Costume *loadCostume(QSqlRecord record);
     QSqlTableModel* getCollectionModel();
     
 signals:
