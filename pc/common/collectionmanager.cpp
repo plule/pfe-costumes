@@ -67,11 +67,11 @@ bool CollectionManager::saveCostume(Costume *costume)
 
 Costume *CollectionManager::loadCostume(int id)
 {
-    qWarning() << "loadcostume(id) ne marche pas";
     QSqlTableModel model(this, db);
-    model.setFilter("id="+QString::number(id));
+    model.setTable("collection");
+    model.setFilter("id='"+QString::number(id)+"'");
     model.select();
-    QSqlRecord record = model.record(1); // todo ne marche pas
+    QSqlRecord record = model.record(0);
     return loadCostume(record);
 }
 
@@ -81,7 +81,6 @@ Costume *CollectionManager::loadCostume(QSqlRecord record)
     costume->setId(record.value("id").toInt());
     foreach(QString key, Costume::valid_informations.keys())
         costume->setInfo(key, record.value(key));
-    qDebug()<<costume->toString();
     return costume;
 }
 

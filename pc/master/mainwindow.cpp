@@ -200,13 +200,12 @@ void MainWindow::loadCostume(Costume *costume)
 void MainWindow::loadSelectedCostume()
 {
     QModelIndex index = ui->collectionTable->selectionModel()->selectedIndexes().first();
-    Costume *costume = collection.loadCostume(collection.getCollectionModel()->record(index.row()));
+    Costume *costume = collection.loadCostume(collection.getCollectionModel()->record(index.row()).value("id").toInt());
     loadCostume(costume);
 }
 
 void MainWindow::removeSelectedRows()
 {
-    qDebug()<<this->ui->collectionTable->selectionModel()->selectedIndexes();
     foreach (QModelIndex i, this->ui->collectionTable->selectionModel()->selectedIndexes())
         collection.getCollectionModel()->removeRow(i.row());
 }
