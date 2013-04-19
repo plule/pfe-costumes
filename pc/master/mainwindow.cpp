@@ -19,15 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     handler->init();
     doConnections();
-    if(collection.init(QFileDialog::getOpenFileName(this, tr("Open collection"), QDir::home().absolutePath()))) {
-        collection.createCollectionTable();
-        QSqlTableModel *model = collection.getCollectionModel();
-
-        model->setTable("collection");
-        model->select();
-        ui->collectionTable->setModel(model);
-        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
-    }
 
     ui->turntable->setNumber(36);
 }
@@ -222,4 +213,30 @@ void MainWindow::on_suzanneButton_pressed()
     ui->turntable->setView(0);
     ui->turntable->fitInView();
     ui->angleBox->setSingleStep(ui->turntable->getAngleStep());
+}
+
+void MainWindow::on_actionNew_Collection_triggered()
+{
+    if(collection.init(QFileDialog::getSaveFileName(this, tr("New collection"), QDir::home().absolutePath()))) {
+        collection.createCollectionTable();
+        QSqlTableModel *model = collection.getCollectionModel();
+
+        model->setTable("collection");
+        model->select();
+        ui->collectionTable->setModel(model);
+        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
+    }
+}
+
+void MainWindow::on_actionOpen_Collection_triggered()
+{
+    if(collection.init(QFileDialog::getOpenFileName(this, tr("Open collection"), QDir::home().absolutePath()))) {
+        collection.createCollectionTable();
+        QSqlTableModel *model = collection.getCollectionModel();
+
+        model->setTable("collection");
+        model->select();
+        ui->collectionTable->setModel(model);
+        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
+    }
 }

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>891</width>
-    <height>665</height>
+    <height>710</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -462,6 +462,14 @@
      <height>27</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuA">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionNew_Collection"/>
+    <addaction name="actionOpen_Collection"/>
+   </widget>
+   <addaction name="menuA"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -475,6 +483,16 @@
     <bool>false</bool>
    </attribute>
   </widget>
+  <action name="actionNew_Collection">
+   <property name="text">
+    <string>New Collection</string>
+   </property>
+  </action>
+  <action name="actionOpen_Collection">
+   <property name="text">
+    <string>Open Collection</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
