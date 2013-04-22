@@ -40,8 +40,8 @@ public:
     bool setInfo(QString key, QVariant value);
     bool isValid();
     QString toString();
-    long getId();
-    void setId(long id);
+    int getId();
+    void setId(int id);
     QString getName();
 
     static void InitDefaultInfos();
@@ -57,7 +57,6 @@ private:
 
     //QList<Costume_info> informations;
     QMap<QString, QVariant> informations;
-    long id;
 };
 
 #endif // COSTUME_H

@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     logger = new SlotLog();
     handler = new QPhoto::CameraHandler();
+    costume = new Costume();
     ui->setupUi(this);
     ui->turntable->resize(800,600);
     ui->centralwidget->adjustSize();
@@ -154,23 +155,22 @@ void MainWindow::initInfoLayout(QFormLayout *layout, QMap<QString, Costume_info>
 
 void MainWindow::saveCostume()
 {
-    Costume costume;
     foreach(QString key, infoWidgets.keys()) {
         Costume_info info = Costume::valid_informations.value(key);
         if(info.type == ShortString) {
             QLineEdit *widget = (QLineEdit*)infoWidgets.value(key);
             if(widget->text() != "")
-                costume.setInfo(key, widget->text());
+                costume->setInfo(key, widget->text());
         } else if(info.type == LongString) {
             QPlainTextEdit *widget = (QPlainTextEdit*)infoWidgets.value(key);
             if(widget->toPlainText() != "")
-                costume.setInfo(key, widget->toPlainText());
+                costume->setInfo(key, widget->toPlainText());
         } else if(info.type == Number) {
             QSpinBox *widget = (QSpinBox*)infoWidgets.value(key);
-            costume.setInfo(key, widget->value());
+            costume->setInfo(key, widget->value());
         }
     }
-    collection.saveCostume(&costume);
+    collection.saveCostume(costume);
 }
 
 void MainWindow::loadCostume(Costume *costume)
@@ -191,35 +191,12 @@ void MainWindow::loadCostume(Costume *costume)
     }
 }
 
-void MainWindow::loadSelectedCostume()
+void MainWindow::on_newCostume_clicked()
 {
-    QModelIndex index = ui->collectionTable->selectionModel()->selectedIndexes().first();
-    Costume *costume = collection.loadCostume(collection.getCollectionModel()->record(index.row()).value("id").toInt());
-    loadCostume(costume);
-}
-
-void MainWindow::removeSelectedRows()
-{
-    QItemSelection selection(ui->collectionTable->selectionModel()->selection() );
-
-    QList<int> rows;
-    foreach( const QModelIndex & index, selection.indexes() ) {
-        rows.append( index.row() );
-    }
-
-    qSort( rows );
-
-    int prev = -1;
-    for( int i = rows.count() - 1; i >= 0; i -= 1 ) {
-        int current = rows[i];
-        if( current != prev ) {
-            collection.getCollectionModel()->removeRows( current, 1 );
-            prev = current;
-        }
-    }
+    collection.getCollectionModel()->insertRecord(-1, QSqlRecord());
     collection.getCollectionModel()->select();
+    mapper.toLast();
 }
-
 
 void MainWindow::on_suzanneButton_pressed()
 {
@@ -254,7 +231,48 @@ void MainWindow::loadCollection(QString path)
         model->setTable("collection");
         model->select();
         ui->collectionTable->setModel(model);
+        mapper.setModel(model);
         ui->collectionTable->setModelColumn(collection.getIndexOf("generated_name"));
         connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
+        connect(ui->collectionTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), &mapper, SLOT(setCurrentModelIndex(QModelIndex)));
+        mapper.clearMapping();
+        foreach(QString key, Costume::valid_informations.keys())
+            mapper.addMapping(infoWidgets.value(key), model->record().indexOf(key));
+        mapper.toFirst();
     }
+}
+
+void MainWindow::on_loadButton_clicked()
+{
+    QModelIndex index = ui->collectionTable->selectionModel()->selectedIndexes().first();
+    costume = collection.loadCostume(collection.getCollectionModel()->record(index.row()).value("id").toInt());
+    mapper.setCurrentIndex(index.row());
+}
+
+void MainWindow::on_removeButton_clicked()
+{
+    QItemSelection selection(ui->collectionTable->selectionModel()->selection() );
+
+    QList<int> rows;
+    foreach( const QModelIndex & index, selection.indexes() ) {
+        rows.append( index.row() );
+    }
+
+    qSort( rows );
+
+    int prev = -1;
+    for( int i = rows.count() - 1; i >= 0; i -= 1 ) {
+        int current = rows[i];
+        if( current != prev ) {
+            collection.getCollectionModel()->removeRows( current, 1 );
+            prev = current;
+        }
+    }
+    collection.getCollectionModel()->select();
+}
+
+void MainWindow::on_saveButton_clicked()
+{
+/*    if(!mapper.submit())
+        qDebug() << ((QSqlQueryModel)mapper.model()).lastError();*/
 }

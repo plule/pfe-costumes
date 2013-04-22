@@ -18,7 +18,7 @@ bool CollectionManager::init(QString collectionPath)
     db.setDatabaseName(collectionPath);
     collection->setTable("collection");
     connect(collection, SIGNAL(beforeInsert(QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
-    connect(collection, SIGNAL(beforeUpdate(int,QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
+    connect(collection, SIGNAL(beforeUpdate(int,QSqlRecord&)), this, SLOT(prepareRecord(int,QSqlRecord&)));
     return db.open();
 }
 
@@ -44,7 +44,7 @@ bool CollectionManager::createCollectionTable()
         qDebug() << sqlquery.lastError();
     collection->setTable("collection");
     connect(collection, SIGNAL(beforeInsert(QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
-    connect(collection, SIGNAL(beforeUpdate(int,QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
+    connect(collection, SIGNAL(beforeUpdate(int,QSqlRecord&)), this, SLOT(prepareRecord(int, QSqlRecord&)));
     return false;
 }
 
@@ -53,7 +53,7 @@ bool CollectionManager::saveCostume(Costume *costume)
     if(!costume->isValid()) {
         qWarning() << "Could not save uncomplete costume";
         return false;
-    } else if(costume->getId() == -1) { // New costume
+    } else {
         QMap<QString, QVariant> infos = costume->getInfos();
         QSqlRecord record;
         foreach(QString key, infos.keys()) {
@@ -62,13 +62,13 @@ bool CollectionManager::saveCostume(Costume *costume)
             record.append(field);
         }
 
-        collection->insertRecord(-1, record);
+        if(costume->getId() < 0) // new Record
+            collection->insertRecord(-1, record);
+        else
+            collection->setRecord(costume->getId(), record);
         bool ret = collection->submit();
         collection->select();
         return ret;
-    } else {
-        qWarning() << "Update not implemented yet.";
-        return false;
     }
 }
 
@@ -96,6 +96,11 @@ QSqlTableModel *CollectionManager::getCollectionModel()
     return collection;
 }
 
+QSqlError CollectionManager::lastError()
+{
+    return collection->lastError();
+}
+
 int CollectionManager::getIndexOf(QString key)
 {
     return db.record("collection").indexOf(key);
@@ -110,6 +115,11 @@ void CollectionManager::prepareRecord(QSqlRecord &record)
     QSqlField nameField("generated_name", QVariant::String);
     nameField.setValue(tr("%1 in %2").arg(character, scene));
     record.append(nameField);
+}
+
+void CollectionManager::prepareRecord(int row, QSqlRecord &record)
+{
+    prepareRecord(record);
 }
 
 QString CollectionManager::keySqlList(QStringList keys)

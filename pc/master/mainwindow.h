@@ -22,6 +22,8 @@
 #include <QFileDialog>
 #include <QPushButton>
 #include <QItemSelectionModel>
+#include <QDataWidgetMapper>
+#include <QSqlQueryModel>
 #include "common/qturntable.h"
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
@@ -50,8 +52,6 @@ public slots:
     void displayError(QString error);
     void saveCostume();
     void loadCostume(Costume *costume);
-    void loadSelectedCostume();
-    void removeSelectedRows();
     
 private slots:
     void on_captureButton_clicked();
@@ -65,6 +65,14 @@ private slots:
 
     void on_actionOpen_Collection_triggered();
 
+    void on_loadButton_clicked();
+
+    void on_newCostume_clicked();
+
+    void on_removeButton_clicked();
+
+    void on_saveButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QPhoto::CameraHandler *handler;
@@ -72,8 +80,10 @@ private:
     QList<QPixmap> *pics;
     QErrorMessage errorMessage;
     QMap<QString, QWidget*> infoWidgets;
+    QDataWidgetMapper mapper;
     CollectionManager collection;
     QSettings settings;
+    Costume *costume;
 
     void doConnections();
     void loadCollection(QString path);

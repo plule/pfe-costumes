@@ -12,6 +12,7 @@
 #include <QSqlTableModel>
 #include <QSqlRecord>
 #include <QSqlField>
+#include <QSqlError>
 
 #include "common/costume.h"
 
@@ -27,12 +28,14 @@ public:
     Costume *loadCostume(int id);
     Costume *loadCostume(QSqlRecord record);
     QSqlTableModel* getCollectionModel();
+    QSqlError lastError();
     int getIndexOf(QString key);
     
 signals:
     
 public slots:
     void prepareRecord(QSqlRecord & record);
+    void prepareRecord(int row, QSqlRecord & record);
 
 private:
     QString keySqlList(QStringList keys);

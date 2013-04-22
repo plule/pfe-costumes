@@ -6,13 +6,12 @@ int Costume_info::last_order;
 
 Costume::Costume(QObject *parent) : QObject(parent)
 {
-    id = -1;
+    informations.insert("id",-1);
 }
 
 Costume::Costume(long id, QMap<QString, QVariant> informations, QObject *parent) :
     QObject(parent)
 {
-    this->id = id;
     this->informations = informations;
 }
 
@@ -20,6 +19,7 @@ void Costume::InitDefaultInfos()
 {
     Costume_info::last_order = 0;
     valid_informations = QMap<QString, Costume_info>();
+    valid_informations.insert("id", Costume_info(Number, tr("Id")));
     valid_informations.insert("director", Costume_info(ShortString, tr("Piece Director")));
     valid_informations.insert("piece", Costume_info(ShortString, tr("Piece Name")));
     valid_informations.insert("writer", Costume_info(ShortString, tr("Piece Writer")));
@@ -72,7 +72,7 @@ bool Costume::isValid()
 
 QString Costume::toString()
 {
-    QString ret = "Costume " + QString::number(id) + "\n";
+    QString ret = "Costume " + QString::number(getId()) + "\n";
     foreach(QString key, informations.keys()) {
         Costume_info info = valid_informations.value(key);
         ret += "  " + key + ":" + informations.value(key).toString() + "\n";
@@ -80,14 +80,14 @@ QString Costume::toString()
     return ret;
 }
 
-long Costume::getId()
+int Costume::getId()
 {
-    return id;
+    return informations.value("id",-1).toInt();
 }
 
-void Costume::setId(long id)
+void Costume::setId(int id)
 {
-    this->id = id;
+    informations.insert("id",id);
 }
 
 QString Costume::getName()

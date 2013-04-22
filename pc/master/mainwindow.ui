@@ -28,15 +28,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="maximumSize">
-         <size>
-          <width>200</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="selectionMode">
-         <enum>QAbstractItemView::MultiSelection</enum>
-        </property>
        </widget>
       </item>
       <item>
@@ -45,6 +36,13 @@
          <widget class="QPushButton" name="loadButton">
           <property name="text">
            <string>Load costume</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="newCostume">
+          <property name="text">
+           <string>New</string>
           </property>
          </widget>
         </item>
@@ -62,7 +60,7 @@
     <item>
      <widget class="QTabWidget" name="tab">
       <property name="currentIndex">
-       <number>3</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="collectionTab">
        <attribute name="title">
@@ -525,12 +523,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>118</y>
+     <x>431</x>
+     <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>765</x>
-     <y>433</y>
+     <x>758</x>
+     <y>464</y>
     </hint>
    </hints>
   </connection>
@@ -541,12 +539,12 @@
    <slot>setAngle(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>765</x>
-     <y>433</y>
+     <x>758</x>
+     <y>464</y>
     </hint>
     <hint type="destinationlabel">
-     <x>119</x>
-     <y>118</y>
+     <x>431</x>
+     <y>204</y>
     </hint>
    </hints>
   </connection>
@@ -557,12 +555,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>118</y>
+     <x>431</x>
+     <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>794</x>
-     <y>413</y>
+     <x>787</x>
+     <y>464</y>
     </hint>
    </hints>
   </connection>
@@ -573,12 +571,12 @@
    <slot>setAngle(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>765</x>
-     <y>474</y>
+     <x>758</x>
+     <y>499</y>
     </hint>
     <hint type="destinationlabel">
-     <x>119</x>
-     <y>118</y>
+     <x>431</x>
+     <y>204</y>
     </hint>
    </hints>
   </connection>
@@ -589,12 +587,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>118</y>
+     <x>431</x>
+     <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>765</x>
-     <y>474</y>
+     <x>758</x>
+     <y>499</y>
     </hint>
    </hints>
   </connection>
@@ -609,8 +607,8 @@
      <y>474</y>
     </hint>
     <hint type="destinationlabel">
-     <x>119</x>
-     <y>118</y>
+     <x>431</x>
+     <y>204</y>
     </hint>
    </hints>
   </connection>
@@ -621,8 +619,8 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>118</y>
+     <x>431</x>
+     <y>204</y>
     </hint>
     <hint type="destinationlabel">
      <x>858</x>
@@ -637,12 +635,12 @@
    <slot>setZoom(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>794</x>
-     <y>413</y>
+     <x>787</x>
+     <y>464</y>
     </hint>
     <hint type="destinationlabel">
-     <x>119</x>
-     <y>118</y>
+     <x>431</x>
+     <y>204</y>
     </hint>
    </hints>
   </connection>
@@ -653,12 +651,12 @@
    <slot>resetScale()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>211</x>
-     <y>588</y>
+     <x>513</x>
+     <y>629</y>
     </hint>
     <hint type="destinationlabel">
-     <x>119</x>
-     <y>118</y>
+     <x>431</x>
+     <y>204</y>
     </hint>
    </hints>
   </connection>
@@ -669,12 +667,12 @@
    <slot>fitInView()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>120</x>
-     <y>588</y>
+     <x>422</x>
+     <y>629</y>
     </hint>
     <hint type="destinationlabel">
-     <x>119</x>
-     <y>118</y>
+     <x>431</x>
+     <y>204</y>
     </hint>
    </hints>
   </connection>
@@ -686,7 +684,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>869</x>
-     <y>506</y>
+     <y>539</y>
     </hint>
     <hint type="destinationlabel">
      <x>889</x>
@@ -694,43 +692,9 @@
     </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>removeButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>removeSelectedRows()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>815</x>
-     <y>613</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>886</x>
-     <y>557</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>loadButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>loadSelectedCostume()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>699</x>
-     <y>604</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>712</x>
-     <y>639</y>
-    </hint>
-   </hints>
-  </connection>
  </connections>
  <slots>
   <slot>saveCostume()</slot>
-  <slot>removeSelectedRows()</slot>
   <slot>loadCostume(int)</slot>
-  <slot>loadSelectedCostume()</slot>
  </slots>
 </ui>
