@@ -89,3 +89,8 @@ void Costume::setId(long id)
 {
     this->id = id;
 }
+
+QString Costume::getName()
+{
+    return tr("%1 in %2").arg(getInfo("character").toString(), getInfo("piece").toString());
+}

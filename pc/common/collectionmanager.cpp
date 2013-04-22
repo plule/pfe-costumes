@@ -17,6 +17,8 @@ bool CollectionManager::init(QString collectionPath)
     //QString path = configPath.absoluteFilePath(collection + ".db");
     db.setDatabaseName(collectionPath);
     collection->setTable("collection");
+    connect(collection, SIGNAL(beforeInsert(QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
+    connect(collection, SIGNAL(beforeUpdate(int,QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
     return db.open();
 }
 
@@ -34,13 +36,15 @@ bool CollectionManager::createCollectionTable()
             qWarning() << "Field \"" + key + "\" is not supported for storage in the database.";
         }
     }
-
+    query.append(", generated_name varchar(512)");
     query.append(")");
     qDebug() << query;
     bool ret = sqlquery.exec(query);
     if(!ret)
         qDebug() << sqlquery.lastError();
     collection->setTable("collection");
+    connect(collection, SIGNAL(beforeInsert(QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
+    connect(collection, SIGNAL(beforeUpdate(int,QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
     return false;
 }
 
@@ -57,6 +61,7 @@ bool CollectionManager::saveCostume(Costume *costume)
             field.setValue(costume->getInfo(key));
             record.append(field);
         }
+
         collection->insertRecord(-1, record);
         bool ret = collection->submit();
         collection->select();
@@ -94,6 +99,17 @@ QSqlTableModel *CollectionManager::getCollectionModel()
 int CollectionManager::getIndexOf(QString key)
 {
     return db.record("collection").indexOf(key);
+}
+
+void CollectionManager::prepareRecord(QSqlRecord &record)
+{
+    QString character = record.value("character").toString();
+    QString scene = record.value("piece").toString();
+    record.setValue(record.indexOf("generated_name"), tr("%1 in %2").arg(character, scene));
+
+    QSqlField nameField("generated_name", QVariant::String);
+    nameField.setValue(tr("%1 in %2").arg(character, scene));
+    record.append(nameField);
 }
 
 QString CollectionManager::keySqlList(QStringList keys)

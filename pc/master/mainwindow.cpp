@@ -254,6 +254,7 @@ void MainWindow::loadCollection(QString path)
         model->setTable("collection");
         model->select();
         ui->collectionTable->setModel(model);
+        ui->collectionTable->setModelColumn(collection.getIndexOf("generated_name"));
         connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
     }
 }

@@ -42,6 +42,7 @@ public:
     QString toString();
     long getId();
     void setId(long id);
+    QString getName();
 
     static void InitDefaultInfos();
     static QMap<QString, Costume_info> valid_informations;

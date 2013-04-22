@@ -32,6 +32,7 @@ public:
 signals:
     
 public slots:
+    void prepareRecord(QSqlRecord & record);
 
 private:
     QString keySqlList(QStringList keys);

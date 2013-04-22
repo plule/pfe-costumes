@@ -21,7 +21,7 @@
        <enum>QLayout::SetMinimumSize</enum>
       </property>
       <item>
-       <widget class="QTableView" name="collectionTable">
+       <widget class="QListView" name="collectionTable">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -36,9 +36,6 @@
         </property>
         <property name="selectionMode">
          <enum>QAbstractItemView::MultiSelection</enum>
-        </property>
-        <property name="gridStyle">
-         <enum>Qt::DashLine</enum>
         </property>
        </widget>
       </item>
