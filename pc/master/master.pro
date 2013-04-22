@@ -29,7 +29,8 @@ LIBS += -lgphoto2 -lgphoto2_port
 FORMS += \
     mainwindow.ui
 
-TRANSLATIONS = master_fr.ts
+TRANSLATIONS = ../resources/master_fr.ts
 
 RESOURCES += \
-    ../resources/pics/pics.qrc
+    ../resources/pics/pics.qrc \
+    ../resources/translations.qrc
