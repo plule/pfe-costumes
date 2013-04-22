@@ -73,8 +73,10 @@ private:
     QErrorMessage errorMessage;
     QMap<QString, QWidget*> infoWidgets;
     CollectionManager collection;
+    QSettings settings;
 
     void doConnections();
+    void loadCollection(QString path);
     void initInfoLayout(QFormLayout *layout, QMap<QString, Costume_info> valid_informations);
 };
 

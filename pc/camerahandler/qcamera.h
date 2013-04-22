@@ -12,6 +12,8 @@
 
 #include "cameraexception.h"
 
+#define LEGACY_GPHOTO
+
 #define GP_CALL(ret, fn, ...) emit wait_for_camera_answer();\
     ret = fn(__VA_ARGS__);\
     emit camera_answered();

@@ -1,4 +1,4 @@
-#include <QApplication>
+#include <QtWidgets/QApplication>
 #include <QDebug>
 #include <QObject>
 #include <QTranslator>
@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     a.setApplicationName("pfe-costumes");
+    a.setOrganizationName("INSA-CNCS-MJCSteFoy");
     QTranslator translator;
     QLocale locale;
 

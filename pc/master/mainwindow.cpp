@@ -19,8 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     handler->init();
     doConnections();
-
+    qDebug() << QIcon::themeName();
     ui->turntable->setNumber(36);
+    if(settings.value("collection").type() == QVariant::String)
+        loadCollection(settings.value("collection").toString());
 }
 
 MainWindow::~MainWindow()
@@ -102,6 +104,7 @@ void MainWindow::doConnections()
         connect(cameras[i]->getWatchdog(), SIGNAL(timeout()), this, SLOT(timeout()));
     }
 }
+
 typedef QPair<Costume_info,QString> info_for_sort;
 
 void MainWindow::initInfoLayout(QFormLayout *layout, QMap<QString, Costume_info> valid_informations)
@@ -217,20 +220,18 @@ void MainWindow::on_suzanneButton_pressed()
 
 void MainWindow::on_actionNew_Collection_triggered()
 {
-    if(collection.init(QFileDialog::getSaveFileName(this, tr("New collection"), QDir::home().absolutePath()))) {
-        collection.createCollectionTable();
-        QSqlTableModel *model = collection.getCollectionModel();
-
-        model->setTable("collection");
-        model->select();
-        ui->collectionTable->setModel(model);
-        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
-    }
+    loadCollection(QFileDialog::getSaveFileName(this, tr("New collection"), QDir::home().absolutePath()));
 }
 
 void MainWindow::on_actionOpen_Collection_triggered()
 {
-    if(collection.init(QFileDialog::getOpenFileName(this, tr("Open collection"), QDir::home().absolutePath()))) {
+    loadCollection(QFileDialog::getOpenFileName(this, tr("Open collection"), QDir::home().absolutePath()));
+}
+
+void MainWindow::loadCollection(QString path)
+{
+    settings.setValue("collection", path);
+    if(collection.init(path)) {
         collection.createCollectionTable();
         QSqlTableModel *model = collection.getCollectionModel();
 
