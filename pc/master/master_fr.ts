@@ -4,57 +4,57 @@
 <context>
     <name>Costume</name>
     <message>
-        <location filename="../common/costume.cpp" line="14"/>
+        <location filename="../common/costume.cpp" line="23"/>
         <source>Piece Director</source>
         <translation>Metteur en scène</translation>
     </message>
     <message>
-        <location filename="../common/costume.cpp" line="15"/>
+        <location filename="../common/costume.cpp" line="24"/>
         <source>Piece Name</source>
         <translation>Nom de la pièce</translation>
     </message>
     <message>
-        <location filename="../common/costume.cpp" line="16"/>
+        <location filename="../common/costume.cpp" line="25"/>
         <source>Piece Writer</source>
         <translation>Auteur de la pièce</translation>
     </message>
     <message>
-        <location filename="../common/costume.cpp" line="17"/>
+        <location filename="../common/costume.cpp" line="26"/>
         <source>Piece Type</source>
         <translation>Type de pièce</translation>
     </message>
     <message>
-        <location filename="../common/costume.cpp" line="18"/>
+        <location filename="../common/costume.cpp" line="27"/>
         <source>Character Name</source>
         <translation>Nom du personnage</translation>
     </message>
     <message>
-        <location filename="../common/costume.cpp" line="19"/>
+        <location filename="../common/costume.cpp" line="28"/>
         <source>Worn by : </source>
         <translation>Porté par : </translation>
     </message>
     <message>
-        <location filename="../common/costume.cpp" line="20"/>
+        <location filename="../common/costume.cpp" line="29"/>
         <source>Year</source>
         <translation>Année</translation>
     </message>
     <message>
-        <location filename="../common/costume.cpp" line="21"/>
+        <location filename="../common/costume.cpp" line="30"/>
         <source>Designer</source>
         <translation>Costumier</translation>
     </message>
     <message>
-        <location filename="../common/costume.cpp" line="22"/>
+        <location filename="../common/costume.cpp" line="31"/>
         <source>Collection</source>
         <translation>Collection</translation>
     </message>
     <message>
-        <location filename="../common/costume.cpp" line="23"/>
+        <location filename="../common/costume.cpp" line="32"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../common/costume.cpp" line="24"/>
+        <location filename="../common/costume.cpp" line="33"/>
         <source>Additional visuals</source>
         <translation>Visuels supplémentaires</translation>
     </message>
@@ -67,143 +67,192 @@
         <translation>Fenêtre principale</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="25"/>
+        <location filename="mainwindow.ui" line="50"/>
+        <source>Load costume</source>
+        <translation>Charger Costume</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="57"/>
+        <source>Remove</source>
+        <translation>Supprimer</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="72"/>
+        <source>Collection</source>
+        <translation>Collection</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="82"/>
         <source>Preparation</source>
         <translation>Préparation</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="30"/>
+        <location filename="mainwindow.ui" line="87"/>
         <source>Adjustment</source>
         <translation>Ajustement</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="35"/>
+        <location filename="mainwindow.ui" line="92"/>
         <source>Capture</source>
         <translation>Capture</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="69"/>
+        <location filename="mainwindow.ui" line="126"/>
         <source>Fit to window</source>
         <translation>Ajuster à la fenêtre</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="76"/>
+        <location filename="mainwindow.ui" line="133"/>
         <source>1:1</source>
         <translation>1:1</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="108"/>
+        <location filename="mainwindow.ui" line="165"/>
         <source>Refresh</source>
         <translation>Rafraîchir</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="115"/>
         <source>Suzanne</source>
-        <translation>Suzanne</translation>
+        <translation type="obsolete">Suzanne</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="122"/>
+        <location filename="mainwindow.ui" line="172"/>
+        <source>Load Default Model</source>
+        <translation>Charger le modèle par défaut</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="179"/>
         <source>Mass capture</source>
         <translation>Captures multiples</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="128"/>
+        <location filename="mainwindow.ui" line="185"/>
         <source>Launch mass capture</source>
         <translation>Lancer les captures</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="137"/>
+        <location filename="mainwindow.ui" line="194"/>
         <source>From : </source>
         <oldsource>De : </oldsource>
         <translation>De : </translation>
     </message>
     <message utf8="true">
-        <location filename="mainwindow.ui" line="150"/>
-        <location filename="mainwindow.ui" line="173"/>
-        <location filename="mainwindow.ui" line="262"/>
+        <location filename="mainwindow.ui" line="207"/>
+        <location filename="mainwindow.ui" line="230"/>
+        <location filename="mainwindow.ui" line="319"/>
         <source>°</source>
         <translation>°</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="160"/>
+        <location filename="mainwindow.ui" line="217"/>
         <source>To : </source>
         <oldsource>À : </oldsource>
         <translation>À : </translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="191"/>
+        <location filename="mainwindow.ui" line="248"/>
         <source>Single capture</source>
         <translation>Capture unique</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="197"/>
+        <location filename="mainwindow.ui" line="254"/>
         <source>(Re)capture current view</source>
         <translation>(Re)capturer la vue actuelle</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="204"/>
+        <location filename="mainwindow.ui" line="261"/>
         <source>Autofocus</source>
         <translation>Autofocus</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="214"/>
+        <location filename="mainwindow.ui" line="271"/>
         <source>View</source>
         <translation>Vue</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="292"/>
+        <location filename="mainwindow.ui" line="349"/>
         <source>%</source>
         <translation>%</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="310"/>
+        <location filename="mainwindow.ui" line="367"/>
         <source>Control</source>
         <translation>Contrôle</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="316"/>
+        <location filename="mainwindow.ui" line="373"/>
         <source>Apply rotation</source>
         <translation>Appliquer la rotation</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="323"/>
+        <location filename="mainwindow.ui" line="380"/>
         <source>Automatic rotation</source>
         <translation>Rotation automatique</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="361"/>
+        <location filename="mainwindow.ui" line="418"/>
         <source>Informations</source>
         <translation>Informations</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="386"/>
+        <location filename="mainwindow.ui" line="453"/>
+        <source>saveButton</source>
+        <translation>Sauvegarder</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="476"/>
+        <source>File</source>
+        <translation>Fichier</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="486"/>
         <source>toolBar</source>
         <translation>Barre d&apos;état</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="61"/>
+        <location filename="mainwindow.ui" line="497"/>
+        <source>New Collection</source>
+        <translation>Nouvelle Collection</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="502"/>
+        <source>Open Collection</source>
+        <translation>Ouvrir Collection</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="63"/>
         <source>Lost camera.</source>
         <translation>L&apos;appareil photo ne répond plus.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="62"/>
+        <location filename="mainwindow.cpp" line="64"/>
         <source>Lost camera... You should try to disconnect and reconnect it.</source>
         <translation>L&apos;appareil photo ne répond plus, vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="74"/>
+        <location filename="mainwindow.cpp" line="76"/>
         <source>No camera connected</source>
         <translation>Aucun appareil photo détecté</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="122"/>
+        <location filename="mainwindow.cpp" line="137"/>
         <source>Choose file(s)</source>
         <translation>Selectionner des fichiers</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="141"/>
+        <location filename="mainwindow.cpp" line="210"/>
         <source>Loading views</source>
         <translation>Chargement des vues</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="223"/>
+        <source>New collection</source>
+        <translation>Nouvelle collection</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="228"/>
+        <source>Open collection</source>
+        <translation>Ouvrir collection</translation>
     </message>
 </context>
 <context>

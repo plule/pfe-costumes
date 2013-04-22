@@ -30,3 +30,6 @@ FORMS += \
     mainwindow.ui
 
 TRANSLATIONS = master_fr.ts
+
+RESOURCES += \
+    ../resources/pics/pics.qrc

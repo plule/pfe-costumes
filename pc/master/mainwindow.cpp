@@ -210,7 +210,7 @@ void MainWindow::on_suzanneButton_pressed()
     this->startWork(tr("Loading views"), 36);
     for(int i=1; i<=36; ++i)
     {
-        ui->turntable->setPixmap(i-1, QString("/home/xubuntu/PFE/monkeys/%1.jpg").arg(i));
+        ui->turntable->setPixmap(i-1, QString(":/default-model/%1.jpg").arg(i));
         this->ui->workBar->setValue(i);
     }
     ui->turntable->setView(0);

@@ -81,6 +81,7 @@ void QTurntable::setPixmap(int index, QPixmap &pixmap)
     if(index > m_pixmaps.size())
         setNumber(index+1);
     m_pixmaps[index] = pixmap;
+    qDebug() << pixmap;
     if(index == m_current)
     {
         m_current_pixmap->setPixmap(pixmap);
@@ -89,6 +90,7 @@ void QTurntable::setPixmap(int index, QPixmap &pixmap)
 
 void QTurntable::setPixmap(int index, QString path)
 {
+    qDebug() << path;
     QPixmap pic(path);
     setPixmap(index, pic);
 }

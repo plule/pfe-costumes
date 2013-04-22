@@ -4,18 +4,21 @@
 #include <QTranslator>
 #include <QLocale>
 #include <QDir>
+#include <QResource>
 
 #include "mainwindow.h"
  
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    Q_INIT_RESOURCE(pics);
 
     a.setApplicationName("pfe-costumes");
     a.setOrganizationName("INSA-CNCS-MJCSteFoy");
     QTranslator translator;
     QLocale locale;
 
+    qDebug() << QDir(a.applicationDirPath()).filePath("master_fr");
     translator.load(QDir(a.applicationDirPath()).filePath("master_fr"));
     a.installTranslator(&translator);
     /*foreach(QString strlocale, locale.uiLanguages()) {
