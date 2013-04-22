@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/translations">
-        <file>master_fr.qm</file>
+    <qresource prefix="/translations" lang="fr">
+        <file alias="master.qm">master_fr.qm</file>
     </qresource>
 </RCC>
