@@ -58,7 +58,9 @@ bool CollectionManager::saveCostume(Costume *costume)
             record.append(field);
         }
         collection->insertRecord(-1, record);
-        return collection->submit();
+        bool ret = collection->submit();
+        collection->select();
+        return ret;
     } else {
         qWarning() << "Update not implemented yet.";
         return false;
@@ -87,6 +89,11 @@ Costume *CollectionManager::loadCostume(QSqlRecord record)
 QSqlTableModel *CollectionManager::getCollectionModel()
 {
     return collection;
+}
+
+int CollectionManager::getIndexOf(QString key)
+{
+    return db.record("collection").indexOf(key);
 }
 
 QString CollectionManager::keySqlList(QStringList keys)

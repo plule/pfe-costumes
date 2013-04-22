@@ -200,8 +200,24 @@ void MainWindow::loadSelectedCostume()
 
 void MainWindow::removeSelectedRows()
 {
-    foreach (QModelIndex i, this->ui->collectionTable->selectionModel()->selectedIndexes())
-        collection.getCollectionModel()->removeRow(i.row());
+    QItemSelection selection(ui->collectionTable->selectionModel()->selection() );
+
+    QList<int> rows;
+    foreach( const QModelIndex & index, selection.indexes() ) {
+        rows.append( index.row() );
+    }
+
+    qSort( rows );
+
+    int prev = -1;
+    for( int i = rows.count() - 1; i >= 0; i -= 1 ) {
+        int current = rows[i];
+        if( current != prev ) {
+            collection.getCollectionModel()->removeRows( current, 1 );
+            prev = current;
+        }
+    }
+    collection.getCollectionModel()->select();
 }
 
 

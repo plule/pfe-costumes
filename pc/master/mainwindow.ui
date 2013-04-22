@@ -35,7 +35,7 @@
          </size>
         </property>
         <property name="selectionMode">
-         <enum>QAbstractItemView::SingleSelection</enum>
+         <enum>QAbstractItemView::MultiSelection</enum>
         </property>
         <property name="gridStyle">
          <enum>Qt::DashLine</enum>

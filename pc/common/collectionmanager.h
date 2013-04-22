@@ -27,6 +27,7 @@ public:
     Costume *loadCostume(int id);
     Costume *loadCostume(QSqlRecord record);
     QSqlTableModel* getCollectionModel();
+    int getIndexOf(QString key);
     
 signals:
     
