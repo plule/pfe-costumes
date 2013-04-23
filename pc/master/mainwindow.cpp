@@ -11,8 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->turntable->resize(800,600);
     ui->centralwidget->adjustSize();
 
-    CollectionManager::InitDefaultInfos(); // hack because tr() won't work out of the class
-    initInfoLayout(ui->infoLayout, CollectionManager::valid_informations);
+    Collection::InitDefaultInfos(); // hack because tr() won't work out of the class
+    initInfoLayout(ui->infoLayout, Collection::valid_informations);
 
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
     connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
@@ -40,7 +40,7 @@ void MainWindow::loadCollection(QString path)
         connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
         connect(ui->collectionTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), &mapper, SLOT(setCurrentModelIndex(QModelIndex)));
         mapper.clearMapping();
-        foreach(QString key, CollectionManager::valid_informations.keys())
+        foreach(QString key, Collection::valid_informations.keys())
             mapper.addMapping(infoWidgets.value(key), model->record().indexOf(key));
         mapper.toFirst();
     }

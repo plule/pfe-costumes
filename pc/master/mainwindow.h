@@ -28,7 +28,7 @@
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
 #include "common/slotlog.h"
-#include "common/collectionmanager.h"
+#include "common/collection.h"
 
 #define GROUP_INFO "costume_informations"
 
@@ -78,7 +78,7 @@ private:
     QErrorMessage errorMessage;
     QMap<QString, QWidget*> infoWidgets;
     QDataWidgetMapper mapper;
-    CollectionManager collection;
+    Collection collection;
     QSettings settings;
 
     void doConnections();

@@ -36,12 +36,12 @@ struct Costume_info {
     }
 };
 
-class CollectionManager : public QObject
+class Collection : public QObject
 {
     Q_OBJECT
 public:
-    explicit CollectionManager(QObject *parent = 0);
-    ~CollectionManager();
+    explicit Collection(QObject *parent = 0);
+    ~Collection();
     bool init(QString collectionPath);
     bool createCollectionTable();
     QSqlTableModel* getCollectionModel();

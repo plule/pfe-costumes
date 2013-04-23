@@ -1,20 +1,20 @@
-#include "collectionmanager.h"
+#include "collection.h"
 
-QMap<QString, Costume_info> CollectionManager::valid_informations;
-QMap<Costume_info_type, QString> CollectionManager::sql_types;
+QMap<QString, Costume_info> Collection::valid_informations;
+QMap<Costume_info_type, QString> Collection::sql_types;
 int Costume_info::last_order;
 
-CollectionManager::CollectionManager(QObject *parent) :
+Collection::Collection(QObject *parent) :
     QObject(parent)
 {
 }
 
-CollectionManager::~CollectionManager()
+Collection::~Collection()
 {
     db.close();
 }
 
-bool CollectionManager::init(QString collectionPath)
+bool Collection::init(QString collectionPath)
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
     collection = new QSqlTableModel(this, db);
@@ -25,7 +25,7 @@ bool CollectionManager::init(QString collectionPath)
     return db.open();
 }
 
-bool CollectionManager::createCollectionTable()
+bool Collection::createCollectionTable()
 {
     QString query = "create table collection (";
     QSqlQuery sqlquery;
@@ -52,22 +52,22 @@ bool CollectionManager::createCollectionTable()
     return false;
 }
 
-QSqlTableModel *CollectionManager::getCollectionModel()
+QSqlTableModel *Collection::getCollectionModel()
 {
     return collection;
 }
 
-QSqlError CollectionManager::lastError()
+QSqlError Collection::lastError()
 {
     return collection->lastError();
 }
 
-int CollectionManager::getIndexOf(QString key)
+int Collection::getIndexOf(QString key)
 {
     return db.record("collection").indexOf(key);
 }
 
-void CollectionManager::InitDefaultInfos()
+void Collection::InitDefaultInfos()
 {
     Costume_info::last_order = 0;
     valid_informations = QMap<QString, Costume_info>();
@@ -91,7 +91,7 @@ void CollectionManager::InitDefaultInfos()
     sql_types.insert(PK, "integer primary key");
 }
 
-QList<QPair<Costume_info, QString> > CollectionManager::sortedValidInformations()
+QList<QPair<Costume_info, QString> > Collection::sortedValidInformations()
 {
     QList<QPair<Costume_info, QString> > orderedInfos;
 
@@ -102,7 +102,7 @@ QList<QPair<Costume_info, QString> > CollectionManager::sortedValidInformations(
     return orderedInfos;
 }
 
-void CollectionManager::prepareRecord(QSqlRecord &record)
+void Collection::prepareRecord(QSqlRecord &record)
 {
     QString character = record.value("character").toString();
     QString scene = record.value("piece").toString();
@@ -113,18 +113,18 @@ void CollectionManager::prepareRecord(QSqlRecord &record)
     record.append(nameField);
 }
 
-void CollectionManager::prepareRecord(int row, QSqlRecord &record)
+void Collection::prepareRecord(int row, QSqlRecord &record)
 {
     (void)row;
     prepareRecord(record);
 }
 
-QString CollectionManager::keySqlList(QStringList keys)
+QString Collection::keySqlList(QStringList keys)
 {
     return keys.join(", ");
 }
 
-QString CollectionManager::keyValueList(QStringList keys)
+QString Collection::keyValueList(QStringList keys)
 {
     return ":" + keys.join(", :");
 }
