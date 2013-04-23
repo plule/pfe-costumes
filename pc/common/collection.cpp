@@ -103,7 +103,7 @@ void Collection::InitDefaultInfos()
     valid_informations.insert("collection", Costume_info(ShortString, tr("Collection")));
     valid_informations.insert("description", Costume_info(LongString, tr("Description")));
     //valid_informations.insert("visual", Costume_info(Files, tr("Additional visuals")));
-    valid_informations.insert("generated_name", Costume_info(LongString, tr("Generated Name")));
+    valid_informations.insert("generated_name", Costume_info(LongString, tr("Generated Name"), false, false));
     valid_informations.insert("turntable", Costume_info(Files, tr("360° view"), false, true, true));
 
     sql_types.insert(ShortString, "varchar(256)");

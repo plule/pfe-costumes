@@ -47,7 +47,6 @@ QString QTurntable::getPaths()
 void QTurntable::loadPaths(QString paths)
 {
     pathsToLoad = paths.split("|");
-    qDebug() << pathsToLoad;
 }
 
 int QTurntable::getNumber()
