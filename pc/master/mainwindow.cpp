@@ -26,6 +26,28 @@ MainWindow::MainWindow(QWidget *parent) :
         loadCollection(settings.value("collection").toString());
 }
 
+void MainWindow::loadCollection(QString path)
+{
+    settings.setValue("collection", path);
+    if(collection.init(path)) {
+        collection.createCollectionTable();
+        QSqlTableModel *model = collection.getCollectionModel();
+
+        model->setTable("collection");
+        model->select();
+        ui->collectionTable->setModel(model);
+        mapper.setModel(model);
+        ui->collectionTable->setModelColumn(collection.getIndexOf("generated_name"));
+        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
+        connect(ui->collectionTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), &mapper, SLOT(setCurrentModelIndex(QModelIndex)));
+        mapper.clearMapping();
+        foreach(QString key, Costume::valid_informations.keys())
+            mapper.addMapping(infoWidgets.value(key), model->record().indexOf(key));
+        mapper.toFirst();
+    }
+}
+
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -124,7 +146,7 @@ void MainWindow::initInfoLayout(QFormLayout *layout, QMap<QString, Costume_info>
         QWidget *widget = 0;
         if(info.type == ShortString)
             widget = new QLineEdit(this);
-        else if(info.type == Number) {
+        else if(info.type == Number || info.type == PK) {
             widget = new QSpinBox(this);
             ((QSpinBox*)widget)->setMaximum(9999);
             ((QSpinBox*)widget)->setMinimum(-9999);
@@ -200,27 +222,6 @@ void MainWindow::on_actionOpen_Collection_triggered()
     loadCollection(QFileDialog::getOpenFileName(this, tr("Open collection"), QDir::home().absolutePath()));
 }
 
-void MainWindow::loadCollection(QString path)
-{
-    settings.setValue("collection", path);
-    if(collection.init(path)) {
-        collection.createCollectionTable();
-        QSqlTableModel *model = collection.getCollectionModel();
-
-        model->setTable("collection");
-        model->select();
-        ui->collectionTable->setModel(model);
-        mapper.setModel(model);
-        ui->collectionTable->setModelColumn(collection.getIndexOf("generated_name"));
-        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
-        connect(ui->collectionTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), &mapper, SLOT(setCurrentModelIndex(QModelIndex)));
-        mapper.clearMapping();
-        foreach(QString key, Costume::valid_informations.keys())
-            mapper.addMapping(infoWidgets.value(key), model->record().indexOf(key));
-        mapper.toFirst();
-    }
-}
-
 void MainWindow::on_loadButton_clicked()
 {
     QModelIndex index = ui->collectionTable->selectionModel()->selectedIndexes().first();
@@ -254,20 +255,4 @@ void MainWindow::on_saveButton_clicked()
 {
     if(!mapper.submit())
         qDebug() << ((QSqlQueryModel)mapper.model()).lastError();
- /*   foreach(QString key, infoWidgets.keys()) {
-        Costume_info info = Costume::valid_informations.value(key);
-        if(info.type == ShortString) {
-            QLineEdit *widget = (QLineEdit*)infoWidgets.value(key);
-            if(widget->text() != "")
-                costume->setInfo(key, widget->text());
-        } else if(info.type == LongString) {
-            QPlainTextEdit *widget = (QPlainTextEdit*)infoWidgets.value(key);
-            if(widget->toPlainText() != "")
-                costume->setInfo(key, widget->toPlainText());
-        } else if(info.type == Number) {
-            QSpinBox *widget = (QSpinBox*)infoWidgets.value(key);
-            costume->setInfo(key, widget->value());
-        }
-    }
-    collection.saveCostume(costume);*/
 }

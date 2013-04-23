@@ -7,6 +7,7 @@
 
 enum Costume_info_type {
     Invalid,
+    PK,
     ShortString,
     LongString,
     Number,
@@ -46,6 +47,7 @@ public:
 
     static void InitDefaultInfos();
     static QMap<QString, Costume_info> valid_informations;
+    static QList<QPair<Costume_info, QString> > sortedValidInformations();
     static QMap<Costume_info_type, QString> sql_types;
 
     

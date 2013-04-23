@@ -19,7 +19,7 @@ void Costume::InitDefaultInfos()
 {
     Costume_info::last_order = 0;
     valid_informations = QMap<QString, Costume_info>();
-    valid_informations.insert("id", Costume_info(Number, tr("Id")));
+    valid_informations.insert("id", Costume_info(PK, tr("Id")));
     valid_informations.insert("director", Costume_info(ShortString, tr("Piece Director")));
     valid_informations.insert("piece", Costume_info(ShortString, tr("Piece Name")));
     valid_informations.insert("writer", Costume_info(ShortString, tr("Piece Writer")));
@@ -36,6 +36,18 @@ void Costume::InitDefaultInfos()
     sql_types.insert(ShortString, "varchar(256)");
     sql_types.insert(LongString, "varchar(4096)");
     sql_types.insert(Number, "integer");
+    sql_types.insert(PK, "integer primary key");
+}
+
+QList<QPair<Costume_info, QString> > Costume::sortedValidInformations()
+{
+    QList<QPair<Costume_info, QString> > orderedInfos;
+
+    foreach(QString key, valid_informations.keys())
+        orderedInfos << QPair<Costume_info, QString>(valid_informations.value(key), key);
+
+    qSort(orderedInfos);
+    return orderedInfos;
 }
 
 QVariant Costume::getInfo(QString key)

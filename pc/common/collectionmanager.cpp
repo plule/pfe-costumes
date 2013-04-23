@@ -23,27 +23,28 @@ bool CollectionManager::init(QString collectionPath)
 
 bool CollectionManager::createCollectionTable()
 {
-    QString query = "create table collection (id integer primary key";
+    QString query = "create table collection (";
     QSqlQuery sqlquery;
-    foreach(QString key, Costume::valid_informations.keys()) {
-        Costume_info info = Costume::valid_informations.value(key);
+    QList<QPair<Costume_info, QString> > orderedInfos = Costume::sortedValidInformations();
+    for(int i = 0; i < orderedInfos.length(); i++) {
+        QPair<Costume_info, QString> pair = orderedInfos.at(i);
+        QString key = pair.second;
+        Costume_info info = pair.first;
 
         if(Costume::sql_types.keys().contains(info.type)) {
             QString type = Costume::sql_types.value(info.type);
-            query.append(", " + key + " " + type);
+            query.append(key + " " + type);
+            if(i != orderedInfos.length()-1)
+                query.append(", ");
         } else {
             qWarning() << "Field \"" + key + "\" is not supported for storage in the database.";
         }
     }
-    query.append(", generated_name varchar(512)");
     query.append(")");
     qDebug() << query;
     bool ret = sqlquery.exec(query);
     if(!ret)
         qDebug() << sqlquery.lastError();
-    collection->setTable("collection");
-    connect(collection, SIGNAL(beforeInsert(QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
-    connect(collection, SIGNAL(beforeUpdate(int,QSqlRecord&)), this, SLOT(prepareRecord(int, QSqlRecord&)));
     return false;
 }
 
