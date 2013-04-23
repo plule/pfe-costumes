@@ -92,7 +92,8 @@ void MainWindow::loadCollection(QString path)
                 qWarning() << QString("Unknown field type for field ") + info.name;
 
             if(widget != 0) {
-                ui->infoLayout->addRow(info.name, widget);
+                if(info.visible)
+                    ui->infoLayout->addRow(info.name, widget);
                 mapper.addMapping(widget, model->record().indexOf(key));
             }
         }

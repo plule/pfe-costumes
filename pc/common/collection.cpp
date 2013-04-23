@@ -76,7 +76,7 @@ void Collection::InitDefaultInfos()
 {
     Costume_info::last_order = 0;
     valid_informations = QMap<QString, Costume_info>();
-    valid_informations.insert("id", Costume_info(PK, tr("Id")));
+    valid_informations.insert("id", Costume_info(PK, tr("Id"), true, false));
     valid_informations.insert("director", Costume_info(ShortString, tr("Piece Director")));
     valid_informations.insert("piece", Costume_info(ShortString, tr("Piece Name")));
     valid_informations.insert("writer", Costume_info(ShortString, tr("Piece Writer")));
