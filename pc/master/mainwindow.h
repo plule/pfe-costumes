@@ -76,14 +76,12 @@ private:
     SlotLog *logger;
     QList<QPixmap> *pics;
     QErrorMessage errorMessage;
-    QMap<QString, QWidget*> infoWidgets;
     QDataWidgetMapper mapper;
-    Collection collection;
+    Collection *collection;
     QSettings settings;
 
     void doConnections();
     void loadCollection(QString path);
-    void initInfoLayout(QFormLayout *layout, QMap<QString, Costume_info> valid_informations);
 };
 
 #endif // MAINWINDOW_H

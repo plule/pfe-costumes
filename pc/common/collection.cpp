@@ -9,20 +9,23 @@ Collection::Collection(QObject *parent) :
 {
 }
 
+Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent)
+{
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName(collectionPath);
+    model = new QSqlTableModel(this, db);
+
+    connect(model, SIGNAL(beforeInsert(QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
+    connect(model, SIGNAL(beforeUpdate(int,QSqlRecord&)), this, SLOT(prepareRecord(int,QSqlRecord&)));
+
+    valid = db.open();
+    if(valid)
+        createCollectionTable(); //todo test collection table
+}
+
 Collection::~Collection()
 {
     db.close();
-}
-
-bool Collection::init(QString collectionPath)
-{
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    collection = new QSqlTableModel(this, db);
-    db.setDatabaseName(collectionPath);
-    collection->setTable("collection");
-    connect(collection, SIGNAL(beforeInsert(QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
-    connect(collection, SIGNAL(beforeUpdate(int,QSqlRecord&)), this, SLOT(prepareRecord(int,QSqlRecord&)));
-    return db.open();
 }
 
 bool Collection::createCollectionTable()
@@ -49,17 +52,19 @@ bool Collection::createCollectionTable()
     bool ret = sqlquery.exec(query);
     if(!ret)
         qDebug() << sqlquery.lastError();
-    return false;
+    model->setTable("collection");
+    model->select();
+    return ret;
 }
 
 QSqlTableModel *Collection::getCollectionModel()
 {
-    return collection;
+    return model;
 }
 
 QSqlError Collection::lastError()
 {
-    return collection->lastError();
+    return model->lastError();
 }
 
 int Collection::getIndexOf(QString key)
@@ -127,4 +132,9 @@ QString Collection::keySqlList(QStringList keys)
 QString Collection::keyValueList(QStringList keys)
 {
     return ":" + keys.join(", :");
+}
+
+bool Collection::isValid() const
+{
+    return valid;
 }

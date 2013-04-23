@@ -41,9 +41,8 @@ class Collection : public QObject
     Q_OBJECT
 public:
     explicit Collection(QObject *parent = 0);
+    Collection(QObject *parent = 0, QString collectionPath = "");
     ~Collection();
-    bool init(QString collectionPath);
-    bool createCollectionTable();
     QSqlTableModel* getCollectionModel();
     QSqlError lastError();
     int getIndexOf(QString key);
@@ -53,6 +52,8 @@ public:
     static QList<QPair<Costume_info, QString> > sortedValidInformations();
     static QMap<Costume_info_type, QString> sql_types;
     
+    bool isValid() const;
+
 signals:
     
 public slots:
@@ -60,11 +61,13 @@ public slots:
     void prepareRecord(int row, QSqlRecord & record);
 
 private:
+    bool createCollectionTable();
     QString keySqlList(QStringList keys);
     QString keyValueList(QStringList keys);
 
     QSqlDatabase db;
-    QSqlTableModel *collection;
+    QSqlTableModel *model;
+    bool valid;
     
 };
 

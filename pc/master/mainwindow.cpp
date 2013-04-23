@@ -12,7 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralwidget->adjustSize();
 
     Collection::InitDefaultInfos(); // hack because tr() won't work out of the class
-    initInfoLayout(ui->infoLayout, Collection::valid_informations);
 
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
     connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
@@ -25,27 +24,74 @@ MainWindow::MainWindow(QWidget *parent) :
         loadCollection(settings.value("collection").toString());
 }
 
-void MainWindow::loadCollection(QString path)
+static void clearLayout(QLayout* layout, bool deleteWidgets = true)
 {
-    settings.setValue("collection", path);
-    if(collection.init(path)) {
-        collection.createCollectionTable();
-        QSqlTableModel *model = collection.getCollectionModel();
-
-        model->setTable("collection");
-        model->select();
-        ui->collectionTable->setModel(model);
-        mapper.setModel(model);
-        ui->collectionTable->setModelColumn(collection.getIndexOf("generated_name"));
-        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
-        connect(ui->collectionTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), &mapper, SLOT(setCurrentModelIndex(QModelIndex)));
-        mapper.clearMapping();
-        foreach(QString key, Collection::valid_informations.keys())
-            mapper.addMapping(infoWidgets.value(key), model->record().indexOf(key));
-        mapper.toFirst();
+    while (QLayoutItem* item = layout->takeAt(0))
+    {
+        if (deleteWidgets)
+        {
+            if (QWidget* widget = item->widget())
+                delete widget;
+        }
+        else if (QLayout* childLayout = item->layout())
+            clearLayout(childLayout, deleteWidgets);
+        delete item;
     }
 }
 
+void MainWindow::loadCollection(QString path)
+{
+    qDebug() << "Load collection " + path;
+    settings.setValue("collection", path);
+    collection = new Collection(this, path);
+    if(collection->isValid()) {
+        QSqlTableModel *model = collection->getCollectionModel();
+
+        ui->collectionTable->setModel(model);
+        ui->collectionTable->setModelColumn(collection->getIndexOf("generated_name"));
+        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
+        connect(ui->collectionTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), &mapper, SLOT(setCurrentModelIndex(QModelIndex)));
+
+        mapper.setModel(model);
+        mapper.clearMapping();
+        clearLayout(ui->infoLayout);
+
+        QList<QPair<Costume_info, QString> > collectionInfos = collection->sortedValidInformations();
+        for(int i=0; i < collectionInfos.length(); i++) {
+            QString key = collectionInfos.at(i).second;
+            Costume_info info = collectionInfos.at(i).first;
+            QWidget *widget = 0;
+
+            if(info.type == ShortString)
+                widget = new QLineEdit(this);
+            else if(info.type == Number || info.type == PK) {
+                widget = new QSpinBox(this);
+                ((QSpinBox*)widget)->setMaximum(9999);
+                ((QSpinBox*)widget)->setMinimum(-9999);
+            } else if(info.type == LongString)
+                widget = new QPlainTextEdit(this);
+            else if(info.type == Files){
+                QFileDialog *dialog = new QFileDialog(this);
+                dialog->setDirectory(QDir::home());
+                dialog->setFileMode(QFileDialog::ExistingFiles);
+                QPushButton *button = new QPushButton(this);
+                button->setText(tr("Choose file(s)"));
+                connect(button, SIGNAL(clicked()), dialog, SLOT(open()));
+                // TODO display selected file(s)
+                // TODO better multi-file picker
+
+                ui->infoLayout->addRow(info.name, button);
+            } else
+                qWarning() << QString("Unknown field type for field ") + info.name;
+
+            if(widget != 0) {
+                ui->infoLayout->addRow(info.name, widget);
+                mapper.addMapping(widget, model->record().indexOf(key));
+            }
+        }
+        mapper.toFirst();
+    }
+}
 
 MainWindow::~MainWindow()
 {
@@ -127,56 +173,10 @@ void MainWindow::doConnections()
     }
 }
 
-typedef QPair<Costume_info,QString> info_for_sort;
-
-void MainWindow::initInfoLayout(QFormLayout *layout, QMap<QString, Costume_info> valid_informations)
-{
-    QList<QPair<Costume_info, QString> > orderedInfos;
-
-    foreach(QString key, valid_informations.keys())
-        orderedInfos << QPair<Costume_info, QString>(valid_informations.value(key), key);
-
-    qSort(orderedInfos);
-
-    foreach(info_for_sort pair, orderedInfos)
-    {
-        Costume_info info = pair.first;
-        QString key = pair.second;
-        QWidget *widget = 0;
-        if(info.type == ShortString)
-            widget = new QLineEdit(this);
-        else if(info.type == Number || info.type == PK) {
-            widget = new QSpinBox(this);
-            ((QSpinBox*)widget)->setMaximum(9999);
-            ((QSpinBox*)widget)->setMinimum(-9999);
-        } else if(info.type == LongString)
-            widget = new QPlainTextEdit(this);
-        else if(info.type == Files){
-            QFileDialog *dialog = new QFileDialog(this);
-            dialog->setDirectory(QDir::home());
-            dialog->setFileMode(QFileDialog::ExistingFiles);
-            QPushButton *button = new QPushButton(this);
-            button->setText(tr("Choose file(s)"));
-            connect(button, SIGNAL(clicked()), dialog, SLOT(open()));
-            // TODO display selected file(s)
-            // TODO better multi-file picker
-
-            layout->addRow(info.name, button);
-            infoWidgets.insert(key, dialog);
-        } else
-            qWarning() << QString("Unknown field type for field ") + info.name;
-
-        if(widget != 0) {
-            infoWidgets.insert(key, widget);
-            layout->addRow(info.name, widget);
-        }
-    }
-}
-
 void MainWindow::on_newCostume_clicked()
 {
-    collection.getCollectionModel()->insertRecord(-1, QSqlRecord());
-    collection.getCollectionModel()->select();
+    collection->getCollectionModel()->insertRecord(-1, QSqlRecord());
+    collection->getCollectionModel()->select();
     mapper.toLast();
 }
 
@@ -224,11 +224,11 @@ void MainWindow::on_removeButton_clicked()
     for( int i = rows.count() - 1; i >= 0; i -= 1 ) {
         int current = rows[i];
         if( current != prev ) {
-            collection.getCollectionModel()->removeRows( current, 1 );
+            collection->getCollectionModel()->removeRows( current, 1 );
             prev = current;
         }
     }
-    collection.getCollectionModel()->select();
+    collection->getCollectionModel()->select();
 }
 
 void MainWindow::on_saveButton_clicked()
