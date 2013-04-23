@@ -50,7 +50,6 @@ public slots:
     void startWork(QString work, int target);
     void updateStatusBar(QString message);
     void displayError(QString error);
-    void saveCostume();
     void loadCostume(Costume *costume);
     
 private slots:

@@ -152,27 +152,6 @@ void MainWindow::initInfoLayout(QFormLayout *layout, QMap<QString, Costume_info>
     }
 }
 
-
-void MainWindow::saveCostume()
-{
-    foreach(QString key, infoWidgets.keys()) {
-        Costume_info info = Costume::valid_informations.value(key);
-        if(info.type == ShortString) {
-            QLineEdit *widget = (QLineEdit*)infoWidgets.value(key);
-            if(widget->text() != "")
-                costume->setInfo(key, widget->text());
-        } else if(info.type == LongString) {
-            QPlainTextEdit *widget = (QPlainTextEdit*)infoWidgets.value(key);
-            if(widget->toPlainText() != "")
-                costume->setInfo(key, widget->toPlainText());
-        } else if(info.type == Number) {
-            QSpinBox *widget = (QSpinBox*)infoWidgets.value(key);
-            costume->setInfo(key, widget->value());
-        }
-    }
-    collection.saveCostume(costume);
-}
-
 void MainWindow::loadCostume(Costume *costume)
 {
     foreach(QString key, costume->getInfos().keys()) {
@@ -273,6 +252,22 @@ void MainWindow::on_removeButton_clicked()
 
 void MainWindow::on_saveButton_clicked()
 {
-/*    if(!mapper.submit())
-        qDebug() << ((QSqlQueryModel)mapper.model()).lastError();*/
+    if(!mapper.submit())
+        qDebug() << ((QSqlQueryModel)mapper.model()).lastError();
+ /*   foreach(QString key, infoWidgets.keys()) {
+        Costume_info info = Costume::valid_informations.value(key);
+        if(info.type == ShortString) {
+            QLineEdit *widget = (QLineEdit*)infoWidgets.value(key);
+            if(widget->text() != "")
+                costume->setInfo(key, widget->text());
+        } else if(info.type == LongString) {
+            QPlainTextEdit *widget = (QPlainTextEdit*)infoWidgets.value(key);
+            if(widget->toPlainText() != "")
+                costume->setInfo(key, widget->toPlainText());
+        } else if(info.type == Number) {
+            QSpinBox *widget = (QSpinBox*)infoWidgets.value(key);
+            costume->setInfo(key, widget->value());
+        }
+    }
+    collection.saveCostume(costume);*/
 }

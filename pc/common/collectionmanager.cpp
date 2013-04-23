@@ -14,7 +14,6 @@ bool CollectionManager::init(QString collectionPath)
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
     collection = new QSqlTableModel(this, db);
-    //QString path = configPath.absoluteFilePath(collection + ".db");
     db.setDatabaseName(collectionPath);
     collection->setTable("collection");
     connect(collection, SIGNAL(beforeInsert(QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
@@ -119,6 +118,7 @@ void CollectionManager::prepareRecord(QSqlRecord &record)
 
 void CollectionManager::prepareRecord(int row, QSqlRecord &record)
 {
+    (void)row;
     prepareRecord(record);
 }
 

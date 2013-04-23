@@ -676,25 +676,8 @@
     </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>saveButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>saveCostume()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>869</x>
-     <y>539</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>889</x>
-     <y>486</y>
-    </hint>
-   </hints>
-  </connection>
  </connections>
  <slots>
-  <slot>saveCostume()</slot>
   <slot>loadCostume(int)</slot>
  </slots>
 </ui>
