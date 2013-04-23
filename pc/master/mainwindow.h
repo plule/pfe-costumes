@@ -28,7 +28,6 @@
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
 #include "common/slotlog.h"
-#include "common/costume.h"
 #include "common/collectionmanager.h"
 
 #define GROUP_INFO "costume_informations"
@@ -50,7 +49,6 @@ public slots:
     void startWork(QString work, int target);
     void updateStatusBar(QString message);
     void displayError(QString error);
-    void loadCostume(Costume *costume);
     
 private slots:
     void on_captureButton_clicked();
@@ -82,7 +80,6 @@ private:
     QDataWidgetMapper mapper;
     CollectionManager collection;
     QSettings settings;
-    Costume *costume;
 
     void doConnections();
     void loadCollection(QString path);

@@ -7,13 +7,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     logger = new SlotLog();
     handler = new QPhoto::CameraHandler();
-    costume = new Costume();
     ui->setupUi(this);
     ui->turntable->resize(800,600);
     ui->centralwidget->adjustSize();
 
-    Costume::InitDefaultInfos(); // hack because tr() won't work out of the class
-    initInfoLayout(ui->infoLayout, Costume::valid_informations);
+    CollectionManager::InitDefaultInfos(); // hack because tr() won't work out of the class
+    initInfoLayout(ui->infoLayout, CollectionManager::valid_informations);
 
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
     connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
@@ -41,7 +40,7 @@ void MainWindow::loadCollection(QString path)
         connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
         connect(ui->collectionTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), &mapper, SLOT(setCurrentModelIndex(QModelIndex)));
         mapper.clearMapping();
-        foreach(QString key, Costume::valid_informations.keys())
+        foreach(QString key, CollectionManager::valid_informations.keys())
             mapper.addMapping(infoWidgets.value(key), model->record().indexOf(key));
         mapper.toFirst();
     }
@@ -174,24 +173,6 @@ void MainWindow::initInfoLayout(QFormLayout *layout, QMap<QString, Costume_info>
     }
 }
 
-void MainWindow::loadCostume(Costume *costume)
-{
-    foreach(QString key, costume->getInfos().keys()) {
-        Costume_info info = Costume::valid_informations.value(key);
-        QVariant value = costume->getInfo(key);
-        if(info.type == ShortString) {
-            QLineEdit *widget = (QLineEdit*)infoWidgets.value(key);
-            widget->setText(value.toString());
-        } else if(info.type == LongString) {
-            QPlainTextEdit *widget = (QPlainTextEdit*)infoWidgets.value(key);
-            widget->setPlainText(value.toString());
-        } else if(info.type == Number) {
-            QSpinBox *widget = (QSpinBox*)infoWidgets.value(key);
-            widget->setValue(value.toInt());
-        }
-    }
-}
-
 void MainWindow::on_newCostume_clicked()
 {
     collection.getCollectionModel()->insertRecord(-1, QSqlRecord());
@@ -225,7 +206,6 @@ void MainWindow::on_actionOpen_Collection_triggered()
 void MainWindow::on_loadButton_clicked()
 {
     QModelIndex index = ui->collectionTable->selectionModel()->selectedIndexes().first();
-    costume = collection.loadCostume(collection.getCollectionModel()->record(index.row()).value("id").toInt());
     mapper.setCurrentIndex(index.row());
 }
 
