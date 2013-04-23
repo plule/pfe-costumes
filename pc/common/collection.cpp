@@ -21,6 +21,8 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
     valid = db.open();
     if(valid)
         createCollectionTable(); //todo test collection table
+
+    collectionDir = QFileInfo(collectionPath).absoluteDir();
 }
 
 Collection::~Collection()
@@ -72,6 +74,19 @@ int Collection::getIndexOf(QString key)
     return db.record("collection").indexOf(key);
 }
 
+QDir Collection::getStorageDir(int costumeId, QString key)
+{
+    QDir ret = collectionDir;
+    ret.mkpath(QString::number(costumeId) + "/" + key); // todo portable ?
+    ret.cd(QString::number(costumeId) + "/" + key);
+    return ret.absolutePath();
+}
+
+void Collection::createStorageDir(int costumeId, QString key)
+{
+    collectionDir.mkpath(QString::number(costumeId) + "/" + key);
+}
+
 void Collection::InitDefaultInfos()
 {
     Costume_info::last_order = 0;
@@ -89,12 +104,13 @@ void Collection::InitDefaultInfos()
     valid_informations.insert("description", Costume_info(LongString, tr("Description")));
     //valid_informations.insert("visual", Costume_info(Files, tr("Additional visuals")));
     valid_informations.insert("generated_name", Costume_info(LongString, tr("Generated Name")));
-    valid_informations.insert("turntable", Costume_info(LongString, tr("360 view"), false, true, true));
+    valid_informations.insert("turntable", Costume_info(Files, tr("360° view"), false, true, true));
 
     sql_types.insert(ShortString, "varchar(256)");
     sql_types.insert(LongString, "varchar(4096)");
     sql_types.insert(Number, "integer");
     sql_types.insert(PK, "integer primary key");
+    sql_types.insert(Files, "varchar(4096)");
 }
 
 QList<QPair<Costume_info, QString> > Collection::sortedValidInformations()

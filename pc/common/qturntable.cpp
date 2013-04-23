@@ -10,6 +10,8 @@ QTurntable::QTurntable(QWidget *parent) :
     m_zoom_step = 1.25;
     m_min_zoom = 1;
     m_max_zoom = 200;
+    paths = "";
+    relativePath = "";
 }
 
 void QTurntable::wheelEvent(QWheelEvent *e)
@@ -44,16 +46,18 @@ QString QTurntable::getPaths()
 
 void QTurntable::loadPaths(QString paths)
 {
-    QStringList pathList = paths.split("|");
-    this->setNumber(pathList.size());
-    for(int i=0; i < pathList.size(); i++) {
-        setPicture(i,pathList.at(i));
-    }
+    pathsToLoad = paths.split("|");
+    qDebug() << pathsToLoad;
 }
 
 int QTurntable::getNumber()
 {
     return m_pixmaps.size();
+}
+
+int QTurntable::getView()
+{
+    return m_current;
 }
 
 void QTurntable::zoom(int factor)
@@ -70,10 +74,25 @@ void QTurntable::zoom(int factor)
     }
 }
 
+void QTurntable::loadPreparedPath()
+{
+    this->setNumber(pathsToLoad.size());
+    for(int i=0; i < pathsToLoad.size(); i++) {
+        setPicture(i,pathsToLoad.at(i));
+    }
+}
+
 int QTurntable::computeZoom()
 {
     qreal sc = transform().m11();
     return sc*100;
+}
+
+QString QTurntable::getPathOf(QString filename)
+{
+    if(!filename.startsWith(":"))
+        return relativePath.absoluteFilePath(filename);
+    return filename;
 }
 
 void QTurntable::setZoom(int zoom)
@@ -95,7 +114,9 @@ void QTurntable::setNumber(int n)
 
 void QTurntable::addPicture(QString path)
 {
-    QPixmap pic(path);
+    qDebug() << path;
+    QPixmap pic(getPathOf(path));
+    qDebug() << getPathOf(path);
     m_pixmaps.append(QPair<QString,QPixmap>(path,pic));
     if(m_current < 0)
         setView(0);
@@ -103,7 +124,7 @@ void QTurntable::addPicture(QString path)
 
 void QTurntable::setPicture(int index, QString path)
 {
-    QPixmap pic(path);
+    QPixmap pic(getPathOf(path));
     if(index > m_pixmaps.size())
         setNumber(index+1);
     m_pixmaps[index] = QPair<QString,QPixmap>(path,pic);
@@ -148,4 +169,14 @@ void QTurntable::resetScale()
 {
     QGraphicsView::resetMatrix();
     m_zoom = 100;
+}
+
+QDir QTurntable::getRelativePath() const
+{
+    return relativePath;
+}
+
+void QTurntable::setRelativePath(const QDir &value)
+{
+    relativePath = value;
 }

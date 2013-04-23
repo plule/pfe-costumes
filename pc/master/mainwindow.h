@@ -51,6 +51,7 @@ public slots:
     void updateStatusBar(QString message);
     void displayError(QString error);
     void handleNewPicture(QString path);
+    void completeLoadCostume(int index);
     
 private slots:
     void on_captureButton_clicked();
@@ -89,6 +90,7 @@ private:
 
     void doCamerasConnections();
     void loadCollection(QString path);
+    int getCurrentId();
 };
 
 #endif // MAINWINDOW_H

@@ -62,6 +62,7 @@ void MainWindow::loadCollection(QString path)
         mapper.setModel(model);
         mapper.clearMapping();
         connect(ui->collectionTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), &mapper, SLOT(setCurrentModelIndex(QModelIndex)));
+        connect(&mapper, SIGNAL(currentIndexChanged(int)), this, SLOT(completeLoadCostume(int)));
 
         // Creation of the widgets that contains costumes info
         clearLayout(ui->infoLayout, true);
@@ -109,6 +110,11 @@ void MainWindow::loadCollection(QString path)
     }
 }
 
+int MainWindow::getCurrentId()
+{
+    return ((QSpinBox *)mapper.mappedWidgetAt(collection->getIndexOf("id")))->value();
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -145,6 +151,7 @@ void MainWindow::displayError(QString error)
 void MainWindow::handleNewPicture(QString path)
 {
     // TODO : safe
+    QString filename = QFileInfo(path).fileName();
     switch(captureAction)
     {
     case Ignore:
@@ -152,17 +159,24 @@ void MainWindow::handleNewPicture(QString path)
         break;
     case Append:
         captureAction = Ignore;
-        ui->turntable->addPicture(path);
+        ui->turntable->addPicture(filename);
         break;
     case Replace:
         captureAction = Ignore;
-        ui->turntable->setCurrentPicture(path);
+        ui->turntable->setCurrentPicture(filename);
         break;
     default:
         captureAction = Ignore;
         qWarning() << "Got a photo for unknown reason";
         break;
     }
+}
+
+void MainWindow::completeLoadCostume(int index)
+{
+    int id = getCurrentId();
+    ui->turntable->setRelativePath(collection->getStorageDir(id, "turntable"));
+    ui->turntable->loadPreparedPath();
 }
 
 void MainWindow::timeout()
@@ -178,7 +192,8 @@ void MainWindow::on_captureButton_clicked()
     if(handler->getCameras(&cameras) >= 1)
     {
         QPhoto::QCamera *camera = cameras[0];
-        QString path = QDir::temp().absoluteFilePath("test.jpg");
+        QString filename = QString("%1").arg(ui->turntable->getView());
+        QString path = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
         this->displayError(tr("No camera connected"));
@@ -193,7 +208,8 @@ void MainWindow::on_appendCaptureButton_clicked()
     if(handler->getCameras(&cameras) >= 1)
     {
         QPhoto::QCamera *camera = cameras[0];
-        QString path = QDir::temp().absoluteFilePath(QString("test-{0}.jpg").arg(ui->turntable->getNumber()+1));
+        QString filename = QString("%1.jpg").arg(ui->turntable->getNumber());
+        QString path = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
         this->displayError(tr("No camera connected"));
@@ -241,7 +257,9 @@ void MainWindow::on_suzanneButton_pressed()
     this->startWork(tr("Loading views"), 36);
     for(int i=1; i<=36; ++i)
     {
-        ui->turntable->setPicture(i-1, QString(":/default-model/suzanne/%1.jpg").arg(i));
+        QString dest = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(QString("%1.jpg").arg(i));
+        QFile::copy(QString(":/default-model/suzanne/%1.jpg").arg(i), dest);
+        ui->turntable->setPicture(i-1, QString("%1.jpg").arg(i));
         this->ui->workBar->setValue(i);
     }
     ui->turntable->setView(0);
@@ -255,7 +273,9 @@ void MainWindow::on_manButton_clicked()
     this->startWork(tr("Loading views"), 36);
     for(int i=1; i<=36; ++i)
     {
-        ui->turntable->setPicture(i-1, QString(":/default-model/man/%1.jpg").arg(i));
+        QString dest = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(QString("%1.jpg").arg(i));
+        QFile::copy(QString(":/default-model/man/%1.jpg").arg(i), dest);
+        ui->turntable->setPicture(i-1, QString("%1.jpg").arg(i));
         this->ui->workBar->setValue(i);
     }
     ui->turntable->setView(0);

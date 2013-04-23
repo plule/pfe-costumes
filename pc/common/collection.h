@@ -5,7 +5,6 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QDesktopServices>
 #include <QDir>
 #include <QDebug>
 #include <QStringList>
@@ -13,6 +12,7 @@
 #include <QSqlRecord>
 #include <QSqlField>
 #include <QSqlError>
+#include <QFileInfo>
 
 enum Costume_info_type {
     Invalid,
@@ -48,6 +48,8 @@ public:
     QSqlTableModel* getCollectionModel();
     QSqlError lastError();
     int getIndexOf(QString key);
+    QDir getStorageDir(int costumeId, QString key);
+    void createStorageDir(int costumeId, QString key);
 
     static void InitDefaultInfos();
     static QMap<QString, Costume_info> valid_informations;
@@ -69,6 +71,7 @@ private:
 
     QSqlDatabase db;
     QSqlTableModel *model;
+    QDir collectionDir;
     bool valid;
     
 };
