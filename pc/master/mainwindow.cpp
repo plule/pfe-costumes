@@ -19,14 +19,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->turntable->resize(800,600);
     ui->centralwidget->adjustSize();
-
     // hack because tr() won't work out of the class
     Collection::InitDefaultInfos();
 
     // Load last collection
-    if(settings.value("collection").type() == QVariant::String)
+    if(settings.value("collection").type() == QVariant::String) {
         loadCollection(settings.value("collection").toString());
+        populateList(collection->getCollectionModel(), ui->collectionTable2, -1);
+    }
 
+    //ui->collectionTable->setProperty("loaded",true);
+    ui->collectionTable->itemDelegate()->setProperty("loaded",true);
+    ui->collectionTable->style()->unpolish(ui->collectionTable);
+    ui->collectionTable->style()->polish(ui->collectionTable);
     captureAction = Ignore;
 }
 
@@ -63,6 +68,7 @@ void MainWindow::loadCollection(QString path)
         mapper.clearMapping();
         connect(ui->collectionTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), &mapper, SLOT(setCurrentModelIndex(QModelIndex)));
         connect(&mapper, SIGNAL(currentIndexChanged(int)), this, SLOT(completeLoadCostume(int)));
+        connect(&mapper, SIGNAL(currentIndexChanged(int)), this, SLOT(refreshList(int)));
 
         // Creation of the widgets that contains costumes info
         clearLayout(ui->infoLayout, true);
@@ -113,6 +119,25 @@ void MainWindow::loadCollection(QString path)
 int MainWindow::getCurrentId()
 {
     return ((QSpinBox *)mapper.mappedWidgetAt(collection->getIndexOf("id")))->value();
+}
+
+void MainWindow::populateList(QSqlTableModel *model, QListWidget *widget, int loaded)
+{
+    widget->clear();
+    model->select();
+    int nameRow = model->fieldIndex("character");
+    for(int i=0; i<model->rowCount(); i++) {
+        QSqlRecord r = model->record(i);
+        QListWidgetItem *item = new QListWidgetItem(r.value(nameRow).toString());
+        widget->insertItem(i,item);
+    }
+    if(loaded >= 0)
+        widget->item(loaded)->setTextColor(Qt::red);
+}
+
+void MainWindow::refreshList(int loaded)
+{
+    populateList(collection->getCollectionModel(), ui->collectionTable2, loaded);
 }
 
 MainWindow::~MainWindow()

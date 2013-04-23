@@ -16,10 +16,13 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_6">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="collectionLayout">
       <property name="sizeConstraint">
        <enum>QLayout::SetMinimumSize</enum>
       </property>
+      <item>
+       <widget class="QListWidget" name="collectionTable2"/>
+      </item>
       <item>
        <widget class="QListView" name="collectionTable">
         <property name="sizePolicy">
@@ -27,6 +30,15 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">[loaded=true]
+{
+	color: red;
+}</string>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::DoubleClicked</set>
         </property>
         <property name="alternatingRowColors">
          <bool>true</bool>

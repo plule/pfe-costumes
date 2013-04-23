@@ -24,6 +24,10 @@
 #include <QItemSelectionModel>
 #include <QDataWidgetMapper>
 #include <QSqlQueryModel>
+#include <QStyledItemDelegate>
+#include <QListWidget>
+#include <QListWidgetItem>
+#include <QSqlTableModel>
 #include "common/qturntable.h"
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
@@ -76,6 +80,7 @@ private slots:
     void on_manButton_clicked();
 
     void on_appendCaptureButton_clicked();
+    void refreshList(int loaded);
 
 private:
     Ui::MainWindow *ui;
@@ -91,6 +96,7 @@ private:
     void doCamerasConnections();
     void loadCollection(QString path);
     int getCurrentId();
+    void populateList(QSqlTableModel *model, QListWidget *widget, int loaded);
 };
 
 #endif // MAINWINDOW_H
