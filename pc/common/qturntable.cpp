@@ -34,6 +34,16 @@ int QTurntable::getAngleStep()
     return 3;
 }
 
+QString QTurntable::getPaths()
+{
+    return "yea";
+}
+
+void QTurntable::loadPaths(QString paths)
+{
+    this->paths = paths;
+}
+
 void QTurntable::zoom(int factor)
 {
     qreal dfactor = pow(m_zoom_step, factor);
@@ -66,7 +76,7 @@ void QTurntable::setZoom(int zoom)
     }
 }
 
-void QTurntable::addPixmap(const QPixmap & pixmap)
+void QTurntable::addPicture(const QPixmap & pixmap)
 {
     m_pixmaps.append(pixmap);
 }
@@ -76,33 +86,37 @@ void QTurntable::setNumber(int n)
     m_pixmaps.resize(n);
 }
 
-void QTurntable::setPixmap(int index, QPixmap &pixmap)
+void QTurntable::addPicture(QString path)
+{
+    QPixmap pic(path);
+    addPicture(pic);
+}
+
+void QTurntable::setPicture(int index, QPixmap &pixmap)
 {
     if(index > m_pixmaps.size())
         setNumber(index+1);
     m_pixmaps[index] = pixmap;
-    qDebug() << pixmap;
     if(index == m_current)
     {
         m_current_pixmap->setPixmap(pixmap);
     }
 }
 
-void QTurntable::setPixmap(int index, QString path)
+void QTurntable::setPicture(int index, QString path)
 {
-    qDebug() << path;
     QPixmap pic(path);
-    setPixmap(index, pic);
+    setPicture(index, pic);
 }
 
-void QTurntable::setCurrentPixmap(QPixmap &pixmap)
+void QTurntable::setCurrentPicture(QPixmap &pixmap)
 {
-    setPixmap(m_current, pixmap);
+    setPicture(m_current, pixmap);
 }
 
-void QTurntable::setCurrentPixmap(QString path)
+void QTurntable::setCurrentPicture(QString path)
 {
-    setPixmap(m_current, path);
+    setPicture(m_current, path);
 }
 
 void QTurntable::setView(int view)

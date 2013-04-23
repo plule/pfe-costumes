@@ -1,4 +1,5 @@
 #DESTDIR = ../bin
+TEMPLATE = app
 INCLUDEPATH += .. ../common
 VPATH = ..
 

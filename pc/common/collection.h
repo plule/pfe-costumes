@@ -30,7 +30,8 @@ struct Costume_info {
     static int last_order;
     bool mandatory;
     bool visible;
-    Costume_info( Costume_info_type t, QString n, bool m=false, bool v=true) : type(t), name(n),mandatory(m),visible(v) {order = last_order++;}
+    bool external;
+    Costume_info( Costume_info_type t, QString n, bool m=false, bool v=true, bool e=false) : type(t), name(n),mandatory(m),visible(v),external(e) {order = last_order++;}
     Costume_info() {type = Invalid;}
     friend bool operator<(const Costume_info& left, const Costume_info& right){
         return left.order < right.order;

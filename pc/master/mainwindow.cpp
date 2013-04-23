@@ -68,35 +68,41 @@ void MainWindow::loadCollection(QString path)
             QString key = collectionInfos.at(i).second;
             Costume_info info = collectionInfos.at(i).first;
             QWidget *widget = 0;
+            if(!info.external) {
+                if(info.type == ShortString)
+                    widget = new QLineEdit(this);
+                else if(info.type == Number || info.type == PK) {
+                    widget = new QSpinBox(this);
+                    ((QSpinBox*)widget)->setMaximum(9999);
+                    ((QSpinBox*)widget)->setMinimum(-9999);
+                } else if(info.type == LongString)
+                    widget = new QPlainTextEdit(this);
+                else if(info.type == Files){
+                    QFileDialog *dialog = new QFileDialog(this);
+                    dialog->setDirectory(QDir::home());
+                    dialog->setFileMode(QFileDialog::ExistingFiles);
+                    QPushButton *button = new QPushButton(this);
+                    button->setText(tr("Choose file(s)"));
+                    connect(button, SIGNAL(clicked()), dialog, SLOT(open()));
+                    // TODO display selected file(s)
+                    // TODO better multi-file picker
 
-            if(info.type == ShortString)
-                widget = new QLineEdit(this);
-            else if(info.type == Number || info.type == PK) {
-                widget = new QSpinBox(this);
-                ((QSpinBox*)widget)->setMaximum(9999);
-                ((QSpinBox*)widget)->setMinimum(-9999);
-            } else if(info.type == LongString)
-                widget = new QPlainTextEdit(this);
-            else if(info.type == Files){
-                QFileDialog *dialog = new QFileDialog(this);
-                dialog->setDirectory(QDir::home());
-                dialog->setFileMode(QFileDialog::ExistingFiles);
-                QPushButton *button = new QPushButton(this);
-                button->setText(tr("Choose file(s)"));
-                connect(button, SIGNAL(clicked()), dialog, SLOT(open()));
-                // TODO display selected file(s)
-                // TODO better multi-file picker
+                    ui->infoLayout->addRow(info.name, button);
+                } else
+                    qWarning() << QString("Unknown field type for field ") + info.name;
 
-                ui->infoLayout->addRow(info.name, button);
-            } else
-                qWarning() << QString("Unknown field type for field ") + info.name;
-
-            if(widget != 0) {
-                if(info.visible)
-                    ui->infoLayout->addRow(info.name, widget);
-                mapper.addMapping(widget, model->record().indexOf(key));
+                if(widget != 0) {
+                    if(info.visible)
+                        ui->infoLayout->addRow(info.name, widget);
+                    else
+                        widget->setVisible(false);
+                    mapper.addMapping(widget, model->record().indexOf(key));
+                }
             }
         }
+        // Externals (not in the form)
+        mapper.addMapping(ui->turntable, model->record().indexOf("turntable"));
+
         mapper.toFirst();
     }
 }
@@ -173,7 +179,7 @@ void MainWindow::doCamerasConnections()
 
         connect(cameras[i], SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
         connect(cameras[i], SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
-        connect(cameras[i], SIGNAL(captured(QString)), this->ui->turntable, SLOT(setCurrentPixmap(QString)));
+        connect(cameras[i], SIGNAL(captured(QString)), this->ui->turntable, SLOT(setCurrentPicture(QString)));
 
         connect(cameras[i], SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
         connect(cameras[i], SIGNAL(operation_failed(QString)), this, SLOT(displayError(QString)));
@@ -194,7 +200,7 @@ void MainWindow::on_suzanneButton_pressed()
     this->startWork(tr("Loading views"), 36);
     for(int i=1; i<=36; ++i)
     {
-        ui->turntable->setPixmap(i-1, QString(":/default-model/%1.jpg").arg(i));
+        ui->turntable->setPicture(i-1, QString(":/default-model/%1.jpg").arg(i));
         this->ui->workBar->setValue(i);
     }
     ui->turntable->setView(0);
