@@ -36,12 +36,19 @@ int QTurntable::getAngleStep()
 
 QString QTurntable::getPaths()
 {
-    return "yea";
+    QStringList ret;
+    for(int i=0; i < m_pixmaps.size(); i++)
+        ret.append(m_pixmaps.at(i).first);
+    return ret.join("|");
 }
 
 void QTurntable::loadPaths(QString paths)
 {
-    this->paths = paths;
+    QStringList pathList = paths.split("|");
+    this->setNumber(pathList.size());
+    for(int i=0; i < pathList.size(); i++) {
+        setPicture(i,pathList.at(i));
+    }
 }
 
 void QTurntable::zoom(int factor)
@@ -76,11 +83,6 @@ void QTurntable::setZoom(int zoom)
     }
 }
 
-void QTurntable::addPicture(const QPixmap & pixmap)
-{
-    m_pixmaps.append(pixmap);
-}
-
 void QTurntable::setNumber(int n)
 {
     m_pixmaps.resize(n);
@@ -89,29 +91,23 @@ void QTurntable::setNumber(int n)
 void QTurntable::addPicture(QString path)
 {
     QPixmap pic(path);
-    addPicture(pic);
-}
-
-void QTurntable::setPicture(int index, QPixmap &pixmap)
-{
-    if(index > m_pixmaps.size())
-        setNumber(index+1);
-    m_pixmaps[index] = pixmap;
-    if(index == m_current)
-    {
-        m_current_pixmap->setPixmap(pixmap);
-    }
+    m_pixmaps.append(QPair<QString,QPixmap>(path,pic));
+    if(m_current < 0)
+        setView(0);
 }
 
 void QTurntable::setPicture(int index, QString path)
 {
     QPixmap pic(path);
-    setPicture(index, pic);
-}
-
-void QTurntable::setCurrentPicture(QPixmap &pixmap)
-{
-    setPicture(m_current, pixmap);
+    if(index > m_pixmaps.size())
+        setNumber(index+1);
+    m_pixmaps[index] = QPair<QString,QPixmap>(path,pic);
+    if(index == m_current)
+    {
+        m_current_pixmap->setPixmap(pic);
+    }
+    if(m_current < 0)
+        setView(0);
 }
 
 void QTurntable::setCurrentPicture(QString path)
@@ -123,7 +119,7 @@ void QTurntable::setView(int view)
 {
     if(view < m_pixmaps.size() && view != m_current) {
         m_current = view;
-        m_current_pixmap->setPixmap(m_pixmaps[m_current]);
+        m_current_pixmap->setPixmap(m_pixmaps[m_current].second);
         emit angleChanged(360 * m_current / m_pixmaps.size());
     }
 }

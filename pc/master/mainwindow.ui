@@ -73,7 +73,7 @@
     <item>
      <widget class="QTabWidget" name="tab">
       <property name="currentIndex">
-       <number>4</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="collectionTab">
        <attribute name="title">
@@ -177,7 +177,14 @@
             <item>
              <widget class="QPushButton" name="suzanneButton">
               <property name="text">
-               <string>Load Default Model</string>
+               <string>Load Default Model 1</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="manButton">
+              <property name="text">
+               <string>Load Default Model 2</string>
               </property>
              </widget>
             </item>
@@ -188,7 +195,7 @@
               </property>
               <layout class="QVBoxLayout" name="verticalLayout">
                <item>
-                <widget class="QPushButton" name="pushButton">
+                <widget class="QPushButton" name="massCaptureButton">
                  <property name="text">
                   <string>Launch mass capture</string>
                  </property>

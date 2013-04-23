@@ -6,6 +6,8 @@
 #include <QGraphicsPixmapItem>
 #include <QDebug>
 #include <QWheelEvent>
+#include <QPair>
+#include <QStringList>
 #include "math.h"
 
 class QTurntable : public QGraphicsView
@@ -37,15 +39,10 @@ public slots:
     virtual void setZoom(int zoom);
     virtual void zoom(int factor);
 
-    virtual void setPicture(int index, QPixmap &pixmap);
-    virtual void setCurrentPicture(QPixmap & pixmap);
-    virtual void addPicture (const QPixmap &);
-
-
 private:
     int computeZoom();
 
-    QVector<QPixmap> m_pixmaps;
+    QVector<QPair<QString,QPixmap> > m_pixmaps;
     QString paths;
     int m_current;
     int m_zoom;

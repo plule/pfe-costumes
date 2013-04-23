@@ -31,5 +31,5 @@ FORMS += \
 TRANSLATIONS = ../resources/master_fr.ts
 
 RESOURCES += \
-    ../resources/pics/pics.qrc \
-    ../resources/translations.qrc
+    ../resources/translations.qrc \
+    ../resources/pics/pics.qrc

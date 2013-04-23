@@ -200,7 +200,21 @@ void MainWindow::on_suzanneButton_pressed()
     this->startWork(tr("Loading views"), 36);
     for(int i=1; i<=36; ++i)
     {
-        ui->turntable->setPicture(i-1, QString(":/default-model/%1.jpg").arg(i));
+        ui->turntable->setPicture(i-1, QString(":/default-model/suzanne/%1.jpg").arg(i));
+        this->ui->workBar->setValue(i);
+    }
+    ui->turntable->setView(0);
+    ui->turntable->fitInView();
+    ui->angleBox->setSingleStep(ui->turntable->getAngleStep());
+}
+
+void MainWindow::on_manButton_clicked()
+{
+    ui->turntable->setNumber(36);
+    this->startWork(tr("Loading views"), 36);
+    for(int i=1; i<=36; ++i)
+    {
+        ui->turntable->setPicture(i-1, QString(":/default-model/man/%1.jpg").arg(i));
         this->ui->workBar->setValue(i);
     }
     ui->turntable->setView(0);

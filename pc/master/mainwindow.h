@@ -70,6 +70,8 @@ private slots:
 
     void on_saveButton_clicked();
 
+    void on_manButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QPhoto::CameraHandler *handler;
