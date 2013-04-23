@@ -5,25 +5,30 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    // Logger that show what goes through the slots
     logger = new SlotLog();
+
+    // Handle cameras (listing, taking photos, etc...)
     handler = new QPhoto::CameraHandler();
+    connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
+    connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
+    handler->init();
+    doCamerasConnections();
+
+    // Ui init and tweaks
     ui->setupUi(this);
     ui->turntable->resize(800,600);
     ui->centralwidget->adjustSize();
 
-    Collection::InitDefaultInfos(); // hack because tr() won't work out of the class
+    // hack because tr() won't work out of the class
+    Collection::InitDefaultInfos();
 
-    connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
-    connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
-
-    handler->init();
-    doConnections();
-    qDebug() << QIcon::themeName();
-    ui->turntable->setNumber(36);
+    // Load last collection
     if(settings.value("collection").type() == QVariant::String)
         loadCollection(settings.value("collection").toString());
 }
 
+// Utility to remove all widgets from a layout
 static void clearLayout(QLayout* layout, bool deleteWidgets = true)
 {
     while (QLayoutItem* item = layout->takeAt(0))
@@ -41,21 +46,23 @@ static void clearLayout(QLayout* layout, bool deleteWidgets = true)
 
 void MainWindow::loadCollection(QString path)
 {
-    qDebug() << "Load collection " + path;
     settings.setValue("collection", path);
     collection = new Collection(this, path);
     if(collection->isValid()) {
         QSqlTableModel *model = collection->getCollectionModel();
 
+        // Map the collection viewer to the model
         ui->collectionTable->setModel(model);
         ui->collectionTable->setModelColumn(collection->getIndexOf("generated_name"));
         connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
-        connect(ui->collectionTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), &mapper, SLOT(setCurrentModelIndex(QModelIndex)));
 
+        // Configuration of the mapper between costume info widget and database model
         mapper.setModel(model);
         mapper.clearMapping();
-        clearLayout(ui->infoLayout);
+        connect(ui->collectionTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), &mapper, SLOT(setCurrentModelIndex(QModelIndex)));
 
+        // Creation of the widgets that contains costumes info
+        clearLayout(ui->infoLayout, true);
         QList<QPair<Costume_info, QString> > collectionInfos = collection->sortedValidInformations();
         for(int i=0; i < collectionInfos.length(); i++) {
             QString key = collectionInfos.at(i).second;
@@ -148,10 +155,10 @@ void MainWindow::on_captureButton_clicked()
 void MainWindow::on_refreshButton_clicked()
 {
     handler->refreshCameraList();
-    doConnections();
+    doCamerasConnections();
 }
 
-void MainWindow::doConnections()
+void MainWindow::doCamerasConnections()
 {
     QPhoto::QCamera **cameras;
     int nConnections = handler->getCameras(&cameras);
@@ -182,6 +189,7 @@ void MainWindow::on_newCostume_clicked()
 
 void MainWindow::on_suzanneButton_pressed()
 {
+    ui->turntable->setNumber(36);
     this->startWork(tr("Loading views"), 36);
     for(int i=1; i<=36; ++i)
     {

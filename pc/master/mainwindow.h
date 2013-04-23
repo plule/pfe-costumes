@@ -80,7 +80,7 @@ private:
     Collection *collection;
     QSettings settings;
 
-    void doConnections();
+    void doCamerasConnections();
     void loadCollection(QString path);
 };
 
