@@ -271,6 +271,13 @@
                 </widget>
                </item>
                <item>
+                <widget class="QPushButton" name="appendCaptureButton">
+                 <property name="text">
+                  <string>Add new view</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <widget class="QCheckBox" name="autofocusCheckBox">
                  <property name="text">
                   <string>Autofocus</string>

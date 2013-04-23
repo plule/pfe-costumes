@@ -26,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // Load last collection
     if(settings.value("collection").type() == QVariant::String)
         loadCollection(settings.value("collection").toString());
+
+    captureAction = Ignore;
 }
 
 // Utility to remove all widgets from a layout
@@ -140,6 +142,29 @@ void MainWindow::displayError(QString error)
     msg.exec();
 }
 
+void MainWindow::handleNewPicture(QString path)
+{
+    // TODO : safe
+    switch(captureAction)
+    {
+    case Ignore:
+        qWarning() << "Got a photo for unknown reason";
+        break;
+    case Append:
+        captureAction = Ignore;
+        ui->turntable->addPicture(path);
+        break;
+    case Replace:
+        captureAction = Ignore;
+        ui->turntable->setCurrentPicture(path);
+        break;
+    default:
+        captureAction = Ignore;
+        qWarning() << "Got a photo for unknown reason";
+        break;
+    }
+}
+
 void MainWindow::timeout()
 {
     statusBar()->showMessage(tr("Lost camera."));
@@ -149,10 +174,26 @@ void MainWindow::timeout()
 void MainWindow::on_captureButton_clicked()
 {
     QPhoto::QCamera **cameras;
+    captureAction = Replace;
     if(handler->getCameras(&cameras) >= 1)
     {
         QPhoto::QCamera *camera = cameras[0];
         QString path = QDir::temp().absoluteFilePath("test.jpg");
+        QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
+    } else {
+        this->displayError(tr("No camera connected"));
+    }
+}
+
+
+void MainWindow::on_appendCaptureButton_clicked()
+{
+    QPhoto::QCamera **cameras;
+    captureAction = Append;
+    if(handler->getCameras(&cameras) >= 1)
+    {
+        QPhoto::QCamera *camera = cameras[0];
+        QString path = QDir::temp().absoluteFilePath(QString("test-{0}.jpg").arg(ui->turntable->getNumber()+1));
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
         this->displayError(tr("No camera connected"));
@@ -179,7 +220,7 @@ void MainWindow::doCamerasConnections()
 
         connect(cameras[i], SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
         connect(cameras[i], SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
-        connect(cameras[i], SIGNAL(captured(QString)), this->ui->turntable, SLOT(setCurrentPicture(QString)));
+        connect(cameras[i], SIGNAL(captured(QString)), this, SLOT(handleNewPicture(QString)));
 
         connect(cameras[i], SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
         connect(cameras[i], SIGNAL(operation_failed(QString)), this, SLOT(displayError(QString)));

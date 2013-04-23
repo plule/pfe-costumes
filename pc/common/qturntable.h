@@ -22,6 +22,7 @@ public:
     int getAngleStep();
     QString getPaths();
     void loadPaths(QString paths);
+    int getNumber();
     
 signals:
     void zoomChanged(int zoom);

@@ -40,6 +40,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     
+    enum CaptureAction {Ignore, Replace, Append};
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -49,6 +50,7 @@ public slots:
     void startWork(QString work, int target);
     void updateStatusBar(QString message);
     void displayError(QString error);
+    void handleNewPicture(QString path);
     
 private slots:
     void on_captureButton_clicked();
@@ -72,6 +74,8 @@ private slots:
 
     void on_manButton_clicked();
 
+    void on_appendCaptureButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QPhoto::CameraHandler *handler;
@@ -81,6 +85,7 @@ private:
     QDataWidgetMapper mapper;
     Collection *collection;
     QSettings settings;
+    CaptureAction captureAction;
 
     void doCamerasConnections();
     void loadCollection(QString path);

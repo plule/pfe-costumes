@@ -51,6 +51,11 @@ void QTurntable::loadPaths(QString paths)
     }
 }
 
+int QTurntable::getNumber()
+{
+    return m_pixmaps.size();
+}
+
 void QTurntable::zoom(int factor)
 {
     qreal dfactor = pow(m_zoom_step, factor);
