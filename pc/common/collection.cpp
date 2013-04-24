@@ -26,8 +26,8 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
             lastId = q.value(0).toInt();
         }
     }
-    qDebug() << lastId;
     model->setTable("collection");
+    model->setFilter("notdeleted == 1");
     model->select();
     collectionDir = QFileInfo(collectionPath).absoluteDir();
 }
@@ -94,8 +94,7 @@ void Collection::createStorageDir(int costumeId, QString key)
 int Collection::newCostume()
 {
     QSqlRecord r = model->record();
-    qDebug() << r;
-    r.setValue("deleted", QVariant(0));
+    r.setValue("notdeleted", QVariant(1));
     r.setValue("id", ++lastId);
     model->insertRecord(-1, r);
     model->select();
@@ -107,7 +106,7 @@ void Collection::deleteCostumes(QList<int> ids)
     QStringList tests;
     foreach(int id, ids)
         tests.push_back("id="+QString::number(id));
-    db.exec("DELETE FROM collection WHERE " + tests.join(" OR "));
+    db.exec("UPDATE collection SET notdeleted=0 WHERE " + tests.join(" OR "));
     model->select();
 }
 
@@ -126,7 +125,7 @@ QString Collection::getName(QSqlRecord rec)
 {
     if(rec.value("character").toString() != "")
         return rec.value("character").toString();
-    return tr("Unkown costume");
+    return tr("Unnamed costume");
 }
 
 void Collection::InitDefaultInfos()
@@ -134,7 +133,7 @@ void Collection::InitDefaultInfos()
     Costume_info::last_order = 0;
     valid_informations = QMap<QString, Costume_info>();
     valid_informations.insert("id", Costume_info(PK, tr("Id"), true, true));
-    valid_informations.insert("deleted", Costume_info(Bool, tr("Deleted costume")));
+    valid_informations.insert("notdeleted", Costume_info(Bool, tr("Not Deleted costume")));
     valid_informations.insert("director", Costume_info(ShortString, tr("Piece Director")));
     valid_informations.insert("piece", Costume_info(ShortString, tr("Piece Name")));
     valid_informations.insert("writer", Costume_info(ShortString, tr("Piece Writer")));
