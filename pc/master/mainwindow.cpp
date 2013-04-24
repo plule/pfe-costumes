@@ -269,9 +269,11 @@ void MainWindow::on_suzanneButton_pressed()
     this->startWork(tr("Loading views"), 36);
     for(int i=1; i<=36; ++i)
     {
-        QString dest = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(QString("%1.jpg").arg(i));
-        QFile::copy(QString(":/default-model/suzanne/%1.jpg").arg(i), dest);
-        ui->turntable->setPicture(i-1, QString("%1.jpg").arg(i));
+        QString filename = QString("%1.jpg").arg(QString::number(i), 3, QLatin1Char('0'));
+        QString dest = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
+        QFile::remove(dest);
+        QFile::copy(":/default-model/suzanne/"+filename, dest);
+        ui->turntable->setPicture(i-1, filename);
         this->ui->workBar->setValue(i);
     }
     ui->turntable->setView(0);
@@ -285,9 +287,11 @@ void MainWindow::on_manButton_clicked()
     this->startWork(tr("Loading views"), 36);
     for(int i=1; i<=36; ++i)
     {
-        QString dest = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(QString("%1.jpg").arg(i));
-        QFile::copy(QString(":/default-model/man/%1.jpg").arg(i), dest);
-        ui->turntable->setPicture(i-1, QString("%1.jpg").arg(i));
+        QString filename = QString("%1.jpg").arg(QString::number(i), 3, QLatin1Char('0'));
+        QString dest = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
+        QFile::remove(dest);
+        QFile::copy(":/default-model/man/"+filename, dest);
+        ui->turntable->setPicture(i-1, filename);
         this->ui->workBar->setValue(i);
     }
     ui->turntable->setView(0);
