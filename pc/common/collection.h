@@ -76,6 +76,7 @@ private:
     QSqlTableModel *model;
     QDir collectionDir;
     bool valid;
+    int lastId;
     
 };
 

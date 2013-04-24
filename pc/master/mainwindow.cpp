@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     Collection::InitDefaultInfos();
 
     // Load last collection
-    if(settings.value("collection").type() == QVariant::String) {
+    if(settings.value("collection").type() == QVariant::String && QFile::exists(settings.value("collection").toString())) {
         loadCollection(settings.value("collection").toString());
     }
 

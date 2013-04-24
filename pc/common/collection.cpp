@@ -14,14 +14,23 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(collectionPath);
     model = new QSqlTableModel(this, db);
-
+    lastId = 0;
     connect(model, SIGNAL(beforeInsert(QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
     connect(model, SIGNAL(beforeUpdate(int,QSqlRecord&)), this, SLOT(prepareRecord(int,QSqlRecord&)));
 
     valid = db.open();
-    if(valid)
-        createCollectionTable(); //todo test collection table
-
+    if(valid) {
+        if(!db.tables().contains("collection"))
+            createCollectionTable(); //todo test collection table
+        QSqlQuery q(db);
+        q.exec("SELECT MAX(id) FROM collection");
+        if(q.next()) {
+            lastId = q.value(0).toInt();
+        }
+    }
+    qDebug() << lastId;
+    model->setTable("collection");
+    model->select();
     collectionDir = QFileInfo(collectionPath).absoluteDir();
 }
 
@@ -53,8 +62,6 @@ bool Collection::createCollectionTable()
     bool ret = sqlquery.exec(query);
     if(!ret)
         qDebug() << sqlquery.lastError();
-    model->setTable("collection");
-    model->select();
     return ret;
 }
 
@@ -88,10 +95,10 @@ void Collection::createStorageDir(int costumeId, QString key)
 
 int Collection::newCostume()
 {
-    model->insertRecord(-1, QSqlRecord());
+    QSqlRecord r;
+    model->insertRecord(-1, r);
     model->select();
-    QSqlRecord rec = model->record(model->rowCount()-1);
-    return rec.value(rec.indexOf("id")).toInt();
+    return lastId;
 }
 
 void Collection::deleteCostumes(QList<int> ids)
@@ -119,7 +126,6 @@ void Collection::InitDefaultInfos()
     valid_informations.insert("collection", Costume_info(ShortString, tr("Collection")));
     valid_informations.insert("description", Costume_info(LongString, tr("Description")));
     //valid_informations.insert("visual", Costume_info(Files, tr("Additional visuals")));
-    valid_informations.insert("generated_name", Costume_info(LongString, tr("Generated Name"), false, false));
 
     sql_types.insert(ShortString, "varchar(256)");
     sql_types.insert(LongString, "varchar(4096)");
@@ -141,13 +147,11 @@ QList<QPair<Costume_info, QString> > Collection::sortedValidInformations()
 
 void Collection::prepareRecord(QSqlRecord &record)
 {
-    QString character = record.value("character").toString();
-    QString scene = record.value("piece").toString();
-    record.setValue(record.indexOf("generated_name"), tr("%1 in %2").arg(character, scene));
-
-    QSqlField nameField("generated_name", QVariant::String);
-    nameField.setValue(tr("%1 in %2").arg(character, scene));
-    record.append(nameField);
+    if(record.value("id").toInt() == 0) {
+        QSqlField idField("id", QVariant::Int);
+        idField.setValue(++lastId);
+        record.append(idField);
+    }
 }
 
 void Collection::prepareRecord(int row, QSqlRecord &record)
