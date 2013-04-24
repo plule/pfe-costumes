@@ -273,6 +273,7 @@ void MainWindow::on_suzanneButton_pressed()
         QString dest = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
         QFile::remove(dest);
         QFile::copy(":/default-model/suzanne/"+filename, dest);
+        QFile::setPermissions(dest, QFileDevice::ReadOwner|QFileDevice::WriteOwner);
         ui->turntable->setPicture(i-1, filename);
         this->ui->workBar->setValue(i);
     }
@@ -291,6 +292,7 @@ void MainWindow::on_manButton_clicked()
         QString dest = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
         QFile::remove(dest);
         QFile::copy(":/default-model/man/"+filename, dest);
+        QFile::setPermissions(dest, QFileDevice::ReadOwner|QFileDevice::WriteOwner);
         ui->turntable->setPicture(i-1, filename);
         this->ui->workBar->setValue(i);
     }
