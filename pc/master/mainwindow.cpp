@@ -314,29 +314,10 @@ void MainWindow::on_actionOpen_Collection_triggered()
 
 void MainWindow::on_removeButton_clicked()
 {
-    // TODO : safer ?
-
-    // Model
-    QItemSelection selection(ui->collectionTable2->selectionModel()->selection() );
-
-    QList<int> rows;
-    foreach( const QModelIndex & index, selection.indexes() ) {
-        rows.append( index.row() );
-    }
-
-    qSort( rows );
-
-    int prev = -1;
-    for( int i = rows.count() - 1; i >= 0; i -= 1 ) {
-        int current = rows[i];
-        if( current != prev ) {
-            collection->getCollectionModel()->removeRows( current, 1 );
-            prev = current;
-        }
-    }
-    collection->getCollectionModel()->select();
-
-    // List widget
+    QList<int> ids;
+    foreach(QListWidgetItem *item, ui->collectionTable2->selectedItems())
+        ids.append(item->data(Qt::UserRole).toInt());
+    collection->deleteCostumes(ids);
     qDeleteAll(ui->collectionTable2->selectedItems());
 }
 

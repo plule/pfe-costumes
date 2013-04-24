@@ -13,6 +13,7 @@
 #include <QSqlField>
 #include <QSqlError>
 #include <QFileInfo>
+#include <QList>
 
 enum Costume_info_type {
     Invalid,
@@ -51,6 +52,7 @@ public:
     QDir getStorageDir(int costumeId, QString key);
     void createStorageDir(int costumeId, QString key);
     int newCostume();
+    void deleteCostumes(QList<int> ids);
 
     static void InitDefaultInfos();
     static QMap<QString, Costume_info> valid_informations;
