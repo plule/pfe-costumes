@@ -44,11 +44,15 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    
+    Q_PROPERTY(int currentCostumeId READ getCurrentCostumeId WRITE setCurrentCostumeId USER true)
+
     enum CaptureAction {Ignore, Replace, Append};
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    int getCurrentCostumeId() const;
+    void setCurrentCostumeId(int value);
 
 public slots:
     void refresh();
@@ -56,7 +60,6 @@ public slots:
     void updateStatusBar(QString message);
     void displayError(QString error);
     void handleNewPicture(QString path);
-    void completeLoadCostume(int index);
     
 private slots:
     void on_captureButton_clicked();
@@ -90,6 +93,7 @@ private:
     Collection *collection;
     QSettings settings;
     CaptureAction captureAction;
+    int currentCostumeId;
 
     void doCamerasConnections();
     void loadCollection(QString path);

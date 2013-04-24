@@ -56,7 +56,6 @@ void MainWindow::loadCollection(QString path)
         // Configuration of the mapper between costume info widget and database model
         mapper.setModel(model);
         mapper.clearMapping();
-        connect(&mapper, SIGNAL(currentIndexChanged(int)), this, SLOT(completeLoadCostume(int)));
 
         // Connection between list widget and mapper
         connect(&mapper, SIGNAL(currentIndexChanged(int)), ui->collectionTable2, SLOT(load(int)));
@@ -69,40 +68,40 @@ void MainWindow::loadCollection(QString path)
             QString key = collectionInfos.at(i).second;
             Costume_info info = collectionInfos.at(i).first;
             QWidget *widget = 0;
-            if(!info.external) {
-                if(info.type == ShortString)
-                    widget = new QLineEdit(this);
-                else if(info.type == Number || info.type == PK) {
-                    widget = new QSpinBox(this);
-                    ((QSpinBox*)widget)->setMaximum(9999);
-                    ((QSpinBox*)widget)->setMinimum(-9999);
-                } else if(info.type == LongString)
-                    widget = new QPlainTextEdit(this);
-                else if(info.type == Files){
-                    QFileDialog *dialog = new QFileDialog(this);
-                    dialog->setDirectory(QDir::home());
-                    dialog->setFileMode(QFileDialog::ExistingFiles);
-                    QPushButton *button = new QPushButton(this);
-                    button->setText(tr("Choose file(s)"));
-                    connect(button, SIGNAL(clicked()), dialog, SLOT(open()));
-                    // TODO display selected file(s)
-                    // TODO better multi-file picker
+            if(info.type == ShortString)
+                widget = new QLineEdit(this);
+            else if(info.type == PK)
+                mapper.addMapping(this, model->record().indexOf(key)); // map the pk with currentCostumeId get/set
+            else if(info.type == Number) {
+                widget = new QSpinBox(this);
+                ((QSpinBox*)widget)->setMaximum(9999);
+                ((QSpinBox*)widget)->setMinimum(-9999);
+            } else if(info.type == LongString)
+                widget = new QPlainTextEdit(this);
+            else if(info.type == Files){
+                QFileDialog *dialog = new QFileDialog(this);
+                dialog->setDirectory(QDir::home());
+                dialog->setFileMode(QFileDialog::ExistingFiles);
+                QPushButton *button = new QPushButton(this);
+                button->setText(tr("Choose file(s)"));
+                connect(button, SIGNAL(clicked()), dialog, SLOT(open()));
+                // TODO display selected file(s)
+                // TODO better multi-file picker
 
-                    ui->infoLayout->addRow(info.name, button);
-                } else
-                    qWarning() << QString("Unknown field type for field ") + info.name;
+                ui->infoLayout->addRow(info.name, button);
+            } else
+                qWarning() << QString("Unknown field type for field ") + info.name;
 
-                if(widget != 0) {
+            if(widget != 0) {
+                if(!info.external) {
                     if(info.visible)
                         ui->infoLayout->addRow(info.name, widget);
                     else
                         widget->setVisible(false);
-                    mapper.addMapping(widget, model->record().indexOf(key));
                 }
+                mapper.addMapping(widget, model->record().indexOf(key));
             }
         }
-        // Externals (not in the form)
-        mapper.addMapping(ui->turntable, model->record().indexOf("turntable"));
 
         populateList();
         mapper.toFirst();
@@ -187,13 +186,6 @@ void MainWindow::handleNewPicture(QString path)
         qWarning() << "Got a photo for unknown reason";
         break;
     }
-}
-
-void MainWindow::completeLoadCostume(int index)
-{
-    int id = getCurrentId();
-    ui->turntable->setRelativePath(collection->getStorageDir(id, "turntable"));
-    ui->turntable->loadPreparedPath();
 }
 
 void MainWindow::timeout()
@@ -324,4 +316,15 @@ void MainWindow::on_saveButton_clicked()
 {
     if(!mapper.submit())
         qDebug() << ((QSqlQueryModel)mapper.model()).lastError();
+}
+
+int MainWindow::getCurrentCostumeId() const
+{
+    return currentCostumeId;
+}
+
+void MainWindow::setCurrentCostumeId(int value)
+{
+    currentCostumeId = value;
+    ui->turntable->loadDir(collection->getStorageDir(value,"turntable"));
 }

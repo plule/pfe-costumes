@@ -15,17 +15,14 @@ class QTurntable : public QGraphicsView
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString paths READ getPaths WRITE loadPaths USER true)
 public:
     explicit QTurntable(QWidget *parent = 0);
     virtual void wheelEvent(QWheelEvent *event);
     int getZoomStep();
     int getAngleStep();
-    QString getPaths();
-    void loadPaths(QString paths); // /!\ this doesn't load the pics.
     int getNumber();
     int getView();
-    
+
     QDir getRelativePath() const;
     void setRelativePath(const QDir &value);
 
@@ -44,16 +41,14 @@ public slots:
     virtual void resetScale();
     virtual void setZoom(int zoom);
     virtual void zoom(int factor);
-    virtual void loadPreparedPath();
+    virtual void loadDir(QDir dir);
 
 private:
     int computeZoom();
     QString getPathOf(QString filename);
 
-    QVector<QPair<QString,QPixmap> > m_pixmaps;
     QDir relativePath;
-    QString paths;
-    QStringList pathsToLoad;
+    QVector<QPair<QString,QPixmap> > m_pixmaps;
     int m_current;
     int m_zoom;
     int m_min_zoom,m_max_zoom;
