@@ -12,14 +12,16 @@ SOURCES += master/main.cpp \
     mainwindow.cpp \
     ../camerahandler/cameraexception.cpp \
     ../common/qturntable.cpp \
-    ../common/collection.cpp
+    ../common/collection.cpp \
+    ../common/qloadedlistwidget.cpp
 HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
     common/slotlog.h \
     mainwindow.h \
     ../cameraHandler/cameraexception.h \
     ../common/qturntable.h \
-    ../common/collection.h
+    ../common/collection.h \
+    ../common/qloadedlistwidget.h
 
 CONFIG += qt warn_on release
 

@@ -28,6 +28,7 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QSqlTableModel>
+#include "common/qloadedlistwidget.h"
 #include "common/qturntable.h"
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
@@ -69,8 +70,6 @@ private slots:
 
     void on_actionOpen_Collection_triggered();
 
-    void on_loadButton_clicked();
-
     void on_newCostume_clicked();
 
     void on_removeButton_clicked();
@@ -80,7 +79,6 @@ private slots:
     void on_manButton_clicked();
 
     void on_appendCaptureButton_clicked();
-    void refreshList(int loaded);
 
 private:
     Ui::MainWindow *ui;
@@ -96,7 +94,7 @@ private:
     void doCamerasConnections();
     void loadCollection(QString path);
     int getCurrentId();
-    void populateList(QSqlTableModel *model, QListWidget *widget, int loaded);
+    void populateList(QSqlTableModel *model, QLoadedListWidget *widget, int loaded=-1);
 };
 
 #endif // MAINWINDOW_H

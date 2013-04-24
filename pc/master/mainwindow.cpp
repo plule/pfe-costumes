@@ -58,7 +58,10 @@ void MainWindow::loadCollection(QString path)
         mapper.setModel(model);
         mapper.clearMapping();
         connect(&mapper, SIGNAL(currentIndexChanged(int)), this, SLOT(completeLoadCostume(int)));
-        connect(&mapper, SIGNAL(currentIndexChanged(int)), this, SLOT(refreshList(int)));
+
+        // Connection between list widget and mapper
+        connect(&mapper, SIGNAL(currentIndexChanged(int)), ui->collectionTable2, SLOT(load(int)));
+        connect(ui->collectionTable2, SIGNAL(loadedChanged(int)), &mapper, SLOT(setCurrentIndex(int)));
 
         // Creation of the widgets that contains costumes info
         clearLayout(ui->infoLayout, true);
@@ -111,23 +114,21 @@ int MainWindow::getCurrentId()
     return ((QSpinBox *)mapper.mappedWidgetAt(collection->getIndexOf("id")))->value();
 }
 
-void MainWindow::populateList(QSqlTableModel *model, QListWidget *widget, int loaded)
+void MainWindow::populateList(QSqlTableModel *model, QLoadedListWidget *widget, int loaded)
 {
     widget->clear();
     model->select();
     int nameRow = model->fieldIndex("character");
     for(int i=0; i<model->rowCount(); i++) {
         QSqlRecord r = model->record(i);
-        QListWidgetItem *item = new QListWidgetItem(r.value(nameRow).toString());
+        QString name = r.value(nameRow).toString();
+        if(name == "")
+            name = tr("New Costume");
+        QListWidgetItem *item = new QListWidgetItem(name);
         widget->insertItem(i,item);
     }
-    if(loaded >= 0)
-        widget->item(loaded)->setTextColor(Qt::red);
-}
-
-void MainWindow::refreshList(int loaded)
-{
-    populateList(collection->getCollectionModel(), ui->collectionTable2, loaded);
+    if(loaded > -1)
+        widget->load(loaded);
 }
 
 MainWindow::~MainWindow()
@@ -261,8 +262,11 @@ void MainWindow::doCamerasConnections()
 
 void MainWindow::on_newCostume_clicked()
 {
-    collection->getCollectionModel()->insertRecord(-1, QSqlRecord());
-    collection->getCollectionModel()->select();
+    QSqlTableModel *m = collection->getCollectionModel();
+    m->insertRecord(-1, QSqlRecord());
+    m->select();
+    QSqlRecord rec = m->record(m->rowCount());
+    ui->collectionTable2->addItem(tr("New Item"));
     mapper.toLast();
 }
 
@@ -308,17 +312,9 @@ void MainWindow::on_actionOpen_Collection_triggered()
     loadCollection(QFileDialog::getOpenFileName(this, tr("Open collection"), QDir::home().absolutePath()));
 }
 
-void MainWindow::on_loadButton_clicked()
-{
-    int row = ui->collectionTable2->currentRow();
-    mapper.setCurrentIndex(row);
-    ui->turntable->loadPreparedPath();
-    refreshList(row);
-    ui->collectionTable2->setCurrentRow(row);
-}
-
 void MainWindow::on_removeButton_clicked()
 {
+    // Model
     QItemSelection selection(ui->collectionTable2->selectionModel()->selection() );
 
     QList<int> rows;
@@ -337,6 +333,9 @@ void MainWindow::on_removeButton_clicked()
         }
     }
     collection->getCollectionModel()->select();
+
+    // List widget
+    qDeleteAll(ui->collectionTable2->selectedItems());
 }
 
 void MainWindow::on_saveButton_clicked()
