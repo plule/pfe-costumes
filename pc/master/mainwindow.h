@@ -94,7 +94,7 @@ private:
     void doCamerasConnections();
     void loadCollection(QString path);
     int getCurrentId();
-    void populateList(QSqlTableModel *model, QLoadedListWidget *widget, int loaded=-1);
+    void populateList();
 };
 
 #endif // MAINWINDOW_H

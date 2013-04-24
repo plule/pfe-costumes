@@ -25,7 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // Load last collection
     if(settings.value("collection").type() == QVariant::String) {
         loadCollection(settings.value("collection").toString());
-        populateList(collection->getCollectionModel(), ui->collectionTable2, -1);
     }
 
     captureAction = Ignore;
@@ -105,6 +104,7 @@ void MainWindow::loadCollection(QString path)
         // Externals (not in the form)
         mapper.addMapping(ui->turntable, model->record().indexOf("turntable"));
 
+        populateList();
         mapper.toFirst();
     }
 }
@@ -114,9 +114,10 @@ int MainWindow::getCurrentId()
     return ((QSpinBox *)mapper.mappedWidgetAt(collection->getIndexOf("id")))->value();
 }
 
-void MainWindow::populateList(QSqlTableModel *model, QLoadedListWidget *widget, int loaded)
+void MainWindow::populateList()
 {
-    widget->clear();
+    QSqlTableModel *model = collection->getCollectionModel();
+    ui->collectionTable2->clear();
     model->select();
     int nameRow = model->fieldIndex("character");
     int idRow = model->fieldIndex("id");
@@ -127,10 +128,8 @@ void MainWindow::populateList(QSqlTableModel *model, QLoadedListWidget *widget, 
             name = tr("New Costume");
         QListWidgetItem *item = new QListWidgetItem(name);
         item->setData(Qt::UserRole, r.value(idRow));
-        widget->insertItem(i,item);
+        ui->collectionTable2->insertItem(i,item);
     }
-    if(loaded > -1)
-        widget->load(loaded);
 }
 
 MainWindow::~MainWindow()
