@@ -119,12 +119,14 @@ void MainWindow::populateList(QSqlTableModel *model, QLoadedListWidget *widget, 
     widget->clear();
     model->select();
     int nameRow = model->fieldIndex("character");
+    int idRow = model->fieldIndex("id");
     for(int i=0; i<model->rowCount(); i++) {
         QSqlRecord r = model->record(i);
         QString name = r.value(nameRow).toString();
         if(name == "")
             name = tr("New Costume");
         QListWidgetItem *item = new QListWidgetItem(name);
+        item->setData(Qt::UserRole, r.value(idRow));
         widget->insertItem(i,item);
     }
     if(loaded > -1)
@@ -262,11 +264,9 @@ void MainWindow::doCamerasConnections()
 
 void MainWindow::on_newCostume_clicked()
 {
-    QSqlTableModel *m = collection->getCollectionModel();
-    m->insertRecord(-1, QSqlRecord());
-    m->select();
-    QSqlRecord rec = m->record(m->rowCount());
-    ui->collectionTable2->addItem(tr("New Item"));
+    int newId = collection->newCostume();
+    QListWidgetItem *item = new QListWidgetItem(tr("New Costume"), ui->collectionTable2);
+    item->setData(Qt::UserRole, newId);
     mapper.toLast();
 }
 
@@ -314,6 +314,8 @@ void MainWindow::on_actionOpen_Collection_triggered()
 
 void MainWindow::on_removeButton_clicked()
 {
+    // TODO : safer ?
+
     // Model
     QItemSelection selection(ui->collectionTable2->selectionModel()->selection() );
 

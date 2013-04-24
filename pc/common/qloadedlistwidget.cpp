@@ -22,6 +22,7 @@ void QLoadedListWidget::load(int index)
         }
         loadedItem->setFont(loadedFont);
         emit loadedChanged(index);
+        emit loadedChanged(loadedItem);
     }
 }
 

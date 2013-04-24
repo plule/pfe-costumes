@@ -87,6 +87,14 @@ void Collection::createStorageDir(int costumeId, QString key)
     collectionDir.mkpath(QString::number(costumeId) + "/" + key);
 }
 
+int Collection::newCostume()
+{
+    model->insertRecord(-1, QSqlRecord());
+    model->select();
+    QSqlRecord rec = model->record(model->rowCount()-1);
+    return rec.value(rec.indexOf("id")).toInt();
+}
+
 void Collection::InitDefaultInfos()
 {
     Costume_info::last_order = 0;
