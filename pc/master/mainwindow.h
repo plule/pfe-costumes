@@ -28,6 +28,7 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QSqlTableModel>
+#include <QCheckBox>
 #include "common/qloadedlistwidget.h"
 #include "common/qturntable.h"
 #include "camerahandler/camerahandler.h"

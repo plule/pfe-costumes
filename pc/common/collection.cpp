@@ -15,8 +15,6 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
     db.setDatabaseName(collectionPath);
     model = new QSqlTableModel(this, db);
     lastId = 0;
-    connect(model, SIGNAL(beforeInsert(QSqlRecord&)), this, SLOT(prepareRecord(QSqlRecord&)));
-    connect(model, SIGNAL(beforeUpdate(int,QSqlRecord&)), this, SLOT(prepareRecord(int,QSqlRecord&)));
 
     valid = db.open();
     if(valid) {
@@ -95,7 +93,10 @@ void Collection::createStorageDir(int costumeId, QString key)
 
 int Collection::newCostume()
 {
-    QSqlRecord r;
+    QSqlRecord r = model->record();
+    qDebug() << r;
+    r.setValue("deleted", QVariant(0));
+    r.setValue("id", ++lastId);
     model->insertRecord(-1, r);
     model->select();
     return lastId;
@@ -133,6 +134,7 @@ void Collection::InitDefaultInfos()
     Costume_info::last_order = 0;
     valid_informations = QMap<QString, Costume_info>();
     valid_informations.insert("id", Costume_info(PK, tr("Id"), true, true));
+    valid_informations.insert("deleted", Costume_info(Bool, tr("Deleted costume")));
     valid_informations.insert("director", Costume_info(ShortString, tr("Piece Director")));
     valid_informations.insert("piece", Costume_info(ShortString, tr("Piece Name")));
     valid_informations.insert("writer", Costume_info(ShortString, tr("Piece Writer")));
@@ -142,7 +144,7 @@ void Collection::InitDefaultInfos()
     valid_informations.insert("year", Costume_info(Number, tr("Year")));
     valid_informations.insert("designer", Costume_info(ShortString, tr("Designer")));
     valid_informations.insert("collection", Costume_info(ShortString, tr("Collection")));
-    valid_informations.insert("description", Costume_info(LongString, tr("Description")));
+    valid_informations.insert("description", Costume_info(LongString, tr("Description"), false, true));
     //valid_informations.insert("visual", Costume_info(Files, tr("Additional visuals")));
 
     sql_types.insert(ShortString, "varchar(256)");
@@ -150,6 +152,7 @@ void Collection::InitDefaultInfos()
     sql_types.insert(Number, "integer");
     sql_types.insert(PK, "integer primary key");
     sql_types.insert(Files, "varchar(4096)");
+    sql_types.insert(Bool, "integer");
 }
 
 QList<QPair<Costume_info, QString> > Collection::sortedValidInformations()
@@ -161,21 +164,6 @@ QList<QPair<Costume_info, QString> > Collection::sortedValidInformations()
 
     qSort(orderedInfos);
     return orderedInfos;
-}
-
-void Collection::prepareRecord(QSqlRecord &record)
-{
-    if(record.value("id").toInt() == 0) {
-        QSqlField idField("id", QVariant::Int);
-        idField.setValue(++lastId);
-        record.append(idField);
-    }
-}
-
-void Collection::prepareRecord(int row, QSqlRecord &record)
-{
-    (void)row;
-    prepareRecord(record);
 }
 
 QString Collection::keySqlList(QStringList keys)

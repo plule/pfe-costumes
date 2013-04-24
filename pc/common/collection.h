@@ -21,7 +21,8 @@ enum Costume_info_type {
     ShortString,
     LongString,
     Number,
-    Files
+    Files,
+    Bool
 };
 
 struct Costume_info {
@@ -66,8 +67,6 @@ public:
 signals:
     
 public slots:
-    void prepareRecord(QSqlRecord & record);
-    void prepareRecord(int row, QSqlRecord & record);
 
 private:
     bool createCollectionTable();

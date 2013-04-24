@@ -78,6 +78,8 @@ void MainWindow::loadCollection(QString path)
                 ((QSpinBox*)widget)->setMinimum(-9999);
             } else if(info.type == LongString)
                 widget = new QPlainTextEdit(this);
+            else if(info.type == Bool)
+                widget = new QCheckBox(this);
             else if(info.type == Files){
                 QFileDialog *dialog = new QFileDialog(this);
                 dialog->setDirectory(QDir::home());
