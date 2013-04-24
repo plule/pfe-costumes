@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>891</width>
-    <height>710</height>
+    <height>740</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,30 +21,12 @@
        <enum>QLayout::SetMinimumSize</enum>
       </property>
       <item>
-       <widget class="QListWidget" name="collectionTable2"/>
-      </item>
-      <item>
-       <widget class="QListView" name="collectionTable">
+       <widget class="QListWidget" name="collectionTable2">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">[loaded=true]
-{
-	color: red;
-}</string>
-        </property>
-        <property name="editTriggers">
-         <set>QAbstractItemView::DoubleClicked</set>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>true</bool>
-        </property>
-        <property name="selectionMode">
-         <enum>QAbstractItemView::ExtendedSelection</enum>
         </property>
        </widget>
       </item>

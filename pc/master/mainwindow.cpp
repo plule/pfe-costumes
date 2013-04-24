@@ -28,10 +28,6 @@ MainWindow::MainWindow(QWidget *parent) :
         populateList(collection->getCollectionModel(), ui->collectionTable2, -1);
     }
 
-    //ui->collectionTable->setProperty("loaded",true);
-    ui->collectionTable->itemDelegate()->setProperty("loaded",true);
-    ui->collectionTable->style()->unpolish(ui->collectionTable);
-    ui->collectionTable->style()->polish(ui->collectionTable);
     captureAction = Ignore;
 }
 
@@ -58,15 +54,9 @@ void MainWindow::loadCollection(QString path)
     if(collection->isValid()) {
         QSqlTableModel *model = collection->getCollectionModel();
 
-        // Map the collection viewer to the model
-        ui->collectionTable->setModel(model);
-        ui->collectionTable->setModelColumn(collection->getIndexOf("generated_name"));
-        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->collectionTable, SLOT(update(QModelIndex)));
-
         // Configuration of the mapper between costume info widget and database model
         mapper.setModel(model);
         mapper.clearMapping();
-        connect(ui->collectionTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), &mapper, SLOT(setCurrentModelIndex(QModelIndex)));
         connect(&mapper, SIGNAL(currentIndexChanged(int)), this, SLOT(completeLoadCostume(int)));
         connect(&mapper, SIGNAL(currentIndexChanged(int)), this, SLOT(refreshList(int)));
 
@@ -320,13 +310,16 @@ void MainWindow::on_actionOpen_Collection_triggered()
 
 void MainWindow::on_loadButton_clicked()
 {
-    QModelIndex index = ui->collectionTable->selectionModel()->selectedIndexes().first();
-    mapper.setCurrentIndex(index.row());
+    int row = ui->collectionTable2->currentRow();
+    mapper.setCurrentIndex(row);
+    ui->turntable->loadPreparedPath();
+    refreshList(row);
+    ui->collectionTable2->setCurrentRow(row);
 }
 
 void MainWindow::on_removeButton_clicked()
 {
-    QItemSelection selection(ui->collectionTable->selectionModel()->selection() );
+    QItemSelection selection(ui->collectionTable2->selectionModel()->selection() );
 
     QList<int> rows;
     foreach( const QModelIndex & index, selection.indexes() ) {
