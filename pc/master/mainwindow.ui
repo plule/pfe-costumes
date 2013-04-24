@@ -511,6 +511,7 @@
     <signal>loadedChanged(int)</signal>
     <slot>loadCurrent()</slot>
     <slot>load(int)</slot>
+    <slot>load(QListWidgetItem*)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -689,6 +690,22 @@
     <hint type="destinationlabel">
      <x>86</x>
      <y>597</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>collectionTable2</sender>
+   <signal>itemDoubleClicked(QListWidgetItem*)</signal>
+   <receiver>collectionTable2</receiver>
+   <slot>load(QListWidgetItem*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>112</x>
+     <y>146</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>161</x>
+     <y>79</y>
     </hint>
    </hints>
   </connection>

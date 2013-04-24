@@ -14,19 +14,18 @@ void QLoadedListWidget::loadCurrent()
 
 void QLoadedListWidget::load(int index)
 {
-    int loadedIndex = row(loadedItem);
-    if(index != loadedIndex && item(index)) {
-        loadedItem = item(index);
-        for(int i=0; i<count(); i++) {
-            item(i)->setFont(normalFont);
-        }
-        loadedItem->setFont(loadedFont);
-        emit loadedChanged(index);
-        emit loadedChanged(loadedItem);
-    }
+    load(this->item(index));
 }
 
 void QLoadedListWidget::load(QListWidgetItem *item)
 {
-    load(row(item));
+    if((row(item) > -1) && item != loadedItem) {
+        loadedItem = item;
+        for(int i=0; i<count(); i++) {
+            this->item(i)->setFont(normalFont);
+        }
+        item->setFont(loadedFont);
+        emit loadedChanged(row(item));
+        emit loadedChanged(item);
+    }
 }

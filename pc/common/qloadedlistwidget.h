@@ -4,6 +4,7 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QFont>
+#include <QDebug>
 
 class QLoadedListWidget : public QListWidget
 {
@@ -13,7 +14,7 @@ public:
     
 signals:
     void loadedChanged(int index);
-    void loadedChanged(QListWidgetItem item);
+    void loadedChanged(QListWidgetItem *item);
     
 public slots:
     void loadCurrent();
