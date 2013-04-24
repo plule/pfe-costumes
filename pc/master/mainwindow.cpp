@@ -118,14 +118,10 @@ void MainWindow::populateList()
     QSqlTableModel *model = collection->getCollectionModel();
     ui->collectionTable2->clear();
     model->select();
-    int nameRow = model->fieldIndex("character");
     int idRow = model->fieldIndex("id");
     for(int i=0; i<model->rowCount(); i++) {
         QSqlRecord r = model->record(i);
-        QString name = r.value(nameRow).toString();
-        if(name == "")
-            name = tr("New Costume");
-        QListWidgetItem *item = new QListWidgetItem(name);
+        QListWidgetItem *item = new QListWidgetItem(collection->getName(r));
         item->setData(Qt::UserRole, r.value(idRow));
         ui->collectionTable2->insertItem(i,item);
     }
@@ -322,8 +318,11 @@ void MainWindow::on_removeButton_clicked()
 
 void MainWindow::on_saveButton_clicked()
 {
-    if(!mapper.submit())
+    if(!mapper.submit()) {
         qDebug() << ((QSqlQueryModel)mapper.model()).lastError();
+        QListWidgetItem *i = ui->collectionTable2->loadedItem();
+        i->setText(collection->getName(i->data(Qt::UserRole).toInt()));
+    }
 }
 
 int MainWindow::getCurrentCostumeId() const

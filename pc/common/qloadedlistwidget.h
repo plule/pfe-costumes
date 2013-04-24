@@ -12,6 +12,9 @@ class QLoadedListWidget : public QListWidget
 public:
     explicit QLoadedListWidget(QWidget *parent = 0);
     
+    QListWidgetItem *loadedItem() const;
+    void setLoadedItem(QListWidgetItem *loadedItem);
+
 signals:
     void loadedChanged(int index);
     void loadedChanged(QListWidgetItem *item);
@@ -22,9 +25,9 @@ public slots:
     void load(QListWidgetItem *item);
 
 private:
-    QListWidgetItem *loadedItem;
-    QFont loadedFont;
-    QFont normalFont;
+    QListWidgetItem *m_loadedItem;
+    QFont m_loadedFont;
+    QFont m_normalFont;
 
     
 };

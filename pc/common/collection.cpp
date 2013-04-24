@@ -110,6 +110,24 @@ void Collection::deleteCostumes(QList<int> ids)
     model->select();
 }
 
+QString Collection::getName(int id)
+{
+    QSqlQuery q(db);
+    q.exec("SELECT * FROM collection WHERE id="+QString::number(id));
+    if(q.next()) {
+        QSqlRecord r = q.record();
+        return getName(r);
+    }
+    return tr("Unknown costume");
+}
+
+QString Collection::getName(QSqlRecord rec)
+{
+    if(rec.value("character").toString() != "")
+        return rec.value("character").toString();
+    return tr("Unkown costume");
+}
+
 void Collection::InitDefaultInfos()
 {
     Costume_info::last_order = 0;

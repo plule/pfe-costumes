@@ -53,6 +53,8 @@ public:
     void createStorageDir(int costumeId, QString key);
     int newCostume();
     void deleteCostumes(QList<int> ids);
+    QString getName(QSqlRecord rec);
+    QString getName(int id);
 
     static void InitDefaultInfos();
     static QMap<QString, Costume_info> valid_informations;

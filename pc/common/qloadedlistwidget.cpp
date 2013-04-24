@@ -3,8 +3,8 @@
 QLoadedListWidget::QLoadedListWidget(QWidget *parent) :
     QListWidget(parent)
 {
-    loadedItem = 0;
-    loadedFont.setBold(true);
+    m_loadedItem = 0;
+    m_loadedFont.setBold(true);
 }
 
 void QLoadedListWidget::loadCurrent()
@@ -19,13 +19,23 @@ void QLoadedListWidget::load(int index)
 
 void QLoadedListWidget::load(QListWidgetItem *item)
 {
-    if((row(item) > -1) && item != loadedItem) {
-        loadedItem = item;
+    if((row(item) > -1) && item != m_loadedItem) {
+        m_loadedItem = item;
         for(int i=0; i<count(); i++) {
-            this->item(i)->setFont(normalFont);
+            this->item(i)->setFont(m_normalFont);
         }
-        item->setFont(loadedFont);
+        item->setFont(m_loadedFont);
         emit loadedChanged(row(item));
         emit loadedChanged(item);
     }
+}
+
+QListWidgetItem *QLoadedListWidget::loadedItem() const
+{
+    return m_loadedItem;
+}
+
+void QLoadedListWidget::setLoadedItem(QListWidgetItem *loadedItem)
+{
+    m_loadedItem = loadedItem;
 }
