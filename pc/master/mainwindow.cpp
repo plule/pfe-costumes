@@ -110,7 +110,7 @@ void MainWindow::loadCollection(QString path)
 
 int MainWindow::getCurrentId()
 {
-    return ((QSpinBox *)mapper.mappedWidgetAt(collection->getIndexOf("id")))->value();
+    return currentCostumeId;
 }
 
 void MainWindow::populateList()
@@ -201,8 +201,9 @@ void MainWindow::on_captureButton_clicked()
     if(handler->getCameras(&cameras) >= 1)
     {
         QPhoto::QCamera *camera = cameras[0];
-        QString filename = QString("%1").arg(ui->turntable->getView());
+        QString filename = QString("%1").arg(QString::number(ui->turntable->getView()), 3, QLatin1Char('0'));
         QString path = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
+        qDebug() << path;
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
         this->displayError(tr("No camera connected"));
@@ -217,8 +218,9 @@ void MainWindow::on_appendCaptureButton_clicked()
     if(handler->getCameras(&cameras) >= 1)
     {
         QPhoto::QCamera *camera = cameras[0];
-        QString filename = QString("%1.jpg").arg(ui->turntable->getNumber());
+        QString filename = QString("%1.jpg").arg(QString::number(ui->turntable->getNumber()), 3, QLatin1Char('0'));
         QString path = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
+        qDebug() << path;
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
         this->displayError(tr("No camera connected"));
