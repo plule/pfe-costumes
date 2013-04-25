@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">*[mandatoryField=&quot;true&quot;] { background-color: yellow }
+   <string notr="true">
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">

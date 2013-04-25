@@ -53,12 +53,15 @@ void MandatoryFieldGroup::changed()
                 continue;
         }
         if (widget->inherits("QLineEdit")) {
-            if (((QLineEdit*)widget->qt_metacast("QLineEdit"))->text().isEmpty()) {
+            QLineEdit *lineEdit = ((QLineEdit*)widget->qt_metacast("QLineEdit"));
+            if (lineEdit->text().isEmpty()) {
+                lineEdit->setStyleSheet("QLineEdit{background: yellow}");
                 enable = false;
                 break;
-            }
-            else
+            } else {
+                lineEdit->setStyleSheet("QLineEdit{background: white}");
                 continue;
+            }
         }
     }
     okButton->setEnabled(enable);
@@ -67,6 +70,5 @@ void MandatoryFieldGroup::changed()
 
 void MandatoryFieldGroup::clear()
 {
-    qDebug() << "clear";
     widgets.clear();
 }

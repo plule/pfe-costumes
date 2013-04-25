@@ -107,9 +107,12 @@ void MainWindow::loadCollection(QString path)
                 if(!info.external) {
                     if(info.visible) {
                         widget->setProperty("mandatoryField", info.mandatory);
-                        if(info.mandatory)
+                        QString name = info.name;
+                        if(info.mandatory) {
+                            name = "<b>"+name+"*</b>";
                             mandatoryFields->add(widget);
-                        ui->infoLayout->addRow(info.name, widget);
+                        }
+                        ui->infoLayout->addRow(name, widget);
                     } else
                         widget->setVisible(false);
                 }
