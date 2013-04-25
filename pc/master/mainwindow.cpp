@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     doCamerasConnections();
 
     // Ui init and tweaks
+    QIcon::setThemeName("elementary-xfce"); // TODO fix this.
     ui->setupUi(this);
     ui->turntable->resize(800,600);
     ui->centralwidget->adjustSize();
@@ -125,6 +126,7 @@ void MainWindow::populateList()
         QSqlRecord r = model->record(i);
         QListWidgetItem *item = new QListWidgetItem(collection->getName(r));
         item->setData(Qt::UserRole, r.value(idRow));
+        item->setIcon(QIcon::fromTheme("x-office-document"));
         ui->collectionTable2->insertItem(i,item);
     }
 }
@@ -258,6 +260,7 @@ void MainWindow::on_newCostume_clicked()
     int newId = collection->newCostume();
     QListWidgetItem *item = new QListWidgetItem(tr("New Costume"), ui->collectionTable2);
     item->setData(Qt::UserRole, newId);
+    item->setIcon(QIcon::fromTheme("x-office-document"));
     mapper.toLast();
 }
 
