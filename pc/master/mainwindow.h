@@ -64,6 +64,7 @@ public slots:
     void handleNewPicture(QString path);
     void updateSaveButton();
     void onModelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    void populateList();
     
 private slots:
     void timeout();
@@ -103,7 +104,6 @@ private:
     void doCamerasConnections();
     void loadCollection(QString path);
     int getCurrentId();
-    void populateList();
 };
 
 #endif // MAINWINDOW_H

@@ -59,6 +59,7 @@ void MainWindow::loadCollection(QString path)
         connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                 this, SLOT(onModelDataChanged(QModelIndex,QModelIndex)));
         connect(collection, SIGNAL(synchronised()), this, SLOT(updateSaveButton()));
+        connect(collection, SIGNAL(synchronised()), this, SLOT(populateList())); // ensure sync
 
         // Configuration of the mapper between costume info widget and database model
         mapper.setModel(model);
@@ -129,6 +130,7 @@ int MainWindow::getCurrentId()
 
 void MainWindow::populateList()
 {
+    qDebug() << "populate";
     QSqlTableModel *model = collection->getCollectionModel();
     ui->collectionTable2->clear();
     int idRow = model->fieldIndex("id");
@@ -139,6 +141,7 @@ void MainWindow::populateList()
         item->setIcon(QIcon::fromTheme("x-office-document"));
         ui->collectionTable2->insertItem(i,item);
     }
+    qDebug() << "populated";
 }
 
 MainWindow::~MainWindow()
@@ -208,7 +211,8 @@ void MainWindow::onModelDataChanged(const QModelIndex &topLeft, const QModelInde
     updateSaveButton();
     for(int row = topLeft.row(); row <= bottomRight.row(); row++) {
         QListWidgetItem *item = ui->collectionTable2->item(row);
-        item->setText(collection->getName(item->data(Qt::UserRole).toInt()));
+        if(item)
+            item->setText(collection->getName(item->data(Qt::UserRole).toInt()));
     }
 }
 
@@ -338,16 +342,15 @@ void MainWindow::on_actionOpen_Collection_triggered()
 
 void MainWindow::on_removeButton_clicked()
 {
-    foreach(QListWidgetItem *item, ui->collectionTable2->selectedItems())
+    foreach(QListWidgetItem *item, ui->collectionTable2->selectedItems()) {
         collection->deleteCostume(item->data(Qt::UserRole).toInt());
-    qDeleteAll(ui->collectionTable2->selectedItems());
+        ui->collectionTable2->setItemHidden(item, true);
+    }
 }
 
 void MainWindow::on_saveButton_clicked()
 {
     collection->submit();
-    QListWidgetItem *i = ui->collectionTable2->loadedItem();
-    i->setText(collection->getName(i->data(Qt::UserRole).toInt()));
 }
 
 int MainWindow::getCurrentCostumeId() const
