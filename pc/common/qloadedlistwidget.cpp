@@ -4,7 +4,6 @@ QLoadedListWidget::QLoadedListWidget(QWidget *parent) :
     QListWidget(parent)
 {
     m_loadedItem = 0;
-    m_loadedFont.setBold(true);
 }
 
 void QLoadedListWidget::loadCurrent()
@@ -22,9 +21,13 @@ void QLoadedListWidget::load(QListWidgetItem *item)
     if((row(item) > -1) && item != m_loadedItem) {
         m_loadedItem = item;
         for(int i=0; i<count(); i++) {
-            this->item(i)->setFont(m_normalFont);
+            QFont f = this->item(i)->font();
+            f.setBold(false);
+            this->item(i)->setFont(f);
         }
-        item->setFont(m_loadedFont);
+        QFont f = item->font();
+        f.setBold(true);
+        item->setFont(f);
         emit loadedChanged(row(item));
         emit loadedChanged(item);
     }

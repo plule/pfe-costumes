@@ -26,10 +26,6 @@ public slots:
 
 private:
     QListWidgetItem *m_loadedItem;
-    QFont m_loadedFont;
-    QFont m_normalFont;
-
-    
 };
 
 #endif // QLOADEDLISTWIDGET_H

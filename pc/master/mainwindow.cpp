@@ -130,7 +130,6 @@ int MainWindow::getCurrentId()
 
 void MainWindow::populateList()
 {
-    qDebug() << "populate";
     QSqlTableModel *model = collection->getCollectionModel();
     ui->collectionTable2->clear();
     int idRow = model->fieldIndex("id");
@@ -141,7 +140,6 @@ void MainWindow::populateList()
         item->setIcon(QIcon::fromTheme("x-office-document"));
         ui->collectionTable2->insertItem(i,item);
     }
-    qDebug() << "populated";
 }
 
 MainWindow::~MainWindow()
@@ -213,6 +211,12 @@ void MainWindow::onModelDataChanged(const QModelIndex &topLeft, const QModelInde
         QListWidgetItem *item = ui->collectionTable2->item(row);
         if(item)
             item->setText(collection->getName(item->data(Qt::UserRole).toInt()));
+    }
+    if(collection->getCollectionModel()->isDirty(topLeft)) { // TODO tous les indexes ?
+        QListWidgetItem *item = ui->collectionTable2->item(topLeft.row());
+        QFont f = item->font();
+        f.setItalic(true);
+        item->setFont(f);
     }
 }
 
