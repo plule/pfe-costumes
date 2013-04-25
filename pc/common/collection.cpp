@@ -176,6 +176,8 @@ bool Collection::submit()
     bool ret = model->submitAll();
     if(ret)
         emit synchronised();
+    else
+        qDebug() << model->lastError();
     return ret;
 }
 

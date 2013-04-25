@@ -348,18 +348,23 @@ void MainWindow::on_actionNew_Collection_triggered()
     QString path = QFileDialog::getSaveFileName(this, tr("New collection"), QDir::home().absolutePath());
     QFile::remove(path);
     QFile::copy(":/default-db/default.db",path);
+    QFile::setPermissions(path, QFileDevice::ReadOwner|QFileDevice::WriteOwner);
     loadCollection(path);
     QDir src(":/default-model/man");
     QStringList files = src.entryList(QDir::Files, QDir::Name);
     QDir dest = collection->getStorageDir(1, "turntable");
-    foreach(QString file, files)
+    foreach(QString file, files) {
         QFile::copy(src.absoluteFilePath(file), dest.absoluteFilePath(file));
+        QFile::setPermissions(dest.absoluteFilePath(file), QFileDevice::ReadOwner|QFileDevice::WriteOwner);
+    }
 
     QDir src2(":/default-model/suzanne");
     files = src2.entryList(QDir::Files, QDir::Name);
     dest = collection->getStorageDir(2, "turntable");
-    foreach(QString file, files)
+    foreach(QString file, files) {
         QFile::copy(src2.absoluteFilePath(file), dest.absoluteFilePath(file));
+        QFile::setPermissions(dest.absoluteFilePath(file), QFileDevice::ReadOwner|QFileDevice::WriteOwner);
+    }
 
     ui->turntable->loadDir(collection->getStorageDir(currentCostumeId,"turntable"), true);
     mapper.toFirst();
