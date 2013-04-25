@@ -36,7 +36,6 @@
 #include "camerahandler/qcamera.h"
 #include "common/slotlog.h"
 #include "common/collection.h"
-#include "common/mandatoryfieldgroup.h"
 
 #define GROUP_INFO "costume_informations"
 
@@ -97,7 +96,6 @@ private:
     QSettings settings;
     CaptureAction captureAction;
     int currentCostumeId;
-    MandatoryFieldGroup *mandatoryFields;
 
     void doCamerasConnections();
     void loadCollection(QString path);
