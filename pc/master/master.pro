@@ -36,4 +36,5 @@ TRANSLATIONS = ../resources/master_fr.ts
 
 RESOURCES += \
     ../resources/translations.qrc \
-    ../resources/pics/pics.qrc
+    ../resources/pics/pics.qrc \
+    ../resources/default-db.qrc
