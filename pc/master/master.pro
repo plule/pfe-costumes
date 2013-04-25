@@ -13,7 +13,8 @@ SOURCES += master/main.cpp \
     ../camerahandler/cameraexception.cpp \
     ../common/qturntable.cpp \
     ../common/collection.cpp \
-    ../common/qloadedlistwidget.cpp
+    ../common/qloadedlistwidget.cpp \
+    ../common/uniqueproxymodel.cpp
 HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
     common/slotlog.h \
@@ -21,7 +22,8 @@ HEADERS += camerahandler/camerahandler.h \
     ../cameraHandler/cameraexception.h \
     ../common/qturntable.h \
     ../common/collection.h \
-    ../common/qloadedlistwidget.h
+    ../common/qloadedlistwidget.h \
+    ../common/uniqueproxymodel.h
 
 CONFIG += qt warn_on release
 

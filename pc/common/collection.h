@@ -16,6 +16,9 @@
 #include <QList>
 #include <QMap>
 #include <QSet>
+#include <QCompleter>
+#include <QStringListModel>
+#include "common/uniqueproxymodel.h"
 
 enum Costume_info_type {
     Invalid,
@@ -57,8 +60,8 @@ public:
     void deleteCostume(int id);
     QString getName(QSqlRecord rec);
     QString getName(int id);
-    QStringList *getExistings(QString key);
-    void loadExistings();
+    QCompleter *getCompleter(QString key);
+    void loadCompleters();
     bool isDirty();
     bool submit();
     void revert();
@@ -86,7 +89,7 @@ private:
     QSqlDatabase db;
     QSqlTableModel *model;
     QDir collectionDir;
-    QMap<QString,QStringList* > existing;
+    QMap<QString,QCompleter* > completers;
     bool valid;
     int lastId;
     

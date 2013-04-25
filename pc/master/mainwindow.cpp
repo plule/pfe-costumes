@@ -80,7 +80,7 @@ void MainWindow::loadCollection(QString path)
             QWidget *widget = 0;
             if(info.type == ShortString) {
                 QLineEdit *lineEdit = new QLineEdit(this);
-                lineEdit->setCompleter(new QCompleter(*collection->getExistings(key), lineEdit));
+                lineEdit->setCompleter(collection->getCompleter(key));
                 widget = lineEdit;
 
             } else if(info.type == PK)

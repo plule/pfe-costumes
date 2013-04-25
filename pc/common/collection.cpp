@@ -25,12 +25,12 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
         if(q.next()) {
             lastId = q.value(0).toInt();
         }
-        loadExistings();
     }
     model->setTable("collection");
     model->setFilter("notdeleted == 1");
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     select();
+    loadCompleters();
     collectionDir = QFileInfo(collectionPath).absoluteDir();
 }
 
@@ -115,22 +115,20 @@ QString Collection::getName(int id)
     return getName(getRecord(id));
 }
 
-QStringList *Collection::getExistings(QString key)
+QCompleter *Collection::getCompleter(QString key)
 {
-    return existing.value(key);
+    return completers.value(key);
 }
 
-void Collection::loadExistings()
+void Collection::loadCompleters()
 {
     foreach(QString key, valid_informations.keys()) {
-        QSqlQuery q(db);
-        q.exec("SELECT "+key+" FROM collection WHERE notdeleted=1 GROUP BY "+key);
-        existing.insert(key, new QStringList());
-        QStringList *list = existing.value(key);
-        while(q.next()) {
-            QString value = q.value(0).toString();
-            list->append(value);
-        }
+        int column = model->record().indexOf(key);
+        UniqueProxyModel *proxy = new UniqueProxyModel(column, this);
+        proxy->setSourceModel(model);
+        QCompleter *c = new QCompleter(proxy,this);
+        c->setCompletionColumn(model->record().indexOf(key));
+        completers.insert(key, c);
     }
 }
 
