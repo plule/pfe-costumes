@@ -60,6 +60,7 @@ void MainWindow::loadCollection(QString path)
                 this, SLOT(onModelDataChanged(QModelIndex,QModelIndex)));
         connect(collection, SIGNAL(synchronised()), this, SLOT(updateSaveButton()));
         connect(collection, SIGNAL(synchronised()), this, SLOT(populateList())); // ensure sync. TODO useful?
+        connect(collection, SIGNAL(synchronised()), ui->collectionTable2, SLOT(cleanAll()));
 
         // Configuration of the mapper between costume info widget and database model
         mapper.setModel(model);
@@ -207,15 +208,12 @@ void MainWindow::updateSaveButton()
 // Do not expect more than one change at a time.
 void MainWindow::onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
+    (void)bottomRight;
     updateSaveButton();
     QListWidgetItem *item = ui->collectionTable2->item(topLeft.row());
     if(item) {
         item->setText(collection->getName(item->data(Qt::UserRole).toInt()));
-        if(collection->getCollectionModel()->isDirty(topLeft)) {
-            QFont f = item->font();
-            f.setItalic(true);
-            item->setFont(f);
-        }
+        ui->collectionTable2->setDirty(item, collection->getCollectionModel()->isDirty(topLeft));
     }
 }
 
@@ -292,6 +290,7 @@ void MainWindow::on_newCostume_clicked()
     QListWidgetItem *item = new QListWidgetItem(tr("New Costume"), ui->collectionTable2);
     item->setData(Qt::UserRole, newId);
     item->setIcon(QIcon::fromTheme("x-office-document"));
+    ui->collectionTable2->setDirty(item, true);
     mapper.toLast();
 }
 

@@ -14,6 +14,7 @@ public:
     
     QListWidgetItem *loadedItem() const;
     void setLoadedItem(QListWidgetItem *loadedItem);
+    void setDirty(QListWidgetItem *item, bool dirty);
 
 signals:
     void loadedChanged(int index);
@@ -23,6 +24,8 @@ public slots:
     void loadCurrent();
     void load(int index);
     void load(QListWidgetItem *item);
+    void dirty(int index, bool dirty);
+    void cleanAll();
 
 private:
     QListWidgetItem *m_loadedItem;

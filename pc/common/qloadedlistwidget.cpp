@@ -33,6 +33,17 @@ void QLoadedListWidget::load(QListWidgetItem *item)
     }
 }
 
+void QLoadedListWidget::dirty(int index, bool dirty)
+{
+    setDirty(item(index),dirty);
+}
+
+void QLoadedListWidget::cleanAll()
+{
+    for(int i=0; i<count(); i++)
+        dirty(i,false);
+}
+
 QListWidgetItem *QLoadedListWidget::loadedItem() const
 {
     return m_loadedItem;
@@ -41,4 +52,13 @@ QListWidgetItem *QLoadedListWidget::loadedItem() const
 void QLoadedListWidget::setLoadedItem(QListWidgetItem *loadedItem)
 {
     m_loadedItem = loadedItem;
+}
+
+void QLoadedListWidget::setDirty(QListWidgetItem *item, bool dirty)
+{
+    if(item) {
+        QFont f = item->font();
+        f.setItalic(dirty);
+        item->setFont(f);
+    }
 }
