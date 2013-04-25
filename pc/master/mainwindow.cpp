@@ -59,7 +59,7 @@ void MainWindow::loadCollection(QString path)
         connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                 this, SLOT(onModelDataChanged(QModelIndex,QModelIndex)));
         connect(collection, SIGNAL(synchronised()), this, SLOT(updateSaveButton()));
-        connect(collection, SIGNAL(synchronised()), this, SLOT(populateList())); // ensure sync
+        connect(collection, SIGNAL(synchronised()), this, SLOT(populateList())); // ensure sync. TODO useful?
 
         // Configuration of the mapper between costume info widget and database model
         mapper.setModel(model);
@@ -204,19 +204,18 @@ void MainWindow::updateSaveButton()
     ui->saveButton->setEnabled(collection->isDirty());
 }
 
+// Do not expect more than one change at a time.
 void MainWindow::onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
     updateSaveButton();
-    for(int row = topLeft.row(); row <= bottomRight.row(); row++) {
-        QListWidgetItem *item = ui->collectionTable2->item(row);
-        if(item)
-            item->setText(collection->getName(item->data(Qt::UserRole).toInt()));
-    }
-    if(collection->getCollectionModel()->isDirty(topLeft)) { // TODO tous les indexes ?
-        QListWidgetItem *item = ui->collectionTable2->item(topLeft.row());
-        QFont f = item->font();
-        f.setItalic(true);
-        item->setFont(f);
+    QListWidgetItem *item = ui->collectionTable2->item(topLeft.row());
+    if(item) {
+        item->setText(collection->getName(item->data(Qt::UserRole).toInt()));
+        if(collection->getCollectionModel()->isDirty(topLeft)) {
+            QFont f = item->font();
+            f.setItalic(true);
+            item->setFont(f);
+        }
     }
 }
 
