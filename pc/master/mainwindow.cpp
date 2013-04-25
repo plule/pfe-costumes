@@ -55,8 +55,9 @@ void MainWindow::loadCollection(QString path)
     if(collection->isValid()) {
         QSqlTableModel *model = collection->getCollectionModel();
 
-        // Enable save button only when data changed
-        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(updateSaveButton()));
+        // Update save button and titles on data change/sync
+        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                this, SLOT(onModelDataChanged(QModelIndex,QModelIndex)));
         connect(collection, SIGNAL(synchronised()), this, SLOT(updateSaveButton()));
 
         // Configuration of the mapper between costume info widget and database model
@@ -200,6 +201,15 @@ void MainWindow::handleNewPicture(QString path)
 void MainWindow::updateSaveButton()
 {
     ui->saveButton->setEnabled(collection->isDirty());
+}
+
+void MainWindow::onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
+    updateSaveButton();
+    for(int row = topLeft.row(); row <= bottomRight.row(); row++) {
+        QListWidgetItem *item = ui->collectionTable2->item(row);
+        item->setText(collection->getName(item->data(Qt::UserRole).toInt()));
+    }
 }
 
 void MainWindow::timeout()

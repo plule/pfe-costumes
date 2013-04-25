@@ -112,13 +112,7 @@ void Collection::deleteCostume(int id)
 
 QString Collection::getName(int id)
 {
-    QSqlQuery q(db);
-    q.exec("SELECT * FROM collection WHERE id="+QString::number(id));
-    if(q.next()) {
-        QSqlRecord r = q.record();
-        return getName(r);
-    }
-    return tr("Unknown costume");
+    return getName(getRecord(id));
 }
 
 QStringList *Collection::getExistings(QString key)

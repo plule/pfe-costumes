@@ -63,6 +63,7 @@ public slots:
     void displayError(QString error);
     void handleNewPicture(QString path);
     void updateSaveButton();
+    void onModelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
     
 private slots:
     void timeout();
