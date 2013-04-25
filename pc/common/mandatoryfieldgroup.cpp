@@ -1,3 +1,7 @@
+/**
+  * Adapted from : http://doc.qt.digia.com/qq/qq11-mandatoryfields.html
+  */
+
 #include "mandatoryfieldgroup.h"
 
 void MandatoryFieldGroup::add(QWidget *widget)

@@ -10,6 +10,10 @@
 #include <QDebug>
 #include <QtWidgets/QWidget>
 
+/**
+ * @brief The MandatoryFieldGroup class
+ * Adapted from : http://doc.qt.digia.com/qq/qq11-mandatoryfields.html
+ */
 class MandatoryFieldGroup : public QObject
 {
     Q_OBJECT
