@@ -63,9 +63,13 @@ void QTurntable::loadDir(QDir dir)
     if(dir != relativePath) {
         relativePath = dir;
         QStringList files = dir.entryList(QDir::Files, QDir::Name);
+        emit loadStart(tr("Loading 360° view"), files.size());
         setNumber(files.size());
-        for(int i=0; i<files.size(); i++)
+        for(int i=0; i<files.size(); i++) {
             setPicture(i, files.at(i));
+            emit loadUpdate(i);
+        }
+        emit loadComplete();
         if(m_current == -1 || m_current >= files.size())
             setView(0);
     }

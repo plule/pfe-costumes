@@ -156,8 +156,14 @@ void MainWindow::refresh()
 
 void MainWindow::startWork(QString work, int target)
 {
-    this->ui->workBar->setFormat(sender()->objectName() + " : " + work + " (%p%)");
+    this->ui->workBar->setFormat(work + " (%p%)");
     this->ui->workBar->setMaximum(target);
+    this->ui->workBar->setValue(0);
+}
+
+void MainWindow::endWork()
+{
+    this->ui->workBar->setFormat("");
     this->ui->workBar->setValue(0);
 }
 

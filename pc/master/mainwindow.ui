@@ -40,7 +40,7 @@
       <item>
        <widget class="QTabWidget" name="tab">
         <property name="currentIndex">
-         <number>4</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="collectionTab">
          <attribute name="title">
@@ -520,6 +520,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="separator"/>
   </widget>
   <action name="actionNew_Collection">
    <property name="text">
@@ -540,6 +541,9 @@
    <slots>
     <signal>zoomChanged(int)</signal>
     <signal>angleChanged(int)</signal>
+    <signal>loadStart(QString,int)</signal>
+    <signal>loadUpdate(int)</signal>
+    <signal>loadComplete()</signal>
     <slot>setView(int)</slot>
     <slot>fitInView()</slot>
     <slot>resetScale()</slot>
@@ -753,8 +757,58 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>turntable</sender>
+   <signal>loadStart(QString,int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>startWork(QString,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>511</x>
+     <y>160</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>415</x>
+     <y>50</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>turntable</sender>
+   <signal>loadUpdate(int)</signal>
+   <receiver>workBar</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>517</x>
+     <y>531</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>533</x>
+     <y>647</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>turntable</sender>
+   <signal>loadComplete()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>endWork()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>376</x>
+     <y>460</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>605</x>
+     <y>687</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loadCostume(int)</slot>
+  <slot>startWork(QString,int)</slot>
+  <slot>endWork()</slot>
  </slots>
 </ui>

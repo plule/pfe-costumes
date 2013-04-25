@@ -29,6 +29,9 @@ public:
 signals:
     void zoomChanged(int zoom);
     void angleChanged(int angle);
+    void loadStart(QString task, int target);
+    void loadUpdate(int current);
+    void loadComplete();
     
 public slots:
     virtual void setNumber(int n);

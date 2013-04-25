@@ -59,6 +59,7 @@ public:
 public slots:
     void refresh();
     void startWork(QString work, int target);
+    void endWork();
     void updateStatusBar(QString message);
     void displayError(QString error);
     void handleNewPicture(QString path);
