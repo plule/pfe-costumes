@@ -345,7 +345,24 @@ void MainWindow::on_manButton_clicked()
 
 void MainWindow::on_actionNew_Collection_triggered()
 {
-    loadCollection(QFileDialog::getSaveFileName(this, tr("New collection"), QDir::home().absolutePath()));
+    QString path = QFileDialog::getSaveFileName(this, tr("New collection"), QDir::home().absolutePath());
+    QFile::remove(path);
+    QFile::copy(":/default-db/default.db",path);
+    loadCollection(path);
+    QDir src(":/default-model/man");
+    QStringList files = src.entryList(QDir::Files, QDir::Name);
+    QDir dest = collection->getStorageDir(1, "turntable");
+    foreach(QString file, files)
+        QFile::copy(src.absoluteFilePath(file), dest.absoluteFilePath(file));
+
+    QDir src2(":/default-model/suzanne");
+    files = src2.entryList(QDir::Files, QDir::Name);
+    dest = collection->getStorageDir(2, "turntable");
+    foreach(QString file, files)
+        QFile::copy(src2.absoluteFilePath(file), dest.absoluteFilePath(file));
+
+    ui->turntable->loadDir(collection->getStorageDir(currentCostumeId,"turntable"), true);
+    mapper.toFirst();
 }
 
 void MainWindow::on_actionOpen_Collection_triggered()
@@ -374,5 +391,5 @@ int MainWindow::getCurrentCostumeId() const
 void MainWindow::setCurrentCostumeId(int value)
 {
     currentCostumeId = value;
-    ui->turntable->loadDir(collection->getStorageDir(value,"turntable"));
+    ui->turntable->loadDir(collection->getStorageDir(currentCostumeId,"turntable"));
 }

@@ -44,7 +44,7 @@ public slots:
     virtual void resetScale();
     virtual void setZoom(int zoom);
     virtual void zoom(int factor);
-    virtual void loadDir(QDir dir);
+    virtual void loadDir(QDir dir, bool force=false);
 
 private:
     int computeZoom();

@@ -6,16 +6,16 @@ int Costume_info::last_order;
 Collection::Collection(QObject *parent) :
     QObject(parent)
 {
+    valid = false;
 }
 
 Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent)
 {
     valid = false;
-
+    this->collectionPath = collectionPath;
     /* Connect to the db */
-    db = QSqlDatabase::addDatabase("QSQLITE");
+    db = QSqlDatabase::addDatabase("QSQLITE", collectionPath);
     db.setDatabaseName(collectionPath);
-
     if(!db.open())
         return;
 
@@ -96,6 +96,7 @@ QSqlTableModel *Collection::loadContent(QSqlDatabase db)
 Collection::~Collection()
 {
     db.close();
+    QSqlDatabase::removeDatabase(collectionPath);
 }
 
 QSqlTableModel *Collection::getCollectionModel()

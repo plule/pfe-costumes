@@ -58,9 +58,9 @@ void QTurntable::zoom(int factor)
     }
 }
 
-void QTurntable::loadDir(QDir dir)
+void QTurntable::loadDir(QDir dir, bool force)
 {
-    if(dir != relativePath) {
+    if(dir != relativePath || force) {
         relativePath = dir;
         QStringList files = dir.entryList(QDir::Files, QDir::Name);
         setNumber(files.size());

@@ -87,6 +87,7 @@ private:
     QSqlTableModel *loadContent(QSqlDatabase db);
     QString keySqlList(QStringList keys);
     QString keyValueList(QStringList keys);
+    QString collectionPath;
 
     QSqlDatabase db;
     QSqlTableModel *model;
