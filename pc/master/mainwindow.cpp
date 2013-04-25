@@ -322,6 +322,7 @@ void MainWindow::on_saveButton_clicked()
 {
     if(!mapper.submit()) {
         qDebug() << ((QSqlQueryModel)mapper.model()).lastError();
+    } else {
         QListWidgetItem *i = ui->collectionTable2->loadedItem();
         i->setText(collection->getName(i->data(Qt::UserRole).toInt()));
     }
