@@ -297,6 +297,8 @@ void MainWindow::on_newCostume_clicked()
     item->setData(Qt::UserRole, newId);
     item->setIcon(QIcon::fromTheme("x-office-document"));
     ui->collectionTable2->setDirty(item, true);
+    ui->collectionTable2->selectionModel()->clear();
+    ui->collectionTable2->setCurrentItem(item);
     mapper.toLast();
 }
 
