@@ -31,7 +31,10 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     select();
     loadCompleters();
-    collectionDir = QFileInfo(collectionPath).absoluteDir();
+    QFileInfo coll(collectionPath);
+    collectionDir = coll.absoluteDir();
+    collectionDir.mkdir(coll.baseName()+"_FILES");
+    collectionDir.cd(coll.baseName()+"_FILES");
 }
 
 Collection::~Collection()
