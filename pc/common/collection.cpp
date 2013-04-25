@@ -158,7 +158,7 @@ void Collection::InitDefaultInfos()
     valid_informations.insert("piece", Costume_info(ShortString, tr("Piece Name")));
     valid_informations.insert("writer", Costume_info(ShortString, tr("Piece Writer")));
     valid_informations.insert("piece_type", Costume_info(ShortString, tr("Piece Type")));
-    valid_informations.insert("character", Costume_info(ShortString, tr("Character Name")));
+    valid_informations.insert("character", Costume_info(ShortString, tr("Character Name"), true));
     valid_informations.insert("wearer", Costume_info(ShortString, tr("Worn by : ")));
     valid_informations.insert("year", Costume_info(Number, tr("Year")));
     valid_informations.insert("designer", Costume_info(ShortString, tr("Designer")));

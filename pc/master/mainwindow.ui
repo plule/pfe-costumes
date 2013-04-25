@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">*[mandatoryField=&quot;true&quot;] { background-color: yellow }
+</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
@@ -36,7 +40,7 @@
       <item>
        <widget class="QTabWidget" name="tab">
         <property name="currentIndex">
-         <number>3</number>
+         <number>4</number>
         </property>
         <widget class="QWidget" name="collectionTab">
          <attribute name="title">
@@ -565,8 +569,8 @@
      <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>758</x>
-     <y>464</y>
+     <x>757</x>
+     <y>489</y>
     </hint>
    </hints>
   </connection>
@@ -577,8 +581,8 @@
    <slot>setAngle(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>758</x>
-     <y>464</y>
+     <x>757</x>
+     <y>489</y>
     </hint>
     <hint type="destinationlabel">
      <x>431</x>
@@ -597,8 +601,8 @@
      <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>787</x>
-     <y>464</y>
+     <x>786</x>
+     <y>472</y>
     </hint>
    </hints>
   </connection>
@@ -609,8 +613,8 @@
    <slot>setAngle(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>758</x>
-     <y>543</y>
+     <x>757</x>
+     <y>507</y>
     </hint>
     <hint type="destinationlabel">
      <x>431</x>
@@ -629,8 +633,8 @@
      <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>758</x>
-     <y>543</y>
+     <x>757</x>
+     <y>507</y>
     </hint>
    </hints>
   </connection>
@@ -641,8 +645,8 @@
    <slot>setZoom(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>858</x>
-     <y>543</y>
+     <x>857</x>
+     <y>507</y>
     </hint>
     <hint type="destinationlabel">
      <x>431</x>
@@ -661,8 +665,8 @@
      <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>858</x>
-     <y>543</y>
+     <x>857</x>
+     <y>507</y>
     </hint>
    </hints>
   </connection>
@@ -673,8 +677,8 @@
    <slot>setZoom(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>787</x>
-     <y>464</y>
+     <x>786</x>
+     <y>472</y>
     </hint>
     <hint type="destinationlabel">
      <x>431</x>
@@ -689,8 +693,8 @@
    <slot>resetScale()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>609</x>
-     <y>659</y>
+     <x>505</x>
+     <y>623</y>
     </hint>
     <hint type="destinationlabel">
      <x>431</x>
@@ -705,8 +709,8 @@
    <slot>fitInView()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>518</x>
-     <y>659</y>
+     <x>414</x>
+     <y>623</y>
     </hint>
     <hint type="destinationlabel">
      <x>431</x>

@@ -8,6 +8,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // Logger that show what goes through the slots
     logger = new SlotLog();
 
+    // Mandatory group that handles the mandatory infos
+    mandatoryFields = new MandatoryFieldGroup(this);
+
     // Handle cameras (listing, taking photos, etc...)
     handler = new QPhoto::CameraHandler();
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
@@ -20,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->turntable->resize(800,600);
     ui->centralwidget->adjustSize();
+    mandatoryFields->setOkButton(ui->saveButton);
     // hack because tr() won't work out of the class
     Collection::InitDefaultInfos();
 
@@ -51,6 +55,7 @@ void MainWindow::loadCollection(QString path)
 {
     settings.setValue("collection", path);
     collection = new Collection(this, path);
+    mandatoryFields->clear();
     if(collection->isValid()) {
         QSqlTableModel *model = collection->getCollectionModel();
 
@@ -100,9 +105,12 @@ void MainWindow::loadCollection(QString path)
 
             if(widget != 0) {
                 if(!info.external) {
-                    if(info.visible)
+                    if(info.visible) {
+                        widget->setProperty("mandatoryField", info.mandatory);
+                        if(info.mandatory)
+                            mandatoryFields->add(widget);
                         ui->infoLayout->addRow(info.name, widget);
-                    else
+                    } else
                         widget->setVisible(false);
                 }
                 mapper.addMapping(widget, model->record().indexOf(key));
