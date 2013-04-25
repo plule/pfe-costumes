@@ -68,13 +68,13 @@ public:
     bool select();
     int getRow(int id);
     QSqlRecord getRecord(int id);
-
-    static void InitDefaultInfos();
-    static QMap<QString, Costume_info> valid_informations;
-    static QList<QPair<Costume_info, QString> > sortedValidInformations();
-    static QMap<Costume_info_type, QString> sql_types;
-    
     bool isValid() const;
+
+    QList<QPair<Costume_info, QString> > sortedContent();
+
+    static QMap<Costume_info_type, QString> sql_types;
+    static void InitSqlTypes();
+    
 
 signals:
     void synchronised();
@@ -83,6 +83,7 @@ public slots:
 
 private:
     bool createCollectionTable();
+    void loadContent();
     QString keySqlList(QStringList keys);
     QString keyValueList(QStringList keys);
 
@@ -92,6 +93,7 @@ private:
     QMap<QString,QCompleter* > completers;
     bool valid;
     int lastId;
+    QMap<QString, Costume_info> content;
     
 };
 

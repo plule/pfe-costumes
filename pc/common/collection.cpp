@@ -1,6 +1,5 @@
 #include "collection.h"
 
-QMap<QString, Costume_info> Collection::valid_informations;
 QMap<Costume_info_type, QString> Collection::sql_types;
 int Costume_info::last_order;
 
@@ -18,6 +17,7 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
 
     valid = db.open();
     if(valid) {
+        loadContent();
         if(!db.tables().contains("collection"))
             createCollectionTable(); //todo test collection table
         QSqlQuery q(db);
@@ -46,7 +46,7 @@ bool Collection::createCollectionTable()
 {
     QString query = "create table collection (";
     QSqlQuery sqlquery;
-    QList<QPair<Costume_info, QString> > orderedInfos = sortedValidInformations();
+    QList<QPair<Costume_info, QString> > orderedInfos = sortedContent();
     for(int i = 0; i < orderedInfos.length(); i++) {
         QPair<Costume_info, QString> pair = orderedInfos.at(i);
         QString key = pair.second;
@@ -125,7 +125,7 @@ QCompleter *Collection::getCompleter(QString key)
 
 void Collection::loadCompleters()
 {
-    foreach(QString key, valid_informations.keys()) {
+    foreach(QString key, content.keys()) {
         int column = model->record().indexOf(key);
         UniqueProxyModel *proxy = new UniqueProxyModel(column, this);
         proxy->setSourceModel(model);
@@ -181,41 +181,47 @@ QString Collection::getName(QSqlRecord rec)
     return tr("Unnamed costume");
 }
 
-void Collection::InitDefaultInfos()
+void Collection::loadContent()
 {
     Costume_info::last_order = 0;
-    valid_informations = QMap<QString, Costume_info>();
-    valid_informations.insert("id", Costume_info(PK, tr("Id"), true));
-    valid_informations.insert("notdeleted", Costume_info(Bool, tr("Not Deleted costume"), false));
-    valid_informations.insert("director", Costume_info(ShortString, tr("Piece Director")));
-    valid_informations.insert("piece", Costume_info(ShortString, tr("Piece Name")));
-    valid_informations.insert("writer", Costume_info(ShortString, tr("Piece Writer")));
-    valid_informations.insert("piece_type", Costume_info(ShortString, tr("Piece Type")));
-    valid_informations.insert("character", Costume_info(ShortString, tr("Character Name")));
-    valid_informations.insert("wearer", Costume_info(ShortString, tr("Worn by : ")));
-    valid_informations.insert("year", Costume_info(Number, tr("Year")));
-    valid_informations.insert("designer", Costume_info(ShortString, tr("Designer")));
-    valid_informations.insert("collection", Costume_info(ShortString, tr("Collection")));
-    valid_informations.insert("description", Costume_info(LongString, tr("Description")));
+    content = QMap<QString, Costume_info>();
+    content.insert("id", Costume_info(PK, tr("Id"), true));
+    content.insert("notdeleted", Costume_info(Bool, tr("Not Deleted costume"), false));
+    content.insert("director", Costume_info(ShortString, tr("Piece Director")));
+    content.insert("piece", Costume_info(ShortString, tr("Piece Name")));
+    content.insert("writer", Costume_info(ShortString, tr("Piece Writer")));
+    content.insert("piece_type", Costume_info(ShortString, tr("Piece Type")));
+    content.insert("character", Costume_info(ShortString, tr("Character Name")));
+    content.insert("wearer", Costume_info(ShortString, tr("Worn by : ")));
+    content.insert("year", Costume_info(Number, tr("Year")));
+    content.insert("designer", Costume_info(ShortString, tr("Designer")));
+    content.insert("collection", Costume_info(ShortString, tr("Collection")));
+    content.insert("description", Costume_info(LongString, tr("Description")));
     //valid_informations.insert("visual", Costume_info(Files, tr("Additional visuals")));
 
+
+}
+
+QList<QPair<Costume_info, QString> > Collection::sortedContent()
+{
+    QList<QPair<Costume_info, QString> > orderedInfos;
+
+    foreach(QString key, content.keys())
+        orderedInfos << QPair<Costume_info, QString>(content.value(key), key);
+
+    qSort(orderedInfos);
+    return orderedInfos;
+}
+
+void Collection::InitSqlTypes()
+{
+    sql_types = QMap<Costume_info_type, QString>();
     sql_types.insert(ShortString, "varchar(256)");
     sql_types.insert(LongString, "varchar(4096)");
     sql_types.insert(Number, "integer");
     sql_types.insert(PK, "integer primary key");
     sql_types.insert(Files, "varchar(4096)");
     sql_types.insert(Bool, "integer");
-}
-
-QList<QPair<Costume_info, QString> > Collection::sortedValidInformations()
-{
-    QList<QPair<Costume_info, QString> > orderedInfos;
-
-    foreach(QString key, valid_informations.keys())
-        orderedInfos << QPair<Costume_info, QString>(valid_informations.value(key), key);
-
-    qSort(orderedInfos);
-    return orderedInfos;
 }
 
 QString Collection::keySqlList(QStringList keys)

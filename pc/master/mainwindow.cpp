@@ -22,8 +22,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->turntable->resize(800,600);
     ui->centralwidget->adjustSize();
 
-    // hack because tr() won't work out of the class
-    Collection::InitDefaultInfos();
+    // hackhackhack
+    Collection::InitSqlTypes();
 
     // Load last collection
     if(settings.value("collection").type() == QVariant::String && QFile::exists(settings.value("collection").toString())) {
@@ -76,7 +76,7 @@ void MainWindow::loadCollection(QString path)
 
         // Creation of the widgets that contains costumes info
         clearLayout(ui->infoLayout, true);
-        QList<QPair<Costume_info, QString> > collectionInfos = collection->sortedValidInformations();
+        QList<QPair<Costume_info, QString> > collectionInfos = collection->sortedContent();
         for(int i=0; i < collectionInfos.length(); i++) {
             QString key = collectionInfos.at(i).second;
             Costume_info info = collectionInfos.at(i).first;
