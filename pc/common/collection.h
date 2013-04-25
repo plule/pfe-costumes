@@ -84,8 +84,7 @@ signals:
 public slots:
 
 private:
-    bool createCollectionTable();
-    void loadContent(QSqlDatabase db);
+    QSqlTableModel *loadContent(QSqlDatabase db);
     QString keySqlList(QStringList keys);
     QString keyValueList(QStringList keys);
 

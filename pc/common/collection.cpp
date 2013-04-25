@@ -10,62 +10,92 @@ Collection::Collection(QObject *parent) :
 
 Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent)
 {
+    valid = false;
+
+    /* Connect to the db */
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(collectionPath);
-    model = new QSqlTableModel(this, db);
-    lastId = 0;
 
-    valid = db.open();
-    if(valid) {
-        loadContent(db);
-        if(!db.tables().contains("collection"))
-            createCollectionTable(); //todo test collection table
-        QSqlQuery q(db);
-        q.exec("SELECT MAX(id) FROM collection");
-        if(q.next()) {
-            lastId = q.value(0).toInt();
-        }
+    if(!db.open())
+        return;
+
+    /* Load meta content and do the validation */
+    model = loadContent(db);
+    if(model == 0)
+        return;
+
+    /* Find highest unused id */
+    QSqlQuery q(db);
+    q.exec("SELECT MAX(id) FROM collection");
+    lastId = 0;
+    if(q.next()) {
+        lastId = q.value(0).toInt();
     }
-    model->setTable("collection");
-    model->setFilter("notdeleted == 1");
-    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    select();
+
+    /* Load autocompleters */
     loadCompleters();
+
+    /* Init personnal storage path */
     QFileInfo coll(collectionPath);
     collectionDir = coll.absoluteDir();
     collectionDir.mkdir(coll.baseName()+"_FILES");
     collectionDir.cd(coll.baseName()+"_FILES");
+    valid = true;
+}
+
+QSqlTableModel *Collection::loadContent(QSqlDatabase db)
+{
+    if(!db.tables().contains("collection") || !db.tables().contains("content")) {
+        return 0;
+    }
+    QSqlTableModel *model = new QSqlTableModel(this, db);
+
+    // TODO : validation
+    Costume_info::last_order = 0;
+    content = QMap<QString, Costume_info>();
+    /* System infos */
+    content.insert("id", Costume_info(PK, tr("Id"), true));
+    content.insert("notdeleted", Costume_info(Bool, tr("Not Deleted costume"), false));
+
+    /* User infos */
+    QSqlQuery q(db);
+    q.exec("SELECT * FROM content");
+    QSqlRecord r = q.record();
+    int ikey = r.indexOf("key");
+    int iname = r.indexOf("name");
+    int itype = r.indexOf("type");
+    int iautocomplete = r.indexOf("autocomplete");
+    int ivisible = r.indexOf("visible");
+    while(q.next()) {
+        QSqlRecord r = q.record();
+        QString key = r.value(ikey).toString();
+        QString type_s = r.value(itype).toString();
+        QString name = r.value(iname).toString();
+        bool autocomplete = r.value(iautocomplete).toBool(); // TODO
+        bool visible = r.value(ivisible).toBool();
+        Costume_info_type type = Invalid;
+        if(type_s == "ShortString")
+            type = ShortString;
+        if(type_s == "Number")
+            type = Number;
+        if(type_s == "LongString")
+            type = LongString;
+        if(type_s == "Bool")
+            type = Bool;
+        if(type_s == "Files")
+            type = Files;
+        content.insert(key, Costume_info(type, name, visible));
+    }
+    model->setTable("collection");
+    model->setFilter("notdeleted == 1");
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    model->select();
+    return model;
 }
 
 Collection::~Collection()
 {
     db.close();
-}
-
-bool Collection::createCollectionTable()
-{
-    QString query = "create table collection (";
-    QSqlQuery sqlquery;
-    QList<QPair<Costume_info, QString> > orderedInfos = sortedContent();
-    for(int i = 0; i < orderedInfos.length(); i++) {
-        QPair<Costume_info, QString> pair = orderedInfos.at(i);
-        QString key = pair.second;
-        Costume_info info = pair.first;
-
-        if(sql_types.keys().contains(info.type)) {
-            QString type = sql_types.value(info.type);
-            query.append(key + " " + type);
-            if(i != orderedInfos.length()-1)
-                query.append(", ");
-        } else {
-            qWarning() << "Field \"" + key + "\" is not supported for storage in the database.";
-        }
-    }
-    query.append(")");
-    bool ret = sqlquery.exec(query);
-    if(!ret)
-        qDebug() << sqlquery.lastError();
-    return ret;
 }
 
 QSqlTableModel *Collection::getCollectionModel()
@@ -179,45 +209,6 @@ QString Collection::getName(QSqlRecord rec)
     if(rec.value("character").toString() != "")
         return rec.value("character").toString();
     return tr("Unnamed costume");
-}
-
-void Collection::loadContent(QSqlDatabase db)
-{
-    Costume_info::last_order = 0;
-    content = QMap<QString, Costume_info>();
-    /* System infos */
-    content.insert("id", Costume_info(PK, tr("Id"), true));
-    content.insert("notdeleted", Costume_info(Bool, tr("Not Deleted costume"), false));
-
-    /* User infos */
-    QSqlQuery q(db);
-    q.exec("SELECT * FROM content");
-    QSqlRecord r = q.record();
-    int ikey = r.indexOf("key");
-    int iname = r.indexOf("name");
-    int itype = r.indexOf("type");
-    int iautocomplete = r.indexOf("autocomplete");
-    int ivisible = r.indexOf("visible");
-    while(q.next()) {
-        QSqlRecord r = q.record();
-        QString key = r.value(ikey).toString();
-        QString type_s = r.value(itype).toString();
-        QString name = r.value(iname).toString();
-        bool autocomplete = r.value(iautocomplete).toBool();
-        bool visible = r.value(ivisible).toBool();
-        Costume_info_type type = Invalid;
-        if(type_s == "ShortString")
-            type = ShortString;
-        if(type_s == "Number")
-            type = Number;
-        if(type_s == "LongString")
-            type = LongString;
-        if(type_s == "Bool")
-            type = Bool;
-        if(type_s == "Files")
-            type = Files;
-        content.insert(key, Costume_info(type, name, visible));
-    }
 }
 
 QList<QPair<Costume_info, QString> > Collection::sortedContent()
