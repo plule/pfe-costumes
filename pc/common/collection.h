@@ -47,6 +47,8 @@ struct Costume_info {
 class Collection : public QObject
 {
     Q_OBJECT
+    Q_ENUMS(Costume_info_type)
+
 public:
     explicit Collection(QObject *parent = 0);
     Collection(QObject *parent = 0, QString collectionPath = "");
@@ -83,7 +85,7 @@ public slots:
 
 private:
     bool createCollectionTable();
-    void loadContent();
+    void loadContent(QSqlDatabase db);
     QString keySqlList(QStringList keys);
     QString keyValueList(QStringList keys);
 

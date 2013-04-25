@@ -17,7 +17,7 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
 
     valid = db.open();
     if(valid) {
-        loadContent();
+        loadContent(db);
         if(!db.tables().contains("collection"))
             createCollectionTable(); //todo test collection table
         QSqlQuery q(db);
@@ -181,25 +181,43 @@ QString Collection::getName(QSqlRecord rec)
     return tr("Unnamed costume");
 }
 
-void Collection::loadContent()
+void Collection::loadContent(QSqlDatabase db)
 {
     Costume_info::last_order = 0;
     content = QMap<QString, Costume_info>();
+    /* System infos */
     content.insert("id", Costume_info(PK, tr("Id"), true));
     content.insert("notdeleted", Costume_info(Bool, tr("Not Deleted costume"), false));
-    content.insert("director", Costume_info(ShortString, tr("Piece Director")));
-    content.insert("piece", Costume_info(ShortString, tr("Piece Name")));
-    content.insert("writer", Costume_info(ShortString, tr("Piece Writer")));
-    content.insert("piece_type", Costume_info(ShortString, tr("Piece Type")));
-    content.insert("character", Costume_info(ShortString, tr("Character Name")));
-    content.insert("wearer", Costume_info(ShortString, tr("Worn by : ")));
-    content.insert("year", Costume_info(Number, tr("Year")));
-    content.insert("designer", Costume_info(ShortString, tr("Designer")));
-    content.insert("collection", Costume_info(ShortString, tr("Collection")));
-    content.insert("description", Costume_info(LongString, tr("Description")));
-    //valid_informations.insert("visual", Costume_info(Files, tr("Additional visuals")));
 
-
+    /* User infos */
+    QSqlQuery q(db);
+    q.exec("SELECT * FROM content");
+    QSqlRecord r = q.record();
+    int ikey = r.indexOf("key");
+    int iname = r.indexOf("name");
+    int itype = r.indexOf("type");
+    int iautocomplete = r.indexOf("autocomplete");
+    int ivisible = r.indexOf("visible");
+    while(q.next()) {
+        QSqlRecord r = q.record();
+        QString key = r.value(ikey).toString();
+        QString type_s = r.value(itype).toString();
+        QString name = r.value(iname).toString();
+        bool autocomplete = r.value(iautocomplete).toBool();
+        bool visible = r.value(ivisible).toBool();
+        Costume_info_type type = Invalid;
+        if(type_s == "ShortString")
+            type = ShortString;
+        if(type_s == "Number")
+            type = Number;
+        if(type_s == "LongString")
+            type = LongString;
+        if(type_s == "Bool")
+            type = Bool;
+        if(type_s == "Files")
+            type = Files;
+        content.insert(key, Costume_info(type, name, visible));
+    }
 }
 
 QList<QPair<Costume_info, QString> > Collection::sortedContent()
