@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    collection = 0;
     // Logger that show what goes through the slots
     logger = new SlotLog();
 
@@ -50,6 +51,8 @@ static void clearLayout(QLayout* layout, bool deleteWidgets = true)
 
 void MainWindow::loadCollection(QString path)
 {
+    if(collection)
+        delete collection;
     settings.setValue("collection", path);
     collection = new Collection(this, path);
     if(collection->isValid()) {
