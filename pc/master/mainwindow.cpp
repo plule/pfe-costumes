@@ -55,10 +55,14 @@ void MainWindow::loadCollection(QString path)
     if(collection->isValid()) {
         QSqlTableModel *model = collection->getCollectionModel();
 
+        // Enable save button only when data changed
+        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(updateSaveButton()));
+        connect(collection, SIGNAL(synchronised()), this, SLOT(updateSaveButton()));
+
         // Configuration of the mapper between costume info widget and database model
         mapper.setModel(model);
         mapper.clearMapping();
-        mapper.setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
+        mapper.setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
 
         // Connection between list widget and mapper
         connect(&mapper, SIGNAL(currentIndexChanged(int)), ui->collectionTable2, SLOT(load(int)));
@@ -191,6 +195,11 @@ void MainWindow::handleNewPicture(QString path)
         qWarning() << "Got a photo for unknown reason";
         break;
     }
+}
+
+void MainWindow::updateSaveButton()
+{
+    ui->saveButton->setEnabled(collection->isDirty());
 }
 
 void MainWindow::timeout()

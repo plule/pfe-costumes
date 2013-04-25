@@ -62,12 +62,14 @@ public slots:
     void updateStatusBar(QString message);
     void displayError(QString error);
     void handleNewPicture(QString path);
+    void updateSaveButton();
     
 private slots:
+    void timeout();
+
     void on_captureButton_clicked();
 
     void on_refreshButton_clicked();
-    void timeout();
 
     void on_suzanneButton_pressed();
 

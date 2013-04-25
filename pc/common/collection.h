@@ -62,6 +62,7 @@ public:
     bool isDirty();
     bool submit();
     void revert();
+    bool select();
     int getRow(int id);
     QSqlRecord getRecord(int id);
 
@@ -73,7 +74,8 @@ public:
     bool isValid() const;
 
 signals:
-    
+    void synchronised();
+
 public slots:
 
 private:

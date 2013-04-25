@@ -30,7 +30,7 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
     model->setTable("collection");
     model->setFilter("notdeleted == 1");
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    model->select();
+    select();
     collectionDir = QFileInfo(collectionPath).absoluteDir();
 }
 
@@ -99,7 +99,6 @@ int Collection::newCostume()
     r.setValue("notdeleted", QVariant(1));
     r.setValue("id", ++lastId);
     model->insertRecord(-1, r);
-    //model->select();
     return lastId;
 }
 
@@ -109,13 +108,6 @@ void Collection::deleteCostume(int id)
     QSqlRecord rec = model->record(row);
     rec.setValue("notdeleted",0);
     model->setRecord(row, rec);
-    /*foreach(int id, ids)
-        qDebug() << getRecord(id);*/
-    /*QStringList tests;
-    foreach(int id, ids)
-        tests.push_back("id="+QString::number(id));
-    db.exec("UPDATE collection SET notdeleted=0 WHERE " + tests.join(" OR "));
-    model->select();*/
 }
 
 QString Collection::getName(int id)
@@ -155,12 +147,23 @@ bool Collection::isDirty()
 
 bool Collection::submit()
 {
-    return model->submitAll();
+    bool ret = model->submitAll();
+    if(ret)
+        emit synchronised();
+    return ret;
 }
 
 void Collection::revert()
 {
     model->revertAll();
+}
+
+bool Collection::select()
+{
+    bool ret = model->select();
+    if(ret)
+        emit synchronised();
+    return ret;
 }
 
 int Collection::getRow(int id)
