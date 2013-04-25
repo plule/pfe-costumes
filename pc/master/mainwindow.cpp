@@ -62,6 +62,7 @@ void MainWindow::loadCollection(QString path)
         // Configuration of the mapper between costume info widget and database model
         mapper.setModel(model);
         mapper.clearMapping();
+        mapper.setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
         // Connection between list widget and mapper
         connect(&mapper, SIGNAL(currentIndexChanged(int)), ui->collectionTable2, SLOT(load(int)));
@@ -134,7 +135,6 @@ void MainWindow::populateList()
 {
     QSqlTableModel *model = collection->getCollectionModel();
     ui->collectionTable2->clear();
-    model->select();
     int idRow = model->fieldIndex("id");
     for(int i=0; i<model->rowCount(); i++) {
         QSqlRecord r = model->record(i);
@@ -328,21 +328,16 @@ void MainWindow::on_actionOpen_Collection_triggered()
 
 void MainWindow::on_removeButton_clicked()
 {
-    QList<int> ids;
     foreach(QListWidgetItem *item, ui->collectionTable2->selectedItems())
-        ids.append(item->data(Qt::UserRole).toInt());
-    collection->deleteCostumes(ids);
+        collection->deleteCostume(item->data(Qt::UserRole).toInt());
     qDeleteAll(ui->collectionTable2->selectedItems());
 }
 
 void MainWindow::on_saveButton_clicked()
 {
-    if(!mapper.submit()) {
-        qDebug() << ((QSqlQueryModel)mapper.model()).lastError();
-    } else {
-        QListWidgetItem *i = ui->collectionTable2->loadedItem();
-        i->setText(collection->getName(i->data(Qt::UserRole).toInt()));
-    }
+    collection->submit();
+    QListWidgetItem *i = ui->collectionTable2->loadedItem();
+    i->setText(collection->getName(i->data(Qt::UserRole).toInt()));
 }
 
 int MainWindow::getCurrentCostumeId() const

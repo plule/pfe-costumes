@@ -55,11 +55,16 @@ public:
     QDir getStorageDir(int costumeId, QString key);
     void createStorageDir(int costumeId, QString key);
     int newCostume();
-    void deleteCostumes(QList<int> ids);
+    void deleteCostume(int id);
     QString getName(QSqlRecord rec);
     QString getName(int id);
     QStringList *getExistings(QString key);
     void loadExistings();
+    bool isDirty();
+    bool submit();
+    void revert();
+    int getRow(int id);
+    QSqlRecord getRecord(int id);
 
     static void InitDefaultInfos();
     static QMap<QString, Costume_info> valid_informations;

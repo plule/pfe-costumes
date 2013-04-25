@@ -29,6 +29,7 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
     }
     model->setTable("collection");
     model->setFilter("notdeleted == 1");
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->select();
     collectionDir = QFileInfo(collectionPath).absoluteDir();
 }
@@ -98,17 +99,23 @@ int Collection::newCostume()
     r.setValue("notdeleted", QVariant(1));
     r.setValue("id", ++lastId);
     model->insertRecord(-1, r);
-    model->select();
+    //model->select();
     return lastId;
 }
 
-void Collection::deleteCostumes(QList<int> ids)
+void Collection::deleteCostume(int id)
 {
-    QStringList tests;
+    int row = getRow(id);
+    QSqlRecord rec = model->record(row);
+    rec.setValue("notdeleted",0);
+    model->setRecord(row, rec);
+    /*foreach(int id, ids)
+        qDebug() << getRecord(id);*/
+    /*QStringList tests;
     foreach(int id, ids)
         tests.push_back("id="+QString::number(id));
     db.exec("UPDATE collection SET notdeleted=0 WHERE " + tests.join(" OR "));
-    model->select();
+    model->select();*/
 }
 
 QString Collection::getName(int id)
@@ -139,6 +146,34 @@ void Collection::loadExistings()
             list->append(value);
         }
     }
+}
+
+bool Collection::isDirty()
+{
+    return model->isDirty();
+}
+
+bool Collection::submit()
+{
+    return model->submitAll();
+}
+
+void Collection::revert()
+{
+    model->revertAll();
+}
+
+int Collection::getRow(int id)
+{
+    for(int row=0; row < model->rowCount(); ++row)
+        if ( model->index(row, 0).data(Qt::DisplayRole).toInt() == id )
+            return row;
+    return -1;
+}
+
+QSqlRecord Collection::getRecord(int id)
+{
+    return model->record(getRow(id));
 }
 
 QString Collection::getName(QSqlRecord rec)
