@@ -25,6 +25,7 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
         if(q.next()) {
             lastId = q.value(0).toInt();
         }
+        loadExistings();
     }
     model->setTable("collection");
     model->setFilter("notdeleted == 1");
@@ -119,6 +120,25 @@ QString Collection::getName(int id)
         return getName(r);
     }
     return tr("Unknown costume");
+}
+
+QStringList *Collection::getExistings(QString key)
+{
+    return existing.value(key);
+}
+
+void Collection::loadExistings()
+{
+    foreach(QString key, valid_informations.keys()) {
+        QSqlQuery q(db);
+        q.exec("SELECT "+key+" FROM collection WHERE notdeleted=1 GROUP BY "+key);
+        existing.insert(key, new QStringList());
+        QStringList *list = existing.value(key);
+        while(q.next()) {
+            QString value = q.value(0).toString();
+            list->append(value);
+        }
+    }
 }
 
 QString Collection::getName(QSqlRecord rec)

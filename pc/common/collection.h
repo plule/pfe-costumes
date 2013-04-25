@@ -14,6 +14,8 @@
 #include <QSqlError>
 #include <QFileInfo>
 #include <QList>
+#include <QMap>
+#include <QSet>
 
 enum Costume_info_type {
     Invalid,
@@ -56,6 +58,8 @@ public:
     void deleteCostumes(QList<int> ids);
     QString getName(QSqlRecord rec);
     QString getName(int id);
+    QStringList *getExistings(QString key);
+    void loadExistings();
 
     static void InitDefaultInfos();
     static QMap<QString, Costume_info> valid_informations;
@@ -76,6 +80,7 @@ private:
     QSqlDatabase db;
     QSqlTableModel *model;
     QDir collectionDir;
+    QMap<QString,QStringList* > existing;
     bool valid;
     int lastId;
     

@@ -69,9 +69,12 @@ void MainWindow::loadCollection(QString path)
             QString key = collectionInfos.at(i).second;
             Costume_info info = collectionInfos.at(i).first;
             QWidget *widget = 0;
-            if(info.type == ShortString)
-                widget = new QLineEdit(this);
-            else if(info.type == PK)
+            if(info.type == ShortString) {
+                QLineEdit *lineEdit = new QLineEdit(this);
+                lineEdit->setCompleter(new QCompleter(*collection->getExistings(key), lineEdit));
+                widget = lineEdit;
+
+            } else if(info.type == PK)
                 mapper.addMapping(this, model->record().indexOf(key)); // map the pk with currentCostumeId get/set
             else if(info.type == Number) {
                 widget = new QSpinBox(this);
