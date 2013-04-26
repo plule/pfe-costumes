@@ -36,9 +36,11 @@ struct Costume_info {
     QString name;
     int order;
     static int last_order;
+    bool autocomplete;
     bool visible;
     bool external;
-    Costume_info( Costume_info_type t, QString n, bool v=true, bool e=false) : type(t), name(n),visible(v),external(e) {order = last_order++;}
+    Costume_info( Costume_info_type type, QString name, bool autocomplete=true, bool visible=true, bool external=false) :
+        type(type), name(name), autocomplete(autocomplete), visible(visible),external(external) {order = last_order++;}
     Costume_info() {type = Invalid;}
     friend bool operator<(const Costume_info& left, const Costume_info& right){
         return left.order < right.order;

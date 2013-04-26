@@ -77,7 +77,7 @@ QSqlTableModel *Collection::loadContent(QSqlDatabase *db)
         QString key = r.value(ikey).toString();
         QString type_s = r.value(itype).toString();
         QString name = r.value(iname).toString();
-        bool autocomplete = r.value(iautocomplete).toBool(); // TODO
+        bool autocomplete = r.value(iautocomplete).toBool();
         bool visible = r.value(ivisible).toBool();
         Costume_info_type type = Invalid;
         if(type_s == "ShortString")
@@ -90,7 +90,7 @@ QSqlTableModel *Collection::loadContent(QSqlDatabase *db)
             type = Bool;
         if(type_s == "Files")
             type = Files;
-        content.insert(key, Costume_info(type, name, visible));
+        content.insert(key, Costume_info(type, name, autocomplete, visible));
     }
     model->setTable("collection");
     model->setFilter("notdeleted == 1");
@@ -202,12 +202,14 @@ QCompleter *Collection::getCompleter(QString key)
 void Collection::loadCompleters()
 {
     foreach(QString key, content.keys()) {
-        int column = model->record().indexOf(key);
-        UniqueProxyModel *proxy = new UniqueProxyModel(column, this);
-        proxy->setSourceModel(model);
-        QCompleter *c = new QCompleter(proxy,this);
-        c->setCompletionColumn(model->record().indexOf(key));
-        completers.insert(key, c);
+        if(content.value(key).autocomplete) {
+            int column = model->record().indexOf(key);
+            UniqueProxyModel *proxy = new UniqueProxyModel(column, this);
+            proxy->setSourceModel(model);
+            QCompleter *c = new QCompleter(proxy,this);
+            c->setCompletionColumn(model->record().indexOf(key));
+            completers.insert(key, c);
+        }
     }
 }
 

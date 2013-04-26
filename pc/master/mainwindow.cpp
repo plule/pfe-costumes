@@ -24,9 +24,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     // Load last collection
-    if(settings.value("collection").type() == QVariant::String && QFile::exists(settings.value("collection").toString())) {
+    if(settings.value("collection").type() == QVariant::String && QFile::exists(settings.value("collection").toString()))
         loadCollection(settings.value("collection").toString());
-    }
+    else
+        on_actionNew_Collection_triggered();
 }
 
 // Utility to remove all widgets from a layout
@@ -80,7 +81,8 @@ void MainWindow::loadCollection(QString path)
             QWidget *widget = 0;
             if(info.type == ShortString) {
                 QLineEdit *lineEdit = new QLineEdit(this);
-                lineEdit->setCompleter(collection->getCompleter(key));
+                if(info.autocomplete)
+                    lineEdit->setCompleter(collection->getCompleter(key));
                 widget = lineEdit;
 
             } else if(info.type == PK)
@@ -337,7 +339,9 @@ void MainWindow::on_manButton_clicked()
 
 void MainWindow::on_actionNew_Collection_triggered()
 {
-    QString path = QFileDialog::getSaveFileName(this, tr("New collection"), QDir::home().absolutePath());
+    QString path = "";
+    while(path.isEmpty())
+        path = QFileDialog::getSaveFileName(this, tr("New collection"), QDir::home().absolutePath());
     QFile::remove(path);
     QFile::copy(":/default-db/default.db",path);
     QFile::setPermissions(path, QFileDevice::ReadOwner|QFileDevice::WriteOwner);
