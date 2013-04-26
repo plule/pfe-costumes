@@ -14,9 +14,9 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
     valid = false;
     this->collectionPath = collectionPath;
     /* Connect to the db */
-    db = QSqlDatabase::addDatabase("QSQLITE", collectionPath);
-    db.setDatabaseName(collectionPath);
-    if(!db.open())
+    db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", collectionPath));
+    db->setDatabaseName(collectionPath);
+    if(!db->open())
         return;
 
     /* Load meta content and do the validation */
@@ -25,7 +25,7 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
         return;
 
     /* Find highest unused id */
-    QSqlQuery q(db);
+    QSqlQuery q(*db);
     q.exec("SELECT MAX(id) FROM collection");
     lastId = 0;
     if(q.next()) {
@@ -49,12 +49,12 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
     tempDir.cd(coll.baseName()+"_FILES");
 }
 
-QSqlTableModel *Collection::loadContent(QSqlDatabase db)
+QSqlTableModel *Collection::loadContent(QSqlDatabase *db)
 {
-    if(!db.tables().contains("collection") || !db.tables().contains("content")) {
+    if(!db->tables().contains("collection") || !db->tables().contains("content")) {
         return 0;
     }
-    QSqlTableModel *model = new QSqlTableModel(this, db);
+    QSqlTableModel *model = new QSqlTableModel(this, *db);
 
     // TODO : validation
     Costume_info::last_order = 0;
@@ -64,7 +64,7 @@ QSqlTableModel *Collection::loadContent(QSqlDatabase db)
     content.insert("notdeleted", Costume_info(Bool, tr("Not Deleted costume"), false));
 
     /* User infos */
-    QSqlQuery q(db);
+    QSqlQuery q(*db);
     q.exec("SELECT * FROM content");
     QSqlRecord r = q.record();
     int ikey = r.indexOf("key");
@@ -101,8 +101,10 @@ QSqlTableModel *Collection::loadContent(QSqlDatabase db)
 
 Collection::~Collection()
 {
-    db.close();
-    //QSqlDatabase::removeDatabase(collectionPath);
+    db->close();
+    delete db;
+    delete model;
+    QSqlDatabase::removeDatabase(collectionPath);
 }
 
 QSqlTableModel *Collection::getCollectionModel()
@@ -117,7 +119,7 @@ QSqlError Collection::lastError()
 
 int Collection::getIndexOf(QString key)
 {
-    return db.record("collection").indexOf(key);
+    return db->record("collection").indexOf(key);
 }
 
 QDir Collection::getStorageDir(int costumeId, QString key)

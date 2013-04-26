@@ -90,12 +90,12 @@ signals:
 public slots:
 
 private:
-    QSqlTableModel *loadContent(QSqlDatabase db);
+    QSqlTableModel *loadContent(QSqlDatabase *db);
     QString keySqlList(QStringList keys);
     QString keyValueList(QStringList keys);
     QString collectionPath;
 
-    QSqlDatabase db;
+    QSqlDatabase *db;
     QSqlTableModel *model;
     QDir collectionDir;
     QDir tempDir;

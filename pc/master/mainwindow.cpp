@@ -32,8 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
 // Utility to remove all widgets from a layout
 static void clearLayout(QLayout* layout, bool deleteWidgets = true)
 {
-    while (QLayoutItem* item = layout->takeAt(0))
+    while (layout->count() > 0)
     {
+        QLayoutItem* item = layout->takeAt(0);
         if (deleteWidgets)
         {
             if (QWidget* widget = item->widget())
