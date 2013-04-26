@@ -18,6 +18,7 @@
 #include <QSet>
 #include <QCompleter>
 #include <QStringListModel>
+#include <QDirIterator>
 #include "common/uniqueproxymodel.h"
 
 enum Costume_info_type {
@@ -101,7 +102,6 @@ private:
     bool valid;
     int lastId;
     QMap<QString, Costume_info> content;
-    
 };
 
 #endif // COLLECTIONMANAGER_H

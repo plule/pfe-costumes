@@ -40,6 +40,7 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
     collectionDir = coll.absoluteDir();
     collectionDir.mkdir(coll.baseName()+"_FILES");
     collectionDir.cd(coll.baseName()+"_FILES");
+    qDebug() << collectionDir.absolutePath();
     valid = true;
 
     /* Init temp storage path */
@@ -206,12 +207,24 @@ void Collection::loadCompleters()
 
 bool Collection::isDirty()
 {
-    return model->isDirty();
+    if(model->isDirty())
+        return true;
+    // Recursive find new pics in temp dir
+    QDirIterator it(tempDir.absolutePath(), QDir::Files, QDirIterator::Subdirectories);
+    return it.hasNext();
 }
 
 bool Collection::submit()
 {
     bool ret = model->submitAll();
+    QDirIterator it(tempDir.absolutePath(), QDir::Files, QDirIterator::Subdirectories);
+    while(it.hasNext()) {
+        it.next();
+        QString filename = it.filePath();
+        filename.replace(tempDir.absolutePath()+QDir::separator(),"");
+        QFile::copy(tempDir.absoluteFilePath(filename), collectionDir.absoluteFilePath(filename));
+        QFile::remove(tempDir.absoluteFilePath(filename));
+    }
     if(ret)
         emit synchronised();
     else
