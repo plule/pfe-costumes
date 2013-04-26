@@ -26,8 +26,6 @@ MainWindow::MainWindow(QWidget *parent) :
     if(settings.value("collection").type() == QVariant::String && QFile::exists(settings.value("collection").toString())) {
         loadCollection(settings.value("collection").toString());
     }
-
-    captureAction = Ignore;
 }
 
 // Utility to remove all widgets from a layout
@@ -184,26 +182,23 @@ void MainWindow::displayError(QString error)
 
 void MainWindow::handleNewPicture(QString path)
 {
-    // TODO : safe
     QString filename = QFileInfo(path).fileName();
-    switch(captureAction)
+    switch(captureActions.value(path, Ignore))
     {
     case Ignore:
         qWarning() << "Got a photo for unknown reason";
         break;
     case Append:
-        captureAction = Ignore;
         ui->turntable->addPicture(filename);
         break;
     case Replace:
-        captureAction = Ignore;
         ui->turntable->setCurrentPicture(filename);
         break;
     default:
-        captureAction = Ignore;
         qWarning() << "Got a photo for unknown reason";
         break;
     }
+    captureActions.remove(path);
 }
 
 void MainWindow::updateSaveButton()
@@ -232,13 +227,12 @@ void MainWindow::timeout()
 void MainWindow::on_captureButton_clicked()
 {
     QPhoto::QCamera **cameras;
-    captureAction = Replace;
     if(handler->getCameras(&cameras) >= 1)
     {
         QPhoto::QCamera *camera = cameras[0];
         QString filename = QString("%1").arg(QString::number(ui->turntable->getView()), 3, QLatin1Char('0'));
         QString path = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
-        qDebug() << path;
+        captureActions.insert(path, Replace);
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
         this->displayError(tr("No camera connected"));
@@ -249,13 +243,12 @@ void MainWindow::on_captureButton_clicked()
 void MainWindow::on_appendCaptureButton_clicked()
 {
     QPhoto::QCamera **cameras;
-    captureAction = Append;
     if(handler->getCameras(&cameras) >= 1)
     {
         QPhoto::QCamera *camera = cameras[0];
         QString filename = QString("%1.jpg").arg(QString::number(ui->turntable->getNumber()), 3, QLatin1Char('0'));
         QString path = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
-        qDebug() << path;
+        captureActions.insert(path, Append);
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
         this->displayError(tr("No camera connected"));

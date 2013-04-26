@@ -99,7 +99,7 @@ private:
     QDataWidgetMapper mapper;
     Collection *collection;
     QSettings settings;
-    CaptureAction captureAction;
+    QMap <QString, CaptureAction> captureActions;
     int currentCostumeId;
 
     void doCamerasConnections();
