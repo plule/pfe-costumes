@@ -233,7 +233,6 @@ void MainWindow::on_captureButton_clicked()
     {
         QPhoto::QCamera *camera = cameras[0];
         QString filename = ui->turntable->getCurrentFileName();//QString("%1").arg(QString::number(ui->turntable->getView()), 3, QLatin1Char('0'));
-        qDebug() << filename;
         QString path = collection->getTempStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
         captureActions.insert(path, Replace);
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
@@ -357,8 +356,6 @@ void MainWindow::on_actionNew_Collection_triggered()
         QFile::copy(src2.absoluteFilePath(file), dest.absoluteFilePath(file));
         QFile::setPermissions(dest.absoluteFilePath(file), QFileDevice::ReadOwner|QFileDevice::WriteOwner);
     }
-
-    ui->turntable->loadDirs(collection->getAllDirs(currentCostumeId,"turntable"), true);
     mapper.toFirst();
 }
 
@@ -387,6 +384,8 @@ int MainWindow::getCurrentCostumeId() const
 
 void MainWindow::setCurrentCostumeId(int value)
 {
-    currentCostumeId = value;
-    ui->turntable->loadDirs(collection->getAllDirs(currentCostumeId,"turntable"));
+    if(value != currentCostumeId) {
+        currentCostumeId = value;
+        ui->turntable->loadDirs(collection->getAllDirs(currentCostumeId,"turntable"));
+    }
 }

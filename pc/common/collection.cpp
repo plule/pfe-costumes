@@ -102,7 +102,7 @@ QSqlTableModel *Collection::loadContent(QSqlDatabase db)
 Collection::~Collection()
 {
     db.close();
-    QSqlDatabase::removeDatabase(collectionPath);
+    //QSqlDatabase::removeDatabase(collectionPath);
 }
 
 QSqlTableModel *Collection::getCollectionModel()
