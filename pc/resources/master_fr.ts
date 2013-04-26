@@ -4,69 +4,59 @@
 <context>
     <name>Collection</name>
     <message>
-        <location filename="../common/collection.cpp" line="178"/>
+        <location filename="../common/collection.cpp" line="283"/>
         <source>Unnamed costume</source>
         <translation>Costume sans nom</translation>
     </message>
     <message>
-        <location filename="../common/collection.cpp" line="185"/>
+        <location filename="../common/collection.cpp" line="63"/>
         <source>Id</source>
         <translation>Id</translation>
     </message>
     <message>
-        <location filename="../common/collection.cpp" line="186"/>
+        <location filename="../common/collection.cpp" line="64"/>
         <source>Not Deleted costume</source>
         <translation>Costume non supprimé</translation>
     </message>
     <message>
-        <location filename="../common/collection.cpp" line="187"/>
         <source>Piece Director</source>
-        <translation>Metteur en scène</translation>
+        <translation type="obsolete">Metteur en scène</translation>
     </message>
     <message>
-        <location filename="../common/collection.cpp" line="188"/>
         <source>Piece Name</source>
-        <translation>Nom de la pièce</translation>
+        <translation type="obsolete">Nom de la pièce</translation>
     </message>
     <message>
-        <location filename="../common/collection.cpp" line="189"/>
         <source>Piece Writer</source>
-        <translation>Auteur de la pièce</translation>
+        <translation type="obsolete">Auteur de la pièce</translation>
     </message>
     <message>
-        <location filename="../common/collection.cpp" line="190"/>
         <source>Piece Type</source>
-        <translation>Type de pièce</translation>
+        <translation type="obsolete">Type de pièce</translation>
     </message>
     <message>
-        <location filename="../common/collection.cpp" line="191"/>
         <source>Character Name</source>
-        <translation>Nom du personnage</translation>
+        <translation type="obsolete">Nom du personnage</translation>
     </message>
     <message>
-        <location filename="../common/collection.cpp" line="192"/>
         <source>Worn by : </source>
-        <translation>Porté par : </translation>
+        <translation type="obsolete">Porté par : </translation>
     </message>
     <message>
-        <location filename="../common/collection.cpp" line="193"/>
         <source>Year</source>
-        <translation>Année</translation>
+        <translation type="obsolete">Année</translation>
     </message>
     <message>
-        <location filename="../common/collection.cpp" line="194"/>
         <source>Designer</source>
-        <translation>Costumier</translation>
+        <translation type="obsolete">Costumier</translation>
     </message>
     <message>
-        <location filename="../common/collection.cpp" line="195"/>
         <source>Collection</source>
-        <translation>Collection</translation>
+        <translation type="obsolete">Collection</translation>
     </message>
     <message>
-        <location filename="../common/collection.cpp" line="196"/>
         <source>Description</source>
-        <translation>Description</translation>
+        <translation type="obsolete">Description</translation>
     </message>
     <message>
         <source>Generated Name</source>
@@ -257,44 +247,55 @@
         <translation>Ouvrir Collection</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="228"/>
+        <location filename="../master/mainwindow.cpp" line="247"/>
         <source>Lost camera.</source>
         <translation>L&apos;appareil photo ne répond plus.</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="229"/>
+        <location filename="../master/mainwindow.cpp" line="248"/>
         <source>Lost camera... You should try to disconnect and reconnect it.</source>
         <translation>L&apos;appareil photo ne répond plus, vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="244"/>
-        <location filename="../master/mainwindow.cpp" line="261"/>
+        <location filename="../master/mainwindow.cpp" line="262"/>
+        <location filename="../master/mainwindow.cpp" line="277"/>
         <source>No camera connected</source>
         <translation>Aucun appareil photo détecté</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="101"/>
+        <location filename="../master/mainwindow.cpp" line="103"/>
         <source>Choose file(s)</source>
         <translation>Selectionner des fichiers</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="296"/>
+        <location filename="../master/mainwindow.cpp" line="138"/>
+        <source>Save Collection</source>
+        <translation>Sauvegarder la Collection</translation>
+    </message>
+    <message>
+        <location filename="../master/mainwindow.cpp" line="139"/>
+        <source>The collection has unsaved changes.
+Do you want to save the modifications?</source>
+        <translation>La collection a des modification non enregistrées.\nVoulez vous sauvegarder ?</translation>
+    </message>
+    <message>
+        <location filename="../master/mainwindow.cpp" line="312"/>
         <source>New Costume</source>
         <translation>Nouveau Costume</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="306"/>
-        <location filename="../master/mainwindow.cpp" line="325"/>
+        <location filename="../master/mainwindow.cpp" line="324"/>
+        <location filename="../master/mainwindow.cpp" line="343"/>
         <source>Loading views</source>
         <translation>Chargement des vues</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="343"/>
+        <location filename="../master/mainwindow.cpp" line="363"/>
         <source>New collection</source>
         <translation>Nouvelle collection</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="348"/>
+        <location filename="../master/mainwindow.cpp" line="388"/>
         <source>Open collection</source>
         <translation>Ouvrir collection</translation>
     </message>
@@ -324,7 +325,7 @@
 <context>
     <name>QTurntable</name>
     <message>
-        <location filename="../common/qturntable.cpp" line="66"/>
+        <location filename="../common/qturntable.cpp" line="78"/>
         <source>Loading 360Â° view</source>
         <translation>Chargement de la vue 360°</translation>
     </message>
