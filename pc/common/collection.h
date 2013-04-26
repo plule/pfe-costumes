@@ -76,6 +76,7 @@ public:
     bool submit();
     void revert();
     bool select();
+    void cleanUp();
     int getRow(int id);
     QSqlRecord getRecord(int id);
     bool isValid() const;

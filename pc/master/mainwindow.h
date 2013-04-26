@@ -30,6 +30,7 @@
 #include <QSqlTableModel>
 #include <QCheckBox>
 #include <QCompleter>
+#include <QMessageBox>
 #include "common/qloadedlistwidget.h"
 #include "common/qturntable.h"
 #include "camerahandler/camerahandler.h"
@@ -55,6 +56,9 @@ public:
 
     int getCurrentCostumeId() const;
     void setCurrentCostumeId(int value);
+
+protected:
+    void closeEvent(QCloseEvent *event);
 
 public slots:
     void refresh();
@@ -105,6 +109,7 @@ private:
     void doCamerasConnections();
     void loadCollection(QString path);
     int getCurrentId();
+    bool saveDialog();
 };
 
 #endif // MAINWINDOW_H

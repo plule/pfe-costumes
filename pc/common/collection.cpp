@@ -256,6 +256,13 @@ bool Collection::select()
     return ret;
 }
 
+void Collection::cleanUp()
+{
+    QDirIterator it(tempDir.absolutePath(), QDir::Files, QDirIterator::Subdirectories);
+    while(it.hasNext())
+        QFile::remove(it.next());
+}
+
 int Collection::getRow(int id)
 {
     for(int row=0; row < model->rowCount(); ++row)

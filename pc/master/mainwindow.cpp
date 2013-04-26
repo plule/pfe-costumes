@@ -131,6 +131,23 @@ int MainWindow::getCurrentId()
     return currentCostumeId;
 }
 
+bool MainWindow::saveDialog()
+{
+    if(collection->isDirty()) {
+        QMessageBox::StandardButton ret;
+        ret = QMessageBox::warning(this, tr("Save Collection"),
+                                   tr("The collection has unsaved changes.\n"
+                                      "Do you want to save the modifications?"),
+                                   QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        if(ret == QMessageBox::Save) {
+            collection->submit();
+            return true;
+        } else if(ret == QMessageBox::Cancel)
+            return false;
+    }
+    return true;
+}
+
 void MainWindow::populateList()
 {
     QSqlTableModel *model = collection->getCollectionModel();
@@ -394,5 +411,15 @@ void MainWindow::setCurrentCostumeId(int value)
     if(value != currentCostumeId) {
         currentCostumeId = value;
         ui->turntable->loadDirs(collection->getAllDirs(currentCostumeId,"turntable"));
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (saveDialog()) {
+        collection->cleanUp();
+        event->accept();
+    } else {
+        event->ignore();
     }
 }
