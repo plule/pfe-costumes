@@ -41,6 +41,11 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
     collectionDir.mkdir(coll.baseName()+"_FILES");
     collectionDir.cd(coll.baseName()+"_FILES");
     valid = true;
+
+    /* Init temp storage path */
+    tempDir = QDir::temp();
+    tempDir.mkdir(coll.baseName()+"_FILES");
+    tempDir.cd(coll.baseName()+"_FILES");
 }
 
 QSqlTableModel *Collection::loadContent(QSqlDatabase db)
@@ -120,6 +125,39 @@ QDir Collection::getStorageDir(int costumeId, QString key)
     ret.mkpath(QString::number(costumeId) + "/" + key); // todo portable ?
     ret.cd(QString::number(costumeId) + "/" + key);
     return ret.absolutePath();
+}
+
+QDir Collection::getTempStorageDir(int costumeId, QString key)
+{
+    QDir ret = tempDir;
+    ret.mkpath(QString::number(costumeId) + "/" + key); // todo portable ?
+    ret.cd(QString::number(costumeId) + "/" + key);
+    return ret.absolutePath();
+}
+
+QString Collection::getNewFilePath(int costumeId, QString key)
+{
+    int i=1;
+    while(i < 10000) { // TODO while(1) ?
+        QString filename = QString("%1.jpg").arg(QString::number(i), 3, QLatin1Char('0'));
+        qDebug() << filename;
+        if(!fileExists(costumeId, key, filename)) {
+            QString path = getTempStorageDir(costumeId, key).absoluteFilePath(filename);
+            QFile f(path);
+            f.open( QIODevice::WriteOnly ); // ensure creation
+            f.close();
+            return path;
+        }
+        i++;
+    }
+    return "";
+}
+
+bool Collection::fileExists(int costumeId, QString key, QString filename)
+{
+    QDir tempDir = getTempStorageDir(costumeId, key);
+    QDir storDir = getStorageDir(costumeId, key);
+    return (QFile::exists(tempDir.absoluteFilePath(filename)) || QFile::exists(storDir.absoluteFilePath(filename)));
 }
 
 void Collection::createStorageDir(int costumeId, QString key)

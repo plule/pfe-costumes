@@ -53,10 +53,14 @@ public:
     explicit Collection(QObject *parent = 0);
     Collection(QObject *parent = 0, QString collectionPath = "");
     ~Collection();
+
     QSqlTableModel* getCollectionModel();
     QSqlError lastError();
     int getIndexOf(QString key);
     QDir getStorageDir(int costumeId, QString key);
+    QDir getTempStorageDir(int costumeId, QString key);
+    QString getNewFilePath(int costumeId, QString key);
+    bool fileExists(int costumeId, QString key, QString filename);
     void createStorageDir(int costumeId, QString key);
     int newCostume();
     void deleteCostume(int id);
@@ -92,6 +96,7 @@ private:
     QSqlDatabase db;
     QSqlTableModel *model;
     QDir collectionDir;
+    QDir tempDir;
     QMap<QString,QCompleter* > completers;
     bool valid;
     int lastId;
