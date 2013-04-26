@@ -23,6 +23,7 @@ public:
     int getAngleStep();
     int getNumber();
     int getView();
+    QString getCurrentFileName();
 
 signals:
     void zoomChanged(int zoom);

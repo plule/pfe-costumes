@@ -227,8 +227,11 @@ bool Collection::submit()
         it.next();
         QString filename = it.filePath();
         filename.replace(tempDir.absolutePath()+QDir::separator(),"");
-        QFile::copy(tempDir.absoluteFilePath(filename), collectionDir.absoluteFilePath(filename));
-        QFile::remove(tempDir.absoluteFilePath(filename));
+        QString src = tempDir.absoluteFilePath(filename);
+        QString dest = collectionDir.absoluteFilePath(filename);
+        QFile::remove(dest);
+        QFile::copy(src, dest);
+        QFile::remove(src);
     }
     if(ret)
         emit synchronised();

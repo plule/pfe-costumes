@@ -230,8 +230,9 @@ void MainWindow::on_captureButton_clicked()
     if(handler->getCameras(&cameras) >= 1)
     {
         QPhoto::QCamera *camera = cameras[0];
-        QString filename = QString("%1").arg(QString::number(ui->turntable->getView()), 3, QLatin1Char('0'));
-        QString path = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
+        QString filename = ui->turntable->getCurrentFileName();//QString("%1").arg(QString::number(ui->turntable->getView()), 3, QLatin1Char('0'));
+        qDebug() << filename;
+        QString path = collection->getTempStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
         captureActions.insert(path, Replace);
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {

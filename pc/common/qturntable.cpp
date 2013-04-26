@@ -44,6 +44,11 @@ int QTurntable::getView()
     return m_current;
 }
 
+QString QTurntable::getCurrentFileName()
+{
+    return m_pixmaps.at(m_current).first;
+}
+
 void QTurntable::zoom(int factor)
 {
     qreal dfactor = pow(m_zoom_step, factor);
