@@ -194,9 +194,11 @@ void MainWindow::handleNewPicture(QString path)
         break;
     case Append:
         ui->turntable->addPicture(filename);
+        ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
         break;
     case Replace:
         ui->turntable->setCurrentPicture(filename);
+        ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
         break;
     default:
         qWarning() << "Got a photo for unknown reason";
