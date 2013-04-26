@@ -232,7 +232,6 @@ void MainWindow::on_captureButton_clicked()
         QPhoto::QCamera *camera = cameras[0];
         QString filename = QString("%1").arg(QString::number(ui->turntable->getView()), 3, QLatin1Char('0'));
         QString path = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
-        qDebug() << path;
         captureActions.insert(path, Replace);
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
@@ -247,9 +246,7 @@ void MainWindow::on_appendCaptureButton_clicked()
     if(handler->getCameras(&cameras) >= 1)
     {
         QPhoto::QCamera *camera = cameras[0];
-        /*QString filename = QString("%1.jpg").arg(QString::number(ui->turntable->getNumber()), 3, QLatin1Char('0'));
-        QString path = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);*/
-        QString path = collection->getNewFilePath(getCurrentId(), "turntable");
+        QString path = collection->getNewFilePath(getCurrentId(), "turntable", "jpg"); // TODO extension follow config
         captureActions.insert(path, Append);
         QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
@@ -358,7 +355,7 @@ void MainWindow::on_actionNew_Collection_triggered()
         QFile::setPermissions(dest.absoluteFilePath(file), QFileDevice::ReadOwner|QFileDevice::WriteOwner);
     }
 
-    ui->turntable->loadDir(collection->getStorageDir(currentCostumeId,"turntable"), true);
+    ui->turntable->loadDirs(collection->getAllDirs(currentCostumeId,"turntable"), true);
     mapper.toFirst();
 }
 
@@ -388,5 +385,5 @@ int MainWindow::getCurrentCostumeId() const
 void MainWindow::setCurrentCostumeId(int value)
 {
     currentCostumeId = value;
-    ui->turntable->loadDir(collection->getStorageDir(currentCostumeId,"turntable"));
+    ui->turntable->loadDirs(collection->getAllDirs(currentCostumeId,"turntable"));
 }

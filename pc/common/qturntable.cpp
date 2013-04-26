@@ -58,24 +58,27 @@ void QTurntable::zoom(int factor)
     }
 }
 
-void QTurntable::loadDir(QDir dir, bool force)
+void QTurntable::loadDirs(QList<QDir> dirs, bool force)
 {
-    if(dir != relativePath || force) {
-        relativePath = dir;
-        QStringList files = dir.entryList(QDir::Files, QDir::Name);
-        setNumber(files.size());
+    relativePaths = dirs;
+    QSet<QString> filenamesSet;
+    foreach(QDir dir, dirs)
+        foreach(QString file, dir.entryList(QDir::Files, QDir::Name))
+            filenamesSet.insert(file);
+    QStringList files = filenamesSet.toList();
+    qSort(files);
+    setNumber(files.size());
 
-        if(files.size()>0) {
-            emit loadStart(tr("Loading 360° view"), files.size());
-            for(int i=0; i<files.size(); i++) {
-                setPicture(i, files.at(i));
-                emit loadUpdate(i);
-            }
-            emit loadComplete();
+    if(files.size()>0) {
+        emit loadStart(tr("Loading 360° view"), files.size());
+        for(int i=0; i<files.size(); i++) {
+            setPicture(i, files.at(i));
+            emit loadUpdate(i);
         }
-        if(m_current == -1 || m_current >= files.size())
-            setView(0);
+        emit loadComplete();
     }
+    if(m_current == -1 || m_current >= files.size())
+        setView(0);
 }
 
 int QTurntable::computeZoom()
@@ -86,8 +89,11 @@ int QTurntable::computeZoom()
 
 QString QTurntable::getPathOf(QString filename)
 {
-    if(!filename.startsWith(":"))
-        return relativePath.absoluteFilePath(filename);
+    if(!filename.startsWith(":")) {
+        foreach(QDir dir, relativePaths)
+            if(QFile::exists(dir.absoluteFilePath(filename)))
+                return dir.absoluteFilePath(filename);
+    }
     return filename;
 }
 
@@ -159,16 +165,6 @@ void QTurntable::fitInView()
         m_zoom = new_zoom;
         emit zoomChanged(m_zoom);
     }
-}
-
-QDir QTurntable::getRelativePath() const
-{
-    return relativePath;
-}
-
-void QTurntable::setRelativePath(const QDir &value)
-{
-    relativePath = value;
 }
 
 void QTurntable::resetScale()

@@ -136,11 +136,16 @@ QDir Collection::getTempStorageDir(int costumeId, QString key)
     return ret.absolutePath();
 }
 
-QString Collection::getNewFilePath(int costumeId, QString key)
+QList<QDir> Collection::getAllDirs(int costumeId, QString key)
+{
+    return QList<QDir>() << getTempStorageDir(costumeId, key) << getStorageDir(costumeId, key);
+}
+
+QString Collection::getNewFilePath(int costumeId, QString key,QString extension)
 {
     int i=1;
     while(i < 10000) { // TODO while(1) ?
-        QString filename = QString("%1.jpg").arg(QString::number(i), 3, QLatin1Char('0'));
+        QString filename = QString("%1.%2").arg(QString::number(i), 3, QLatin1Char('0')).arg(extension);
         qDebug() << filename;
         if(!fileExists(costumeId, key, filename)) {
             QString path = getTempStorageDir(costumeId, key).absoluteFilePath(filename);

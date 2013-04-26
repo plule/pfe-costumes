@@ -9,6 +9,7 @@
 #include <QPair>
 #include <QStringList>
 #include <QDir>
+#include <QSet>
 #include "math.h"
 
 class QTurntable : public QGraphicsView
@@ -22,9 +23,6 @@ public:
     int getAngleStep();
     int getNumber();
     int getView();
-
-    QDir getRelativePath() const;
-    void setRelativePath(const QDir &value);
 
 signals:
     void zoomChanged(int zoom);
@@ -44,13 +42,13 @@ public slots:
     virtual void resetScale();
     virtual void setZoom(int zoom);
     virtual void zoom(int factor);
-    virtual void loadDir(QDir dir, bool force=false);
+    virtual void loadDirs(QList<QDir> dirs, bool force=false);
 
 private:
     int computeZoom();
     QString getPathOf(QString filename);
 
-    QDir relativePath;
+    QList<QDir> relativePaths;
     QVector<QPair<QString,QPixmap> > m_pixmaps;
     int m_current;
     int m_zoom;

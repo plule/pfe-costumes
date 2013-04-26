@@ -60,7 +60,8 @@ public:
     int getIndexOf(QString key);
     QDir getStorageDir(int costumeId, QString key);
     QDir getTempStorageDir(int costumeId, QString key);
-    QString getNewFilePath(int costumeId, QString key);
+    QList<QDir> getAllDirs(int costumeId, QString key);
+    QString getNewFilePath(int costumeId, QString key, QString extension);
     bool fileExists(int costumeId, QString key, QString filename);
     void createStorageDir(int costumeId, QString key);
     int newCostume();
