@@ -22,9 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->turntable->resize(800,600);
     ui->centralwidget->adjustSize();
 
-    // hackhackhack
-    Collection::InitSqlTypes();
-
     // Load last collection
     if(settings.value("collection").type() == QVariant::String && QFile::exists(settings.value("collection").toString())) {
         loadCollection(settings.value("collection").toString());

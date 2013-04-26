@@ -1,6 +1,6 @@
 #include "collection.h"
 
-QMap<Costume_info_type, QString> Collection::sql_types;
+QMap<Costume_info_type, QString> Collection::sql_types = Collection::InitSqlTypes();
 int Costume_info::last_order;
 
 Collection::Collection(QObject *parent) :
@@ -225,15 +225,16 @@ QList<QPair<Costume_info, QString> > Collection::sortedContent()
     return orderedInfos;
 }
 
-void Collection::InitSqlTypes()
+QMap<Costume_info_type, QString> Collection::InitSqlTypes()
 {
-    sql_types = QMap<Costume_info_type, QString>();
+    QMap<Costume_info_type, QString> sql_types = QMap<Costume_info_type, QString>();
     sql_types.insert(ShortString, "varchar(256)");
     sql_types.insert(LongString, "varchar(4096)");
     sql_types.insert(Number, "integer");
     sql_types.insert(PK, "integer primary key");
     sql_types.insert(Files, "varchar(4096)");
     sql_types.insert(Bool, "integer");
+    return sql_types;
 }
 
 QString Collection::keySqlList(QStringList keys)

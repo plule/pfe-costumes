@@ -75,7 +75,7 @@ public:
     QList<QPair<Costume_info, QString> > sortedContent();
 
     static QMap<Costume_info_type, QString> sql_types;
-    static void InitSqlTypes();
+    static QMap<Costume_info_type, QString> InitSqlTypes();
     
 
 signals:
