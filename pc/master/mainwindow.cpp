@@ -9,6 +9,12 @@ MainWindow::MainWindow(QWidget *parent) :
     // Logger that show what goes through the slots
     logger = new SlotLog();
 
+    // Ui init and tweaks
+    QIcon::setThemeName("elementary-xfce"); // TODO fix this.
+    ui->setupUi(this);
+    ui->turntable->resize(800,600);
+    ui->centralwidget->adjustSize();
+
     // Handle cameras (listing, taking photos, etc...)
     handler = new QPhoto::CameraHandler();
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
@@ -16,11 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
     handler->init();
     doCamerasConnections();
 
-    // Ui init and tweaks
-    QIcon::setThemeName("elementary-xfce"); // TODO fix this.
-    ui->setupUi(this);
-    ui->turntable->resize(800,600);
-    ui->centralwidget->adjustSize();
 
     // Load last collection
     if(settings.value("collection").type() == QVariant::String && QFile::exists(settings.value("collection").toString())) {
@@ -199,6 +200,7 @@ void MainWindow::handleNewPicture(QString path)
         break;
     }
     captureActions.remove(path);
+    updateSaveButton();
 }
 
 void MainWindow::updateSaveButton()
