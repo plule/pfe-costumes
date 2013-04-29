@@ -7,136 +7,203 @@
     <x>0</x>
     <y>0</y>
     <width>891</width>
-    <height>740</height>
+    <height>789</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">
-</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLoadedListWidget" name="collectionTable2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>true</bool>
-        </property>
-        <property name="selectionMode">
-         <enum>QAbstractItemView::ExtendedSelection</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QTabWidget" name="tab">
-        <property name="currentIndex">
-         <number>3</number>
-        </property>
-        <widget class="QWidget" name="collectionTab">
-         <attribute name="title">
-          <string>Collection</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_4">
+     <widget class="QTabWidget" name="tab">
+      <property name="currentIndex">
+       <number>2</number>
+      </property>
+      <widget class="QWidget" name="preparationTab">
+       <attribute name="title">
+        <string>Preparation</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="adjustmentTab">
+       <attribute name="title">
+        <string>Adjustment</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="captureTab">
+       <attribute name="title">
+        <string>Capture</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <layout class="QHBoxLayout" name="captureLayout">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_4"/>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="preparationTab">
-         <attribute name="title">
-          <string>Preparation</string>
-         </attribute>
-        </widget>
-        <widget class="QWidget" name="adjustmentTab">
-         <attribute name="title">
-          <string>Adjustment</string>
-         </attribute>
-        </widget>
-        <widget class="QWidget" name="captureTab">
-         <attribute name="title">
-          <string>Capture</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <item>
-           <layout class="QHBoxLayout" name="mainLayout">
+           <layout class="QVBoxLayout" name="picLayout">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMaximumSize</enum>
+            </property>
             <item>
-             <layout class="QVBoxLayout" name="picLayout">
-              <property name="sizeConstraint">
-               <enum>QLayout::SetMaximumSize</enum>
+             <widget class="QTurntable" name="turntable">
+              <property name="backgroundBrush">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>0</red>
+                 <green>0</green>
+                 <blue>0</blue>
+                </color>
+               </brush>
               </property>
+              <property name="dragMode">
+               <enum>QGraphicsView::ScrollHandDrag</enum>
+              </property>
+              <property name="transformationAnchor">
+               <enum>QGraphicsView::AnchorUnderMouse</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="zoomLayout_2">
               <item>
-               <widget class="QTurntable" name="turntable">
-                <property name="backgroundBrush">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>0</red>
-                   <green>0</green>
-                   <blue>0</blue>
-                  </color>
-                 </brush>
+               <widget class="QPushButton" name="fitButton">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
                 </property>
-                <property name="dragMode">
-                 <enum>QGraphicsView::ScrollHandDrag</enum>
+                <property name="icon">
+                 <iconset theme="zoom-fit-best"/>
                 </property>
-                <property name="transformationAnchor">
-                 <enum>QGraphicsView::AnchorUnderMouse</enum>
+                <property name="iconSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_3">
-                <item>
-                 <widget class="QPushButton" name="fitButton">
-                  <property name="text">
-                   <string>Fit to window</string>
-                  </property>
-                  <property name="icon">
-                   <iconset theme="zoom-fit-best"/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="resetScaleButton">
-                  <property name="text">
-                   <string>1:1</string>
-                  </property>
-                  <property name="icon">
-                   <iconset theme="zoom-original"/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
+               <widget class="QPushButton" name="zoomOutButton">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="icon">
+                 <iconset theme="zoom-out"/>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="resetScaleButton">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="icon">
+                 <iconset theme="zoom-original">
+                  <normaloff/>
+                 </iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="zoomInButton">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="icon">
+                 <iconset theme="zoom-in"/>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </item>
-            <item>
-             <layout class="QVBoxLayout" name="controlLayout">
-              <property name="sizeConstraint">
-               <enum>QLayout::SetMinimumSize</enum>
-              </property>
+           </layout>
+          </item>
+          <item>
+           <widget class="QScrollArea" name="controlArea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="controlAreaWidgetContents">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>246</width>
+               <height>588</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <widget class="QPushButton" name="suzanneButton">
+                <property name="text">
+                 <string>Load Default Model 1</string>
+                </property>
+               </widget>
+              </item>
               <item>
                <widget class="QPushButton" name="refreshButton">
                 <property name="enabled">
@@ -146,14 +213,9 @@
                  <string>Refresh</string>
                 </property>
                 <property name="icon">
-                 <iconset theme="view-refresh"/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="suzanneButton">
-                <property name="text">
-                 <string>Load Default Model 1</string>
+                 <iconset theme="view-refresh">
+                  <normaloff/>
+                 </iconset>
                 </property>
                </widget>
               </item>
@@ -396,48 +458,40 @@
                </widget>
               </item>
              </layout>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QProgressBar" name="workBar">
-            <property name="value">
-             <number>0</number>
-            </property>
-            <property name="format">
-             <string/>
-            </property>
+            </widget>
            </widget>
           </item>
          </layout>
-        </widget>
-        <widget class="QWidget" name="infoTab">
-         <attribute name="title">
-          <string>Informations</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_7">
-          <item>
-           <layout class="QFormLayout" name="infoLayout">
-            <property name="fieldGrowthPolicy">
-             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-            </property>
-           </layout>
-          </item>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="infoTab">
+       <attribute name="title">
+        <string>Informations</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_7">
+        <item>
+         <layout class="QFormLayout" name="infoLayout">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
          </layout>
-        </widget>
-       </widget>
-      </item>
-     </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_7">
+     <layout class="QHBoxLayout" name="buttonsLayout">
       <item>
        <widget class="QPushButton" name="loadButton">
         <property name="text">
          <string>Load costume</string>
         </property>
         <property name="icon">
-         <iconset theme="document-open"/>
+         <iconset theme="document-open">
+          <normaloff/>
+         </iconset>
         </property>
        </widget>
       </item>
@@ -447,7 +501,9 @@
          <string>New</string>
         </property>
         <property name="icon">
-         <iconset theme="document-new"/>
+         <iconset theme="document-new">
+          <normaloff/>
+         </iconset>
         </property>
        </widget>
       </item>
@@ -457,7 +513,9 @@
          <string>Remove</string>
         </property>
         <property name="icon">
-         <iconset theme="edit-delete"/>
+         <iconset theme="edit-delete">
+          <normaloff/>
+         </iconset>
         </property>
        </widget>
       </item>
@@ -470,7 +528,9 @@
          <string>Save</string>
         </property>
         <property name="icon">
-         <iconset theme="document-save"/>
+         <iconset theme="document-save">
+          <normaloff/>
+         </iconset>
         </property>
        </widget>
       </item>
@@ -488,6 +548,16 @@
        </spacer>
       </item>
      </layout>
+    </item>
+    <item>
+     <widget class="QProgressBar" name="workBar">
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="format">
+       <string/>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -520,14 +590,62 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionNew_Collection"/>
+   <addaction name="actionOpen_Collection"/>
    <addaction name="separator"/>
   </widget>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout_9">
+     <item>
+      <widget class="QLoadedListWidget" name="collectionTable2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>200</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="alternatingRowColors">
+        <bool>true</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::ExtendedSelection</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionNew_Collection">
+   <property name="icon">
+    <iconset theme="document-new"/>
+   </property>
    <property name="text">
     <string>New Collection</string>
    </property>
   </action>
   <action name="actionOpen_Collection">
+   <property name="icon">
+    <iconset theme="document-open"/>
+   </property>
    <property name="text">
     <string>Open Collection</string>
    </property>
@@ -549,6 +667,8 @@
     <slot>resetScale()</slot>
     <slot>setZoom(int)</slot>
     <slot>setAngle(int)</slot>
+    <slot>zoomIn()</slot>
+    <slot>zoomOut()</slot>
    </slots>
   </customwidget>
   <customwidget>
@@ -576,8 +696,8 @@
      <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>757</x>
-     <y>489</y>
+     <x>748</x>
+     <y>540</y>
     </hint>
    </hints>
   </connection>
@@ -588,8 +708,8 @@
    <slot>setAngle(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>757</x>
-     <y>489</y>
+     <x>748</x>
+     <y>540</y>
     </hint>
     <hint type="destinationlabel">
      <x>431</x>
@@ -608,8 +728,8 @@
      <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>786</x>
-     <y>472</y>
+     <x>777</x>
+     <y>540</y>
     </hint>
    </hints>
   </connection>
@@ -620,8 +740,8 @@
    <slot>setAngle(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>757</x>
-     <y>507</y>
+     <x>748</x>
+     <y>575</y>
     </hint>
     <hint type="destinationlabel">
      <x>431</x>
@@ -640,8 +760,8 @@
      <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>757</x>
-     <y>507</y>
+     <x>748</x>
+     <y>575</y>
     </hint>
    </hints>
   </connection>
@@ -652,8 +772,8 @@
    <slot>setZoom(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>857</x>
-     <y>507</y>
+     <x>848</x>
+     <y>575</y>
     </hint>
     <hint type="destinationlabel">
      <x>431</x>
@@ -672,8 +792,8 @@
      <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>857</x>
-     <y>507</y>
+     <x>848</x>
+     <y>575</y>
     </hint>
    </hints>
   </connection>
@@ -684,8 +804,8 @@
    <slot>setZoom(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>786</x>
-     <y>472</y>
+     <x>777</x>
+     <y>540</y>
     </hint>
     <hint type="destinationlabel">
      <x>431</x>
@@ -700,8 +820,8 @@
    <slot>resetScale()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>505</x>
-     <y>623</y>
+     <x>362</x>
+     <y>667</y>
     </hint>
     <hint type="destinationlabel">
      <x>431</x>
@@ -716,8 +836,8 @@
    <slot>fitInView()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>414</x>
-     <y>623</y>
+     <x>278</x>
+     <y>667</y>
     </hint>
     <hint type="destinationlabel">
      <x>431</x>
@@ -732,8 +852,8 @@
    <slot>loadCurrent()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>71</x>
-     <y>691</y>
+     <x>300</x>
+     <y>721</y>
     </hint>
     <hint type="destinationlabel">
      <x>86</x>
@@ -753,7 +873,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>161</x>
-     <y>79</y>
+     <y>139</y>
     </hint>
    </hints>
   </connection>
@@ -784,8 +904,8 @@
      <y>531</y>
     </hint>
     <hint type="destinationlabel">
-     <x>533</x>
-     <y>647</y>
+     <x>761</x>
+     <y>755</y>
     </hint>
    </hints>
   </connection>
@@ -802,6 +922,38 @@
     <hint type="destinationlabel">
      <x>605</x>
      <y>687</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>zoomInButton</sender>
+   <signal>clicked()</signal>
+   <receiver>turntable</receiver>
+   <slot>zoomIn()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>395</x>
+     <y>645</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>405</x>
+     <y>589</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>zoomOutButton</sender>
+   <signal>clicked()</signal>
+   <receiver>turntable</receiver>
+   <slot>zoomOut()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>313</x>
+     <y>652</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>322</x>
+     <y>624</y>
     </hint>
    </hints>
   </connection>

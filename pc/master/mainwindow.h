@@ -5,9 +5,6 @@
 #include <QDebug>
 #include <QMetaObject>
 #include <QDir>
-#include <QPixmap>
-#include <QLabel>
-#include <QTimer>
 #include <QList>
 #include <QPair>
 #include <QErrorMessage>
@@ -15,16 +12,12 @@
 #include <QStringList>
 #include <QFormLayout>
 #include <QLayout>
-#include <QMap>
 #include <QLineEdit>
 #include <QSpinBox>
 #include <QPlainTextEdit>
 #include <QFileDialog>
 #include <QPushButton>
-#include <QItemSelectionModel>
 #include <QDataWidgetMapper>
-#include <QSqlQueryModel>
-#include <QStyledItemDelegate>
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QSqlTableModel>

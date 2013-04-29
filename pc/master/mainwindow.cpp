@@ -12,8 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // Ui init and tweaks
     QIcon::setThemeName("elementary-xfce"); // TODO fix this.
     ui->setupUi(this);
-    ui->turntable->resize(800,600);
-    ui->centralwidget->adjustSize();
 
     // Handle cameras (listing, taking photos, etc...)
     handler = new QPhoto::CameraHandler();
@@ -28,6 +26,11 @@ MainWindow::MainWindow(QWidget *parent) :
         loadCollection(settings.value("collection").toString());
     else
         on_actionNew_Collection_triggered();
+
+//    ui->turntable->resize(800,600);
+//    ui->centralwidget->adjustSize();
+    showMaximized();
+    ui->turntable->fitInView();
 }
 
 // Utility to remove all widgets from a layout

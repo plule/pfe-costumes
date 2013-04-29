@@ -25,6 +25,9 @@ public:
     int getView();
     QString getCurrentFileName();
 
+protected:
+    virtual void resizeEvent(QResizeEvent *event);
+
 signals:
     void zoomChanged(int zoom);
     void angleChanged(int angle);
@@ -42,6 +45,8 @@ public slots:
     virtual void fitInView();
     virtual void resetScale();
     virtual void setZoom(int zoom);
+    virtual void zoomIn();
+    virtual void zoomOut();
     virtual void zoom(int factor);
     virtual void loadDirs(QList<QDir> dirs, bool force=false);
 
@@ -55,6 +60,7 @@ private:
     int m_zoom;
     int m_min_zoom,m_max_zoom;
     double m_zoom_step;
+    bool m_fit;
     QGraphicsPixmapItem *m_current_pixmap;
 };
 

@@ -10,6 +10,7 @@ QTurntable::QTurntable(QWidget *parent) :
     m_zoom_step = 1.25;
     m_min_zoom = 1;
     m_max_zoom = 200;
+    m_fit = false;
 }
 
 void QTurntable::wheelEvent(QWheelEvent *e)
@@ -49,8 +50,16 @@ QString QTurntable::getCurrentFileName()
     return m_pixmaps.at(m_current).first;
 }
 
+void QTurntable::resizeEvent(QResizeEvent *event)
+{
+    QGraphicsView::resizeEvent(event);
+    if(m_fit)
+        fitInView();
+}
+
 void QTurntable::zoom(int factor)
 {
+    m_fit = false;
     qreal dfactor = pow(m_zoom_step, factor);
     if(transform().m11()*dfactor*100 > m_max_zoom)
         dfactor = (m_max_zoom)/(transform().m11()*100);
@@ -84,6 +93,8 @@ void QTurntable::loadDirs(QList<QDir> dirs, bool force)
     }
     if(m_current == -1 || m_current >= files.size())
         setView(0);
+    if(m_fit)
+        fitInView();
 }
 
 int QTurntable::computeZoom()
@@ -104,14 +115,24 @@ QString QTurntable::getPathOf(QString filename)
 
 void QTurntable::setZoom(int zoom)
 {
+    m_fit = false;
     if(zoom != m_zoom) {
         qreal sc = (qreal)zoom / 100.0;
         resetMatrix();
         scale(sc,sc);
         m_zoom = zoom;
         emit zoomChanged(m_zoom);
-
     }
+}
+
+void QTurntable::zoomIn()
+{
+    zoom(1);
+}
+
+void QTurntable::zoomOut()
+{
+    zoom(-1);
 }
 
 void QTurntable::setNumber(int n)
@@ -146,6 +167,8 @@ void QTurntable::setPicture(int index, QString path)
 void QTurntable::setCurrentPicture(QString path)
 {
     setPicture(m_current, path);
+    if(m_fit)
+        fitInView();
 }
 
 void QTurntable::setView(int view)
@@ -153,6 +176,8 @@ void QTurntable::setView(int view)
     if(view < m_pixmaps.size() && view != m_current) {
         m_current = view;
         m_current_pixmap->setPixmap(m_pixmaps[m_current].second);
+        if(m_fit)
+            fitInView();
         emit angleChanged(360 * m_current / m_pixmaps.size());
     }
 }
@@ -170,10 +195,12 @@ void QTurntable::fitInView()
         m_zoom = new_zoom;
         emit zoomChanged(m_zoom);
     }
+    m_fit = true;
 }
 
 void QTurntable::resetScale()
 {
     QGraphicsView::resetMatrix();
     m_zoom = 100;
+    m_fit = false;
 }
