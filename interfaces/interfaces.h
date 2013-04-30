@@ -7,6 +7,8 @@
 extern "C"{
 #endif
 
+typedef uint8_t ard_size_t;
+
 typedef enum {
     COMMAND,
     ACK,
@@ -15,13 +17,15 @@ typedef enum {
 } MSG_TYPE;
 
 struct ard_message {
-    uint8_t size;
+    ard_size_t size;
     uint8_t type;
     uint16_t id;
     uint8_t dest;
     uint8_t expe;
     // union datas
 };
+
+#define ARD_MAX_SIZE (sizeof(ard_message))
 
 #ifdef __cplusplus
 } // extern c

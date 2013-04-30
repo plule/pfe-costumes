@@ -30,6 +30,7 @@
 #include "camerahandler/qcamera.h"
 #include "common/slotlog.h"
 #include "common/collection.h"
+#include "common/morphology.h"
 
 #define GROUP_INFO "costume_informations"
 
@@ -95,6 +96,7 @@ private:
     QErrorMessage errorMessage;
     QDataWidgetMapper mapper;
     Collection *collection;
+    Morphology *morphology;
     QSettings settings;
     QMap <QString, CaptureAction> captureActions;
     int currentCostumeId;

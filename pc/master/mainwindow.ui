@@ -21,7 +21,7 @@
     <item>
      <widget class="QTabWidget" name="tab">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="preparationTab">
        <attribute name="title">
@@ -32,6 +32,19 @@
        <attribute name="title">
         <string>Adjustment</string>
        </attribute>
+       <widget class="QPushButton" name="ardHelloButton">
+        <property name="geometry">
+         <rect>
+          <x>130</x>
+          <y>80</y>
+          <width>91</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>hello</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="captureTab">
        <attribute name="title">
@@ -75,7 +88,9 @@
                  </sizepolicy>
                 </property>
                 <property name="icon">
-                 <iconset theme="zoom-fit-best"/>
+                 <iconset theme="zoom-fit-best">
+                  <normaloff/>
+                 </iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -97,7 +112,9 @@
                  </sizepolicy>
                 </property>
                 <property name="icon">
-                 <iconset theme="zoom-out"/>
+                 <iconset theme="zoom-out">
+                  <normaloff/>
+                 </iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -143,7 +160,9 @@
                  </sizepolicy>
                 </property>
                 <property name="icon">
-                 <iconset theme="zoom-in"/>
+                 <iconset theme="zoom-in">
+                  <normaloff/>
+                 </iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -636,7 +655,9 @@
   </widget>
   <action name="actionNew_Collection">
    <property name="icon">
-    <iconset theme="document-new"/>
+    <iconset theme="document-new">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>New Collection</string>
@@ -644,7 +665,9 @@
   </action>
   <action name="actionOpen_Collection">
    <property name="icon">
-    <iconset theme="document-open"/>
+    <iconset theme="document-open">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Open Collection</string>
