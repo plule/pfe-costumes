@@ -3,6 +3,8 @@ TEMPLATE = app
 INCLUDEPATH += .. ../common
 VPATH = ..
 
+include(../3rdparty/qextserialport/qextserialport.pri)
+
 QT += widgets sql
 
 SOURCES += master/main.cpp \

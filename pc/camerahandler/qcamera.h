@@ -12,13 +12,15 @@
 
 #include "cameraexception.h"
 
-#define LEGACY_GPHOTO
+//#define LEGACY_GPHOTO
 
 #define GP_CALL(ret, fn, ...) emit wait_for_camera_answer();\
+    qDebug() << #fn;\
     ret = fn(__VA_ARGS__);\
     emit camera_answered();
 
 #define R_GP_CALL(ret, fn, ...) GP_CALL(ret, fn, __VA_ARGS__);\
+    qDebug() << #fn;\
     if(ret < GP_OK) {return handleError(ret, #fn );}
 
 namespace QPhoto
