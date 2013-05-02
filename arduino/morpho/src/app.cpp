@@ -2,7 +2,7 @@
 
 #include "../../../interfaces/interfaces.h"
 
-#define DBG(msg) sendMessage(DEBUG, 0, 1, msg)
+#define DBG(msg) sendMessage(DEBUG, 0, ARD_MASTER, msg)
 
 extern HardwareSerial Serial;
 
@@ -39,15 +39,15 @@ void setup()
 void sendMessage(MSG_TYPE type, int idMsg, int dest, char *data)
 {
     Serial.print(type);
-    Serial.print(" ");
+    Serial.print(ARG_SEP);
     Serial.print(idMsg);
-    Serial.print(" ");
+    Serial.print(ARG_SEP);
     Serial.print(dest);
-    Serial.print(" ");
+    Serial.print(ARG_SEP);
     Serial.print(id);
-    Serial.print(" ");
+    Serial.print(ARG_SEP);
     Serial.print(data);
-    Serial.print("\n");
+    Serial.print(MSG_SEP);
 }
 
 void handleMessage(MSG_TYPE type, int idMsg, int expe)
@@ -61,7 +61,7 @@ void serialEvent() {
     int idMsg = Serial.parseInt();
     int dest = Serial.parseInt();
     int expe = Serial.parseInt();
-    Serial.readStringUntil('\n');
+    Serial.readStringUntil(MSG_SEP);
 
     if(dest == id) /* check if message is for me */
     {
