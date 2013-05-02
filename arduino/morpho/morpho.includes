@@ -1,3 +1,4 @@
 /usr/share/arduino/hardware/arduino/cores/arduino
 /usr/lib/avr/include
 /usr/share/arduino/hardware/arduino/variants/mega
+/usr/share/arduino/libraries

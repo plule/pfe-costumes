@@ -13,19 +13,9 @@ typedef enum {
     COMMAND,
     ACK,
     DONE,
-    DATA
+    DATA,
+    DEBUG,
 } MSG_TYPE;
-
-struct ard_message {
-    ard_size_t size;
-    uint8_t type;
-    uint16_t id;
-    uint8_t dest;
-    uint8_t expe;
-    // union datas
-};
-
-#define ARD_MAX_SIZE (sizeof(ard_message))
 
 #ifdef __cplusplus
 } // extern c

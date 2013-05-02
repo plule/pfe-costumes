@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QStringList>
 #include "qextserialport.h"
 
 class Morphology : public QObject
@@ -23,7 +24,7 @@ private slots:
 
 private:
     QextSerialPort *m_port;
-    QByteArray message;
+    QString message_part;
 };
 
 #endif // MORPHOLOGY_H
