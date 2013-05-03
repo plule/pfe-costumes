@@ -13,12 +13,22 @@ typedef uint8_t ard_size_t;
  * Possible type of messages
  */
 typedef enum {
+    HELLO,
+    DISCOVER,
     COMMAND,
     ACK,
     DONE,
     DATA,
-    DEBUG,
+    DEBUG
 } MSG_TYPE;
+
+/*
+ * Arduino's roles
+ */
+typedef enum {
+    ROTATION,
+    MORPHOLOGY
+} ARD_ROLE;
 
 /*
  * Content order in message

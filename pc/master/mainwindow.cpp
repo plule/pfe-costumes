@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Arduino comm
     morphology = new Morphology("/dev/ttyUSB0");
     connect(ui->ardHelloButton, SIGNAL(clicked()), morphology, SLOT(sendHelloMessage()));
+    connect(ui->ardSlider, SIGNAL(valueChanged(int)), morphology, SLOT(setMicrosecond(int)));
 
     // Load last collection
     if(settings.value("collection").type() == QVariant::String && QFile::exists(settings.value("collection").toString()))

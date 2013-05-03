@@ -34,6 +34,7 @@ signals:
     
 public slots:
     void sendHelloMessage();
+    void setMicrosecond(int ms);
     
 private slots:
     void onDataAvailable();
@@ -41,6 +42,7 @@ private slots:
 private:
     void handleMessage(QString message);
     void handleMessage(ArduinoMessage message);
+    void sendMessage(MSG_TYPE type, int id, int dest, int data);
 
     QextSerialPort *m_port;
     QString message_part;

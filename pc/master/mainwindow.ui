@@ -32,19 +32,35 @@
        <attribute name="title">
         <string>Adjustment</string>
        </attribute>
-       <widget class="QPushButton" name="ardHelloButton">
-        <property name="geometry">
-         <rect>
-          <x>130</x>
-          <y>80</y>
-          <width>91</width>
-          <height>27</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>hello</string>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QPushButton" name="ardHelloButton">
+          <property name="text">
+           <string>hello</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="spinBox">
+          <property name="maximum">
+           <number>10000</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="ardSlider">
+          <property name="minimum">
+           <number>800</number>
+          </property>
+          <property name="maximum">
+           <number>2200</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="captureTab">
        <attribute name="title">
@@ -715,12 +731,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>431</x>
-     <y>204</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
-     <x>748</x>
-     <y>540</y>
+     <x>348</x>
+     <y>521</y>
     </hint>
    </hints>
   </connection>
@@ -731,12 +747,12 @@
    <slot>setAngle(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>748</x>
-     <y>540</y>
+     <x>348</x>
+     <y>521</y>
     </hint>
     <hint type="destinationlabel">
-     <x>431</x>
-     <y>204</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>
@@ -747,12 +763,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>431</x>
-     <y>204</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
-     <x>777</x>
-     <y>540</y>
+     <x>348</x>
+     <y>501</y>
     </hint>
    </hints>
   </connection>
@@ -763,12 +779,12 @@
    <slot>setAngle(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>748</x>
-     <y>575</y>
+     <x>348</x>
+     <y>501</y>
     </hint>
     <hint type="destinationlabel">
-     <x>431</x>
-     <y>204</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>
@@ -779,12 +795,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>431</x>
-     <y>204</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
-     <x>748</x>
-     <y>575</y>
+     <x>348</x>
+     <y>501</y>
     </hint>
    </hints>
   </connection>
@@ -795,12 +811,12 @@
    <slot>setZoom(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>848</x>
-     <y>575</y>
+     <x>348</x>
+     <y>501</y>
     </hint>
     <hint type="destinationlabel">
-     <x>431</x>
-     <y>204</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>
@@ -811,12 +827,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>431</x>
-     <y>204</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
-     <x>848</x>
-     <y>575</y>
+     <x>348</x>
+     <y>501</y>
     </hint>
    </hints>
   </connection>
@@ -827,12 +843,12 @@
    <slot>setZoom(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>777</x>
-     <y>540</y>
+     <x>348</x>
+     <y>501</y>
     </hint>
     <hint type="destinationlabel">
-     <x>431</x>
-     <y>204</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>
@@ -843,12 +859,12 @@
    <slot>resetScale()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>362</x>
-     <y>667</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
-     <x>431</x>
-     <y>204</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>
@@ -859,12 +875,12 @@
    <slot>fitInView()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>278</x>
-     <y>667</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
-     <x>431</x>
-     <y>204</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>
@@ -907,8 +923,8 @@
    <slot>startWork(QString,int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>511</x>
-     <y>160</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
      <x>415</x>
@@ -923,8 +939,8 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>517</x>
-     <y>531</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
      <x>761</x>
@@ -939,8 +955,8 @@
    <slot>endWork()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>376</x>
-     <y>460</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
      <x>605</x>
@@ -955,12 +971,12 @@
    <slot>zoomIn()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>395</x>
-     <y>645</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
-     <x>405</x>
-     <y>589</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>
@@ -971,12 +987,44 @@
    <slot>zoomOut()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>313</x>
-     <y>652</y>
+     <x>338</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
-     <x>322</x>
-     <y>624</y>
+     <x>338</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ardSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>401</x>
+     <y>545</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>389</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>ardSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>331</x>
+     <y>406</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>331</x>
+     <y>542</y>
     </hint>
    </hints>
   </connection>

@@ -2,7 +2,7 @@ ARDUINO_DIR  = /usr/share/arduino
 ARDMK_DIR     = /usr
 AVR_TOOLS_DIR = /usr
 
-ARDUINO_LIBS =
+ARDUINO_LIBS = Servo
 BOARD_TAG = fio
 ARDUINO_PORT = /dev/ttyUSB0
 

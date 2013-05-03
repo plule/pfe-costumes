@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Servo.h>
 #include "../../../interfaces/interfaces.h"
 
 extern HardwareSerial Serial;
