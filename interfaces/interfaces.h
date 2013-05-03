@@ -15,6 +15,7 @@ typedef uint16_t ard_id_t;
  */
 typedef enum {
     HELLO,
+    PING,
     DISCOVER,
     RENAME,
     COMMAND,

@@ -6,6 +6,8 @@
 #include <QStringList>
 #include <QList>
 #include <QMetaType>
+#include <QTimer>
+#include <QMutableListIterator>
 #include "qextserialport.h"
 #include "../../interfaces/interfaces.h"
 
@@ -28,6 +30,7 @@ struct Arduino
 {
     ard_id_t id;
     ARD_ROLE role;
+    bool hasAnswered;
 };
 
 Q_DECLARE_METATYPE(Arduino)
@@ -49,6 +52,8 @@ public slots:
     
 private slots:
     void onDataAvailable();
+    void checkAliveDevices();
+    void cleanUpDeadDevices();
 
 private:
     void handleMessage(QString message);
@@ -58,6 +63,8 @@ private:
     QextSerialPort *m_port;
     QString message_part;
     QList<Arduino> arduinos;
+    QTimer aliveTimer;
+    bool pinging;
 };
 
 #endif // MORPHOLOGY_H

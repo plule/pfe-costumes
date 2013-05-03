@@ -8,15 +8,17 @@ Morphology::Morphology(QObject *parent) :
 
 Morphology::Morphology(QString name, QObject *parent) : QObject(parent)
 {
+    pinging = false;
     m_port = new QextSerialPort(name);
     connect(m_port, SIGNAL(readyRead()), this, SLOT(onDataAvailable()));
     m_port->open(QIODevice::ReadWrite);
+    aliveTimer.setInterval(2000);
+    connect(&aliveTimer, SIGNAL(timeout()), this, SLOT(checkAliveDevices()));
+    aliveTimer.start();
 }
 
 void Morphology::sendHelloMessage()
 {
-    arduinos.clear();
-    emit(arduinoListUpdate(arduinos));
     sendMessage(DISCOVER, 0, 0, 0);
 }
 
@@ -34,11 +36,37 @@ void Morphology::onDataAvailable()
         handleMessage(message);
 }
 
+void Morphology::checkAliveDevices()
+{
+    if(!pinging) {
+        pinging = true;
+        QMutableListIterator<Arduino> i(arduinos);
+        while(i.hasNext())
+            i.next().hasAnswered = false;
+        sendHelloMessage();
+    }
+    QTimer::singleShot(1000, this, SLOT(cleanUpDeadDevices()));
+}
+
+void Morphology::cleanUpDeadDevices()
+{
+    bool changed = false;
+    QMutableListIterator<Arduino> i(arduinos);
+    while(i.hasNext()) {
+        if(!i.next().hasAnswered)
+        {
+            changed = true;
+            i.remove();
+        }
+    }
+    pinging = false;
+    if(changed)
+        emit(arduinoListUpdate(arduinos));
+}
+
 void Morphology::handleMessage(QString message)
 {
-    qDebug() << message;
     QStringList spl = message.split(ARG_SEP);
-    qDebug() << spl;
     if(spl.size() < ARG_NUMBER)
         return;
     int dest = spl.takeFirst().toInt();
@@ -61,11 +89,14 @@ void Morphology::handleMessage(ArduinoMessage message)
         Arduino narduino;
         narduino.id = message.expe;
         narduino.role = (ARD_ROLE)message.data.first().toInt();
+        narduino.hasAnswered = true;
         bool isNew = true;
-        foreach(Arduino arduino, arduinos) {
-            if(arduino.id == narduino.id) {
+        QMutableListIterator<Arduino> i(arduinos);
+        while(i.hasNext()) {
+            if(i.next().id == narduino.id) {
                 isNew = false;
-                arduino.role = narduino.role;
+                i.value().role = narduino.role;
+                i.value().hasAnswered = true;
                 emit(arduinoListUpdate(arduinos));
             }
         }
