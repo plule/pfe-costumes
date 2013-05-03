@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
     morphology = new Morphology("/dev/ttyUSB0");
     connect(ui->ardHelloButton, SIGNAL(clicked()), morphology, SLOT(sendHelloMessage()));
     connect(ui->ardSlider, SIGNAL(valueChanged(int)), morphology, SLOT(setMicrosecond(int)));
+    connect(morphology, SIGNAL(arduinoListUpdate(QList<Arduino>)), this, SLOT(updateDeviceList(QList<Arduino>)));
+    morphology->sendHelloMessage();
 
     // Load last collection
     if(settings.value("collection").type() == QVariant::String && QFile::exists(settings.value("collection").toString()))
@@ -166,6 +168,16 @@ void MainWindow::populateList()
         item->setData(Qt::UserRole, r.value(idRow));
         item->setIcon(QIcon::fromTheme("x-office-document"));
         ui->collectionTable2->insertItem(i,item);
+    }
+}
+
+void MainWindow::updateDeviceList(QList<Arduino> arduinos)
+{
+    ui->ardListCombo->clear();
+    foreach(Arduino arduino, arduinos) {
+        QVariant variant;
+        variant.setValue<Arduino>(arduino);
+        ui->ardListCombo->addItem(QString::number(arduino.id), variant);
     }
 }
 

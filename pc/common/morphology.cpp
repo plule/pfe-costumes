@@ -15,11 +15,9 @@ Morphology::Morphology(QString name, QObject *parent) : QObject(parent)
 
 void Morphology::sendHelloMessage()
 {
-    /*QStringList msgArgs = QStringList() << "%1" << "%2" << "%3" << "%4";
-    QString msg = msgArgs.join(ARG_SEP);
-    msg.append(MSG_SEP);
-    msg.arg(QString::number(COMMAND),"42","3","1");
-    m_port->write(msg.toLatin1());*/
+    arduinos.clear();
+    emit(arduinoListUpdate(arduinos));
+    sendMessage(DISCOVER, 0, 0, 0);
 }
 
 void Morphology::setMicrosecond(int ms)
@@ -55,7 +53,25 @@ void Morphology::handleMessage(QString message)
 
 void Morphology::handleMessage(ArduinoMessage message)
 {
-    qDebug() << message.data;
+    if(message.type == HELLO) {
+        Arduino narduino;
+        narduino.id = message.expe;
+        narduino.role = (ARD_ROLE)message.data.toInt();
+        bool isNew = true;
+        foreach(Arduino arduino, arduinos) {
+            if(arduino.id == narduino.id) {
+                isNew = false;
+                arduino.role = narduino.role;
+                emit(arduinoListUpdate(arduinos));
+            }
+        }
+        if(isNew) {
+            arduinos.append(narduino);
+            emit(arduinoListUpdate(arduinos));
+        }
+    } else {
+        qDebug() << "Unknown command";
+    }
 }
 
 void Morphology::sendMessage(MSG_TYPE type, int id, int dest, int data)
@@ -63,5 +79,4 @@ void Morphology::sendMessage(MSG_TYPE type, int id, int dest, int data)
     QStringList args;
     args << QString::number(type) << QString::number(id) << QString::number(dest) << QString::number(ARD_MASTER) << QString::number(data);
     m_port->write(args.join(ARG_SEP).append(MSG_SEP).toLatin1());
-    qDebug() << data;
 }

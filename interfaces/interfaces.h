@@ -8,6 +8,7 @@ extern "C"{
 #endif
 
 typedef uint8_t ard_size_t;
+typedef uint16_t ard_id_t;
 
 /*
  * Possible type of messages

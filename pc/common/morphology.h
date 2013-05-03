@@ -4,13 +4,15 @@
 #include <QObject>
 #include <QDebug>
 #include <QStringList>
+#include <QList>
+#include <QMetaType>
 #include "qextserialport.h"
 #include "../../interfaces/interfaces.h"
 
 struct ArduinoMessage
 {
     MSG_TYPE type;
-    uint8_t id;
+    ard_id_t id;
     uint8_t expe;
     uint8_t dest;
     QString data;
@@ -22,6 +24,14 @@ struct ArduinoMessage
 };
 
 
+struct Arduino
+{
+    ard_id_t id;
+    ARD_ROLE role;
+};
+
+Q_DECLARE_METATYPE(Arduino)
+
 class Morphology : public QObject
 {
     Q_OBJECT
@@ -31,6 +41,7 @@ public:
 
 
 signals:
+    void arduinoListUpdate(QList<Arduino> arduinos);
     
 public slots:
     void sendHelloMessage();
@@ -46,6 +57,7 @@ private:
 
     QextSerialPort *m_port;
     QString message_part;
+    QList<Arduino> arduinos;
 };
 
 #endif // MORPHOLOGY_H
