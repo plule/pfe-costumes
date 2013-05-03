@@ -36,27 +36,31 @@ void Morphology::onDataAvailable()
 
 void Morphology::handleMessage(QString message)
 {
+    qDebug() << message;
     QStringList spl = message.split(ARG_SEP);
-    if(spl.size() != ARG_NUMBER)
+    qDebug() << spl;
+    if(spl.size() < ARG_NUMBER)
         return;
-    ArduinoMessage msg;
-
-    if(spl.at(ARG_DEST).toInt() == ARD_MASTER) {
-        msg.type = (MSG_TYPE)spl.at(ARG_TYPE).toInt();
-        msg.id = spl.at(ARG_ID).toInt();
-        msg.expe = spl.at(ARG_EXPE).toInt();
-        msg.dest = spl.at(ARG_DEST).toInt();
-        msg.data = spl.at(ARG_DATA);
+    int dest = spl.takeFirst().toInt();
+    if(dest == ARD_MASTER) {
+        ArduinoMessage msg;
+        msg.dest = dest;
+        msg.expe = spl.takeFirst().toInt();
+        msg.id = spl.takeFirst().toInt();
+        msg.type = (MSG_TYPE)spl.takeFirst().toInt();
+        msg.data = spl;
         handleMessage(msg);
     }
 }
 
 void Morphology::handleMessage(ArduinoMessage message)
 {
-    if(message.type == HELLO) {
+    switch(message.type) {
+    case HELLO:
+    {
         Arduino narduino;
         narduino.id = message.expe;
-        narduino.role = (ARD_ROLE)message.data.toInt();
+        narduino.role = (ARD_ROLE)message.data.first().toInt();
         bool isNew = true;
         foreach(Arduino arduino, arduinos) {
             if(arduino.id == narduino.id) {
@@ -69,8 +73,22 @@ void Morphology::handleMessage(ArduinoMessage message)
             arduinos.append(narduino);
             emit(arduinoListUpdate(arduinos));
         }
-    } else {
-        qDebug() << "Unknown command";
+        break;
+    }
+    case DISCOVER:
+        break;
+    case RENAME:
+        break;
+    case COMMAND:
+        break;
+    case ACK:
+        break;
+    case DONE:
+        break;
+    case DATA:
+        break;
+    default:
+        qDebug() << "Unknown message";
     }
 }
 

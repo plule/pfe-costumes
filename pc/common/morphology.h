@@ -11,15 +11,15 @@
 
 struct ArduinoMessage
 {
+    int dest;
+    int expe;
+    int id;
     MSG_TYPE type;
-    ard_id_t id;
-    uint8_t expe;
-    uint8_t dest;
-    QString data;
+    QStringList data;
 
     QString toString() {
-        QString ret = "from %1 to %2 : (%3) %4";
-        return ret.arg(QString::number(id), QString::number(expe), QString::number(type), data);
+        QString ret = "from %1 to %2 : (%3)";
+        return ret.arg(QString::number(expe), QString::number(dest), QString::number(type));
     }
 };
 

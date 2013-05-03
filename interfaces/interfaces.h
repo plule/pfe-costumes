@@ -16,6 +16,7 @@ typedef uint16_t ard_id_t;
 typedef enum {
     HELLO,
     DISCOVER,
+    RENAME,
     COMMAND,
     ACK,
     DONE,
@@ -35,11 +36,10 @@ typedef enum {
  * Content order in message
  */
 typedef enum {
-    ARG_TYPE,
-    ARG_ID,
     ARG_DEST,
     ARG_EXPE,
-    ARG_DATA,
+    ARG_ID,
+    ARG_TYPE,
     ARG_NUMBER
 } MSG_CONTENT;
 

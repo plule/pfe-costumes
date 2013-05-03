@@ -5,13 +5,13 @@ ARD_ROLE Role;
 
 void sendMessage(MSG_TYPE type, int idMsg, int dest, int data)
 {
-    Serial.print(type);
-    Serial.print(ARG_SEP);
-    Serial.print(idMsg);
-    Serial.print(ARG_SEP);
     Serial.print(dest);
     Serial.print(ARG_SEP);
     Serial.print(Id);
+    Serial.print(ARG_SEP);
+    Serial.print(idMsg);
+    Serial.print(ARG_SEP);
+    Serial.print(type);
     Serial.print(ARG_SEP);
     Serial.print(data);
     Serial.print(MSG_SEP);
@@ -54,7 +54,6 @@ void serialEvent() {
     int idMsg = Serial.parseInt();
     int dest = Serial.parseInt();
     int expe = Serial.parseInt();
-    int data = Serial.parseInt();
     Serial.readStringUntil(MSG_SEP);
 
     if(type == DISCOVER) /* Server is looking for the arduinos */
@@ -63,7 +62,7 @@ void serialEvent() {
     } else if(dest == Id) /* Message is for me */
     {
         sendMessage(ACK, idMsg, expe, 0); /* Acknowledge reception */
-        handleMessage(type, idMsg, expe, data);
+        handleMessage(type, idMsg, expe, Serial);
     } else
     {
         //DBG("Not for me");

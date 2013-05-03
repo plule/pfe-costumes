@@ -14,12 +14,17 @@ void setup()
     servo.attach(52,800,2200);
 }
 
-void handleMessage(MSG_TYPE type, int idMsg, int expe, int data)
+void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
 {
     //DBG("Got your message");
     //DBG(data);
-    if(type == COMMAND)
-        servo.writeMicroseconds(data);
+    switch(type) {
+    case COMMAND:
+        servo.writeMicroseconds(serial.parseInt());
+        break;
+    default:
+        break;
+    }
 }
 
 void loop()
