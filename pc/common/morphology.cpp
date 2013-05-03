@@ -12,19 +12,19 @@ Morphology::Morphology(QString name, QObject *parent) : QObject(parent)
     m_port = new QextSerialPort(name);
     connect(m_port, SIGNAL(readyRead()), this, SLOT(onDataAvailable()));
     m_port->open(QIODevice::ReadWrite);
-    aliveTimer.setInterval(2000);
+    aliveTimer.setInterval(5000);
     connect(&aliveTimer, SIGNAL(timeout()), this, SLOT(checkAliveDevices()));
     aliveTimer.start();
 }
 
 void Morphology::sendHelloMessage()
 {
-    sendMessage(DISCOVER, 0, 0, 0);
+    sendMessage(DISCOVER, 40, 41, 42);
 }
 
-void Morphology::setMicrosecond(int ms)
+void Morphology::setMicrosecond(int arduino, int ms)
 {
-    sendMessage(COMMAND, 42, 3, ms);
+    sendMessage(COMMAND, 3, arduino, ms);
 }
 
 void Morphology::onDataAvailable()
@@ -50,18 +50,15 @@ void Morphology::checkAliveDevices()
 
 void Morphology::cleanUpDeadDevices()
 {
-    bool changed = false;
     QMutableListIterator<Arduino> i(arduinos);
     while(i.hasNext()) {
         if(!i.next().hasAnswered)
         {
-            changed = true;
+            emit(arduinoRemoved(i.value()));
             i.remove();
         }
     }
     pinging = false;
-    if(changed)
-        emit(arduinoListUpdate(arduinos));
 }
 
 void Morphology::handleMessage(QString message)
@@ -97,16 +94,18 @@ void Morphology::handleMessage(ArduinoMessage message)
                 isNew = false;
                 i.value().role = narduino.role;
                 i.value().hasAnswered = true;
-                emit(arduinoListUpdate(arduinos));
             }
         }
         if(isNew) {
             arduinos.append(narduino);
-            emit(arduinoListUpdate(arduinos));
+            emit(arduinoAdded(narduino));
         }
         break;
     }
     case DISCOVER:
+        break;
+    case DEBUG:
+        qDebug() << message.data;
         break;
     case RENAME:
         break;
@@ -126,6 +125,11 @@ void Morphology::handleMessage(ArduinoMessage message)
 void Morphology::sendMessage(MSG_TYPE type, int id, int dest, int data)
 {
     QStringList args;
-    args << QString::number(type) << QString::number(id) << QString::number(dest) << QString::number(ARD_MASTER) << QString::number(data);
+    args
+            << QString::number(dest)
+            << QString::number(ARD_MASTER)
+            << QString::number(id)
+            << QString::number(type)
+            << QString::number(data);
     m_port->write(args.join(ARG_SEP).append(MSG_SEP).toLatin1());
 }

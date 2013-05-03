@@ -64,7 +64,9 @@ public slots:
     void updateSaveButton();
     void onModelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
     void populateList();
-    void updateDeviceList(QList<Arduino> arduinos);
+    void addDevice(Arduino arduino);
+    void removeDevice(Arduino arduino);
+    void sendMorpho();
     
 private slots:
     void timeout();

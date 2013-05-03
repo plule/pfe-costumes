@@ -8,6 +8,7 @@
 #include <QMetaType>
 #include <QTimer>
 #include <QMutableListIterator>
+#include <QStandardItemModel>
 #include "qextserialport.h"
 #include "../../interfaces/interfaces.h"
 
@@ -44,11 +45,12 @@ public:
 
 
 signals:
-    void arduinoListUpdate(QList<Arduino> arduinos);
+    void arduinoAdded(Arduino arduino);
+    void arduinoRemoved(Arduino arduino);
     
 public slots:
     void sendHelloMessage();
-    void setMicrosecond(int ms);
+    void setMicrosecond(int arduino, int ms);
     
 private slots:
     void onDataAvailable();

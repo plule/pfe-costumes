@@ -23,8 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // Arduino comm
     morphology = new Morphology("/dev/ttyUSB0");
     connect(ui->ardHelloButton, SIGNAL(clicked()), morphology, SLOT(sendHelloMessage()));
-    connect(ui->ardSlider, SIGNAL(valueChanged(int)), morphology, SLOT(setMicrosecond(int)));
-    connect(morphology, SIGNAL(arduinoListUpdate(QList<Arduino>)), this, SLOT(updateDeviceList(QList<Arduino>)));
+    connect(ui->ardSlider, SIGNAL(valueChanged(int)), this, SLOT(sendMorpho()));
+    connect(morphology, SIGNAL(arduinoAdded(Arduino)), this, SLOT(addDevice(Arduino)));
+    connect(morphology, SIGNAL(arduinoRemoved(Arduino)), this, SLOT(removeDevice(Arduino)));
     morphology->sendHelloMessage();
 
     // Load last collection
@@ -171,14 +172,20 @@ void MainWindow::populateList()
     }
 }
 
-void MainWindow::updateDeviceList(QList<Arduino> arduinos)
+void MainWindow::addDevice(Arduino arduino)
 {
-    ui->ardListCombo->clear();
-    foreach(Arduino arduino, arduinos) {
-        QVariant variant;
-        variant.setValue<Arduino>(arduino);
-        ui->ardListCombo->addItem(QString::number(arduino.id), variant);
-    }
+    ui->ardListCombo->addItem(QString::number(arduino.id), arduino.id);
+}
+
+void MainWindow::removeDevice(Arduino arduino)
+{
+    ui->ardListCombo->removeItem(ui->ardListCombo->findData(arduino.id));
+}
+
+void MainWindow::sendMorpho()
+{
+    int current = ui->ardListCombo->itemData(ui->ardListCombo->currentIndex(), Qt::UserRole).toInt();
+    morphology->setMicrosecond(current, ui->ardSlider->value());
 }
 
 MainWindow::~MainWindow()
