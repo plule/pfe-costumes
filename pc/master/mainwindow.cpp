@@ -28,9 +28,20 @@ MainWindow::MainWindow(QWidget *parent) :
         slider->setMinimum(MORPHO_MIN);
         slider->setMaximum(MORPHO_MAX);
         slider->setProperty("motor", i);
+
+        QSpinBox *spin = new QSpinBox(this);
+        spin->setMinimum(MORPHO_MIN);
+        spin->setMaximum(MORPHO_MAX);
+
+        QHBoxLayout *layout = new QHBoxLayout();
+        layout->addWidget(slider);
+        layout->addWidget(spin);
+
+        connect(slider, SIGNAL(valueChanged(int)), spin, SLOT(setValue(int)));
+        connect(spin, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(sendMs(int)));
 
-        ui->adjustementForm->addRow(name, slider);
+        ui->adjustementForm->addRow(name, layout);
     }
 
     connect(ui->ardHelloButton, SIGNAL(clicked()), morphology, SLOT(sendHelloMessage()));
@@ -372,6 +383,7 @@ void MainWindow::on_suzanneButton_pressed()
     ui->turntable->setView(0);
     ui->turntable->fitInView();
     ui->angleBox->setSingleStep(ui->turntable->getAngleStep());
+    updateSaveButton();
 }
 
 void MainWindow::on_manButton_clicked()
@@ -391,6 +403,7 @@ void MainWindow::on_manButton_clicked()
     ui->turntable->setView(0);
     ui->turntable->fitInView();
     ui->angleBox->setSingleStep(ui->turntable->getAngleStep());
+    updateSaveButton();
 }
 
 void MainWindow::on_actionNew_Collection_triggered()
