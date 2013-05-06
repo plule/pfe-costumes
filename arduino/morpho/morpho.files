@@ -3,3 +3,4 @@ src/Makefile
 ../../interfaces/interfaces.h
 ../common/communication.h
 ../common/communication.cpp
+../../interfaces/morphology.h

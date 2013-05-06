@@ -19,12 +19,15 @@ Morphology::Morphology(QString name, QObject *parent) : QObject(parent)
 
 void Morphology::sendHelloMessage()
 {
-    sendMessage(DISCOVER, 40, 41, 42);
+    sendMessage(DISCOVER, 40, 41);
 }
 
 void Morphology::setMicrosecond(int arduino, int ms)
 {
-    sendMessage(COMMAND, 3, arduino, ms);
+    QList<QVariant> args;
+    args.append(EPAULE);
+    args.append(ms);
+    sendMessage(COMMAND, 3, arduino, args);
 }
 
 void Morphology::onDataAvailable()
@@ -122,14 +125,17 @@ void Morphology::handleMessage(ArduinoMessage message)
     }
 }
 
-void Morphology::sendMessage(MSG_TYPE type, int id, int dest, int data)
+void Morphology::sendMessage(MSG_TYPE type, int id, int dest, QList<QVariant> datas)
 {
     QStringList args;
     args
             << QString::number(dest)
             << QString::number(ARD_MASTER)
             << QString::number(id)
-            << QString::number(type)
-            << QString::number(data);
+            << QString::number(type);
+    foreach(QVariant data, datas) {
+        args << data.toString();
+    };
+
     m_port->write(args.join(ARG_SEP).append(MSG_SEP).toLatin1());
 }

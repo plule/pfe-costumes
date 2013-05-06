@@ -52,6 +52,14 @@ typedef enum {
 #define MSG_SEP '\n'
 #define ARG_SEP '|'
 
+
+/* Morphology */
+#define X(pin, define, string) define,
+enum MORPHO_MOTORS {
+    #include "morphology.h"
+};
+#undef X
+
 #ifdef __cplusplus
 } // extern c
 #endif
