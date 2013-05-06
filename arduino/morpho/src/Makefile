@@ -2,7 +2,7 @@ ARDUINO_DIR  = /usr/share/arduino
 ARDMK_DIR     = /usr
 AVR_TOOLS_DIR = /usr
 
-ARDUINO_LIBS = Servo common
+ARDUINO_LIBS = Servo common EEPROM
 BOARD_TAG = mega2560
 ARDUINO_PORT = /dev/ttyACM0
 
