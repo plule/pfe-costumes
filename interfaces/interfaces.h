@@ -60,6 +60,9 @@ enum MORPHO_MOTORS {
 };
 #undef X
 
+#define MORPHO_MIN 800
+#define MORPHO_MAX 2200
+
 #ifdef __cplusplus
 } // extern c
 #endif

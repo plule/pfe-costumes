@@ -22,8 +22,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Arduino comm
     morphology = new Morphology("/dev/ttyUSB0");
+    for(int i=0; i < morphology->getMotorsNumber(); i++) {
+        QString name = QString(morphology->getMotorsNames()[i]);
+        QSlider *slider = new QSlider(Qt::Horizontal, this);
+        slider->setMinimum(MORPHO_MIN);
+        slider->setMaximum(MORPHO_MAX);
+        slider->setProperty("motor", i);
+        connect(slider, SIGNAL(valueChanged(int)), this, SLOT(sendMs(int)));
+
+        ui->adjustementForm->addRow(name, slider);
+    }
+
     connect(ui->ardHelloButton, SIGNAL(clicked()), morphology, SLOT(sendHelloMessage()));
-    connect(ui->ardSlider, SIGNAL(valueChanged(int)), this, SLOT(sendMorpho()));
     connect(morphology, SIGNAL(arduinoAdded(Arduino)), this, SLOT(addDevice(Arduino)));
     connect(morphology, SIGNAL(arduinoRemoved(Arduino)), this, SLOT(removeDevice(Arduino)));
     morphology->sendHelloMessage();
@@ -182,12 +192,6 @@ void MainWindow::removeDevice(Arduino arduino)
     ui->ardListCombo->removeItem(ui->ardListCombo->findData(arduino.id));
 }
 
-void MainWindow::sendMorpho()
-{
-    int current = ui->ardListCombo->itemData(ui->ardListCombo->currentIndex(), Qt::UserRole).toInt();
-    morphology->setMicrosecond(current, ui->ardSlider->value());
-}
-
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -302,6 +306,13 @@ void MainWindow::on_appendCaptureButton_clicked()
     } else {
         this->displayError(tr("No camera connected"));
     }
+}
+
+void MainWindow::sendMs(int ms)
+{
+    int current = ui->ardListCombo->itemData(ui->ardListCombo->currentIndex(), Qt::UserRole).toInt();
+    int motor = sender()->property("motor").toInt();
+    morphology->setMicrosecond(current, motor, ms);
 }
 
 void MainWindow::on_refreshButton_clicked()

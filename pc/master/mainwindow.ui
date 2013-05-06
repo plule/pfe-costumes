@@ -55,24 +55,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QSpinBox" name="spinBox">
-          <property name="maximum">
-           <number>10000</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSlider" name="ardSlider">
-          <property name="minimum">
-           <number>800</number>
-          </property>
-          <property name="maximum">
-           <number>2200</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
+         <layout class="QFormLayout" name="adjustementForm"/>
         </item>
         <item>
          <spacer name="verticalSpacer_2">
@@ -1020,38 +1003,6 @@
     <hint type="destinationlabel">
      <x>338</x>
      <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>ardSlider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBox</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>401</x>
-     <y>545</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>389</x>
-     <y>400</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>ardSlider</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>331</x>
-     <y>406</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>331</x>
-     <y>542</y>
     </hint>
    </hints>
   </connection>

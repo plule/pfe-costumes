@@ -66,10 +66,10 @@ public slots:
     void populateList();
     void addDevice(Arduino arduino);
     void removeDevice(Arduino arduino);
-    void sendMorpho();
     
 private slots:
     void timeout();
+    void sendMs(int ms);
 
     void on_captureButton_clicked();
 
@@ -92,6 +92,7 @@ private slots:
     void on_appendCaptureButton_clicked();
 
 private:
+
     Ui::MainWindow *ui;
     QPhoto::CameraHandler *handler;
     SlotLog *logger;

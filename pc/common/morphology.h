@@ -42,6 +42,8 @@ class Morphology : public QObject
 public:
     explicit Morphology(QObject *parent = 0);
     Morphology(QString name, QObject *parent = 0);
+    char **getMotorsNames();
+    int getMotorsNumber();
 
 
 signals:
@@ -50,7 +52,7 @@ signals:
     
 public slots:
     void sendHelloMessage();
-    void setMicrosecond(int arduino, int ms);
+    void setMicrosecond(int arduino, int motor, int ms);
     
 private slots:
     void onDataAvailable();

@@ -21,7 +21,7 @@ void setup()
     digitalWrite(led, LOW);
     int i;
     for(i=0; i<MOTOR_NUMBER; i++) {
-        servos[i].attach(morpho_pins[i], 800, 2200);
+        servos[i].attach(morpho_pins[i], MORPHO_MIN, MORPHO_MAX);
     }
     //servo.attach(52,800,2200);
 }

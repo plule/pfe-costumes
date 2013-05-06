@@ -1,5 +1,11 @@
 #include "morphology.h"
 
+#define X(pin, define, string) string,
+static char *morpho_motors_name[] = {
+    #include "../../interfaces/morphology.h"
+};
+#undef X
+
 Morphology::Morphology(QObject *parent) :
     QObject(parent)
 {
@@ -17,15 +23,25 @@ Morphology::Morphology(QString name, QObject *parent) : QObject(parent)
     aliveTimer.start();
 }
 
+char **Morphology::getMotorsNames()
+{
+    return morpho_motors_name;
+}
+
+int Morphology::getMotorsNumber()
+{
+    return MOTOR_NUMBER;
+}
+
 void Morphology::sendHelloMessage()
 {
     sendMessage(DISCOVER, 40, 41);
 }
 
-void Morphology::setMicrosecond(int arduino, int ms)
+void Morphology::setMicrosecond(int arduino, int motor, int ms)
 {
     QList<QVariant> args;
-    args.append(EPAULE);
+    args.append(motor);
     args.append(ms);
     sendMessage(COMMAND, 3, arduino, args);
 }
