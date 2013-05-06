@@ -27,7 +27,9 @@ HEADERS += camerahandler/camerahandler.h \
     ../common/collection.h \
     ../common/qloadedlistwidget.h \
     ../common/uniqueproxymodel.h \
-    ../common/morphology.h
+    ../common/morphology.h \
+    ../../interfaces/interfaces.h \
+    ../../interfaces/morphology.h
 
 CONFIG += qt warn_on release
 

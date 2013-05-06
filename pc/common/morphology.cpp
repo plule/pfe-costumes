@@ -1,7 +1,7 @@
 #include "morphology.h"
 
 #define X(pin, define, string) string,
-static char *morpho_motors_name[] = {
+static const char *morpho_motors_name[] = {
     #include "../../interfaces/morphology.h"
 };
 #undef X
@@ -23,7 +23,7 @@ Morphology::Morphology(QString name, QObject *parent) : QObject(parent)
     aliveTimer.start();
 }
 
-char **Morphology::getMotorsNames()
+const char **Morphology::getMotorsNames()
 {
     return morpho_motors_name;
 }

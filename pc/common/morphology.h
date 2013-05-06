@@ -42,7 +42,7 @@ class Morphology : public QObject
 public:
     explicit Morphology(QObject *parent = 0);
     Morphology(QString name, QObject *parent = 0);
-    char **getMotorsNames();
+    const char **getMotorsNames();
     int getMotorsNumber();
 
 
