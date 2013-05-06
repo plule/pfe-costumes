@@ -38,12 +38,17 @@ void Morphology::sendHelloMessage()
     sendMessage(DISCOVER, 40, 41);
 }
 
-void Morphology::setMicrosecond(int arduino, int motor, int ms)
+void Morphology::setMotorMicrosecond(int arduino, int motor, int ms)
 {
     QList<QVariant> args;
     args.append(motor);
     args.append(ms);
     sendMessage(COMMAND, 3, arduino, args);
+}
+
+void Morphology::getMotorsPosition(int arduino)
+{
+    sendMessage(SERVO_POS, 1, arduino);
 }
 
 void Morphology::onDataAvailable()
@@ -134,8 +139,14 @@ void Morphology::handleMessage(ArduinoMessage message)
         break;
     case DONE:
         break;
-    case DATA:
+    case SERVO_POS:
+    {
+        if(message.data.size() == 2)
+            emit(motorMicrosecondChanged(message.expe, message.data.at(0).toInt(), message.data.at(1).toInt()));
+        else
+            qWarning() << "Invalid servo pos message.";
         break;
+    }
     default:
         qDebug() << "Unknown message";
     }

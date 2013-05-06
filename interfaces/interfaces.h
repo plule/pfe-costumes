@@ -21,7 +21,7 @@ typedef enum {
     COMMAND,
     ACK,
     DONE,
-    DATA,
+    SERVO_POS,
     DEBUG
 } MSG_TYPE;
 

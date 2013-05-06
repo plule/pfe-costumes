@@ -37,12 +37,16 @@ MainWindow::MainWindow(QWidget *parent) :
         layout->addWidget(slider);
         layout->addWidget(spin);
 
+        morphoSliders.append(slider);
+
         connect(slider, SIGNAL(valueChanged(int)), spin, SLOT(setValue(int)));
         connect(spin, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(sendMs(int)));
 
         ui->adjustementForm->addRow(name, layout);
     }
+
+    connect(morphology, SIGNAL(motorMicrosecondChanged(int,int,int)), this, SLOT(setMotorMicroSecond(int,int,int)));
 
     connect(ui->ardHelloButton, SIGNAL(clicked()), morphology, SLOT(sendHelloMessage()));
     connect(morphology, SIGNAL(arduinoAdded(Arduino)), this, SLOT(addDevice(Arduino)));
@@ -55,8 +59,6 @@ MainWindow::MainWindow(QWidget *parent) :
     else
         on_actionNew_Collection_triggered();
 
-//    ui->turntable->resize(800,600);
-//    ui->centralwidget->adjustSize();
     showMaximized();
     ui->turntable->fitInView();
 }
@@ -196,6 +198,8 @@ void MainWindow::populateList()
 void MainWindow::addDevice(Arduino arduino)
 {
     ui->ardListCombo->addItem(QString::number(arduino.id), arduino.id);
+    if(arduino.id == getCurrentArduino())
+        morphology->getMotorsPosition(arduino.id);
 }
 
 void MainWindow::removeDevice(Arduino arduino)
@@ -319,11 +323,23 @@ void MainWindow::on_appendCaptureButton_clicked()
     }
 }
 
+int MainWindow::getCurrentArduino()
+{
+    return ui->ardListCombo->itemData(ui->ardListCombo->currentIndex(), Qt::UserRole).toInt();
+}
+
 void MainWindow::sendMs(int ms)
 {
-    int current = ui->ardListCombo->itemData(ui->ardListCombo->currentIndex(), Qt::UserRole).toInt();
+    int current = getCurrentArduino();
     int motor = sender()->property("motor").toInt();
-    morphology->setMicrosecond(current, motor, ms);
+    morphology->setMotorMicrosecond(current, motor, ms);
+}
+
+void MainWindow::setMotorMicroSecond(int arduino, int motor, int ms)
+{
+    if(arduino == getCurrentArduino() && motor < morphoSliders.size()) {
+        morphoSliders.at(motor)->setValue(ms);
+    }
 }
 
 void MainWindow::on_refreshButton_clicked()

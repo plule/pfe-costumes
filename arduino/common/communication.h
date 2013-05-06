@@ -11,6 +11,7 @@
 extern HardwareSerial Serial;
 
 void sendMessage(MSG_TYPE type, int idMsg, int dest, int data);
+void sendMessage(MSG_TYPE type, int idMsg, int dest, int data1, int data2);
 void sendMessage(MSG_TYPE type, int idMsg, int dest, const char* data);
 int getId();
 void init_ard(ARD_ROLE role);

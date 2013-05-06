@@ -45,10 +45,11 @@ void setup()
     digitalWrite(led, LOW);
     int i;
     for(i=0; i<MOTOR_NUMBER; i++) {
+        int pos = eeprom_read_word(servoAdress(i));
         servos[i].attach(morpho_pins[i], MORPHO_MIN, MORPHO_MAX);
-        servos[i].writeMicroseconds(eeprom_read_word(servoAdress(i)));
+        servos[i].writeMicroseconds(pos);
+        sendMessage(SERVO_POS,0,ARD_MASTER,i,pos);
     }
-    //servo.attach(52,800,2200);
 }
 
 void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
@@ -64,6 +65,14 @@ void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
         break;
     }
     default:
+        break;
+    case SERVO_POS:
+    {
+        int i;
+        for(i=0; i<MOTOR_NUMBER; i++) {
+            sendMessage(SERVO_POS,0,ARD_MASTER,i,servos[i].readMicroseconds());
+        }
+    }
         break;
     }
 }

@@ -49,10 +49,12 @@ public:
 signals:
     void arduinoAdded(Arduino arduino);
     void arduinoRemoved(Arduino arduino);
+    void motorMicrosecondChanged(int arduino, int motor, int ms);
     
 public slots:
     void sendHelloMessage();
-    void setMicrosecond(int arduino, int motor, int ms);
+    void setMotorMicrosecond(int arduino, int motor, int ms);
+    void getMotorsPosition(int arduino);
     
 private slots:
     void onDataAvailable();

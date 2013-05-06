@@ -3,32 +3,51 @@
 uint16_t Id = 0;
 ARD_ROLE Role;
 
-void sendMessage(MSG_TYPE type, int idMsg, int dest, int data)
+static void _sendArg(int arg)
+{
+    Serial.print(ARG_SEP);
+    Serial.print(arg);
+}
+
+static void _sendArg(const char *arg)
+{
+    Serial.print(ARG_SEP);
+    Serial.print(arg);
+}
+
+static void _initSendMessage(MSG_TYPE type, int idMsg, int dest)
 {
     Serial.print(dest);
-    Serial.print(ARG_SEP);
-    Serial.print(Id);
-    Serial.print(ARG_SEP);
-    Serial.print(idMsg);
-    Serial.print(ARG_SEP);
-    Serial.print(type);
-    Serial.print(ARG_SEP);
-    Serial.print(data);
+    _sendArg(Id);
+    _sendArg(idMsg);
+    _sendArg(type);
+}
+
+static void _endSendMessage()
+{
     Serial.print(MSG_SEP);
+}
+
+void sendMessage(MSG_TYPE type, int idMsg, int dest, int data)
+{
+    _initSendMessage(type, idMsg, dest);
+    _sendArg(data);
+    _endSendMessage();
+}
+
+void sendMessage(MSG_TYPE type, int idMsg, int dest, int data1, int data2)
+{
+    _initSendMessage(type, idMsg, dest);
+    _sendArg(data1);
+    _sendArg(data2);
+    _endSendMessage();
 }
 
 void sendMessage(MSG_TYPE type, int idMsg, int dest, const char* data)
 {
-    Serial.print(dest);
-    Serial.print(ARG_SEP);
-    Serial.print(Id);
-    Serial.print(ARG_SEP);
-    Serial.print(idMsg);
-    Serial.print(ARG_SEP);
-    Serial.print(type);
-    Serial.print(ARG_SEP);
-    Serial.print(data);
-    Serial.print(MSG_SEP);
+    _initSendMessage(type, idMsg, dest);
+    _sendArg(data);
+    _endSendMessage();
 }
 
 /*

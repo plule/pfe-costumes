@@ -66,10 +66,12 @@ public slots:
     void populateList();
     void addDevice(Arduino arduino);
     void removeDevice(Arduino arduino);
+    int getCurrentArduino();
     
 private slots:
     void timeout();
     void sendMs(int ms);
+    void setMotorMicroSecond(int arduino,int motor,int ms);
 
     void on_captureButton_clicked();
 
@@ -104,6 +106,7 @@ private:
     QSettings settings;
     QMap <QString, CaptureAction> captureActions;
     int currentCostumeId;
+    QList <QSlider *> morphoSliders;
 
     void doCamerasConnections();
     void loadCollection(QString path);
