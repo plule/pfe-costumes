@@ -2,15 +2,16 @@
 //#include "../../../interfaces/interfaces.h"
 //#include "../../common/communication.h"
 
-#define NBLED 8
+#define NBLED 4
 #define LIMIT 500
 
 extern HardwareSerial Serial;
 int i=0;
-int ledOn=5;
+int ledOn=4;
 
-int leds[] = {6,7,8,9,10,11,12,13};
-int values[8];
+int leds[] = {12,11,10,9,8,7,6,5};
+unsigned char grayValue;
+unsigned char value;
 //int led=13;
 
 void setup()
@@ -24,10 +25,22 @@ void setup()
     //digitalWrite(led, LOW);
 }
 
+unsigned char grayToBinary(unsigned char num)
+{
+    unsigned char mask;
+    for (mask = num >> 1; mask != 0; mask = mask >> 1)
+    {
+        num = num ^ mask;
+    }
+    return num;
+}
+
 void loop()
 {
     unsigned long us;
     int i;
+
+    grayValue = 0;
     for(i=0; i < NBLED; i++) {
         int led = leds[i];
         pinMode(led, OUTPUT);
@@ -36,12 +49,15 @@ void loop()
         us = micros();
         pinMode(led, INPUT);
         while(digitalRead(led) == HIGH){};
-        values[i] = ((micros()-us) > LIMIT);
-        Serial.print(values[i]);
-        Serial.print(" ");
+        unsigned long delta = micros() - us;
+        //Serial.println(delta);
+        if(delta > LIMIT)
+            bitSet(grayValue, NBLED-i-1);
+        else
+            bitClear(grayValue, NBLED-i-1);
     }
-    Serial.println();
-    delay(10);
+    Serial.println(grayToBinary(grayValue), DEC);
+    delay(100);
 }
 /*
 void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
