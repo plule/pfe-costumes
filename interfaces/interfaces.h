@@ -14,24 +14,23 @@ typedef uint16_t ard_id_t;
  * Possible type of messages
  */
 typedef enum {
-    HELLO,
-    PING,
-    DISCOVER,
-    RENAME,
-    COMMAND,
+    MSG_HELLO,
+    MSG_DISCOVER,
+    MSG_RENAME,
+    MSG_MORPHOLOGY,
     MSG_ROTATION,
-    ACK,
-    DONE,
-    SERVO_POS,
-    DEBUG
+    MSG_ACK,
+    MSG_DONE,
+    MSG_SERVO_POS,
+    MSG_DEBUG
 } MSG_TYPE;
 
 /*
  * Arduino's roles
  */
 typedef enum {
-    ROTATION,
-    MORPHOLOGY
+    ROLE_ROTATION,
+    ROLE_MORPHOLOGY
 } ARD_ROLE;
 
 /*
