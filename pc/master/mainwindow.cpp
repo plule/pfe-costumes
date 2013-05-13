@@ -490,3 +490,19 @@ void MainWindow::closeEvent(QCloseEvent *event)
         event->ignore();
     }
 }
+
+void MainWindow::on_massCaptureButton_clicked()
+{
+//    QPhoto::QCamera **cameras;
+//    if(handler->getCameras(&cameras) >= 1)
+//    {
+//        QPhoto::QCamera *camera = cameras[0];
+        Synchroniser *synchroniser = new Synchroniser(this);
+        synchroniser->massCapture(/*camera*/0, morphology, 36);
+        //QString path = collection->getNewFilePath(getCurrentId(), "turntable", "jpg"); // TODO extension follow config
+        //captureActions.insert(path, Append); TODO
+        //QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
+    /*} else {
+        this->displayError(tr("No camera connected"));
+    }*/
+}

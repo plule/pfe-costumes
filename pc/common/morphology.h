@@ -50,6 +50,7 @@ signals:
     void arduinoAdded(Arduino arduino);
     void arduinoRemoved(Arduino arduino);
     void motorMicrosecondChanged(int arduino, int motor, int ms);
+    void done();
     
 public slots:
     void sendHelloMessage();

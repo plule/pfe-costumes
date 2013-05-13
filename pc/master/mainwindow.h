@@ -31,6 +31,7 @@
 #include "common/slotlog.h"
 #include "common/collection.h"
 #include "common/morphology.h"
+#include "synchroniser.h"
 
 #define GROUP_INFO "costume_informations"
 
@@ -92,6 +93,8 @@ private slots:
     void on_manButton_clicked();
 
     void on_appendCaptureButton_clicked();
+
+    void on_massCaptureButton_clicked();
 
 private:
 

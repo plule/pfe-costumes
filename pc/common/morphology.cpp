@@ -50,7 +50,10 @@ void Morphology::setRotation(int angle)
 {
     QList<QVariant> args;
     args.append(360-angle);
-    sendMessage(MSG_ROTATION, 4, arduinos[0].id, args);
+    if(arduinos.size() > 0)
+        sendMessage(MSG_ROTATION, 4, arduinos[0].id, args);
+    else
+        qDebug() << "no arduino";
 }
 
 void Morphology::getMotorsPosition(int arduino)
@@ -145,6 +148,8 @@ void Morphology::handleMessage(ArduinoMessage message)
     case ACK:
         break;
     case DONE:
+        qDebug() << "arduino done";
+        emit(done());
         break;
     case SERVO_POS:
     {

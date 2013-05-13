@@ -28,12 +28,11 @@ uint16_t *servoAdress(int index)
 
 void saveState()
 {
-    DBG("Saving...");
     int i;
     for(i=0; i<MOTOR_NUMBER; i++) {
         uint16_t value = eeprom_read_word(servoAdress(i));
         if(value != servos[i].readMicroseconds()) {
-            DBG("Value changed");
+            DBG("Saving...");
             eeprom_write_word(servoAdress(i), servos[i].readMicroseconds());
         }
     }
@@ -53,6 +52,7 @@ void setup()
         sendMessage(SERVO_POS,0,ARD_MASTER,i,pos);
     }
     rotationMotor.attach(30, MORPHO_MIN, MORPHO_MAX);
+    rotationMotor.writeMicroseconds(1000);
 }
 
 void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
@@ -72,6 +72,8 @@ void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
         int angle = serial.parseInt();
         int ms = 1000 + (float)angle*211.66/360.0;
         rotationMotor.writeMicroseconds(ms);
+        delay(500);
+        sendMessage(DONE, idMsg, expe);
         break;
     }
     case SERVO_POS:

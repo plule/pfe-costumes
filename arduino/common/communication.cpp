@@ -28,6 +28,12 @@ static void _endSendMessage()
     Serial.print(MSG_SEP);
 }
 
+void sendMessage(MSG_TYPE type, int idMsg, int dest)
+{
+    _initSendMessage(type, idMsg, dest);
+    _endSendMessage();
+}
+
 void sendMessage(MSG_TYPE type, int idMsg, int dest, int data)
 {
     _initSendMessage(type, idMsg, dest);
