@@ -337,9 +337,11 @@ int MainWindow::getCurrentArduino()
     return ui->ardListCombo->itemData(ui->ardListCombo->currentIndex(), Qt::UserRole).toInt();
 }
 
-void MainWindow::whenMassCaptureDone()
+void MainWindow::whenMassCaptureDone(bool success)
 {
     massCaptureRunning = false;
+    if(!success)
+        this->displayError(tr("Mass capture failed"));
 }
 
 void MainWindow::sendMs(int ms)

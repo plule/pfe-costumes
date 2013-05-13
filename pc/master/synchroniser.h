@@ -14,13 +14,14 @@ public:
     void massCapture(QPhoto::QCamera *camera, Morphology *morphology, Collection *collection, int idCostume, int nbPhoto);
     
 signals:
-    void done();
+    void done(bool success);
 
 public slots:
-    void onCaptureDone();
-    void onRotationDone();
 
 private slots:
+    void onCaptureDone();
+    void onCaptureFail();
+    void onRotationDone();
 
 private:
     int m_actionNumber;

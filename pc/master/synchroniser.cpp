@@ -18,6 +18,7 @@ void Synchroniser::massCapture(QPhoto::QCamera *camera, Morphology *morphology, 
 
     connect(morphology, SIGNAL(done()), this, SLOT(onRotationDone()));
     connect(camera, SIGNAL(captured(QString)), this, SLOT(onCaptureDone()));
+    connect(camera, SIGNAL(operation_failed(QString)), this, SLOT(onCaptureFail()));
     m_morphology->setRotation(0);
 }
 
@@ -27,9 +28,14 @@ void Synchroniser::onCaptureDone()
     m_actionNumber++;
     if(m_actionNumber == m_target) {
         m_morphology->setRotation(0);
-        emit done();
+        emit done(true);
     } else
         m_morphology->setRotation(m_step*m_actionNumber);
+}
+
+void Synchroniser::onCaptureFail()
+{
+    emit done(false);
 }
 
 void Synchroniser::onRotationDone()

@@ -68,7 +68,7 @@ public slots:
     void addDevice(Arduino arduino);
     void removeDevice(Arduino arduino);
     int getCurrentArduino();
-    void whenMassCaptureDone();
+    void whenMassCaptureDone(bool success);
     
 private slots:
     void timeout();
