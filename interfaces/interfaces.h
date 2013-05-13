@@ -19,6 +19,7 @@ typedef enum {
     DISCOVER,
     RENAME,
     COMMAND,
+    MSG_ROTATION,
     ACK,
     DONE,
     SERVO_POS,

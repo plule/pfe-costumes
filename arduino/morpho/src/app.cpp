@@ -5,6 +5,8 @@
 //Servo servo;
 Servo servos[MOTOR_NUMBER];
 
+Servo rotationMotor;
+
 unsigned long lastSave;
 unsigned long savePeriod = 2000;
 
@@ -50,6 +52,7 @@ void setup()
         servos[i].writeMicroseconds(pos);
         sendMessage(SERVO_POS,0,ARD_MASTER,i,pos);
     }
+    rotationMotor.attach(30, MORPHO_MIN, MORPHO_MAX);
 }
 
 void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
@@ -64,15 +67,22 @@ void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
         }
         break;
     }
-    default:
+    case MSG_ROTATION:
+    {
+        int angle = serial.parseInt();
+        int ms = 1000 + (float)angle*211.66/360.0;
+        rotationMotor.writeMicroseconds(ms);
         break;
+    }
     case SERVO_POS:
     {
         int i;
         for(i=0; i<MOTOR_NUMBER; i++) {
             sendMessage(SERVO_POS,0,ARD_MASTER,i,servos[i].readMicroseconds());
         }
+        break;
     }
+    default:
         break;
     }
 }

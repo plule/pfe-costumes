@@ -2,8 +2,8 @@
 //#include "../../../interfaces/interfaces.h"
 //#include "../../common/communication.h"
 
-#define NBLED 4
-#define LIMIT 500
+#define NBLED 6
+#define LIMIT 400
 
 extern HardwareSerial Serial;
 int i=0;
@@ -50,13 +50,15 @@ void loop()
         pinMode(led, INPUT);
         while(digitalRead(led) == HIGH){};
         unsigned long delta = micros() - us;
-        //Serial.println(delta);
-        if(delta > LIMIT)
+        Serial.println(delta);
+        if(delta > LIMIT) {
             bitSet(grayValue, NBLED-i-1);
-        else
+        } else {
             bitClear(grayValue, NBLED-i-1);
+        }
     }
-    Serial.println(grayToBinary(grayValue), DEC);
+    //float angle = (float)grayToBinary(grayValue) / (float)pow(2,NBLED);
+    Serial.println(grayToBinary(grayValue));//,3);
     delay(100);
 }
 /*

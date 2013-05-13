@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Arduino comm
     morphology = new Morphology("/dev/ttyUSB0");
+    connect(ui->rotationDial, SIGNAL(valueChanged(int)), morphology, SLOT(setRotation(int)));
     for(int i=0; i < morphology->getMotorsNumber(); i++) {
         QString name = QString(morphology->getMotorsNames()[i]);
         QSlider *slider = new QSlider(Qt::Horizontal, this);

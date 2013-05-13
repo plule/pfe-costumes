@@ -54,6 +54,7 @@ signals:
 public slots:
     void sendHelloMessage();
     void setMotorMicrosecond(int arduino, int motor, int ms);
+    void setRotation(int angle);
     void getMotorsPosition(int arduino);
     
 private slots:

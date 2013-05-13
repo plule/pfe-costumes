@@ -46,6 +46,13 @@ void Morphology::setMotorMicrosecond(int arduino, int motor, int ms)
     sendMessage(COMMAND, 3, arduino, args);
 }
 
+void Morphology::setRotation(int angle)
+{
+    QList<QVariant> args;
+    args.append(360-angle);
+    sendMessage(MSG_ROTATION, 4, arduinos[0].id, args);
+}
+
 void Morphology::getMotorsPosition(int arduino)
 {
     sendMessage(SERVO_POS, 1, arduino);
