@@ -5,7 +5,7 @@ Synchroniser::Synchroniser(QObject *parent) :
 {
 }
 
-void Synchroniser::massCapture(QPhoto::QCamera *camera, Morphology *morphology, int nbPhoto)
+void Synchroniser::massCapture(QPhoto::QCamera *camera, Morphology *morphology, Collection *collection, int idCostume, int nbPhoto)
 {
     qDebug() << "mass capture";
     m_step = 360.0 / nbPhoto;
@@ -13,8 +13,11 @@ void Synchroniser::massCapture(QPhoto::QCamera *camera, Morphology *morphology, 
     m_target = nbPhoto;
     m_camera = camera;
     m_morphology = morphology;
+    m_collection = collection;
+    m_idCostume = idCostume;
 
     connect(morphology, SIGNAL(done()), this, SLOT(onRotationDone()));
+    connect(camera, SIGNAL(captured(QString)), this, SLOT(onCaptureDone()));
     m_morphology->setRotation(0);
 }
 
@@ -32,6 +35,6 @@ void Synchroniser::onCaptureDone()
 void Synchroniser::onRotationDone()
 {
     qDebug() << "rotation done";
-    // do capture
-    onCaptureDone();
+    QString path = m_collection->getNewFilePath(m_idCostume, "turntable", "jpg"); // TODO extension follow config
+    m_camera->captureToFile(path);
 }

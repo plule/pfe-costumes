@@ -251,9 +251,10 @@ void MainWindow::displayError(QString error)
 void MainWindow::handleNewPicture(QString path)
 {
     QString filename = QFileInfo(path).fileName();
-    if(massCaptureRunning)
+    if(massCaptureRunning) {
         ui->turntable->addPicture(filename);
-    else {
+        ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
+    } else {
         switch(captureActions.value(path, Ignore))
         {
         case Ignore:
@@ -308,7 +309,8 @@ void MainWindow::on_captureButton_clicked()
         QString filename = ui->turntable->getCurrentFileName();//QString("%1").arg(QString::number(ui->turntable->getView()), 3, QLatin1Char('0'));
         QString path = collection->getTempStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
         captureActions.insert(path, Replace);
-        QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
+        camera->captureToFile(path);
+        //QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
         this->displayError(tr("No camera connected"));
     }
@@ -323,7 +325,8 @@ void MainWindow::on_appendCaptureButton_clicked()
         QPhoto::QCamera *camera = cameras[0];
         QString path = collection->getNewFilePath(getCurrentId(), "turntable", "jpg"); // TODO extension follow config
         captureActions.insert(path, Append);
-        QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
+        camera->captureToFile(path);
+        //QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
         this->displayError(tr("No camera connected"));
     }
@@ -503,17 +506,16 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::on_massCaptureButton_clicked()
 {
-//    QPhoto::QCamera **cameras;
-//    if(handler->getCameras(&cameras) >= 1)
-//    {
-//        QPhoto::QCamera *camera = cameras[0];
-    massCaptureRunning = true;
+    QPhoto::QCamera **cameras;
+    if(handler->getCameras(&cameras) >= 1)
+    {
+        QPhoto::QCamera *camera = cameras[0];
+        massCaptureRunning = true;
         Synchroniser *synchroniser = new Synchroniser(this);
-        synchroniser->massCapture(/*camera*/0, morphology, 36);
-        //QString path = collection->getNewFilePath(getCurrentId(), "turntable", "jpg"); // TODO extension follow config
-        //captureActions.insert(path, Append); TODO
-        //QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
-    /*} else {
+        connect(synchroniser, SIGNAL(done()), this, SLOT(whenMassCaptureDone()));
+        connect(synchroniser, SIGNAL(done()), synchroniser, SLOT(deleteLater()));
+        synchroniser->massCapture(camera, morphology, collection, getCurrentId(), 36);
+    } else {
         this->displayError(tr("No camera connected"));
-    }*/
+    }
 }

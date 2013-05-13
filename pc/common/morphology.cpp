@@ -35,7 +35,7 @@ int Morphology::getMotorsNumber()
 
 void Morphology::sendHelloMessage()
 {
-    sendMessage(DISCOVER, 40, 41);
+    sendMessage(MSG_DISCOVER, 40, 41);
 }
 
 void Morphology::setMotorMicrosecond(int arduino, int motor, int ms)
@@ -43,7 +43,7 @@ void Morphology::setMotorMicrosecond(int arduino, int motor, int ms)
     QList<QVariant> args;
     args.append(motor);
     args.append(ms);
-    sendMessage(COMMAND, 3, arduino, args);
+    sendMessage(MSG_MORPHOLOGY, 3, arduino, args);
 }
 
 void Morphology::setRotation(int angle)
@@ -58,7 +58,7 @@ void Morphology::setRotation(int angle)
 
 void Morphology::getMotorsPosition(int arduino)
 {
-    sendMessage(SERVO_POS, 1, arduino);
+    sendMessage(MSG_SERVO_POS, 1, arduino);
 }
 
 void Morphology::onDataAvailable()
@@ -115,7 +115,7 @@ void Morphology::handleMessage(QString message)
 void Morphology::handleMessage(ArduinoMessage message)
 {
     switch(message.type) {
-    case HELLO:
+    case MSG_HELLO:
     {
         Arduino narduino;
         narduino.id = message.expe;
@@ -136,22 +136,22 @@ void Morphology::handleMessage(ArduinoMessage message)
         }
         break;
     }
-    case DISCOVER:
+    case MSG_DISCOVER:
         break;
-    case DEBUG:
+    case MSG_DEBUG:
         qDebug() << message.data;
         break;
-    case RENAME:
+    case MSG_RENAME:
         break;
-    case COMMAND:
+    case MSG_MORPHOLOGY:
         break;
-    case ACK:
+    case MSG_ACK:
         break;
-    case DONE:
+    case MSG_DONE:
         qDebug() << "arduino done";
         emit(done());
         break;
-    case SERVO_POS:
+    case MSG_SERVO_POS:
     {
         if(message.data.size() == 2)
             emit(motorMicrosecondChanged(message.expe, message.data.at(0).toInt(), message.data.at(1).toInt()));

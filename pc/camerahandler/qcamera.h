@@ -59,6 +59,7 @@ protected:
     friend unsigned int progress_start_func(GPContext *context, float target, const char *, void *data);
 #endif
     int captureToFile(QFile *file);
+    void _captureToFile(QString path, int nbTry=3);
 
 private:
     Camera *camera;

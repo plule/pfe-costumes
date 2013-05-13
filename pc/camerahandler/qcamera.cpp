@@ -240,7 +240,7 @@ int QCamera::captureToFile(QFile *localFile)
     return GP_OK;
 }
 
-void QCamera::captureToFile(QString path, int nbTry)
+void QCamera::_captureToFile(QString path, int nbTry)
 {
     QFile localFile(path);
     for(int i = 0; i < nbTry; i++) {
@@ -257,5 +257,10 @@ void QCamera::captureToFile(QString path, int nbTry)
 void QCamera::captureToFile(const char *name, int nbTry)
 {
     captureToFile(QString(name), nbTry);
+}
+
+void QCamera::captureToFile(QString path, int nbTry)
+{
+    QMetaObject::invokeMethod(this, "_captureToFile", Qt::QueuedConnection, Q_ARG(QString, path), Q_ARG(int, nbTry));
 }
 }

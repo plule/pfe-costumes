@@ -4,13 +4,14 @@
 #include <QObject>
 #include "../camerahandler/qcamera.h"
 #include "../common/morphology.h"
+#include "../common/collection.h"
 
 class Synchroniser : public QObject
 {
     Q_OBJECT
 public:
     explicit Synchroniser(QObject *parent = 0);
-    void massCapture(QPhoto::QCamera *camera, Morphology *morphology, int nbPhoto);
+    void massCapture(QPhoto::QCamera *camera, Morphology *morphology, Collection *collection, int idCostume, int nbPhoto);
     
 signals:
     void done();
@@ -27,6 +28,8 @@ private:
     float m_step;
     QPhoto::QCamera *m_camera;
     Morphology *m_morphology;
+    Collection *m_collection;
+    int m_idCostume;
 };
 
 #endif // SYNCHRONISER_H

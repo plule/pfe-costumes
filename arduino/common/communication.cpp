@@ -85,7 +85,7 @@ void init_ard(ARD_ROLE role)
     Serial.begin(9600);
     Role = role;
     Id = getId();
-    sendMessage(HELLO, 0, ARD_MASTER, Role);
+    sendMessage(MSG_HELLO, 0, ARD_MASTER, Role);
 }
 
 void serialEvent() {
@@ -94,12 +94,12 @@ void serialEvent() {
     int expe = Serial.parseInt();
     int idMsg = Serial.parseInt();
     MSG_TYPE type = (MSG_TYPE)Serial.parseInt();
-    if(type == DISCOVER) /* Server is looking for the arduinos */
+    if(type == MSG_DISCOVER) /* Server is looking for the arduinos */
     {
-        sendMessage(HELLO, 0, ARD_MASTER, Role);
+        sendMessage(MSG_HELLO, 0, ARD_MASTER, Role);
     } else if(dest == Id) /* Message is for me */
     {
-        sendMessage(ACK, idMsg, expe, 0); /* Acknowledge reception */
+        sendMessage(MSG_ACK, idMsg, expe, 0); /* Acknowledge reception */
         handleMessage(type, idMsg, expe, Serial);
     } else {
         DBG("Not for me");

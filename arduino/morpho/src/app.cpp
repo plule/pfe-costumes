@@ -42,14 +42,14 @@ void setup()
 {
     pinMode(led, OUTPUT);
     digitalWrite(led, HIGH);
-    init_ard(MORPHOLOGY);
+    init_ard(ROLE_MORPHOLOGY);
     digitalWrite(led, LOW);
     int i;
     for(i=0; i<MOTOR_NUMBER; i++) {
         int pos = eeprom_read_word(servoAdress(i));
         servos[i].attach(morpho_pins[i], MORPHO_MIN, MORPHO_MAX);
         servos[i].writeMicroseconds(pos);
-        sendMessage(SERVO_POS,0,ARD_MASTER,i,pos);
+        sendMessage(MSG_SERVO_POS,0,ARD_MASTER,i,pos);
     }
     rotationMotor.attach(30, MORPHO_MIN, MORPHO_MAX);
     rotationMotor.writeMicroseconds(1000);
@@ -58,7 +58,7 @@ void setup()
 void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
 {
     switch(type) {
-    case COMMAND:
+    case MSG_MORPHOLOGY:
     {
         int motor = serial.parseInt();
         int time = serial.parseInt();
@@ -73,14 +73,14 @@ void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
         int ms = 1000 + (float)angle*211.66/360.0;
         rotationMotor.writeMicroseconds(ms);
         delay(500);
-        sendMessage(DONE, idMsg, expe);
+        sendMessage(MSG_DONE, idMsg, expe);
         break;
     }
-    case SERVO_POS:
+    case MSG_SERVO_POS:
     {
         int i;
         for(i=0; i<MOTOR_NUMBER; i++) {
-            sendMessage(SERVO_POS,0,ARD_MASTER,i,servos[i].readMicroseconds());
+            sendMessage(MSG_SERVO_POS,0,ARD_MASTER,i,servos[i].readMicroseconds());
         }
         break;
     }
