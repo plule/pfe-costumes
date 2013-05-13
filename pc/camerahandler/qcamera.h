@@ -12,7 +12,7 @@
 
 #include "cameraexception.h"
 
-//#define LEGACY_GPHOTO
+#define LEGACY_GPHOTO
 
 #define GP_CALL(ret, fn, ...) emit wait_for_camera_answer();\
     qDebug() << #fn;\
@@ -41,6 +41,7 @@ public:
     QString getAbout();
     CameraAbilities getAbilities();
     QTimer *getWatchdog();
+    //void _captureToFile(QString path, int nbTry=3);
 
 
 protected:
@@ -59,13 +60,12 @@ protected:
     friend unsigned int progress_start_func(GPContext *context, float target, const char *, void *data);
 #endif
     int captureToFile(QFile *file);
-    void _captureToFile(QString path, int nbTry=3);
 
 private:
     Camera *camera;
     GPContext *context;
     CameraAbilities abilities;
-    GPPortInfo portinfo;
+    //GPPortInfo *portinfo;
     QThread camThread;
     QTimer *watchdog;
 

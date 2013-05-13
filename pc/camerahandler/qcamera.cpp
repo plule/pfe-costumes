@@ -115,6 +115,7 @@ void progress_stop_func(GPContext *context, unsigned int id, void *data)
 
 int QCamera::handleError(int error, QString msg)
 {
+    qDebug() << "error";
     qDebug() << QString(gp_result_as_string(error)) + " : " + msg;
     return error;
 }
@@ -148,6 +149,7 @@ QCamera::~QCamera()
 int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist)
 {
     int ret, model_index, port_index;
+    GPPortInfo portinfo;
 	/* Create the camera object */
     R_GP_CALL(ret, gp_camera_new, &camera);
 
@@ -157,9 +159,18 @@ int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesLis
     R_GP_CALL(ret, gp_camera_set_abilities, camera, abilities);
 
 	/* Assign to a port */
-    R_GP_CALL(port_index, gp_port_info_list_lookup_path, portinfolist, port);
+    qDebug() << model;
+    qDebug() << port;
+
+    port_index = gp_port_info_list_lookup_path(portinfolist, port);
+    qDebug() << port_index;
+    ret = gp_port_info_list_get_info(portinfolist, port_index, &portinfo);
+    qDebug() << ret;
+    ret = gp_camera_set_port_info(camera, portinfo);
+    qDebug() << ret;
+    /*R_GP_CALL(port_index, gp_port_info_list_lookup_path, portinfolist, port);
     R_GP_CALL(ret, gp_port_info_list_get_info, portinfolist, port_index, &portinfo);
-    R_GP_CALL(ret, gp_camera_set_port_info, camera, portinfo);
+    R_GP_CALL(ret, gp_camera_set_port_info, camera, portinfo);*/
 
 	/* Init the connection */
     R_GP_CALL(ret, gp_camera_init, camera, context);
@@ -240,7 +251,7 @@ int QCamera::captureToFile(QFile *localFile)
     return GP_OK;
 }
 
-void QCamera::_captureToFile(QString path, int nbTry)
+void QCamera::captureToFile(QString path, int nbTry)
 {
     QFile localFile(path);
     for(int i = 0; i < nbTry; i++) {
@@ -259,8 +270,8 @@ void QCamera::captureToFile(const char *name, int nbTry)
     captureToFile(QString(name), nbTry);
 }
 
-void QCamera::captureToFile(QString path, int nbTry)
+/*void QCamera::captureToFile(QString path, int nbTry)
 {
     QMetaObject::invokeMethod(this, "_captureToFile", Qt::QueuedConnection, Q_ARG(QString, path), Q_ARG(int, nbTry));
-}
+}*/
 }

@@ -6,7 +6,7 @@
 #include <Arduino.h>
 #include <HardwareSerial.h>
 
-#define DBG(msg) sendMessage(DEBUG, 0, ARD_MASTER, msg)
+#define DBG(msg) sendMessage(MSG_DEBUG, 0, ARD_MASTER, msg)
 
 extern HardwareSerial Serial;
 

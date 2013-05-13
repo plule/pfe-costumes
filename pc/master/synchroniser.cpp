@@ -27,7 +27,8 @@ void Synchroniser::onCaptureDone()
     qDebug() << "capture done";
     m_actionNumber++;
     if(m_actionNumber == m_target) {
-        m_morphology->setRotation(0);
+        qDebug() << "mass capture finished";
+        this->deleteLater();
         emit done(true);
     } else
         m_morphology->setRotation(m_step*m_actionNumber);
@@ -35,6 +36,7 @@ void Synchroniser::onCaptureDone()
 
 void Synchroniser::onCaptureFail()
 {
+    qDebug() << "sync fail";
     emit done(false);
 }
 
