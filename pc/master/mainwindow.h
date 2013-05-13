@@ -68,6 +68,7 @@ public slots:
     void addDevice(Arduino arduino);
     void removeDevice(Arduino arduino);
     int getCurrentArduino();
+    void whenMassCaptureDone();
     
 private slots:
     void timeout();
@@ -108,6 +109,7 @@ private:
     Morphology *morphology;
     QSettings settings;
     QMap <QString, CaptureAction> captureActions;
+    bool massCaptureRunning;
     int currentCostumeId;
     QList <QSlider *> morphoSliders;
 

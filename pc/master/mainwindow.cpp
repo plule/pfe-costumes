@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     collection = 0;
+    massCaptureRunning = false;
     // Logger that show what goes through the slots
     logger = new SlotLog();
 
@@ -250,24 +251,28 @@ void MainWindow::displayError(QString error)
 void MainWindow::handleNewPicture(QString path)
 {
     QString filename = QFileInfo(path).fileName();
-    switch(captureActions.value(path, Ignore))
-    {
-    case Ignore:
-        qWarning() << "Got a photo for unknown reason";
-        break;
-    case Append:
+    if(massCaptureRunning)
         ui->turntable->addPicture(filename);
-        ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
-        break;
-    case Replace:
-        ui->turntable->setCurrentPicture(filename);
-        ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
-        break;
-    default:
-        qWarning() << "Got a photo for unknown reason";
-        break;
+    else {
+        switch(captureActions.value(path, Ignore))
+        {
+        case Ignore:
+            qWarning() << "Got a photo for unknown reason";
+            break;
+        case Append:
+            ui->turntable->addPicture(filename);
+            ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
+            break;
+        case Replace:
+            ui->turntable->setCurrentPicture(filename);
+            ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
+            break;
+        default:
+            qWarning() << "Got a photo for unknown reason";
+            break;
+        }
+        captureActions.remove(path);
     }
-    captureActions.remove(path);
     updateSaveButton();
 }
 
@@ -327,6 +332,11 @@ void MainWindow::on_appendCaptureButton_clicked()
 int MainWindow::getCurrentArduino()
 {
     return ui->ardListCombo->itemData(ui->ardListCombo->currentIndex(), Qt::UserRole).toInt();
+}
+
+void MainWindow::whenMassCaptureDone()
+{
+    massCaptureRunning = false;
 }
 
 void MainWindow::sendMs(int ms)
@@ -497,6 +507,7 @@ void MainWindow::on_massCaptureButton_clicked()
 //    if(handler->getCameras(&cameras) >= 1)
 //    {
 //        QPhoto::QCamera *camera = cameras[0];
+    massCaptureRunning = true;
         Synchroniser *synchroniser = new Synchroniser(this);
         synchroniser->massCapture(/*camera*/0, morphology, 36);
         //QString path = collection->getNewFilePath(getCurrentId(), "turntable", "jpg"); // TODO extension follow config
