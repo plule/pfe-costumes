@@ -24,14 +24,14 @@
 #include <QCheckBox>
 #include <QCompleter>
 #include <QMessageBox>
-#include "common/qloadedlistwidget.h"
-#include "common/qturntable.h"
+#include "widgets/qloadedlistwidget.h"
+#include "widgets/qturntable.h"
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
 #include "common/slotlog.h"
 #include "common/collection.h"
-#include "common/morphology.h"
-#include "synchroniser.h"
+#include "common/communication.h"
+#include "masscapture.h"
 
 #define GROUP_INFO "costume_informations"
 

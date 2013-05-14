@@ -1,11 +1,11 @@
-#include "synchroniser.h"
+#include "masscapture.h"
 
-Synchroniser::Synchroniser(QObject *parent) :
+MassCapture::MassCapture(QObject *parent) :
     QObject(parent)
 {
 }
 
-void Synchroniser::massCapture(QPhoto::QCamera *camera, Morphology *morphology, Collection *collection, int idCostume, int nbPhoto)
+void MassCapture::massCapture(QPhoto::QCamera *camera, Morphology *morphology, Collection *collection, int idCostume, int nbPhoto)
 {
     qDebug() << "mass capture";
     m_step = 360.0 / nbPhoto;
@@ -22,7 +22,7 @@ void Synchroniser::massCapture(QPhoto::QCamera *camera, Morphology *morphology, 
     onCaptureDone();
 }
 
-void Synchroniser::onCaptureDone()
+void MassCapture::onCaptureDone()
 {
     qDebug() << "capture done";
     m_actionNumber++;
@@ -36,13 +36,13 @@ void Synchroniser::onCaptureDone()
     }
 }
 
-void Synchroniser::onCaptureFail()
+void MassCapture::onCaptureFail()
 {
     qDebug() << "sync fail";
     emit done(false);
 }
 
-void Synchroniser::onRotationDone(bool success)
+void MassCapture::onRotationDone(bool success)
 {
     qDebug() << "rotation done";
     if(success) {

@@ -3,14 +3,14 @@
 
 #include <QObject>
 #include "../camerahandler/qcamera.h"
-#include "../common/morphology.h"
+#include "../common/communication.h"
 #include "../common/collection.h"
 
-class Synchroniser : public QObject
+class MassCapture : public QObject
 {
     Q_OBJECT
 public:
-    explicit Synchroniser(QObject *parent = 0);
+    explicit MassCapture(QObject *parent = 0);
     void massCapture(QPhoto::QCamera *camera, Morphology *morphology, Collection *collection, int idCostume, int nbPhoto);
     
 signals:

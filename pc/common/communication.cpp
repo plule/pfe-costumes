@@ -1,4 +1,4 @@
-#include "morphology.h"
+#include "communication.h"
 
 #define X(pin, define, string) string,
 static const char *morpho_motors_name[] = {

@@ -513,7 +513,7 @@ void MainWindow::on_massCaptureButton_clicked()
     {
         QPhoto::QCamera *camera = cameras[0];
         massCaptureRunning = true;
-        Synchroniser *synchroniser = new Synchroniser(this);
+        MassCapture *synchroniser = new MassCapture(this);
         connect(synchroniser, SIGNAL(done(bool)), this, SLOT(whenMassCaptureDone()));
         connect(synchroniser, SIGNAL(done(bool)), synchroniser, SLOT(deleteLater()));
         synchroniser->massCapture(camera, morphology, collection, getCurrentId(), 36);

@@ -13,27 +13,27 @@ SOURCES += master/main.cpp \
     common/slotlog.cpp \
     mainwindow.cpp \
     ../camerahandler/cameraexception.cpp \
-    ../common/qturntable.cpp \
     ../common/collection.cpp \
-    ../common/qloadedlistwidget.cpp \
     ../common/uniqueproxymodel.cpp \
-    ../common/morphology.cpp \
-    synchroniser.cpp \
-    ../common/messagewatcher.cpp
+    ../common/messagewatcher.cpp \
+    ../widgets/qloadedlistwidget.cpp \
+    ../widgets/qturntable.cpp \
+    ../common/communication.cpp \
+    masscapture.cpp
 HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
     common/slotlog.h \
     mainwindow.h \
     ../cameraHandler/cameraexception.h \
-    ../common/qturntable.h \
     ../common/collection.h \
-    ../common/qloadedlistwidget.h \
     ../common/uniqueproxymodel.h \
-    ../common/morphology.h \
     ../../interfaces/interfaces.h \
     ../../interfaces/morphology.h \
-    synchroniser.h \
-    ../common/messagewatcher.h
+    ../common/messagewatcher.h \
+    ../widgets/qturntable.h \
+    ../widgets/qloadedlistwidget.h \
+    ../common/communication.h \
+    masscapture.h
 
 CONFIG += qt warn_on release
 
