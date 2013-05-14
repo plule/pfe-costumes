@@ -146,8 +146,7 @@ void QTurntable::addPicture(QString path)
 {
     QPixmap pic(getPathOf(path));
     m_pixmaps.append(QPair<QString,QPixmap>(path,pic));
-    if(m_current < 0)
-        setView(0);
+    setView(getNumber()-1);
 }
 
 void QTurntable::setPicture(int index, QString path)
