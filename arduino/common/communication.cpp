@@ -97,7 +97,7 @@ void serialEvent() {
     if(type == MSG_DISCOVER) /* Server is looking for the arduinos */
     {
         sendMessage(MSG_HELLO, 0, ARD_MASTER, Role);
-    } else if(dest == Id) /* Message is for me */
+    } else if(dest == Id && type != MSG_ACK) /* Message is for me */
     {
         sendMessage(MSG_ACK, idMsg, expe, 0); /* Acknowledge reception */
         handleMessage(type, idMsg, expe, Serial);

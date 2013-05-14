@@ -23,6 +23,12 @@ MessageWatcher::MessageWatcher(MSG_TYPE type, int id, int dest, QList<QVariant> 
     timer->start(1000);
 }
 
+MessageWatcher::~MessageWatcher()
+{
+    qDebug() << "deleting " << toString();
+    delete timer;
+}
+
 void MessageWatcher::setAck()
 {
     qDebug() << "ack " << toString();
@@ -34,6 +40,11 @@ void MessageWatcher::setDone()
 {
     qDebug() << "done " << toString();
     emit done();
+}
+
+bool MessageWatcher::valid()
+{
+    return type != MSG_INVALID;
 }
 
 void MessageWatcher::timeout()
@@ -81,4 +92,24 @@ QString MessageWatcher::typeToString()
 QString MessageWatcher::toString()
 {
     return QString::number(id) + " (" + typeToString() + ")";
+}
+
+QList<QVariant> MessageWatcher::getDatas() const
+{
+    return datas;
+}
+
+int MessageWatcher::getDest() const
+{
+    return dest;
+}
+
+int MessageWatcher::getId() const
+{
+    return id;
+}
+
+MSG_TYPE MessageWatcher::getType() const
+{
+    return type;
 }

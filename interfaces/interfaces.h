@@ -10,6 +10,8 @@ extern "C"{
 typedef uint8_t ard_size_t;
 typedef uint16_t ard_id_t;
 
+#define MAX_ID 1000
+
 /*
  * Possible type of messages
  */

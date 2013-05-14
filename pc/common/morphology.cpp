@@ -15,11 +15,14 @@ Morphology::Morphology(QObject *parent) :
 Morphology::Morphology(QString name, QObject *parent) : QObject(parent)
 {
     pinging = false;
+    lastMessage = 0;
     m_port = new QextSerialPort(name);
     connect(m_port, SIGNAL(readyRead()), this, SLOT(onDataAvailable()));
     m_port->open(QIODevice::ReadWrite);
     aliveTimer.setInterval(5000);
     connect(&aliveTimer, SIGNAL(timeout()), this, SLOT(checkAliveDevices()));
+    watchers.resize(MAX_ID);
+    watchers.fill(0);
     aliveTimer.start();
 }
 
@@ -40,6 +43,13 @@ MessageWatcher *Morphology::sendHelloMessage()
 
 MessageWatcher *Morphology::setMotorMicrosecond(int arduino, int motor, int ms)
 {
+    for(int i=0; i<MAX_ID; i++) {
+        MessageWatcher *watcher = watchers[i];
+        if(watcher != 0 && watcher->getDest() == arduino && watcher->getDatas().size() >= 1 && watcher->getDatas().first().toInt() == motor) {
+            delete watcher;
+            watchers[i] = 0;
+        }
+    }
     QList<QVariant> args;
     args.append(motor);
     args.append(ms);
@@ -48,6 +58,13 @@ MessageWatcher *Morphology::setMotorMicrosecond(int arduino, int motor, int ms)
 
 MessageWatcher *Morphology::setRotation(int angle)
 {
+    for(int i=0; i<MAX_ID; i++) {
+        if(watchers.value(i,0) != 0 && watchers.value(i)->getType() == MSG_ROTATION) {
+            delete watchers.value(i);
+            watchers[i] = 0;
+        }
+    }
+
     QList<QVariant> args;
     args.append(360-angle);
     if(arduinos.size() > 0)
@@ -149,12 +166,11 @@ void Morphology::handleMessage(ArduinoMessage message)
     case MSG_MORPHOLOGY:
         break;
     case MSG_ACK:
-        if(watchers.contains(message.id))
+        if(watchers.value(message.id,0) != 0 && watchers.value(message.id)->valid())
             watchers.value(message.id)->setAck();
         break;
     case MSG_DONE:
-        emit done();
-        if(watchers.contains(message.id))
+        if(watchers.value(message.id,0) != 0 && watchers.value(message.id)->valid())
             watchers.value(message.id)->setDone();
         break;
     case MSG_SERVO_POS:
@@ -172,12 +188,17 @@ void Morphology::handleMessage(ArduinoMessage message)
 
 MessageWatcher *Morphology::sendMessage(MSG_TYPE type, int dest, QList<QVariant> datas)
 {
-    int id = qrand()%1000;
+    lastMessage++;
+    lastMessage = lastMessage%MAX_ID;
+    if(lastMessage == DEST_BROADCAST)
+        lastMessage++;
+    int id = lastMessage;
+    delete watchers.value(id); // old old message
     MessageWatcher *watcher = 0;
     if(dest != DEST_BROADCAST) { // not a broadcast, so we watch for answer
         watcher = new MessageWatcher(type, id, dest, datas, this);
         connect(watcher, SIGNAL(needResend(MSG_TYPE,int,int,QList<QVariant>)), this, SLOT(_sendMessage(MSG_TYPE,int,int,QList<QVariant>)));
-        watchers.insert(id, watcher);
+        watchers[id] = watcher;
     }
 
     _sendMessage(type, id, dest, datas);

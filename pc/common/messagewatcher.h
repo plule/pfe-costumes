@@ -13,9 +13,19 @@ class MessageWatcher : public QObject
 public:
     explicit MessageWatcher(QObject *parent = 0);
     MessageWatcher(MSG_TYPE type, int id, int dest, QList<QVariant> datas, QObject *parent = 0);
+    ~MessageWatcher();
     void setAck();
     void setDone();
+    bool valid();
     
+    MSG_TYPE getType() const;
+
+    int getId() const;
+
+    int getDest() const;
+
+    QList<QVariant> getDatas() const;
+
 signals:
     void ack();
     void done();

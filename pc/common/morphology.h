@@ -52,7 +52,6 @@ signals:
     void arduinoAdded(Arduino arduino);
     void arduinoRemoved(Arduino arduino);
     void motorMicrosecondChanged(int arduino, int motor, int ms);
-    void done();
     
 public slots:
     MessageWatcher *sendHelloMessage();
@@ -75,7 +74,8 @@ private:
     QString message_part;
     QList<Arduino> arduinos;
     QTimer aliveTimer;
-    QMap<int,MessageWatcher*> watchers;
+    QVector<MessageWatcher*> watchers;
+    int lastMessage;
     bool pinging;
 };
 
