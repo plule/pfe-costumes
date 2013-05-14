@@ -631,6 +631,7 @@
     </property>
     <addaction name="actionNew_Collection"/>
     <addaction name="actionOpen_Collection"/>
+    <addaction name="actionSettings"/>
    </widget>
    <addaction name="menuA"/>
   </widget>
@@ -709,12 +710,17 @@
     <string>Open Collection</string>
    </property>
   </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>QTurntable</class>
    <extends>QGraphicsView</extends>
-   <header location="global">qturntable.h</header>
+   <header location="global">widgets/qturntable.h</header>
    <slots>
     <signal>zoomChanged(int)</signal>
     <signal>angleChanged(int)</signal>
@@ -733,7 +739,7 @@
   <customwidget>
    <class>QLoadedListWidget</class>
    <extends>QListWidget</extends>
-   <header location="global">common/qloadedlistwidget.h</header>
+   <header location="global">widgets/qloadedlistwidget.h</header>
    <slots>
     <signal>loadedChanged(int)</signal>
     <slot>loadCurrent()</slot>

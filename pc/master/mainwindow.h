@@ -24,6 +24,7 @@
 #include <QCheckBox>
 #include <QCompleter>
 #include <QMessageBox>
+#include "settingsform.h"
 #include "widgets/qloadedlistwidget.h"
 #include "widgets/qturntable.h"
 #include "camerahandler/camerahandler.h"
@@ -97,8 +98,11 @@ private slots:
 
     void on_massCaptureButton_clicked();
 
+    void on_actionSettings_triggered();
+
 private:
 
+    SettingsForm *settingForm;
     Ui::MainWindow *ui;
     QPhoto::CameraHandler *handler;
     SlotLog *logger;

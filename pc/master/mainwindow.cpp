@@ -521,3 +521,9 @@ void MainWindow::on_massCaptureButton_clicked()
         this->displayError(tr("No camera connected"));
     }
 }
+
+void MainWindow::on_actionSettings_triggered()
+{
+    settingForm = new SettingsForm(this);
+    settingForm->show();
+}
