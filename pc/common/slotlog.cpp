@@ -1,7 +1,7 @@
 #include "slotlog.h"
 
 void SlotLog::error(QString error) {
-    qDebug() << "Slot error : " << sender()->objectName() << " : " << error;
+//    qDebug() << "Slot error : " << sender()->objectName() << " : " << error;
 }
 
 void SlotLog::idle() {
@@ -9,14 +9,14 @@ void SlotLog::idle() {
 }
 
 void SlotLog::message(QString message) {
-    qDebug() << "Slot message : " << sender()->objectName() << " : " << message;
+//    qDebug() << "Slot message : " << sender()->objectName() << " : " << message;
 }
 
 void SlotLog::progress_update(int current) {
-    qDebug() << "Slot progress : " << sender()->objectName() << " : " << current;
+//    qDebug() << "Slot progress : " << sender()->objectName() << " : " << current;
 }
 
 void SlotLog::progress_start(QString task, int target) {
     (void)target;
-    qDebug() << "Slot start task : " << sender()->objectName() << " : " << task;
+//    qDebug() << "Slot start task : " << sender()->objectName() << " : " << task;
 }

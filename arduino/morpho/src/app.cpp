@@ -55,6 +55,21 @@ void setup()
     rotationMotor.writeMicroseconds(1000);
 }
 
+unsigned long sendTime;
+bool sent;
+MSG_TYPE futureMessageType;
+int futureMessageId;
+int futureMessageDest;
+
+void sendMessageIn(int time, MSG_TYPE type, int id, int dest)
+{
+    futureMessageType = type;
+    futureMessageId = id;
+    futureMessageDest = dest;
+    sent = false;
+    sendTime = millis() + time;
+}
+
 void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
 {
     switch(type) {
@@ -72,8 +87,7 @@ void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
         int angle = serial.parseInt();
         int ms = 1000 + (float)angle*211.66/360.0;
         rotationMotor.writeMicroseconds(ms);
-        delay(500);
-        sendMessage(MSG_DONE, idMsg, expe);
+        sendMessageIn(400,MSG_DONE, idMsg, expe);
         break;
     }
     case MSG_SERVO_POS:
@@ -95,5 +109,9 @@ void loop()
     if(time - lastSave > savePeriod) {
         saveState();
         lastSave = time;
+    }
+    if(time > sendTime && !sent) {
+        sendMessage(futureMessageType, futureMessageId,futureMessageDest);
+        sent = true;
     }
 }

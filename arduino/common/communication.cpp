@@ -84,12 +84,13 @@ void init_ard(ARD_ROLE role)
 {
     Serial.begin(9600);
     Role = role;
-    Id = getId();
+    Id = 42;//getId();
     sendMessage(MSG_HELLO, 0, ARD_MASTER, Role);
 }
 
 void serialEvent() {
     /* Got a message */
+    digitalWrite(13, HIGH);
     int dest = Serial.parseInt();
     int expe = Serial.parseInt();
     int idMsg = Serial.parseInt();
@@ -101,8 +102,9 @@ void serialEvent() {
     {
         sendMessage(MSG_ACK, idMsg, expe, 0); /* Acknowledge reception */
         handleMessage(type, idMsg, expe, Serial);
-    } else {
+    } else if(dest != Id){
         DBG("Not for me");
     }
     Serial.readStringUntil(MSG_SEP);
+    digitalWrite(13,LOW);
 }

@@ -21,7 +21,7 @@ public slots:
 private slots:
     void onCaptureDone();
     void onCaptureFail();
-    void onRotationDone();
+    void onRotationDone(bool success);
 
 private:
     int m_actionNumber;

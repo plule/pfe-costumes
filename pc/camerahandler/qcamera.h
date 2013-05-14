@@ -14,13 +14,12 @@
 
 #define LEGACY_GPHOTO
 
+/*qDebug() << #fn;\*/
 #define GP_CALL(ret, fn, ...) emit wait_for_camera_answer();\
-    qDebug() << #fn;\
     ret = fn(__VA_ARGS__);\
     emit camera_answered();
 
 #define R_GP_CALL(ret, fn, ...) GP_CALL(ret, fn, __VA_ARGS__);\
-    qDebug() << #fn;\
     if(ret < GP_OK) {return handleError(ret, #fn );}
 
 namespace QPhoto
@@ -77,6 +76,7 @@ public slots:
     void captureToCamera(QString *camerapath);
     void captureToFile(const char *path, int nbTry=3);
     void captureToFile(QString path, int nbTry=3);
+    void _captureToFile(QString path, int nbTry=3);
 
 signals:
     void idle();
@@ -91,6 +91,7 @@ signals:
     void operation_failed(QString msg);
     void camera_answered();
     void wait_for_camera_answer();
+    void downloading();
 };
 
 class Sleeper : public QThread { // The horror...

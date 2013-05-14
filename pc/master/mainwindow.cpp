@@ -514,8 +514,8 @@ void MainWindow::on_massCaptureButton_clicked()
         QPhoto::QCamera *camera = cameras[0];
         massCaptureRunning = true;
         Synchroniser *synchroniser = new Synchroniser(this);
-        connect(synchroniser, SIGNAL(done()), this, SLOT(whenMassCaptureDone()));
-        connect(synchroniser, SIGNAL(done()), synchroniser, SLOT(deleteLater()));
+        connect(synchroniser, SIGNAL(done(bool)), this, SLOT(whenMassCaptureDone()));
+        connect(synchroniser, SIGNAL(done(bool)), synchroniser, SLOT(deleteLater()));
         synchroniser->massCapture(camera, morphology, collection, getCurrentId(), 36);
     } else {
         this->displayError(tr("No camera connected"));

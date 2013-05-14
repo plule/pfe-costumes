@@ -3,7 +3,8 @@
 MessageWatcher::MessageWatcher(QObject *parent) :
     QObject(parent)
 {
-    this->timer = new QTimer(this);
+    this->ackTimer = new QTimer(this);
+    this->doneTimer = new QTimer(this);
     this->type = MSG_INVALID;
     this->id = -1;
     this->dest = -1;
@@ -18,28 +19,38 @@ MessageWatcher::MessageWatcher(MSG_TYPE type, int id, int dest, QList<QVariant> 
     this->datas = datas;
 
     qDebug() << "watching " << toString();
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()),this, SLOT(timeout()));
-    timer->start(1000);
+    ackTimer = new QTimer(this);
+    ackTimer->setSingleShot(true);
+    connect(ackTimer, SIGNAL(timeout()),this, SLOT(ackTimeout()));
+    ackTimer->start(1000);
+
+    if(type == MSG_ROTATION) {
+        doneTimer = new QTimer(this);
+        doneTimer->setSingleShot(true);
+        connect(doneTimer, SIGNAL(timeout()), this, SLOT(doneTimeout()));
+        doneTimer->start(5000);
+    }
 }
 
 MessageWatcher::~MessageWatcher()
 {
     qDebug() << "deleting " << toString();
-    delete timer;
+    delete ackTimer;
+    delete doneTimer;
 }
 
 void MessageWatcher::setAck()
 {
     qDebug() << "ack " << toString();
-    timer->stop();
+    ackTimer->stop();
     emit ack();
 }
 
 void MessageWatcher::setDone()
 {
     qDebug() << "done " << toString();
-    emit done();
+    doneTimer->stop();
+    emit done(true);
 }
 
 bool MessageWatcher::valid()
@@ -47,10 +58,16 @@ bool MessageWatcher::valid()
     return type != MSG_INVALID;
 }
 
-void MessageWatcher::timeout()
+void MessageWatcher::ackTimeout()
 {
     qDebug() << "timeout " << toString();
     emit needResend(type, id, dest, datas);
+}
+
+void MessageWatcher::doneTimeout()
+{
+    qDebug() << "timeout done " << toString();
+    emit done(false);
 }
 
 QString MessageWatcher::typeToString()

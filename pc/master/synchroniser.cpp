@@ -16,23 +16,23 @@ void Synchroniser::massCapture(QPhoto::QCamera *camera, Morphology *morphology, 
     m_collection = collection;
     m_idCostume = idCostume;
 
-    connect(camera, SIGNAL(captured(QString)), this, SLOT(onCaptureDone()));
+    connect(camera, SIGNAL(downloading()), this, SLOT(onCaptureDone()));
     connect(camera, SIGNAL(operation_failed(QString)), this, SLOT(onCaptureFail()));
-    MessageWatcher *watcher = m_morphology->setRotation(0);
-    connect(watcher, SIGNAL(done()), this, SLOT(onRotationDone())); // TODO sync risk !
+
+    onCaptureDone();
 }
 
 void Synchroniser::onCaptureDone()
 {
     qDebug() << "capture done";
     m_actionNumber++;
-    if(m_actionNumber == m_target) {
+    if(m_actionNumber > m_target) {
         qDebug() << "mass capture finished";
         this->deleteLater();
         emit done(true);
     } else {
         MessageWatcher *watcher = m_morphology->setRotation(m_step*m_actionNumber);
-        connect(watcher, SIGNAL(done()), this, SLOT(onRotationDone()));
+        connect(watcher, SIGNAL(done(bool)), this, SLOT(onRotationDone(bool)));
     }
 }
 
@@ -42,9 +42,14 @@ void Synchroniser::onCaptureFail()
     emit done(false);
 }
 
-void Synchroniser::onRotationDone()
+void Synchroniser::onRotationDone(bool success)
 {
     qDebug() << "rotation done";
-    QString path = m_collection->getNewFilePath(m_idCostume, "turntable", "jpg"); // TODO extension follow config
-    m_camera->captureToFile(path);
+    if(success) {
+        QString path = m_collection->getNewFilePath(m_idCostume, "turntable", "jpg"); // TODO extension follow config
+        m_camera->captureToFile(path);
+    } else {
+        MessageWatcher *watcher = m_morphology->setRotation(m_step*m_actionNumber);
+        connect(watcher, SIGNAL(done(bool)), this, SLOT(onRotationDone(bool)));
+    }
 }

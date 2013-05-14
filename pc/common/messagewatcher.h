@@ -28,11 +28,12 @@ public:
 
 signals:
     void ack();
-    void done();
+    void done(bool success);
     void needResend(MSG_TYPE type, int id, int dest, QList<QVariant> datas);
     
 public slots:
-    void timeout();
+    void ackTimeout();
+    void doneTimeout();
 
 private:
     QString typeToString();
@@ -42,7 +43,8 @@ private:
     int id;
     int dest;
     QList<QVariant> datas;
-    QTimer *timer;
+    QTimer *ackTimer;
+    QTimer *doneTimer;
 };
 
 #endif // MESSAGEWATCHER_H

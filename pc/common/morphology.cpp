@@ -131,7 +131,7 @@ void Morphology::handleMessage(QString message)
 
 void Morphology::handleMessage(ArduinoMessage message)
 {
-    if(message.type != MSG_ACK)
+    if(message.type != MSG_ACK && message.type != MSG_DEBUG)
         _sendMessage(MSG_ACK, message.id, message.expe);
 
     switch(message.type) {
@@ -216,6 +216,5 @@ void Morphology::_sendMessage(MSG_TYPE type, int id, int dest, QList<QVariant> d
     foreach(QVariant data, datas) {
         args << data.toString();
     };
-
     m_port->write(args.join(ARG_SEP).append(MSG_SEP).toLatin1());
 }

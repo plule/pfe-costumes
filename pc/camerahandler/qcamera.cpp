@@ -162,15 +162,9 @@ int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesLis
     qDebug() << model;
     qDebug() << port;
 
-    port_index = gp_port_info_list_lookup_path(portinfolist, port);
-    qDebug() << port_index;
-    ret = gp_port_info_list_get_info(portinfolist, port_index, &portinfo);
-    qDebug() << ret;
-    ret = gp_camera_set_port_info(camera, portinfo);
-    qDebug() << ret;
-    /*R_GP_CALL(port_index, gp_port_info_list_lookup_path, portinfolist, port);
+    R_GP_CALL(port_index, gp_port_info_list_lookup_path, portinfolist, port);
     R_GP_CALL(ret, gp_port_info_list_get_info, portinfolist, port_index, &portinfo);
-    R_GP_CALL(ret, gp_camera_set_port_info, camera, portinfo);*/
+    R_GP_CALL(ret, gp_camera_set_port_info, camera, portinfo);
 
 	/* Init the connection */
     R_GP_CALL(ret, gp_camera_init, camera, context);
@@ -226,8 +220,10 @@ int QCamera::captureToFile(QFile *localFile)
 	CameraFile *file;
 	int ret;
 	int fd;
-
+    qDebug() << "capturing";
     R_GP_CALL(ret, gp_camera_capture, camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
+    qDebug() << "downloading";
+    emit downloading();
 
     if(!localFile->open(QIODevice::WriteOnly))
         return -1; // TODO : own error
@@ -251,7 +247,7 @@ int QCamera::captureToFile(QFile *localFile)
     return GP_OK;
 }
 
-void QCamera::captureToFile(QString path, int nbTry)
+void QCamera::_captureToFile(QString path, int nbTry)
 {
     QFile localFile(path);
     for(int i = 0; i < nbTry; i++) {
@@ -270,8 +266,8 @@ void QCamera::captureToFile(const char *name, int nbTry)
     captureToFile(QString(name), nbTry);
 }
 
-/*void QCamera::captureToFile(QString path, int nbTry)
+void QCamera::captureToFile(QString path, int nbTry)
 {
     QMetaObject::invokeMethod(this, "_captureToFile", Qt::QueuedConnection, Q_ARG(QString, path), Q_ARG(int, nbTry));
-}*/
+}
 }
