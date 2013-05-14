@@ -22,8 +22,11 @@ typedef enum {
     MSG_ACK,
     MSG_DONE,
     MSG_SERVO_POS,
-    MSG_DEBUG
+    MSG_DEBUG,
+    MSG_INVALID
 } MSG_TYPE;
+
+#define DEST_BROADCAST 0
 
 /*
  * Arduino's roles

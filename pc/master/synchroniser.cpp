@@ -16,10 +16,10 @@ void Synchroniser::massCapture(QPhoto::QCamera *camera, Morphology *morphology, 
     m_collection = collection;
     m_idCostume = idCostume;
 
-    connect(morphology, SIGNAL(done()), this, SLOT(onRotationDone()));
     connect(camera, SIGNAL(captured(QString)), this, SLOT(onCaptureDone()));
     connect(camera, SIGNAL(operation_failed(QString)), this, SLOT(onCaptureFail()));
-    m_morphology->setRotation(0);
+    MessageWatcher *watcher = m_morphology->setRotation(0);
+    connect(watcher, SIGNAL(done()), this, SLOT(onRotationDone())); // TODO sync risk !
 }
 
 void Synchroniser::onCaptureDone()
@@ -30,8 +30,10 @@ void Synchroniser::onCaptureDone()
         qDebug() << "mass capture finished";
         this->deleteLater();
         emit done(true);
-    } else
-        m_morphology->setRotation(m_step*m_actionNumber);
+    } else {
+        MessageWatcher *watcher = m_morphology->setRotation(m_step*m_actionNumber);
+        connect(watcher, SIGNAL(done()), this, SLOT(onRotationDone()));
+    }
 }
 
 void Synchroniser::onCaptureFail()

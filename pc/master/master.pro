@@ -18,7 +18,8 @@ SOURCES += master/main.cpp \
     ../common/qloadedlistwidget.cpp \
     ../common/uniqueproxymodel.cpp \
     ../common/morphology.cpp \
-    synchroniser.cpp
+    synchroniser.cpp \
+    ../common/messagewatcher.cpp
 HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
     common/slotlog.h \
@@ -31,7 +32,8 @@ HEADERS += camerahandler/camerahandler.h \
     ../common/morphology.h \
     ../../interfaces/interfaces.h \
     ../../interfaces/morphology.h \
-    synchroniser.h
+    synchroniser.h \
+    ../common/messagewatcher.h
 
 CONFIG += qt warn_on release
 

@@ -9,7 +9,9 @@
 #include <QTimer>
 #include <QMutableListIterator>
 #include <QStandardItemModel>
+#include <QMap>
 #include "qextserialport.h"
+#include "messagewatcher.h"
 #include "../../interfaces/interfaces.h"
 
 struct ArduinoMessage
@@ -53,25 +55,27 @@ signals:
     void done();
     
 public slots:
-    void sendHelloMessage();
-    void setMotorMicrosecond(int arduino, int motor, int ms);
-    void setRotation(int angle);
-    void getMotorsPosition(int arduino);
+    MessageWatcher *sendHelloMessage();
+    MessageWatcher *setMotorMicrosecond(int arduino, int motor, int ms);
+    MessageWatcher *setRotation(int angle);
+    MessageWatcher *getMotorsPosition(int arduino);
     
 private slots:
     void onDataAvailable();
     void checkAliveDevices();
     void cleanUpDeadDevices();
+    void _sendMessage(MSG_TYPE type, int id, int dest, QList<QVariant> datas = QList<QVariant>());
 
 private:
     void handleMessage(QString message);
     void handleMessage(ArduinoMessage message);
-    void sendMessage(MSG_TYPE type, int id, int dest, QList<QVariant> datas = QList<QVariant>());
+    MessageWatcher *sendMessage(MSG_TYPE type, int dest = DEST_BROADCAST, QList<QVariant> datas = QList<QVariant>());
 
     QextSerialPort *m_port;
     QString message_part;
     QList<Arduino> arduinos;
     QTimer aliveTimer;
+    QMap<int,MessageWatcher*> watchers;
     bool pinging;
 };
 

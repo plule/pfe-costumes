@@ -33,32 +33,32 @@ int Morphology::getMotorsNumber()
     return MOTOR_NUMBER;
 }
 
-void Morphology::sendHelloMessage()
+MessageWatcher *Morphology::sendHelloMessage()
 {
-    sendMessage(MSG_DISCOVER, 40, 41);
+    return sendMessage(MSG_DISCOVER);
 }
 
-void Morphology::setMotorMicrosecond(int arduino, int motor, int ms)
+MessageWatcher *Morphology::setMotorMicrosecond(int arduino, int motor, int ms)
 {
     QList<QVariant> args;
     args.append(motor);
     args.append(ms);
-    sendMessage(MSG_MORPHOLOGY, 3, arduino, args);
+    return sendMessage(MSG_MORPHOLOGY, arduino, args);
 }
 
-void Morphology::setRotation(int angle)
+MessageWatcher *Morphology::setRotation(int angle)
 {
     QList<QVariant> args;
     args.append(360-angle);
     if(arduinos.size() > 0)
-        sendMessage(MSG_ROTATION, 4, arduinos[0].id, args);
+        return sendMessage(MSG_ROTATION, arduinos[0].id, args);
     else
-        qDebug() << "no arduino";
+        return new MessageWatcher(this);
 }
 
-void Morphology::getMotorsPosition(int arduino)
+MessageWatcher *Morphology::getMotorsPosition(int arduino)
 {
-    sendMessage(MSG_SERVO_POS, 1, arduino);
+    return sendMessage(MSG_SERVO_POS, arduino);
 }
 
 void Morphology::onDataAvailable()
@@ -114,6 +114,9 @@ void Morphology::handleMessage(QString message)
 
 void Morphology::handleMessage(ArduinoMessage message)
 {
+    if(message.type != MSG_ACK)
+        _sendMessage(MSG_ACK, message.id, message.expe);
+
     switch(message.type) {
     case MSG_HELLO:
     {
@@ -146,10 +149,13 @@ void Morphology::handleMessage(ArduinoMessage message)
     case MSG_MORPHOLOGY:
         break;
     case MSG_ACK:
+        if(watchers.contains(message.id))
+            watchers.value(message.id)->setAck();
         break;
     case MSG_DONE:
-        qDebug() << "arduino done";
-        emit(done());
+        emit done();
+        if(watchers.contains(message.id))
+            watchers.value(message.id)->setDone();
         break;
     case MSG_SERVO_POS:
     {
@@ -164,7 +170,21 @@ void Morphology::handleMessage(ArduinoMessage message)
     }
 }
 
-void Morphology::sendMessage(MSG_TYPE type, int id, int dest, QList<QVariant> datas)
+MessageWatcher *Morphology::sendMessage(MSG_TYPE type, int dest, QList<QVariant> datas)
+{
+    int id = qrand()%1000;
+    MessageWatcher *watcher = 0;
+    if(dest != DEST_BROADCAST) { // not a broadcast, so we watch for answer
+        watcher = new MessageWatcher(type, id, dest, datas, this);
+        connect(watcher, SIGNAL(needResend(MSG_TYPE,int,int,QList<QVariant>)), this, SLOT(_sendMessage(MSG_TYPE,int,int,QList<QVariant>)));
+        watchers.insert(id, watcher);
+    }
+
+    _sendMessage(type, id, dest, datas);
+    return watcher;
+}
+
+void Morphology::_sendMessage(MSG_TYPE type, int id, int dest, QList<QVariant> datas)
 {
     QStringList args;
     args
