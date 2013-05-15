@@ -57,7 +57,6 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 public slots:
-    void refresh();
     void startWork(QString work, int target);
     void endWork();
     void updateStatusBar(QString message);
@@ -78,8 +77,6 @@ private slots:
     void setMotorMicroSecond(int arduino,int motor,int ms);
 
     void on_captureButton_clicked();
-
-    void on_refreshButton_clicked();
 
     void on_suzanneButton_pressed();
 

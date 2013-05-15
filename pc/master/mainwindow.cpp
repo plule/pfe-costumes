@@ -18,7 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // Handle cameras (listing, taking photos, etc...)
     handler = new QPhoto::CameraHandler();
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
-    connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
     handler->init();
 
     // Settings window
@@ -221,11 +220,6 @@ MainWindow::~MainWindow()
     delete handler;
 }
 
-void MainWindow::refresh()
-{
-    handler->getNbCameras();
-}
-
 void MainWindow::startWork(QString work, int target)
 {
     this->ui->workBar->setFormat(work + " (%p%)");
@@ -322,7 +316,6 @@ void MainWindow::on_captureButton_clicked()
 void MainWindow::on_appendCaptureButton_clicked()
 {
     if(camera != 0) {
-    QPhoto::QCamera **cameras;
         QString path = collection->getNewFilePath(getCurrentId(), "turntable", "jpg"); // TODO extension follow config
         captureActions.insert(path, Append);
         camera->captureToFile(path);
@@ -378,11 +371,6 @@ void MainWindow::setMotorMicroSecond(int arduino, int motor, int ms)
     if(arduino == getCurrentArduino() && motor < morphoSliders.size()) {
         morphoSliders.at(motor)->setValue(ms);
     }
-}
-
-void MainWindow::on_refreshButton_clicked()
-{
-
 }
 
 void MainWindow::on_newCostume_clicked()

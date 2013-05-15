@@ -248,7 +248,7 @@
                <x>0</x>
                <y>0</y>
                <width>246</width>
-               <height>588</height>
+               <height>550</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -256,21 +256,6 @@
                <widget class="QPushButton" name="suzanneButton">
                 <property name="text">
                  <string>Load Default Model 1</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="refreshButton">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="text">
-                 <string>Refresh</string>
-                </property>
-                <property name="icon">
-                 <iconset theme="view-refresh">
-                  <normaloff/>
-                 </iconset>
                 </property>
                </widget>
               </item>
