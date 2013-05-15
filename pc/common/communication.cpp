@@ -6,19 +6,18 @@ static const char *morpho_motors_name[] = {
 };
 #undef X
 
-Morphology::Morphology(QObject *parent) :
+ArduinoCommunication::ArduinoCommunication(QObject *parent) :
     QObject(parent)
 {
 
 }
 
-Morphology::Morphology(QString name, QObject *parent) : QObject(parent)
+ArduinoCommunication::ArduinoCommunication(QString name, QObject *parent) : QObject(parent)
 {
     pinging = false;
     lastMessage = 0;
-    m_port = new QextSerialPort(name);
-    connect(m_port, SIGNAL(readyRead()), this, SLOT(onDataAvailable()));
-    m_port->open(QIODevice::ReadWrite);
+    m_port = 0;
+    setPort(name);
     aliveTimer.setInterval(5000);
     connect(&aliveTimer, SIGNAL(timeout()), this, SLOT(checkAliveDevices()));
     watchers.resize(MAX_ID);
@@ -26,22 +25,27 @@ Morphology::Morphology(QString name, QObject *parent) : QObject(parent)
     aliveTimer.start();
 }
 
-const char **Morphology::getMotorsNames()
+const char **ArduinoCommunication::getMotorsNames()
 {
     return morpho_motors_name;
 }
 
-int Morphology::getMotorsNumber()
+int ArduinoCommunication::getMotorsNumber()
 {
     return MOTOR_NUMBER;
 }
 
-MessageWatcher *Morphology::sendHelloMessage()
+bool ArduinoCommunication::isValid()
+{
+    return (m_port != 0);
+}
+
+MessageWatcher *ArduinoCommunication::sendHelloMessage()
 {
     return sendMessage(MSG_DISCOVER);
 }
 
-MessageWatcher *Morphology::setMotorMicrosecond(int arduino, int motor, int ms)
+MessageWatcher *ArduinoCommunication::setMotorMicrosecond(int arduino, int motor, int ms)
 {
     for(int i=0; i<MAX_ID; i++) {
         MessageWatcher *watcher = watchers[i];
@@ -56,7 +60,7 @@ MessageWatcher *Morphology::setMotorMicrosecond(int arduino, int motor, int ms)
     return sendMessage(MSG_MORPHOLOGY, arduino, args);
 }
 
-MessageWatcher *Morphology::setRotation(int angle)
+MessageWatcher *ArduinoCommunication::setRotation(int angle)
 {
     for(int i=0; i<MAX_ID; i++) {
         if(watchers.value(i,0) != 0 && watchers.value(i)->getType() == MSG_ROTATION) {
@@ -73,21 +77,23 @@ MessageWatcher *Morphology::setRotation(int angle)
         return new MessageWatcher(this);
 }
 
-MessageWatcher *Morphology::getMotorsPosition(int arduino)
+MessageWatcher *ArduinoCommunication::getMotorsPosition(int arduino)
 {
     return sendMessage(MSG_SERVO_POS, arduino);
 }
 
-void Morphology::onDataAvailable()
+void ArduinoCommunication::onDataAvailable()
 {
-    message_part.append(m_port->readAll());
-    QStringList messages = message_part.split(MSG_SEP);
-    message_part = messages.takeLast(); // The last message is incomplete
-    foreach(QString message, messages)
-        handleMessage(message);
+    if(m_port != 0) {
+        message_part.append(m_port->readAll());
+        QStringList messages = message_part.split(MSG_SEP);
+        message_part = messages.takeLast(); // The last message is incomplete
+        foreach(QString message, messages)
+            handleMessage(message);
+    }
 }
 
-void Morphology::checkAliveDevices()
+void ArduinoCommunication::checkAliveDevices()
 {
     if(!pinging) {
         pinging = true;
@@ -99,7 +105,7 @@ void Morphology::checkAliveDevices()
     QTimer::singleShot(1000, this, SLOT(cleanUpDeadDevices()));
 }
 
-void Morphology::cleanUpDeadDevices()
+void ArduinoCommunication::cleanUpDeadDevices()
 {
     QMutableListIterator<Arduino> i(arduinos);
     while(i.hasNext()) {
@@ -112,7 +118,7 @@ void Morphology::cleanUpDeadDevices()
     pinging = false;
 }
 
-void Morphology::handleMessage(QString message)
+void ArduinoCommunication::handleMessage(QString message)
 {
     QStringList spl = message.split(ARG_SEP);
     if(spl.size() < ARG_NUMBER)
@@ -129,7 +135,7 @@ void Morphology::handleMessage(QString message)
     }
 }
 
-void Morphology::handleMessage(ArduinoMessage message)
+void ArduinoCommunication::handleMessage(ArduinoMessage message)
 {
     if(message.type != MSG_ACK && message.type != MSG_DEBUG)
         _sendMessage(MSG_ACK, message.id, message.expe);
@@ -186,7 +192,7 @@ void Morphology::handleMessage(ArduinoMessage message)
     }
 }
 
-MessageWatcher *Morphology::sendMessage(MSG_TYPE type, int dest, QList<QVariant> datas)
+MessageWatcher *ArduinoCommunication::sendMessage(MSG_TYPE type, int dest, QList<QVariant> datas)
 {
     lastMessage++;
     lastMessage = lastMessage%MAX_ID;
@@ -205,16 +211,31 @@ MessageWatcher *Morphology::sendMessage(MSG_TYPE type, int dest, QList<QVariant>
     return watcher;
 }
 
-void Morphology::_sendMessage(MSG_TYPE type, int id, int dest, QList<QVariant> datas)
+void ArduinoCommunication::_sendMessage(MSG_TYPE type, int id, int dest, QList<QVariant> datas)
 {
-    QStringList args;
-    args
-            << QString::number(dest)
-            << QString::number(ARD_MASTER)
-            << QString::number(id)
-            << QString::number(type);
-    foreach(QVariant data, datas) {
-        args << data.toString();
-    };
-    m_port->write(args.join(ARG_SEP).append(MSG_SEP).toLatin1());
+    if(m_port != 0) {
+        QStringList args;
+        args
+                << QString::number(dest)
+                << QString::number(ARD_MASTER)
+                << QString::number(id)
+                << QString::number(type);
+        foreach(QVariant data, datas) {
+            args << data.toString();
+        };
+        m_port->write(args.join(ARG_SEP).append(MSG_SEP).toLatin1());
+    }
+}
+
+void ArduinoCommunication::setPort(QString port)
+{
+    delete m_port;
+    m_port = new QextSerialPort(port);
+    connect(m_port, SIGNAL(readyRead()), this, SLOT(onDataAvailable()));
+    if(!m_port->open(QIODevice::ReadWrite)) {
+        delete m_port;
+        m_port = 0;
+    } else {
+        sendHelloMessage();
+    }
 }

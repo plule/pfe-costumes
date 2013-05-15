@@ -29,11 +29,18 @@ public slots:
     void apply();
     void cancel();
 
+private slots:
+    void on_detectCamerasButton_clicked();
+
+    void on_detectPortsButton_clicked();
+
 private:
     QString guessXbeePort(QList<QString> candidates);
     QPhoto::QCamera *guessCamera(QList<QPhoto::QCamera*> candidates);
     void selectCurrentCamera();
     void selectCurrentXbeePort();
+    QList<QPhoto::QCamera*> fillCameraList();
+    QList<QString> fillXBeePortList();
 
     Ui::SettingsForm *ui;
     QPhoto::CameraHandler *handler;

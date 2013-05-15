@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     collection = 0;
+    camera = 0;
     massCaptureRunning = false;
     // Logger that show what goes through the slots
     logger = new SlotLog();
@@ -19,10 +20,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
     connect(handler, SIGNAL(refreshed()), this, SLOT(refresh()));
     handler->init();
-    doCamerasConnections();
+
+    // Settings window
+    settingsForm = new SettingsForm(handler, this);
+    connect(settingsForm, SIGNAL(cameraChanged(QPhoto::QCamera*)), this, SLOT(setCamera(QPhoto::QCamera*)));
+    setCamera(settingsForm->getCamera());
 
     // Arduino comm
-    morphology = new Morphology("/dev/ttyUSB0");
+    morphology = new ArduinoCommunication(settingsForm->getXbeePort());
     connect(ui->rotationDial, SIGNAL(valueChanged(int)), morphology, SLOT(setRotation(int)));
     for(int i=0; i < morphology->getMotorsNumber(); i++) {
         QString name = QString(morphology->getMotorsNames()[i]);
@@ -54,9 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(morphology, SIGNAL(arduinoAdded(Arduino)), this, SLOT(addDevice(Arduino)));
     connect(morphology, SIGNAL(arduinoRemoved(Arduino)), this, SLOT(removeDevice(Arduino)));
     morphology->sendHelloMessage();
-
-    // Settings window
-    settingsForm = new SettingsForm(handler, this);
+    connect(settingsForm, SIGNAL(xbeePortChanged(QString)), morphology, SLOT(setPort(QString)));
 
     // Load last collection
     if(settings.value("collection").type() == QVariant::String && QFile::exists(settings.value("collection").toString()))
@@ -220,7 +223,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::refresh()
 {
-    qDebug() << handler->getNbCameras();
+    handler->getNbCameras();
 }
 
 void MainWindow::startWork(QString work, int target)
@@ -305,15 +308,11 @@ void MainWindow::timeout()
 
 void MainWindow::on_captureButton_clicked()
 {
-    QPhoto::QCamera **cameras;
-    if(handler->getCameras(&cameras) >= 1)
-    {
-        QPhoto::QCamera *camera = cameras[0];
+    if(camera != 0) {
         QString filename = ui->turntable->getCurrentFileName();//QString("%1").arg(QString::number(ui->turntable->getView()), 3, QLatin1Char('0'));
         QString path = collection->getTempStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
         captureActions.insert(path, Replace);
         camera->captureToFile(path);
-        //QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
         this->displayError(tr("No camera connected"));
     }
@@ -322,14 +321,11 @@ void MainWindow::on_captureButton_clicked()
 
 void MainWindow::on_appendCaptureButton_clicked()
 {
+    if(camera != 0) {
     QPhoto::QCamera **cameras;
-    if(handler->getCameras(&cameras) >= 1)
-    {
-        QPhoto::QCamera *camera = cameras[0];
         QString path = collection->getNewFilePath(getCurrentId(), "turntable", "jpg"); // TODO extension follow config
         captureActions.insert(path, Append);
         camera->captureToFile(path);
-        //QMetaObject::invokeMethod(camera, "captureToFile", Qt::QueuedConnection, Q_ARG(QString, path));
     } else {
         this->displayError(tr("No camera connected"));
     }
@@ -345,6 +341,29 @@ void MainWindow::whenMassCaptureDone(bool success)
     massCaptureRunning = false;
     if(!success)
         this->displayError(tr("Mass capture failed"));
+}
+
+void MainWindow::setCamera(QPhoto::QCamera *camera)
+{
+    //if(this->camera != 0)
+        //disconnect(this->camera, 0, this, 0);
+    this->camera = camera;
+    if(camera != 0) {
+        connect(camera, SIGNAL(error(QString)), logger, SLOT(error(QString)));
+        connect(camera, SIGNAL(idle()), logger, SLOT(idle()));
+        connect(camera, SIGNAL(status(QString)), logger, SLOT(message(QString)));
+        connect(camera, SIGNAL(message(QString)), logger, SLOT(message(QString)));
+        connect(camera, SIGNAL(progress_update(int)), logger, SLOT(progress_update(int)));
+        connect(camera, SIGNAL(progress_start(QString, int)), logger, SLOT(progress_start(QString, int)));
+
+        connect(camera, SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
+        connect(camera, SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
+        connect(camera, SIGNAL(captured(QString)), this, SLOT(handleNewPicture(QString)));
+
+        connect(camera, SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
+        connect(camera, SIGNAL(operation_failed(QString)), this, SLOT(displayError(QString)));
+        connect(camera->getWatchdog(), SIGNAL(timeout()), this, SLOT(timeout()));
+    }
 }
 
 void MainWindow::sendMs(int ms)
@@ -363,30 +382,7 @@ void MainWindow::setMotorMicroSecond(int arduino, int motor, int ms)
 
 void MainWindow::on_refreshButton_clicked()
 {
-    handler->refreshCameraList();
-    doCamerasConnections();
-}
 
-void MainWindow::doCamerasConnections()
-{
-    QPhoto::QCamera **cameras;
-    int nConnections = handler->getCameras(&cameras);
-    for(int i=0; i < nConnections; i++) {
-        connect(cameras[i], SIGNAL(error(QString)), logger, SLOT(error(QString)));
-        connect(cameras[i], SIGNAL(idle()), logger, SLOT(idle()));
-        connect(cameras[i], SIGNAL(status(QString)), logger, SLOT(message(QString)));
-        connect(cameras[i], SIGNAL(message(QString)), logger, SLOT(message(QString)));
-        connect(cameras[i], SIGNAL(progress_update(int)), logger, SLOT(progress_update(int)));
-        connect(cameras[i], SIGNAL(progress_start(QString, int)), logger, SLOT(progress_start(QString, int)));
-
-        connect(cameras[i], SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
-        connect(cameras[i], SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
-        connect(cameras[i], SIGNAL(captured(QString)), this, SLOT(handleNewPicture(QString)));
-
-        connect(cameras[i], SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
-        connect(cameras[i], SIGNAL(operation_failed(QString)), this, SLOT(displayError(QString)));
-        connect(cameras[i]->getWatchdog(), SIGNAL(timeout()), this, SLOT(timeout()));
-    }
 }
 
 void MainWindow::on_newCostume_clicked()
@@ -511,10 +507,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::on_massCaptureButton_clicked()
 {
-    QPhoto::QCamera **cameras;
-    if(handler->getCameras(&cameras) >= 1)
-    {
-        QPhoto::QCamera *camera = cameras[0];
+    if(camera != 0) {
         massCaptureRunning = true;
         MassCapture *synchroniser = new MassCapture(this);
         connect(synchroniser, SIGNAL(done(bool)), this, SLOT(whenMassCaptureDone()));

@@ -38,14 +38,15 @@ struct Arduino
 
 Q_DECLARE_METATYPE(Arduino)
 
-class Morphology : public QObject
+class ArduinoCommunication : public QObject
 {
     Q_OBJECT
 public:
-    explicit Morphology(QObject *parent = 0);
-    Morphology(QString name, QObject *parent = 0);
+    explicit ArduinoCommunication(QObject *parent = 0);
+    ArduinoCommunication(QString name, QObject *parent = 0);
     const char **getMotorsNames();
     int getMotorsNumber();
+    bool isValid();
 
 
 signals:
@@ -64,6 +65,7 @@ private slots:
     void checkAliveDevices();
     void cleanUpDeadDevices();
     void _sendMessage(MSG_TYPE type, int id, int dest, QList<QVariant> datas = QList<QVariant>());
+    void setPort(QString port);
 
 private:
     void handleMessage(QString message);

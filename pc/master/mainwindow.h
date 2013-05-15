@@ -70,6 +70,7 @@ public slots:
     void removeDevice(Arduino arduino);
     int getCurrentArduino();
     void whenMassCaptureDone(bool success);
+    void setCamera(QPhoto::QCamera *camera);
     
 private slots:
     void timeout();
@@ -105,19 +106,19 @@ private:
     SettingsForm *settingsForm;
     Ui::MainWindow *ui;
     QPhoto::CameraHandler *handler;
+    QPhoto::QCamera *camera;
     SlotLog *logger;
     QList<QPixmap> *pics;
     QErrorMessage errorMessage;
     QDataWidgetMapper mapper;
     Collection *collection;
-    Morphology *morphology;
+    ArduinoCommunication *morphology;
     QSettings settings;
     QMap <QString, CaptureAction> captureActions;
     bool massCaptureRunning;
     int currentCostumeId;
     QList <QSlider *> morphoSliders;
 
-    void doCamerasConnections();
     void loadCollection(QString path);
     int getCurrentId();
     bool saveDialog();

@@ -45,6 +45,13 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="detectPortsButton">
+         <property name="text">
+          <string>Detect Ports</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item row="1" column="0">
@@ -70,6 +77,13 @@
         <widget class="QPushButton" name="testCameraButton">
          <property name="text">
           <string>Test Camera</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="detectCamerasButton">
+         <property name="text">
+          <string>Detect Cameras</string>
          </property>
         </widget>
        </item>

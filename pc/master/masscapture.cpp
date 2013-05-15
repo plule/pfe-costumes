@@ -5,7 +5,7 @@ MassCapture::MassCapture(QObject *parent) :
 {
 }
 
-void MassCapture::massCapture(QPhoto::QCamera *camera, Morphology *morphology, Collection *collection, int idCostume, int nbPhoto)
+void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *morphology, Collection *collection, int idCostume, int nbPhoto)
 {
     qDebug() << "mass capture";
     m_step = 360.0 / nbPhoto;

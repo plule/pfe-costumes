@@ -11,7 +11,7 @@ class MassCapture : public QObject
     Q_OBJECT
 public:
     explicit MassCapture(QObject *parent = 0);
-    void massCapture(QPhoto::QCamera *camera, Morphology *morphology, Collection *collection, int idCostume, int nbPhoto);
+    void massCapture(QPhoto::QCamera *camera, ArduinoCommunication *morphology, Collection *collection, int idCostume, int nbPhoto);
     
 signals:
     void done(bool success);
@@ -28,7 +28,7 @@ private:
     int m_target;
     float m_step;
     QPhoto::QCamera *m_camera;
-    Morphology *m_morphology;
+    ArduinoCommunication *m_morphology;
     Collection *m_collection;
     int m_idCostume;
 };
