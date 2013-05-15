@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QList>
+#include <QSettings>
 #include "camerahandler/camerahandler.h"
 #include "qextserialenumerator.h"
 
@@ -46,6 +47,7 @@ private:
     QPhoto::CameraHandler *handler;
 
     QPhoto::QCamera *camera;
+    QSettings settings;
     QString xbeePort;
 };
 

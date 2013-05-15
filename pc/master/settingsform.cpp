@@ -38,11 +38,26 @@ QString SettingsForm::getXbeePort()
 
 QString SettingsForm::guessXbeePort(QList<QString> candidates)
 {
-    return candidates.first();
+    qDebug() << settings.value("xbeeport").toString();
+    if(candidates.contains(settings.value("xbeeport").toString()))
+        return settings.value("xbeeport").toString();
+
+    foreach(QString candidate, candidates) {
+        if(candidate.toLower().contains("usb"))
+            return candidate;
+    }
+
+    if(candidates.size() > 0)
+        return candidates.first();
+
+    return "";
 }
 
 QPhoto::QCamera *SettingsForm::guessCamera(QList<QPhoto::QCamera*> candidates)
 {
+    foreach(QPhoto::QCamera *candidate, candidates)
+        if(candidate->getModel() == settings.value("camera").toString())
+            return candidate;
     if(candidates.size() > 0)
         return candidates.first();
     return 0;
@@ -99,6 +114,11 @@ void SettingsForm::apply()
         xbeePort = newXbeePort;
         emit xbeePortChanged(xbeePort);
     }
+
+    if(camera != 0)
+        settings.setValue("camera", camera->getModel());
+    if(xbeePort != "")
+        settings.setValue("xbeeport", xbeePort);
 }
 
 void SettingsForm::cancel()
