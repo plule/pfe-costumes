@@ -43,6 +43,10 @@ public:
     //void _captureToFile(QString path, int nbTry=3);
 
 
+    QString getModel() const;
+
+    QString getPort() const;
+
 protected:
     friend void idle_func(GPContext *context, void *data);
     friend void progress_update_func(GPContext *context, unsigned int id, float current, void *data);
@@ -64,6 +68,8 @@ private:
     Camera *camera;
     GPContext *context;
     CameraAbilities abilities;
+    QString model;
+    QString port;
     //GPPortInfo *portinfo;
     QThread camThread;
     QTimer *watchdog;

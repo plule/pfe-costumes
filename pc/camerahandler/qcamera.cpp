@@ -159,9 +159,6 @@ int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesLis
     R_GP_CALL(ret, gp_camera_set_abilities, camera, abilities);
 
 	/* Assign to a port */
-    qDebug() << model;
-    qDebug() << port;
-
     R_GP_CALL(port_index, gp_port_info_list_lookup_path, portinfolist, port);
     R_GP_CALL(ret, gp_port_info_list_get_info, portinfolist, port_index, &portinfo);
     R_GP_CALL(ret, gp_camera_set_port_info, camera, portinfo);
@@ -174,6 +171,9 @@ int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesLis
 QCamera::QCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist)
 {
     int ret;
+    this->model = QString(model);
+    this->port = QString(port);
+
 	context = gp_context_new();
 	gp_context_set_idle_func (context, idle_func, this);
 	gp_context_set_progress_funcs (context, progress_start_func, progress_update_func, progress_stop_func, this);
@@ -269,5 +269,15 @@ void QCamera::captureToFile(const char *name, int nbTry)
 void QCamera::captureToFile(QString path, int nbTry)
 {
     QMetaObject::invokeMethod(this, "_captureToFile", Qt::QueuedConnection, Q_ARG(QString, path), Q_ARG(int, nbTry));
+
+}
+QString QCamera::getPort() const
+{
+    return port;
+}
+
+QString QCamera::getModel() const
+{
+    return model;
 }
 }

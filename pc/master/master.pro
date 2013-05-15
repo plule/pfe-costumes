@@ -20,7 +20,7 @@ SOURCES += master/main.cpp \
     ../widgets/qturntable.cpp \
     ../common/communication.cpp \
     masscapture.cpp \
-    ../settingsform.cpp
+    settingsform.cpp
 HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
     common/slotlog.h \
@@ -35,7 +35,7 @@ HEADERS += camerahandler/camerahandler.h \
     ../widgets/qloadedlistwidget.h \
     ../common/communication.h \
     masscapture.h \
-    ../settingsform.h
+    settingsform.h
 
 CONFIG += qt warn_on release
 
@@ -43,7 +43,7 @@ LIBS += -lgphoto2 -lgphoto2_port
 
 FORMS += \
     mainwindow.ui \
-    ../settingsform.ui
+    settingsform.ui
 
 TRANSLATIONS = ../resources/master_fr.ts
 

@@ -55,6 +55,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(morphology, SIGNAL(arduinoRemoved(Arduino)), this, SLOT(removeDevice(Arduino)));
     morphology->sendHelloMessage();
 
+    // Settings window
+    settingsForm = new SettingsForm(handler, this);
+
     // Load last collection
     if(settings.value("collection").type() == QVariant::String && QFile::exists(settings.value("collection").toString()))
         loadCollection(settings.value("collection").toString());
@@ -524,6 +527,5 @@ void MainWindow::on_massCaptureButton_clicked()
 
 void MainWindow::on_actionSettings_triggered()
 {
-    settingForm = new SettingsForm(this);
-    settingForm->show();
+    settingsForm->show();
 }

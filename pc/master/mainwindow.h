@@ -102,7 +102,7 @@ private slots:
 
 private:
 
-    SettingsForm *settingForm;
+    SettingsForm *settingsForm;
     Ui::MainWindow *ui;
     QPhoto::CameraHandler *handler;
     SlotLog *logger;
