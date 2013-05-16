@@ -4,7 +4,11 @@
 #include <QDialog>
 #include <QList>
 #include <QSettings>
+#include <QMessageBox>
+#include <QGuiApplication>
+#include <QCursor>
 #include "camerahandler/camerahandler.h"
+#include "common/communication.h"
 #include "qextserialenumerator.h"
 
 namespace Ui {
@@ -16,7 +20,7 @@ class SettingsForm : public QDialog
     Q_OBJECT
     
 public:
-    explicit SettingsForm(QPhoto::CameraHandler *handler, QWidget *parent = 0);
+    explicit SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication *xbee, QWidget *parent = 0);
     ~SettingsForm();
 
     QPhoto::QCamera *getCamera();
@@ -35,6 +39,8 @@ private slots:
 
     void on_detectPortsButton_clicked();
 
+    void on_testPortButton_clicked();
+
 private:
     QString guessXbeePort(QList<QString> candidates);
     QPhoto::QCamera *guessCamera(QList<QPhoto::QCamera*> candidates);
@@ -45,8 +51,10 @@ private:
 
     Ui::SettingsForm *ui;
     QPhoto::CameraHandler *handler;
+    ArduinoCommunication *m_xbee;
 
     QPhoto::QCamera *camera;
+
     QSettings settings;
     QString xbeePort;
 };

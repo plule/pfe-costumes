@@ -1,12 +1,14 @@
 #include "settingsform.h"
 #include "ui_settingsform.h"
 
-SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, QWidget *parent) :
+SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication *xbee, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SettingsForm)
 {
     ui->setupUi(this);
     this->handler = handler;
+
+    m_xbee = xbee;
 
     /* XBee ports list */
     xbeePort = guessXbeePort(fillXBeePortList());
@@ -38,7 +40,6 @@ QString SettingsForm::getXbeePort()
 
 QString SettingsForm::guessXbeePort(QList<QString> candidates)
 {
-    qDebug() << settings.value("xbeeport").toString();
     if(candidates.contains(settings.value("xbeeport").toString()))
         return settings.value("xbeeport").toString();
 
@@ -141,4 +142,20 @@ void SettingsForm::on_detectPortsButton_clicked()
         xbeePort = newPort;
         emit xbeePortChanged(xbeePort);
     }
+}
+
+void SettingsForm::on_testPortButton_clicked()
+{
+    QString port = ui->xbeePortCombo->itemData(ui->xbeePortCombo->currentIndex()).toString();
+    QMessageBox msg;
+    QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    if(m_xbee->testPort(port)) {
+        msg.setIcon(QMessageBox::Information);
+        msg.setText(tr("The port seems to be valid"));
+    } else {
+        msg.setIcon(QMessageBox::Warning);
+        msg.setText(tr("The port seems to be invalid"));
+    }
+    QGuiApplication::restoreOverrideCursor();
+    msg.exec();
 }

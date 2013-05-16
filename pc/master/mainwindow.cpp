@@ -15,18 +15,21 @@ MainWindow::MainWindow(QWidget *parent) :
     QIcon::setThemeName("elementary-xfce"); // TODO fix this.
     ui->setupUi(this);
 
-    // Handle cameras (listing, taking photos, etc...)
+    // Handler and arduino communication modules
     handler = new QPhoto::CameraHandler();
+    morphology = new ArduinoCommunication(this);
+
+    // Handle cameras (listing, taking photos, etc...)
     connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
     handler->init();
 
     // Settings window
-    settingsForm = new SettingsForm(handler, this);
+    settingsForm = new SettingsForm(handler, morphology, this);
     connect(settingsForm, SIGNAL(cameraChanged(QPhoto::QCamera*)), this, SLOT(setCamera(QPhoto::QCamera*)));
     setCamera(settingsForm->getCamera());
 
-    // Arduino comm
-    morphology = new ArduinoCommunication(settingsForm->getXbeePort());
+    // Arduino comm configuration and ui init
+    morphology->setPort(settingsForm->getXbeePort());
     connect(ui->rotationDial, SIGNAL(valueChanged(int)), morphology, SLOT(setRotation(int)));
     for(int i=0; i < morphology->getMotorsNumber(); i++) {
         QString name = QString(morphology->getMotorsNames()[i]);

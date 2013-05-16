@@ -9,15 +9,9 @@ static const char *morpho_motors_name[] = {
 ArduinoCommunication::ArduinoCommunication(QObject *parent) :
     QObject(parent)
 {
-
-}
-
-ArduinoCommunication::ArduinoCommunication(QString name, QObject *parent) : QObject(parent)
-{
     pinging = false;
     lastMessage = 0;
     m_port = 0;
-    setPort(name);
     aliveTimer.setInterval(5000);
     connect(&aliveTimer, SIGNAL(timeout()), this, SLOT(checkAliveDevices()));
     watchers.resize(MAX_ID);
@@ -38,6 +32,28 @@ int ArduinoCommunication::getMotorsNumber()
 bool ArduinoCommunication::isValid()
 {
     return (m_port != 0);
+}
+
+bool ArduinoCommunication::testPort(QString name)
+{
+    QextSerialPort port(name);
+    QextSerialPort *pPort = &port;
+    if(name == m_port_name && m_port != 0) {
+        pPort = m_port;
+    }
+
+    if(!pPort->open(QIODevice::ReadWrite))
+        return false;
+
+    pPort->write("+++");
+    this->thread()->sleep(4);
+    QString ans = pPort->readLine();
+    if(ans.contains("OK")) {
+        pPort->write("ATCN\r");
+        return true;
+    }
+
+    return false;
 }
 
 MessageWatcher *ArduinoCommunication::sendHelloMessage()
@@ -229,6 +245,7 @@ void ArduinoCommunication::_sendMessage(MSG_TYPE type, int id, int dest, QList<Q
 
 void ArduinoCommunication::setPort(QString port)
 {
+    m_port_name = QString(port);
     delete m_port;
     m_port = new QextSerialPort(port);
     connect(m_port, SIGNAL(readyRead()), this, SLOT(onDataAvailable()));

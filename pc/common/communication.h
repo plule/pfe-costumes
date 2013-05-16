@@ -10,6 +10,7 @@
 #include <QMutableListIterator>
 #include <QStandardItemModel>
 #include <QMap>
+#include <QThread>
 #include "qextserialport.h"
 #include "messagewatcher.h"
 #include "../../interfaces/interfaces.h"
@@ -43,10 +44,10 @@ class ArduinoCommunication : public QObject
     Q_OBJECT
 public:
     explicit ArduinoCommunication(QObject *parent = 0);
-    ArduinoCommunication(QString name, QObject *parent = 0);
     const char **getMotorsNames();
     int getMotorsNumber();
     bool isValid();
+    bool testPort(QString name);
 
 
 signals:
@@ -55,6 +56,7 @@ signals:
     void motorMicrosecondChanged(int arduino, int motor, int ms);
     
 public slots:
+    void setPort(QString port);
     MessageWatcher *sendHelloMessage();
     MessageWatcher *setMotorMicrosecond(int arduino, int motor, int ms);
     MessageWatcher *setRotation(int angle);
@@ -65,7 +67,6 @@ private slots:
     void checkAliveDevices();
     void cleanUpDeadDevices();
     void _sendMessage(MSG_TYPE type, int id, int dest, QList<QVariant> datas = QList<QVariant>());
-    void setPort(QString port);
 
 private:
     void handleMessage(QString message);
@@ -73,6 +74,7 @@ private:
     MessageWatcher *sendMessage(MSG_TYPE type, int dest = DEST_BROADCAST, QList<QVariant> datas = QList<QVariant>());
 
     QextSerialPort *m_port;
+    QString m_port_name;
     QString message_part;
     QList<Arduino> arduinos;
     QTimer aliveTimer;
