@@ -4,6 +4,7 @@ INCLUDEPATH += .. ../common
 VPATH = ..
 
 include(../3rdparty/qextserialport/qextserialport.pri)
+include(../3rdparty/DcRawQT/DcRawQT.pri)
 
 QT += widgets sql
 
@@ -21,6 +22,7 @@ SOURCES += master/main.cpp \
     ../common/communication.cpp \
     masscapture.cpp \
     settingsform.cpp
+
 HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
     common/slotlog.h \
@@ -37,13 +39,13 @@ HEADERS += camerahandler/camerahandler.h \
     masscapture.h \
     settingsform.h
 
-CONFIG += qt warn_on release
+CONFIG += qt warn_on release debug
 
 LIBS += -lgphoto2 -lgphoto2_port
 
 FORMS += \
     mainwindow.ui \
-    settingsform.ui
+    settingsform.ui \
 
 TRANSLATIONS = ../resources/master_fr.ts
 
@@ -51,3 +53,7 @@ RESOURCES += \
     ../resources/translations.qrc \
     ../resources/pics/pics.qrc \
     ../resources/default-db.qrc
+
+OTHER_FILES += \
+    master.pro.user \
+    master_fr.qm

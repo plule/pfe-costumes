@@ -33,6 +33,7 @@
 #include "common/collection.h"
 #include "common/communication.h"
 #include "masscapture.h"
+#include "dcrawqt.h"
 
 #define GROUP_INFO "costume_informations"
 
