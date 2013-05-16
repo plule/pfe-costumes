@@ -95,6 +95,7 @@ signals:
     void progress_stop();
     void captured(QString path);
     void operation_failed(QString msg);
+    void operation_success();
     void camera_answered();
     void wait_for_camera_answer();
     void downloading();

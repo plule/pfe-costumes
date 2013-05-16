@@ -254,6 +254,7 @@ void QCamera::_captureToFile(QString path, int nbTry)
         int ret = captureToFile(&localFile);
         if( ret == GP_OK) {
             emit captured(path);
+            emit operation_success();
             return;
         }
         Sleeper().sleep(1);

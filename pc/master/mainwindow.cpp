@@ -246,8 +246,10 @@ void MainWindow::updateStatusBar(QString message)
 
 void MainWindow::displayError(QString error)
 {
-    QErrorMessage msg;
-    msg.showMessage(error);
+    QMessageBox msg;
+    msg.setIcon(QMessageBox::Warning);
+    msg.setText(error);
+    msg.setDetailedText(lastErrors.join("\n"));
     msg.exec();
 }
 
@@ -341,8 +343,6 @@ void MainWindow::whenMassCaptureDone(bool success)
 
 void MainWindow::setCamera(QPhoto::QCamera *camera)
 {
-    //if(this->camera != 0)
-        //disconnect(this->camera, 0, this, 0);
     this->camera = camera;
     if(camera != 0) {
         connect(camera, SIGNAL(error(QString)), logger, SLOT(error(QString)));
@@ -357,9 +357,21 @@ void MainWindow::setCamera(QPhoto::QCamera *camera)
         connect(camera, SIGNAL(captured(QString)), this, SLOT(handleNewPicture(QString)));
 
         connect(camera, SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
+        connect(camera, SIGNAL(error(QString)), this, SLOT(registerError(QString)));
+        connect(camera, SIGNAL(operation_success()), this, SLOT(clearErrors()));
         connect(camera, SIGNAL(operation_failed(QString)), this, SLOT(displayError(QString)));
         connect(camera->getWatchdog(), SIGNAL(timeout()), this, SLOT(timeout()));
     }
+}
+
+void MainWindow::clearErrors()
+{
+    lastErrors.clear();
+}
+
+void MainWindow::registerError(QString error)
+{
+    lastErrors.append(error);
 }
 
 void MainWindow::sendMs(int ms)

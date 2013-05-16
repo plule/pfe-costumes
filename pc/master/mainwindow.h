@@ -70,6 +70,8 @@ public slots:
     int getCurrentArduino();
     void whenMassCaptureDone(bool success);
     void setCamera(QPhoto::QCamera *camera);
+    void registerError(QString error);
+    void clearErrors();
     
 private slots:
     void timeout();
@@ -115,6 +117,7 @@ private:
     bool massCaptureRunning;
     int currentCostumeId;
     QList <QSlider *> morphoSliders;
+    QStringList lastErrors;
 
     void loadCollection(QString path);
     int getCurrentId();
