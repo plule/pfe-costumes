@@ -39,7 +39,7 @@ public:
      * @param cameras list to be filled
      * @return number of detected cameras
      */
-	int getCameras(QCamera ***cameras);
+    int getCameras(QCamera ***m_cameras);
 
     /**
      * @brief refreshCameraList relaunch the autodectection process
@@ -61,17 +61,14 @@ public:
 
 	
 private:
-    //CameraHandler& operator= (const CameraHandler&){return m_instance;}
-    //CameraHandler (const CameraHandler&):QObject(){}
-	int autodetect(CameraList *list, GPContext *context);
+    int autodetect(CameraList *list, GPContext *m_context);
 	int handleError(int error, QString msg);
 
-	static CameraHandler m_instance;
-    GPPortInfoList* portinfolist;
-    CameraAbilitiesList* abilities;
-	QCamera* cameras[MAX_CAMERA];
-	int nCameras;
-	GPContext* context;
+    GPPortInfoList* m_portinfolist;
+    CameraAbilitiesList* m_abilities;
+    QCamera* m_cameras[MAX_CAMERA];
+    int m_nCameras;
+    GPContext* m_context;
 
 signals:
     void refreshed();

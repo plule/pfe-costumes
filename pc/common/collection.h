@@ -93,19 +93,19 @@ signals:
 public slots:
 
 private:
-    QSqlTableModel *loadContent(QSqlDatabase *db);
+    QSqlTableModel *loadContent(QSqlDatabase *m_db);
     QString keySqlList(QStringList keys);
     QString keyValueList(QStringList keys);
     QString collectionPath;
 
-    QSqlDatabase *db;
-    QSqlTableModel *model;
-    QDir collectionDir;
-    QDir tempDir;
-    QMap<QString,QCompleter* > completers;
-    bool valid;
-    int lastId;
-    QMap<QString, Costume_info> content;
+    QSqlDatabase *m_db;
+    QSqlTableModel *m_model;
+    QDir m_collectionDir;
+    QDir m_tempDir;
+    QMap<QString,QCompleter* > m_completers;
+    bool m_valid;
+    int m_lastId;
+    QMap<QString, Costume_info> m_content;
 };
 
 #endif // COLLECTIONMANAGER_H

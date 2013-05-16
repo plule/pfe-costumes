@@ -6,30 +6,30 @@ int Costume_info::last_order;
 Collection::Collection(QObject *parent) :
     QObject(parent)
 {
-    valid = false;
+    m_valid = false;
 }
 
 Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent)
 {
-    valid = false;
+    m_valid = false;
     this->collectionPath = collectionPath;
     /* Connect to the db */
-    db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", collectionPath));
-    db->setDatabaseName(collectionPath);
-    if(!db->open())
+    m_db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", collectionPath));
+    m_db->setDatabaseName(collectionPath);
+    if(!m_db->open())
         return;
 
     /* Load meta content and do the validation */
-    model = loadContent(db);
-    if(model == 0)
+    m_model = loadContent(m_db);
+    if(m_model == 0)
         return;
 
     /* Find highest unused id */
-    QSqlQuery q(*db);
+    QSqlQuery q(*m_db);
     q.exec("SELECT MAX(id) FROM collection");
-    lastId = 0;
+    m_lastId = 0;
     if(q.next()) {
-        lastId = q.value(0).toInt();
+        m_lastId = q.value(0).toInt();
     }
 
     /* Load autocompleters */
@@ -37,16 +37,16 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
 
     /* Init personnal storage path */
     QFileInfo coll(collectionPath);
-    collectionDir = coll.absoluteDir();
-    collectionDir.mkdir(coll.baseName()+"_FILES");
-    collectionDir.cd(coll.baseName()+"_FILES");
+    m_collectionDir = coll.absoluteDir();
+    m_collectionDir.mkdir(coll.baseName()+"_FILES");
+    m_collectionDir.cd(coll.baseName()+"_FILES");
 
-    valid = true;
+    m_valid = true;
 
     /* Init temp storage path */
-    tempDir = QDir::temp();
-    tempDir.mkdir(coll.baseName()+"_FILES");
-    tempDir.cd(coll.baseName()+"_FILES");
+    m_tempDir = QDir::temp();
+    m_tempDir.mkdir(coll.baseName()+"_FILES");
+    m_tempDir.cd(coll.baseName()+"_FILES");
 }
 
 QSqlTableModel *Collection::loadContent(QSqlDatabase *db)
@@ -58,10 +58,10 @@ QSqlTableModel *Collection::loadContent(QSqlDatabase *db)
 
     // TODO : validation
     Costume_info::last_order = 0;
-    content = QMap<QString, Costume_info>();
+    m_content = QMap<QString, Costume_info>();
     /* System infos */
-    content.insert("id", Costume_info(PK, tr("Id"), true));
-    content.insert("notdeleted", Costume_info(Bool, tr("Not Deleted costume"), false));
+    m_content.insert("id", Costume_info(PK, tr("Id"), true));
+    m_content.insert("notdeleted", Costume_info(Bool, tr("Not Deleted costume"), false));
 
     /* User infos */
     QSqlQuery q(*db);
@@ -90,7 +90,7 @@ QSqlTableModel *Collection::loadContent(QSqlDatabase *db)
             type = Bool;
         if(type_s == "Files")
             type = Files;
-        content.insert(key, Costume_info(type, name, autocomplete, visible));
+        m_content.insert(key, Costume_info(type, name, autocomplete, visible));
     }
     model->setTable("collection");
     model->setFilter("notdeleted == 1");
@@ -101,30 +101,30 @@ QSqlTableModel *Collection::loadContent(QSqlDatabase *db)
 
 Collection::~Collection()
 {
-    db->close();
-    delete db;
-    delete model;
+    m_db->close();
+    delete m_db;
+    delete m_model;
     QSqlDatabase::removeDatabase(collectionPath);
 }
 
 QSqlTableModel *Collection::getCollectionModel()
 {
-    return model;
+    return m_model;
 }
 
 QSqlError Collection::lastError()
 {
-    return model->lastError();
+    return m_model->lastError();
 }
 
 int Collection::getIndexOf(QString key)
 {
-    return db->record("collection").indexOf(key);
+    return m_db->record("collection").indexOf(key);
 }
 
 QDir Collection::getStorageDir(int costumeId, QString key)
 {
-    QDir ret = collectionDir;
+    QDir ret = m_collectionDir;
     ret.mkpath(QString::number(costumeId) + "/" + key); // todo portable ?
     ret.cd(QString::number(costumeId) + "/" + key);
     return ret.absolutePath();
@@ -132,7 +132,7 @@ QDir Collection::getStorageDir(int costumeId, QString key)
 
 QDir Collection::getTempStorageDir(int costumeId, QString key)
 {
-    QDir ret = tempDir;
+    QDir ret = m_tempDir;
     ret.mkpath(QString::number(costumeId) + "/" + key); // todo portable ?
     ret.cd(QString::number(costumeId) + "/" + key);
     return ret.absolutePath();
@@ -169,24 +169,24 @@ bool Collection::fileExists(int costumeId, QString key, QString filename)
 
 void Collection::createStorageDir(int costumeId, QString key)
 {
-    collectionDir.mkpath(QString::number(costumeId) + "/" + key);
+    m_collectionDir.mkpath(QString::number(costumeId) + "/" + key);
 }
 
 int Collection::newCostume()
 {
-    QSqlRecord r = model->record();
+    QSqlRecord r = m_model->record();
     r.setValue("notdeleted", QVariant(1));
-    r.setValue("id", ++lastId);
-    model->insertRecord(-1, r);
-    return lastId;
+    r.setValue("id", ++m_lastId);
+    m_model->insertRecord(-1, r);
+    return m_lastId;
 }
 
 void Collection::deleteCostume(int id)
 {
     int row = getRow(id);
-    QSqlRecord rec = model->record(row);
+    QSqlRecord rec = m_model->record(row);
     rec.setValue("notdeleted",0);
-    model->setRecord(row, rec);
+    m_model->setRecord(row, rec);
 }
 
 QString Collection::getName(int id)
@@ -196,42 +196,42 @@ QString Collection::getName(int id)
 
 QCompleter *Collection::getCompleter(QString key)
 {
-    return completers.value(key);
+    return m_completers.value(key);
 }
 
 void Collection::loadCompleters()
 {
-    foreach(QString key, content.keys()) {
-        if(content.value(key).autocomplete) {
-            int column = model->record().indexOf(key);
+    foreach(QString key, m_content.keys()) {
+        if(m_content.value(key).autocomplete) {
+            int column = m_model->record().indexOf(key);
             UniqueProxyModel *proxy = new UniqueProxyModel(column, this);
-            proxy->setSourceModel(model);
+            proxy->setSourceModel(m_model);
             QCompleter *c = new QCompleter(proxy,this);
-            c->setCompletionColumn(model->record().indexOf(key));
-            completers.insert(key, c);
+            c->setCompletionColumn(m_model->record().indexOf(key));
+            m_completers.insert(key, c);
         }
     }
 }
 
 bool Collection::isDirty()
 {
-    if(model->isDirty())
+    if(m_model->isDirty())
         return true;
     // Recursive find new pics in temp dir
-    QDirIterator it(tempDir.absolutePath(), QDir::Files, QDirIterator::Subdirectories);
+    QDirIterator it(m_tempDir.absolutePath(), QDir::Files, QDirIterator::Subdirectories);
     return it.hasNext();
 }
 
 bool Collection::submit()
 {
-    bool ret = model->submitAll();
-    QDirIterator it(tempDir.absolutePath(), QDir::Files, QDirIterator::Subdirectories);
+    bool ret = m_model->submitAll();
+    QDirIterator it(m_tempDir.absolutePath(), QDir::Files, QDirIterator::Subdirectories);
     while(it.hasNext()) {
         it.next();
         QString filename = it.filePath();
-        filename.replace(tempDir.absolutePath()+QDir::separator(),"");
-        QString src = tempDir.absoluteFilePath(filename);
-        QString dest = collectionDir.absoluteFilePath(filename);
+        filename.replace(m_tempDir.absolutePath()+QDir::separator(),"");
+        QString src = m_tempDir.absoluteFilePath(filename);
+        QString dest = m_collectionDir.absoluteFilePath(filename);
         QFile::remove(dest);
         QFile::copy(src, dest);
         QFile::remove(src);
@@ -239,18 +239,18 @@ bool Collection::submit()
     if(ret)
         emit synchronised();
     else
-        qDebug() << model->lastError();
+        qDebug() << m_model->lastError();
     return ret;
 }
 
 void Collection::revert()
 {
-    model->revertAll();
+    m_model->revertAll();
 }
 
 bool Collection::select()
 {
-    bool ret = model->select();
+    bool ret = m_model->select();
     if(ret)
         emit synchronised();
     return ret;
@@ -258,22 +258,22 @@ bool Collection::select()
 
 void Collection::cleanUp()
 {
-    QDirIterator it(tempDir.absolutePath(), QDir::Files, QDirIterator::Subdirectories);
+    QDirIterator it(m_tempDir.absolutePath(), QDir::Files, QDirIterator::Subdirectories);
     while(it.hasNext())
         QFile::remove(it.next());
 }
 
 int Collection::getRow(int id)
 {
-    for(int row=0; row < model->rowCount(); ++row)
-        if ( model->index(row, 0).data(Qt::DisplayRole).toInt() == id )
+    for(int row=0; row < m_model->rowCount(); ++row)
+        if ( m_model->index(row, 0).data(Qt::DisplayRole).toInt() == id )
             return row;
     return -1;
 }
 
 QSqlRecord Collection::getRecord(int id)
 {
-    return model->record(getRow(id));
+    return m_model->record(getRow(id));
 }
 
 QString Collection::getName(QSqlRecord rec)
@@ -287,8 +287,8 @@ QList<QPair<Costume_info, QString> > Collection::sortedContent()
 {
     QList<QPair<Costume_info, QString> > orderedInfos;
 
-    foreach(QString key, content.keys())
-        orderedInfos << QPair<Costume_info, QString>(content.value(key), key);
+    foreach(QString key, m_content.keys())
+        orderedInfos << QPair<Costume_info, QString>(m_content.value(key), key);
 
     qSort(orderedInfos);
     return orderedInfos;
@@ -318,5 +318,5 @@ QString Collection::keyValueList(QStringList keys)
 
 bool Collection::isValid() const
 {
-    return valid;
+    return m_valid;
 }

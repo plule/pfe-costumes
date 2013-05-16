@@ -20,14 +20,14 @@ class SettingsForm : public QDialog
     Q_OBJECT
     
 public:
-    explicit SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication *xbee, QWidget *parent = 0);
+    explicit SettingsForm(QPhoto::CameraHandler *m_handler, ArduinoCommunication *xbee, QWidget *parent = 0);
     ~SettingsForm();
 
     QPhoto::QCamera *getCamera();
     QString getXbeePort();
 
 signals:
-    void cameraChanged(QPhoto::QCamera *camera);
+    void cameraChanged(QPhoto::QCamera *m_camera);
     void xbeePortChanged(QString port);
     
 public slots:
@@ -50,13 +50,13 @@ private:
     QList<QString> fillXBeePortList();
 
     Ui::SettingsForm *ui;
-    QPhoto::CameraHandler *handler;
+    QPhoto::CameraHandler *m_handler;
     ArduinoCommunication *m_xbee;
 
-    QPhoto::QCamera *camera;
+    QPhoto::QCamera *m_camera;
 
-    QSettings settings;
-    QString xbeePort;
+    QSettings m_settings;
+    QString m_xbeePort;
 };
 
 #endif // SETTINGSFORM_H

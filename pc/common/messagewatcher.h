@@ -12,7 +12,7 @@ class MessageWatcher : public QObject
     Q_OBJECT
 public:
     explicit MessageWatcher(QObject *parent = 0);
-    MessageWatcher(MSG_TYPE type, int id, int dest, QList<QVariant> datas, QObject *parent = 0);
+    MessageWatcher(MSG_TYPE m_type, int m_id, int m_dest, QList<QVariant> m_datas, QObject *parent = 0);
     ~MessageWatcher();
     void setAck();
     void setDone();
@@ -29,7 +29,7 @@ public:
 signals:
     void ack();
     void done(bool success);
-    void needResend(MSG_TYPE type, int id, int dest, QList<QVariant> datas);
+    void needResend(MSG_TYPE m_type, int m_id, int m_dest, QList<QVariant> m_datas);
     
 public slots:
     void ackTimeout();
@@ -39,12 +39,12 @@ private:
     QString typeToString();
     QString toString();
 
-    MSG_TYPE type;
-    int id;
-    int dest;
-    QList<QVariant> datas;
-    QTimer *ackTimer;
-    QTimer *doneTimer;
+    MSG_TYPE m_type;
+    int m_id;
+    int m_dest;
+    QList<QVariant> m_datas;
+    QTimer *m_ackTimer;
+    QTimer *m_doneTimer;
 };
 
 #endif // MESSAGEWATCHER_H

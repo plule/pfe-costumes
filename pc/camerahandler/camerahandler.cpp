@@ -12,13 +12,13 @@ int CameraHandler::handleError(int error, QString msg)
 
 int CameraHandler::getNbCameras()
 {
-	return nCameras;
+    return m_nCameras;
 }
 
 int CameraHandler::getCameras(QCamera ***cameras)
 {
-	(*cameras) = CameraHandler::cameras;
-    return nCameras;
+    (*cameras) = m_cameras;
+    return m_nCameras;
 }
 
 int CameraHandler::refreshCameraList()
@@ -35,34 +35,34 @@ int CameraHandler::init()
     CameraList *list;
     const char *name, *port;
     int ret;
-    context = gp_context_new();
+    m_context = gp_context_new();
 
     /* Port initialization */
-    if ((ret = gp_port_info_list_new(&portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_new");
-    if ((ret = gp_port_info_list_load(portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_load");
-    if ((ret = gp_port_info_list_count(portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_count");
+    if ((ret = gp_port_info_list_new(&m_portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_new");
+    if ((ret = gp_port_info_list_load(m_portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_load");
+    if ((ret = gp_port_info_list_count(m_portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_count");
 
     /* Camera abilities initialization */
-    if ((ret = gp_abilities_list_new(&abilities)) < GP_OK) return handleError(ret, "gp_abilities_list_new");
-    if ((ret = gp_abilities_list_load(abilities, context)) < GP_OK) return handleError(ret, "gp_abilities_list_load");
+    if ((ret = gp_abilities_list_new(&m_abilities)) < GP_OK) return handleError(ret, "gp_abilities_list_new");
+    if ((ret = gp_abilities_list_load(m_abilities, m_context)) < GP_OK) return handleError(ret, "gp_abilities_list_load");
 
     /* Camera listing */
     if ((ret = gp_list_new(&list)) < GP_OK) return handleError(ret, "gp_list_new");
 
 
-    nCameras = autodetect(list, context);
+    m_nCameras = autodetect(list, m_context);
 
-    if(nCameras > MAX_CAMERA)
-        nCameras = MAX_CAMERA;
-    for(int i = 0; i < nCameras; i++) {
+    if(m_nCameras > MAX_CAMERA)
+        m_nCameras = MAX_CAMERA;
+    for(int i = 0; i < m_nCameras; i++) {
         /* Get camera name and port name*/
         gp_list_get_name(list, i, &name);
         gp_list_get_value(list, i, &port);
 
         /* Create the camera object from the name and the port */
-        cameras[i] = new QCamera(name, port, abilities, portinfolist);
+        m_cameras[i] = new QCamera(name, port, m_abilities, m_portinfolist);
     }
-    emit message(tr("%n camera(s) found.", "", nCameras));
+    emit message(tr("%n camera(s) found.", "", m_nCameras));
     return GP_OK;
 }
 
@@ -71,32 +71,32 @@ int CameraHandler::deinit()
     int ret;
 
     for(int i = 0; i < MAX_CAMERA; i++) {
-        if(cameras[i] != NULL) {
-            delete cameras[i];
-            cameras[i] = NULL;
+        if(m_cameras[i] != NULL) {
+            delete m_cameras[i];
+            m_cameras[i] = NULL;
         }
     }
 
-    if((ret = gp_abilities_list_free(abilities)) < GP_OK) return handleError(ret, "gp_abilities_list_free");
-    if((ret = gp_port_info_list_free(portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_free");
+    if((ret = gp_abilities_list_free(m_abilities)) < GP_OK) return handleError(ret, "gp_abilities_list_free");
+    if((ret = gp_port_info_list_free(m_portinfolist)) < GP_OK) return handleError(ret, "gp_port_info_list_free");
 
-    gp_context_unref(context);
+    gp_context_unref(m_context);
 
     return GP_OK;
 }
 
 CameraHandler::CameraHandler()
 {
-	nCameras = 0;
+    m_nCameras = 0;
 	for(int i=0; i<MAX_CAMERA; i++)
-		cameras[i] = NULL;
+        m_cameras[i] = NULL;
 }
 
 CameraHandler::~CameraHandler()
 {
 	for(int i = 0; i < getNbCameras(); i++) {
-		delete cameras[i];
-		cameras[i] = NULL;
+        delete m_cameras[i];
+        m_cameras[i] = NULL;
 	}
 }
 
@@ -108,7 +108,7 @@ int CameraHandler::autodetect(CameraList *list, GPContext *context)
 	ret = gp_list_new (&xlist);
     if(ret < GP_OK) return handleError(ret, "gp_list_new");
 	/* ... and autodetect the currently attached cameras. */
-    ret = gp_abilities_list_detect (abilities, portinfolist, xlist, context);
+    ret = gp_abilities_list_detect (m_abilities, m_portinfolist, xlist, context);
 	if (ret < GP_OK) return handleError(ret, "gp_abilities_list_detect");
 
 	/* Filter out the "usb:" entry */

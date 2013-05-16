@@ -33,7 +33,7 @@ class QCamera : public QObject
     Q_OBJECT
 public:
     QCamera();
-    QCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
+    QCamera(const char *m_model, const char *m_port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
     virtual ~QCamera();
 
     QString getSummary();
@@ -48,14 +48,14 @@ public:
     QString getPort() const;
 
 protected:
-    friend void idle_func(GPContext *context, void *data);
-    friend void progress_update_func(GPContext *context, unsigned int id, float current, void *data);
-    friend void progress_stop_func(GPContext *context, unsigned int id, void *data);
+    friend void idle_func(GPContext *m_context, void *data);
+    friend void progress_update_func(GPContext *m_context, unsigned int id, float current, void *data);
+    friend void progress_stop_func(GPContext *m_context, unsigned int id, void *data);
 #ifdef LEGACY_GPHOTO
-    friend void error_func(GPContext *context, const char *format, va_list args, void *data);
-    friend void status_func(GPContext *context, const char *format, va_list args, void *data);
-    friend void message_func(GPContext *context, const char *format, va_list args, void *data);
-    friend unsigned int progress_start_func(GPContext *context, float target, const char *format, va_list args, void *data);
+    friend void error_func(GPContext *m_context, const char *format, va_list args, void *data);
+    friend void status_func(GPContext *m_context, const char *format, va_list args, void *data);
+    friend void message_func(GPContext *m_context, const char *format, va_list args, void *data);
+    friend unsigned int progress_start_func(GPContext *m_context, float target, const char *format, va_list args, void *data);
 #else
     friend void error_func(GPContext *context, const char *, void *data);
     friend void status_func(GPContext *context, const char *, void *data);
@@ -65,18 +65,18 @@ protected:
     int captureToFile(QFile *file);
 
 private:
-    Camera *camera;
-    GPContext *context;
-    CameraAbilities abilities;
-    QString model;
-    QString port;
+    Camera *m_camera;
+    GPContext *m_context;
+    CameraAbilities m_abilities;
+    QString m_model;
+    QString m_port;
     //GPPortInfo *portinfo;
-    QThread camThread;
-    QTimer *watchdog;
+    QThread m_camThread;
+    QTimer *m_watchdog;
 
 
     int handleError(int error, QString msg);
-    int buildCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
+    int buildCamera(const char *m_model, const char *m_port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
 
 public slots:
     void captureToCamera(QString *camerapath);

@@ -43,7 +43,7 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    Q_PROPERTY(int currentCostumeId READ getCurrentCostumeId WRITE setCurrentCostumeId USER true)
+    Q_PROPERTY(int m_currentCostumeId READ getCurrentCostumeId WRITE setCurrentCostumeId USER true)
 
     enum CaptureAction {Ignore, Replace, Append};
 public:
@@ -69,7 +69,7 @@ public slots:
     void removeDevice(Arduino arduino);
     int getCurrentArduino();
     void whenMassCaptureDone(bool success);
-    void setCamera(QPhoto::QCamera *camera);
+    void setCamera(QPhoto::QCamera *m_camera);
     void registerError(QString error);
     void clearErrors();
     
@@ -102,22 +102,22 @@ private slots:
 
 private:
 
-    SettingsForm *settingsForm;
     Ui::MainWindow *ui;
-    QPhoto::CameraHandler *handler;
-    QPhoto::QCamera *camera;
-    SlotLog *logger;
-    QList<QPixmap> *pics;
-    QErrorMessage errorMessage;
-    QDataWidgetMapper mapper;
-    Collection *collection;
-    ArduinoCommunication *morphology;
-    QSettings settings;
-    QMap <QString, CaptureAction> captureActions;
-    bool massCaptureRunning;
-    int currentCostumeId;
-    QList <QSlider *> morphoSliders;
-    QStringList lastErrors;
+    SettingsForm *m_settingsForm;
+    QPhoto::CameraHandler *m_handler;
+    QPhoto::QCamera *m_camera;
+    SlotLog *m_logger;
+    QList<QPixmap> *m_pics;
+    QErrorMessage m_errorMessage;
+    QDataWidgetMapper m_mapper;
+    Collection *m_collection;
+    ArduinoCommunication *m_arduinoCommunication;
+    QSettings m_settings;
+    QMap <QString, CaptureAction> m_captureActions;
+    bool m_massCaptureRunning;
+    int m_currentCostumeId;
+    QList <QSlider *> m_morphoSliders;
+    QStringList m_lastErrors;
 
     void loadCollection(QString path);
     int getCurrentId();

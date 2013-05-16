@@ -9,14 +9,14 @@ static const char *morpho_motors_name[] = {
 ArduinoCommunication::ArduinoCommunication(QObject *parent) :
     QObject(parent)
 {
-    pinging = false;
-    lastMessage = 0;
+    m_pinging = false;
+    m_lastMessage = 0;
     m_port = 0;
-    aliveTimer.setInterval(5000);
-    connect(&aliveTimer, SIGNAL(timeout()), this, SLOT(checkAliveDevices()));
-    watchers.resize(MAX_ID);
-    watchers.fill(0);
-    aliveTimer.start();
+    m_aliveTimer.setInterval(5000);
+    connect(&m_aliveTimer, SIGNAL(timeout()), this, SLOT(checkAliveDevices()));
+    m_watchers.resize(MAX_ID);
+    m_watchers.fill(0);
+    m_aliveTimer.start();
 }
 
 const char **ArduinoCommunication::getMotorsNames()
@@ -64,10 +64,10 @@ MessageWatcher *ArduinoCommunication::sendHelloMessage()
 MessageWatcher *ArduinoCommunication::setMotorMicrosecond(int arduino, int motor, int ms)
 {
     for(int i=0; i<MAX_ID; i++) {
-        MessageWatcher *watcher = watchers[i];
+        MessageWatcher *watcher = m_watchers[i];
         if(watcher != 0 && watcher->getDest() == arduino && watcher->getDatas().size() >= 1 && watcher->getDatas().first().toInt() == motor) {
             delete watcher;
-            watchers[i] = 0;
+            m_watchers[i] = 0;
         }
     }
     QList<QVariant> args;
@@ -79,16 +79,16 @@ MessageWatcher *ArduinoCommunication::setMotorMicrosecond(int arduino, int motor
 MessageWatcher *ArduinoCommunication::setRotation(int angle)
 {
     for(int i=0; i<MAX_ID; i++) {
-        if(watchers.value(i,0) != 0 && watchers.value(i)->getType() == MSG_ROTATION) {
-            delete watchers.value(i);
-            watchers[i] = 0;
+        if(m_watchers.value(i,0) != 0 && m_watchers.value(i)->getType() == MSG_ROTATION) {
+            delete m_watchers.value(i);
+            m_watchers[i] = 0;
         }
     }
 
     QList<QVariant> args;
     args.append(360-angle);
-    if(arduinos.size() > 0)
-        return sendMessage(MSG_ROTATION, arduinos[0].id, args);
+    if(m_arduinos.size() > 0)
+        return sendMessage(MSG_ROTATION, m_arduinos[0].id, args);
     else
         return new MessageWatcher(this);
 }
@@ -101,9 +101,9 @@ MessageWatcher *ArduinoCommunication::getMotorsPosition(int arduino)
 void ArduinoCommunication::onDataAvailable()
 {
     if(m_port != 0) {
-        message_part.append(m_port->readAll());
-        QStringList messages = message_part.split(MSG_SEP);
-        message_part = messages.takeLast(); // The last message is incomplete
+        m_messagePart.append(m_port->readAll());
+        QStringList messages = m_messagePart.split(MSG_SEP);
+        m_messagePart = messages.takeLast(); // The last message is incomplete
         foreach(QString message, messages)
             handleMessage(message);
     }
@@ -111,9 +111,9 @@ void ArduinoCommunication::onDataAvailable()
 
 void ArduinoCommunication::checkAliveDevices()
 {
-    if(!pinging) {
-        pinging = true;
-        QMutableListIterator<Arduino> i(arduinos);
+    if(!m_pinging) {
+        m_pinging = true;
+        QMutableListIterator<Arduino> i(m_arduinos);
         while(i.hasNext())
             i.next().hasAnswered = false;
         sendHelloMessage();
@@ -123,7 +123,7 @@ void ArduinoCommunication::checkAliveDevices()
 
 void ArduinoCommunication::cleanUpDeadDevices()
 {
-    QMutableListIterator<Arduino> i(arduinos);
+    QMutableListIterator<Arduino> i(m_arduinos);
     while(i.hasNext()) {
         if(!i.next().hasAnswered)
         {
@@ -131,7 +131,7 @@ void ArduinoCommunication::cleanUpDeadDevices()
             i.remove();
         }
     }
-    pinging = false;
+    m_pinging = false;
 }
 
 void ArduinoCommunication::handleMessage(QString message)
@@ -164,7 +164,7 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
         narduino.role = (ARD_ROLE)message.data.first().toInt();
         narduino.hasAnswered = true;
         bool isNew = true;
-        QMutableListIterator<Arduino> i(arduinos);
+        QMutableListIterator<Arduino> i(m_arduinos);
         while(i.hasNext()) {
             if(i.next().id == narduino.id) {
                 isNew = false;
@@ -173,7 +173,7 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
             }
         }
         if(isNew) {
-            arduinos.append(narduino);
+            m_arduinos.append(narduino);
             emit(arduinoAdded(narduino));
         }
         break;
@@ -188,12 +188,12 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
     case MSG_MORPHOLOGY:
         break;
     case MSG_ACK:
-        if(watchers.value(message.id,0) != 0 && watchers.value(message.id)->valid())
-            watchers.value(message.id)->setAck();
+        if(m_watchers.value(message.id,0) != 0 && m_watchers.value(message.id)->valid())
+            m_watchers.value(message.id)->setAck();
         break;
     case MSG_DONE:
-        if(watchers.value(message.id,0) != 0 && watchers.value(message.id)->valid())
-            watchers.value(message.id)->setDone();
+        if(m_watchers.value(message.id,0) != 0 && m_watchers.value(message.id)->valid())
+            m_watchers.value(message.id)->setDone();
         break;
     case MSG_SERVO_POS:
     {
@@ -210,17 +210,17 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
 
 MessageWatcher *ArduinoCommunication::sendMessage(MSG_TYPE type, int dest, QList<QVariant> datas)
 {
-    lastMessage++;
-    lastMessage = lastMessage%MAX_ID;
-    if(lastMessage == DEST_BROADCAST)
-        lastMessage++;
-    int id = lastMessage;
-    delete watchers.value(id); // old old message
+    m_lastMessage++;
+    m_lastMessage = m_lastMessage%MAX_ID;
+    if(m_lastMessage == DEST_BROADCAST)
+        m_lastMessage++;
+    int id = m_lastMessage;
+    delete m_watchers.value(id); // old old message
     MessageWatcher *watcher = 0;
     if(dest != DEST_BROADCAST) { // not a broadcast, so we watch for answer
         watcher = new MessageWatcher(type, id, dest, datas, this);
         connect(watcher, SIGNAL(needResend(MSG_TYPE,int,int,QList<QVariant>)), this, SLOT(_sendMessage(MSG_TYPE,int,int,QList<QVariant>)));
-        watchers[id] = watcher;
+        m_watchers[id] = watcher;
     }
 
     _sendMessage(type, id, dest, datas);

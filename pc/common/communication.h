@@ -75,12 +75,12 @@ private:
 
     QextSerialPort *m_port;
     QString m_port_name;
-    QString message_part;
-    QList<Arduino> arduinos;
-    QTimer aliveTimer;
-    QVector<MessageWatcher*> watchers;
-    int lastMessage;
-    bool pinging;
+    QString m_messagePart;
+    QList<Arduino> m_arduinos;
+    QTimer m_aliveTimer;
+    QVector<MessageWatcher*> m_watchers;
+    int m_lastMessage;
+    bool m_pinging;
 };
 
 #endif // MORPHOLOGY_H

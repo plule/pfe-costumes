@@ -5,34 +5,34 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    collection = 0;
-    camera = 0;
-    massCaptureRunning = false;
+    m_collection = 0;
+    m_camera = 0;
+    m_massCaptureRunning = false;
     // Logger that show what goes through the slots
-    logger = new SlotLog();
+    m_logger = new SlotLog();
 
     // Ui init and tweaks
     QIcon::setThemeName("elementary-xfce"); // TODO fix this.
     ui->setupUi(this);
 
     // Handler and arduino communication modules
-    handler = new QPhoto::CameraHandler();
-    morphology = new ArduinoCommunication(this);
+    m_handler = new QPhoto::CameraHandler();
+    m_arduinoCommunication = new ArduinoCommunication(this);
 
     // Handle cameras (listing, taking photos, etc...)
-    connect(handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
-    handler->init();
+    connect(m_handler, SIGNAL(message(QString)), this, SLOT(updateStatusBar(QString)));
+    m_handler->init();
 
     // Settings window
-    settingsForm = new SettingsForm(handler, morphology, this);
-    connect(settingsForm, SIGNAL(cameraChanged(QPhoto::QCamera*)), this, SLOT(setCamera(QPhoto::QCamera*)));
-    setCamera(settingsForm->getCamera());
+    m_settingsForm = new SettingsForm(m_handler, m_arduinoCommunication, this);
+    connect(m_settingsForm, SIGNAL(cameraChanged(QPhoto::QCamera*)), this, SLOT(setCamera(QPhoto::QCamera*)));
+    setCamera(m_settingsForm->getCamera());
 
     // Arduino comm configuration and ui init
-    morphology->setPort(settingsForm->getXbeePort());
-    connect(ui->rotationDial, SIGNAL(valueChanged(int)), morphology, SLOT(setRotation(int)));
-    for(int i=0; i < morphology->getMotorsNumber(); i++) {
-        QString name = QString(morphology->getMotorsNames()[i]);
+    m_arduinoCommunication->setPort(m_settingsForm->getXbeePort());
+    connect(ui->rotationDial, SIGNAL(valueChanged(int)), m_arduinoCommunication, SLOT(setRotation(int)));
+    for(int i=0; i < m_arduinoCommunication->getMotorsNumber(); i++) {
+        QString name = QString(m_arduinoCommunication->getMotorsNames()[i]);
         QSlider *slider = new QSlider(Qt::Horizontal, this);
         slider->setMinimum(MORPHO_MIN);
         slider->setMaximum(MORPHO_MAX);
@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
         layout->addWidget(slider);
         layout->addWidget(spin);
 
-        morphoSliders.append(slider);
+        m_morphoSliders.append(slider);
 
         connect(slider, SIGNAL(valueChanged(int)), spin, SLOT(setValue(int)));
         connect(spin, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
@@ -55,17 +55,17 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->adjustementForm->addRow(name, layout);
     }
 
-    connect(morphology, SIGNAL(motorMicrosecondChanged(int,int,int)), this, SLOT(setMotorMicroSecond(int,int,int)));
+    connect(m_arduinoCommunication, SIGNAL(motorMicrosecondChanged(int,int,int)), this, SLOT(setMotorMicroSecond(int,int,int)));
 
-    connect(ui->ardHelloButton, SIGNAL(clicked()), morphology, SLOT(sendHelloMessage()));
-    connect(morphology, SIGNAL(arduinoAdded(Arduino)), this, SLOT(addDevice(Arduino)));
-    connect(morphology, SIGNAL(arduinoRemoved(Arduino)), this, SLOT(removeDevice(Arduino)));
-    morphology->sendHelloMessage();
-    connect(settingsForm, SIGNAL(xbeePortChanged(QString)), morphology, SLOT(setPort(QString)));
+    connect(ui->ardHelloButton, SIGNAL(clicked()), m_arduinoCommunication, SLOT(sendHelloMessage()));
+    connect(m_arduinoCommunication, SIGNAL(arduinoAdded(Arduino)), this, SLOT(addDevice(Arduino)));
+    connect(m_arduinoCommunication, SIGNAL(arduinoRemoved(Arduino)), this, SLOT(removeDevice(Arduino)));
+    m_arduinoCommunication->sendHelloMessage();
+    connect(m_settingsForm, SIGNAL(xbeePortChanged(QString)), m_arduinoCommunication, SLOT(setPort(QString)));
 
     // Load last collection
-    if(settings.value("collection").type() == QVariant::String && QFile::exists(settings.value("collection").toString()))
-        loadCollection(settings.value("collection").toString());
+    if(m_settings.value("collection").type() == QVariant::String && QFile::exists(m_settings.value("collection").toString()))
+        loadCollection(m_settings.value("collection").toString());
     else
         on_actionNew_Collection_triggered();
 
@@ -92,32 +92,32 @@ static void clearLayout(QLayout* layout, bool deleteWidgets = true)
 
 void MainWindow::loadCollection(QString path)
 {
-    if(collection)
-        delete collection;
-    settings.setValue("collection", path);
-    collection = new Collection(this, path);
-    if(collection->isValid()) {
-        QSqlTableModel *model = collection->getCollectionModel();
+    if(m_collection)
+        delete m_collection;
+    m_settings.setValue("collection", path);
+    m_collection = new Collection(this, path);
+    if(m_collection->isValid()) {
+        QSqlTableModel *model = m_collection->getCollectionModel();
 
         // Update save button and titles on data change/sync
         connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                 this, SLOT(onModelDataChanged(QModelIndex,QModelIndex)));
-        connect(collection, SIGNAL(synchronised()), this, SLOT(updateSaveButton()));
-        connect(collection, SIGNAL(synchronised()), this, SLOT(populateList())); // ensure sync. TODO useful?
-        connect(collection, SIGNAL(synchronised()), ui->collectionTable2, SLOT(cleanAll()));
+        connect(m_collection, SIGNAL(synchronised()), this, SLOT(updateSaveButton()));
+        connect(m_collection, SIGNAL(synchronised()), this, SLOT(populateList())); // ensure sync. TODO useful?
+        connect(m_collection, SIGNAL(synchronised()), ui->collectionTable2, SLOT(cleanAll()));
 
         // Configuration of the mapper between costume info widget and database model
-        mapper.setModel(model);
-        mapper.clearMapping();
-        mapper.setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
+        m_mapper.setModel(model);
+        m_mapper.clearMapping();
+        m_mapper.setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
 
         // Connection between list widget and mapper
-        connect(&mapper, SIGNAL(currentIndexChanged(int)), ui->collectionTable2, SLOT(load(int)));
-        connect(ui->collectionTable2, SIGNAL(loadedChanged(int)), &mapper, SLOT(setCurrentIndex(int)));
+        connect(&m_mapper, SIGNAL(currentIndexChanged(int)), ui->collectionTable2, SLOT(load(int)));
+        connect(ui->collectionTable2, SIGNAL(loadedChanged(int)), &m_mapper, SLOT(setCurrentIndex(int)));
 
         // Creation of the widgets that contains costumes info
         clearLayout(ui->infoLayout, true);
-        QList<QPair<Costume_info, QString> > collectionInfos = collection->sortedContent();
+        QList<QPair<Costume_info, QString> > collectionInfos = m_collection->sortedContent();
         for(int i=0; i < collectionInfos.length(); i++) {
             QString key = collectionInfos.at(i).second;
             Costume_info info = collectionInfos.at(i).first;
@@ -125,11 +125,11 @@ void MainWindow::loadCollection(QString path)
             if(info.type == ShortString) {
                 QLineEdit *lineEdit = new QLineEdit(this);
                 if(info.autocomplete)
-                    lineEdit->setCompleter(collection->getCompleter(key));
+                    lineEdit->setCompleter(m_collection->getCompleter(key));
                 widget = lineEdit;
 
             } else if(info.type == PK)
-                mapper.addMapping(this, model->record().indexOf(key)); // map the pk with currentCostumeId get/set
+                m_mapper.addMapping(this, model->record().indexOf(key)); // map the pk with currentCostumeId get/set
             else if(info.type == Number) {
                 widget = new QSpinBox(this);
                 ((QSpinBox*)widget)->setMaximum(9999);
@@ -160,30 +160,30 @@ void MainWindow::loadCollection(QString path)
                     } else
                         widget->setVisible(false);
                 }
-                mapper.addMapping(widget, model->record().indexOf(key));
+                m_mapper.addMapping(widget, model->record().indexOf(key));
             }
         }
 
         populateList();
-        mapper.toFirst();
+        m_mapper.toFirst();
     }
 }
 
 int MainWindow::getCurrentId()
 {
-    return currentCostumeId;
+    return m_currentCostumeId;
 }
 
 bool MainWindow::saveDialog()
 {
-    if(collection->isDirty()) {
+    if(m_collection->isDirty()) {
         QMessageBox::StandardButton ret;
         ret = QMessageBox::warning(this, tr("Save Collection"),
                                    tr("The collection has unsaved changes.\n"
                                       "Do you want to save the modifications?"),
                                    QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         if(ret == QMessageBox::Save) {
-            collection->submit();
+            m_collection->submit();
             return true;
         } else if(ret == QMessageBox::Cancel)
             return false;
@@ -193,12 +193,12 @@ bool MainWindow::saveDialog()
 
 void MainWindow::populateList()
 {
-    QSqlTableModel *model = collection->getCollectionModel();
+    QSqlTableModel *model = m_collection->getCollectionModel();
     ui->collectionTable2->clear();
     int idRow = model->fieldIndex("id");
     for(int i=0; i<model->rowCount(); i++) {
         QSqlRecord r = model->record(i);
-        QListWidgetItem *item = new QListWidgetItem(collection->getName(r));
+        QListWidgetItem *item = new QListWidgetItem(m_collection->getName(r));
         item->setData(Qt::UserRole, r.value(idRow));
         item->setIcon(QIcon::fromTheme("x-office-document"));
         ui->collectionTable2->insertItem(i,item);
@@ -209,7 +209,7 @@ void MainWindow::addDevice(Arduino arduino)
 {
     ui->ardListCombo->addItem(QString::number(arduino.id), arduino.id);
     if(arduino.id == getCurrentArduino())
-        morphology->getMotorsPosition(arduino.id);
+        m_arduinoCommunication->getMotorsPosition(arduino.id);
 }
 
 void MainWindow::removeDevice(Arduino arduino)
@@ -220,7 +220,7 @@ void MainWindow::removeDevice(Arduino arduino)
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete handler;
+    delete m_handler;
 }
 
 void MainWindow::startWork(QString work, int target)
@@ -249,18 +249,18 @@ void MainWindow::displayError(QString error)
     QMessageBox msg;
     msg.setIcon(QMessageBox::Warning);
     msg.setText(error);
-    msg.setDetailedText(lastErrors.join("\n"));
+    msg.setDetailedText(m_lastErrors.join("\n"));
     msg.exec();
 }
 
 void MainWindow::handleNewPicture(QString path)
 {
     QString filename = QFileInfo(path).fileName();
-    if(massCaptureRunning) {
+    if(m_massCaptureRunning) {
         ui->turntable->addPicture(filename);
         ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
     } else {
-        switch(captureActions.value(path, Ignore))
+        switch(m_captureActions.value(path, Ignore))
         {
         case Ignore:
             qWarning() << "Got a photo for unknown reason";
@@ -277,14 +277,14 @@ void MainWindow::handleNewPicture(QString path)
             qWarning() << "Got a photo for unknown reason";
             break;
         }
-        captureActions.remove(path);
+        m_captureActions.remove(path);
     }
     updateSaveButton();
 }
 
 void MainWindow::updateSaveButton()
 {
-    ui->saveButton->setEnabled(collection->isDirty());
+    ui->saveButton->setEnabled(m_collection->isDirty());
 }
 
 // Do not expect more than one change at a time.
@@ -294,8 +294,8 @@ void MainWindow::onModelDataChanged(const QModelIndex &topLeft, const QModelInde
     updateSaveButton();
     QListWidgetItem *item = ui->collectionTable2->item(topLeft.row());
     if(item) {
-        item->setText(collection->getName(item->data(Qt::UserRole).toInt()));
-        ui->collectionTable2->setDirty(item, collection->getCollectionModel()->isDirty(topLeft));
+        item->setText(m_collection->getName(item->data(Qt::UserRole).toInt()));
+        ui->collectionTable2->setDirty(item, m_collection->getCollectionModel()->isDirty(topLeft));
     }
 }
 
@@ -307,11 +307,11 @@ void MainWindow::timeout()
 
 void MainWindow::on_captureButton_clicked()
 {
-    if(camera != 0) {
-        QString filename = ui->turntable->getCurrentFileName();//QString("%1").arg(QString::number(ui->turntable->getView()), 3, QLatin1Char('0'));
-        QString path = collection->getTempStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
-        captureActions.insert(path, Replace);
-        camera->captureToFile(path);
+    if(m_camera != 0) {
+        QString filename = ui->turntable->getCurrentFileName();
+        QString path = m_collection->getTempStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
+        m_captureActions.insert(path, Replace);
+        m_camera->captureToFile(path);
     } else {
         this->displayError(tr("No camera connected"));
     }
@@ -320,10 +320,10 @@ void MainWindow::on_captureButton_clicked()
 
 void MainWindow::on_appendCaptureButton_clicked()
 {
-    if(camera != 0) {
-        QString path = collection->getNewFilePath(getCurrentId(), "turntable", "jpg"); // TODO extension follow config
-        captureActions.insert(path, Append);
-        camera->captureToFile(path);
+    if(m_camera != 0) {
+        QString path = m_collection->getNewFilePath(getCurrentId(), "turntable", "jpg"); // TODO extension follow config
+        m_captureActions.insert(path, Append);
+        m_camera->captureToFile(path);
     } else {
         this->displayError(tr("No camera connected"));
     }
@@ -336,21 +336,21 @@ int MainWindow::getCurrentArduino()
 
 void MainWindow::whenMassCaptureDone(bool success)
 {
-    massCaptureRunning = false;
+    m_massCaptureRunning = false;
     if(!success)
         this->displayError(tr("Mass capture failed"));
 }
 
 void MainWindow::setCamera(QPhoto::QCamera *camera)
 {
-    this->camera = camera;
+    this->m_camera = camera;
     if(camera != 0) {
-        connect(camera, SIGNAL(error(QString)), logger, SLOT(error(QString)));
-        connect(camera, SIGNAL(idle()), logger, SLOT(idle()));
-        connect(camera, SIGNAL(status(QString)), logger, SLOT(message(QString)));
-        connect(camera, SIGNAL(message(QString)), logger, SLOT(message(QString)));
-        connect(camera, SIGNAL(progress_update(int)), logger, SLOT(progress_update(int)));
-        connect(camera, SIGNAL(progress_start(QString, int)), logger, SLOT(progress_start(QString, int)));
+        connect(camera, SIGNAL(error(QString)), m_logger, SLOT(error(QString)));
+        connect(camera, SIGNAL(idle()), m_logger, SLOT(idle()));
+        connect(camera, SIGNAL(status(QString)), m_logger, SLOT(message(QString)));
+        connect(camera, SIGNAL(message(QString)), m_logger, SLOT(message(QString)));
+        connect(camera, SIGNAL(progress_update(int)), m_logger, SLOT(progress_update(int)));
+        connect(camera, SIGNAL(progress_start(QString, int)), m_logger, SLOT(progress_start(QString, int)));
 
         connect(camera, SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
         connect(camera, SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
@@ -366,38 +366,38 @@ void MainWindow::setCamera(QPhoto::QCamera *camera)
 
 void MainWindow::clearErrors()
 {
-    lastErrors.clear();
+    m_lastErrors.clear();
 }
 
 void MainWindow::registerError(QString error)
 {
-    lastErrors.append(error);
+    m_lastErrors.append(error);
 }
 
 void MainWindow::sendMs(int ms)
 {
     int current = getCurrentArduino();
     int motor = sender()->property("motor").toInt();
-    morphology->setMotorMicrosecond(current, motor, ms);
+    m_arduinoCommunication->setMotorMicrosecond(current, motor, ms);
 }
 
 void MainWindow::setMotorMicroSecond(int arduino, int motor, int ms)
 {
-    if(arduino == getCurrentArduino() && motor < morphoSliders.size()) {
-        morphoSliders.at(motor)->setValue(ms);
+    if(arduino == getCurrentArduino() && motor < m_morphoSliders.size()) {
+        m_morphoSliders.at(motor)->setValue(ms);
     }
 }
 
 void MainWindow::on_newCostume_clicked()
 {
-    int newId = collection->newCostume();
+    int newId = m_collection->newCostume();
     QListWidgetItem *item = new QListWidgetItem(tr("New Costume"), ui->collectionTable2);
     item->setData(Qt::UserRole, newId);
     item->setIcon(QIcon::fromTheme("x-office-document"));
     ui->collectionTable2->setDirty(item, true);
     ui->collectionTable2->selectionModel()->clear();
     ui->collectionTable2->setCurrentItem(item);
-    mapper.toLast();
+    m_mapper.toLast();
 }
 
 void MainWindow::on_suzanneButton_pressed()
@@ -407,7 +407,7 @@ void MainWindow::on_suzanneButton_pressed()
     for(int i=1; i<=36; ++i)
     {
         QString filename = QString("%1.jpg").arg(QString::number(i), 3, QLatin1Char('0'));
-        QString dest = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
+        QString dest = m_collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
         QFile::remove(dest);
         QFile::copy(":/default-model/suzanne/"+filename, dest);
         QFile::setPermissions(dest, QFileDevice::ReadOwner|QFileDevice::WriteOwner);
@@ -427,7 +427,7 @@ void MainWindow::on_manButton_clicked()
     for(int i=1; i<=36; ++i)
     {
         QString filename = QString("%1.jpg").arg(QString::number(i), 3, QLatin1Char('0'));
-        QString dest = collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
+        QString dest = m_collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
         QFile::remove(dest);
         QFile::copy(":/default-model/man/"+filename, dest);
         QFile::setPermissions(dest, QFileDevice::ReadOwner|QFileDevice::WriteOwner);
@@ -451,7 +451,7 @@ void MainWindow::on_actionNew_Collection_triggered()
     loadCollection(path);
     QDir src(":/default-model/man");
     QStringList files = src.entryList(QDir::Files, QDir::Name);
-    QDir dest = collection->getStorageDir(1, "turntable");
+    QDir dest = m_collection->getStorageDir(1, "turntable");
     foreach(QString file, files) {
         QFile::copy(src.absoluteFilePath(file), dest.absoluteFilePath(file));
         QFile::setPermissions(dest.absoluteFilePath(file), QFileDevice::ReadOwner|QFileDevice::WriteOwner);
@@ -459,12 +459,12 @@ void MainWindow::on_actionNew_Collection_triggered()
 
     QDir src2(":/default-model/suzanne");
     files = src2.entryList(QDir::Files, QDir::Name);
-    dest = collection->getStorageDir(2, "turntable");
+    dest = m_collection->getStorageDir(2, "turntable");
     foreach(QString file, files) {
         QFile::copy(src2.absoluteFilePath(file), dest.absoluteFilePath(file));
         QFile::setPermissions(dest.absoluteFilePath(file), QFileDevice::ReadOwner|QFileDevice::WriteOwner);
     }
-    mapper.toFirst();
+    m_mapper.toFirst();
 }
 
 void MainWindow::on_actionOpen_Collection_triggered()
@@ -475,33 +475,33 @@ void MainWindow::on_actionOpen_Collection_triggered()
 void MainWindow::on_removeButton_clicked()
 {
     foreach(QListWidgetItem *item, ui->collectionTable2->selectedItems()) {
-        collection->deleteCostume(item->data(Qt::UserRole).toInt());
+        m_collection->deleteCostume(item->data(Qt::UserRole).toInt());
         ui->collectionTable2->setItemHidden(item, true);
     }
 }
 
 void MainWindow::on_saveButton_clicked()
 {
-    collection->submit();
+    m_collection->submit();
 }
 
 int MainWindow::getCurrentCostumeId() const
 {
-    return currentCostumeId;
+    return m_currentCostumeId;
 }
 
 void MainWindow::setCurrentCostumeId(int value)
 {
-    if(value != currentCostumeId) {
-        currentCostumeId = value;
-        ui->turntable->loadDirs(collection->getAllDirs(currentCostumeId,"turntable"));
+    if(value != m_currentCostumeId) {
+        m_currentCostumeId = value;
+        ui->turntable->loadDirs(m_collection->getAllDirs(m_currentCostumeId,"turntable"));
     }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (saveDialog()) {
-        collection->cleanUp();
+        m_collection->cleanUp();
         event->accept();
     } else {
         event->ignore();
@@ -510,12 +510,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::on_massCaptureButton_clicked()
 {
-    if(camera != 0) {
-        massCaptureRunning = true;
+    if(m_camera != 0) {
+        m_massCaptureRunning = true;
         MassCapture *synchroniser = new MassCapture(this);
         connect(synchroniser, SIGNAL(done(bool)), this, SLOT(whenMassCaptureDone()));
         connect(synchroniser, SIGNAL(done(bool)), synchroniser, SLOT(deleteLater()));
-        synchroniser->massCapture(camera, morphology, collection, getCurrentId(), 36);
+        synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), 36);
     } else {
         this->displayError(tr("No camera connected"));
     }
@@ -523,5 +523,5 @@ void MainWindow::on_massCaptureButton_clicked()
 
 void MainWindow::on_actionSettings_triggered()
 {
-    settingsForm->show();
+    m_settingsForm->show();
 }

@@ -6,15 +6,15 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
     ui(new Ui::SettingsForm)
 {
     ui->setupUi(this);
-    this->handler = handler;
+    this->m_handler = handler;
 
     m_xbee = xbee;
 
     /* XBee ports list */
-    xbeePort = guessXbeePort(fillXBeePortList());
+    m_xbeePort = guessXbeePort(fillXBeePortList());
 
     /* Cameras list */
-    camera =guessCamera(fillCameraList());
+    m_camera =guessCamera(fillCameraList());
 
     connect(this, SIGNAL(accepted()), this, SLOT(apply()));
     connect(this, SIGNAL(rejected()), this, SLOT(cancel()));
@@ -30,18 +30,18 @@ SettingsForm::~SettingsForm()
 
 QPhoto::QCamera *SettingsForm::getCamera()
 {
-    return camera;
+    return m_camera;
 }
 
 QString SettingsForm::getXbeePort()
 {
-    return xbeePort;
+    return m_xbeePort;
 }
 
 QString SettingsForm::guessXbeePort(QList<QString> candidates)
 {
-    if(candidates.contains(settings.value("xbeeport").toString()))
-        return settings.value("xbeeport").toString();
+    if(candidates.contains(m_settings.value("xbeeport").toString()))
+        return m_settings.value("xbeeport").toString();
 
     foreach(QString candidate, candidates) {
         if(candidate.toLower().contains("usb"))
@@ -57,7 +57,7 @@ QString SettingsForm::guessXbeePort(QList<QString> candidates)
 QPhoto::QCamera *SettingsForm::guessCamera(QList<QPhoto::QCamera*> candidates)
 {
     foreach(QPhoto::QCamera *candidate, candidates)
-        if(candidate->getModel() == settings.value("camera").toString())
+        if(candidate->getModel() == m_settings.value("camera").toString())
             return candidate;
     if(candidates.size() > 0)
         return candidates.first();
@@ -67,13 +67,13 @@ QPhoto::QCamera *SettingsForm::guessCamera(QList<QPhoto::QCamera*> candidates)
 void SettingsForm::selectCurrentCamera()
 {
     for(int i=0; i<ui->cameraPortCombo->count(); i++)
-        if(ui->cameraPortCombo->itemData(i).value<QPhoto::QCamera*>() == camera)
+        if(ui->cameraPortCombo->itemData(i).value<QPhoto::QCamera*>() == m_camera)
             ui->cameraPortCombo->setCurrentIndex(i);
 }
 
 void SettingsForm::selectCurrentXbeePort()
 {
-    ui->xbeePortCombo->setCurrentIndex(ui->xbeePortCombo->findData(QVariant(xbeePort)));
+    ui->xbeePortCombo->setCurrentIndex(ui->xbeePortCombo->findData(QVariant(m_xbeePort)));
 }
 
 QList<QPhoto::QCamera *> SettingsForm::fillCameraList()
@@ -81,7 +81,7 @@ QList<QPhoto::QCamera *> SettingsForm::fillCameraList()
     ui->cameraPortCombo->clear();
     QPhoto::QCamera **cameras;
     int nbCamera;
-    nbCamera = handler->getCameras(&cameras);
+    nbCamera = m_handler->getCameras(&cameras);
     QList<QPhoto::QCamera*> cameraList = QList<QPhoto::QCamera*>();
     for(int i=0; i<nbCamera; i++) {
         QVariant variant;
@@ -105,21 +105,21 @@ QList<QString> SettingsForm::fillXBeePortList()
 void SettingsForm::apply()
 {
     QPhoto::QCamera *newCamera = ui->cameraPortCombo->itemData(ui->cameraPortCombo->currentIndex()).value<QPhoto::QCamera*>();
-    if(camera != newCamera) {
-        camera = newCamera;
-        emit cameraChanged(camera);
+    if(m_camera != newCamera) {
+        m_camera = newCamera;
+        emit cameraChanged(m_camera);
     }
 
     QString newXbeePort = ui->xbeePortCombo->itemData(ui->xbeePortCombo->currentIndex()).toString();
-    if(xbeePort != newXbeePort) {
-        xbeePort = newXbeePort;
-        emit xbeePortChanged(xbeePort);
+    if(m_xbeePort != newXbeePort) {
+        m_xbeePort = newXbeePort;
+        emit xbeePortChanged(m_xbeePort);
     }
 
-    if(camera != 0)
-        settings.setValue("camera", camera->getModel());
-    if(xbeePort != "")
-        settings.setValue("xbeeport", xbeePort);
+    if(m_camera != 0)
+        m_settings.setValue("camera", m_camera->getModel());
+    if(m_xbeePort != "")
+        m_settings.setValue("xbeeport", m_xbeePort);
 }
 
 void SettingsForm::cancel()
@@ -130,17 +130,17 @@ void SettingsForm::cancel()
 
 void SettingsForm::on_detectCamerasButton_clicked()
 {
-    handler->refreshCameraList();
-    camera = guessCamera(fillCameraList());
-    emit cameraChanged(camera);
+    m_handler->refreshCameraList();
+    m_camera = guessCamera(fillCameraList());
+    emit cameraChanged(m_camera);
 }
 
 void SettingsForm::on_detectPortsButton_clicked()
 {
     QString newPort = guessXbeePort(fillXBeePortList());
-    if(newPort != xbeePort) {
-        xbeePort = newPort;
-        emit xbeePortChanged(xbeePort);
+    if(newPort != m_xbeePort) {
+        m_xbeePort = newPort;
+        emit xbeePortChanged(m_xbeePort);
     }
 }
 

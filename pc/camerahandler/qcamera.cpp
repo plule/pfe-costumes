@@ -122,28 +122,28 @@ int QCamera::handleError(int error, QString msg)
 
 CameraAbilities QCamera::getAbilities()
 {
-    return abilities;
+    return m_abilities;
 }
 
 QTimer *QCamera::getWatchdog()
 {
-    return watchdog;
+    return m_watchdog;
 }
 
 QCamera::QCamera()
 {
-	camera = NULL;
-	context = NULL;
+    m_camera = NULL;
+    m_context = NULL;
     // TODO : init thread and watchdog ?
 }
 
 QCamera::~QCamera()
 {
-	if(camera)
-		gp_camera_exit(camera, context);
-    delete watchdog;
-    camThread.exit();
-    camThread.wait(); // TODO : dangerous ??
+    if(m_camera)
+        gp_camera_exit(m_camera, m_context);
+    delete m_watchdog;
+    m_camThread.exit();
+    m_camThread.wait(); // TODO : dangerous ??
 }
 
 int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist)
@@ -151,54 +151,54 @@ int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesLis
     int ret, model_index, port_index;
     GPPortInfo portinfo;
 	/* Create the camera object */
-    R_GP_CALL(ret, gp_camera_new, &camera);
+    R_GP_CALL(ret, gp_camera_new, &m_camera);
 
 	/* Assign the abilities */
     R_GP_CALL(model_index, gp_abilities_list_lookup_model, abilitiesList, model);
-    R_GP_CALL(ret, gp_abilities_list_get_abilities, abilitiesList, model_index, &abilities);
-    R_GP_CALL(ret, gp_camera_set_abilities, camera, abilities);
+    R_GP_CALL(ret, gp_abilities_list_get_abilities, abilitiesList, model_index, &m_abilities);
+    R_GP_CALL(ret, gp_camera_set_abilities, m_camera, m_abilities);
 
 	/* Assign to a port */
     R_GP_CALL(port_index, gp_port_info_list_lookup_path, portinfolist, port);
     R_GP_CALL(ret, gp_port_info_list_get_info, portinfolist, port_index, &portinfo);
-    R_GP_CALL(ret, gp_camera_set_port_info, camera, portinfo);
+    R_GP_CALL(ret, gp_camera_set_port_info, m_camera, portinfo);
 
 	/* Init the connection */
-    R_GP_CALL(ret, gp_camera_init, camera, context);
+    R_GP_CALL(ret, gp_camera_init, m_camera, m_context);
     return GP_OK;
 }
 
 QCamera::QCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist)
 {
     int ret;
-    this->model = QString(model);
-    this->port = QString(port);
+    this->m_model = QString(model);
+    this->m_port = QString(port);
 
-	context = gp_context_new();
-	gp_context_set_idle_func (context, idle_func, this);
-	gp_context_set_progress_funcs (context, progress_start_func, progress_update_func, progress_stop_func, this);
-	gp_context_set_error_func(context, error_func, this);
-	gp_context_set_status_func (context, status_func, this);
+    m_context = gp_context_new();
+    gp_context_set_idle_func (m_context, idle_func, this);
+    gp_context_set_progress_funcs (m_context, progress_start_func, progress_update_func, progress_stop_func, this);
+    gp_context_set_error_func(m_context, error_func, this);
+    gp_context_set_status_func (m_context, status_func, this);
 //	gp_context_set_question_func (context, question_func, this);
 //	gp_context_set_cancel_func (context, cancel_func, this);
-	gp_context_set_message_func (context, message_func, this);
+    gp_context_set_message_func (m_context, message_func, this);
 
     if((ret = buildCamera(model, port, abilitiesList, portinfolist)) != GP_OK)
         throw CameraException(QString("Failed to connect to camera : ") + QString(gp_result_as_string(ret)));
-    watchdog = new QTimer(QApplication::instance()->thread());
-    watchdog->setSingleShot(true);
-    watchdog->setInterval(5000);
-    connect(this, SIGNAL(camera_answered()), watchdog, SLOT(stop()));
-    connect(this, SIGNAL(wait_for_camera_answer()), watchdog, SLOT(start()));
-    camThread.start();
-    this->moveToThread(&camThread);
+    m_watchdog = new QTimer(QApplication::instance()->thread());
+    m_watchdog->setSingleShot(true);
+    m_watchdog->setInterval(5000);
+    connect(this, SIGNAL(camera_answered()), m_watchdog, SLOT(stop()));
+    connect(this, SIGNAL(wait_for_camera_answer()), m_watchdog, SLOT(start()));
+    m_camThread.start();
+    this->moveToThread(&m_camThread);
     this->setObjectName(QString(model));
 }
 
 QString QCamera::getSummary()
 {
 	CameraText cameratext;
-	gp_camera_get_summary(camera, &cameratext, context);
+    gp_camera_get_summary(m_camera, &cameratext, m_context);
 	return QString(cameratext.text);
 }
 
@@ -207,7 +207,7 @@ void QCamera::captureToCamera(QString *cameraPath)
 	CameraFilePath camera_file_path;
 	int ret;
     // TODO : ensure memory is set to card
-    GP_CALL(ret, gp_camera_capture, camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
+    GP_CALL(ret, gp_camera_capture, m_camera, GP_CAPTURE_IMAGE, &camera_file_path, m_context);
     if(ret < GP_OK) return;
 	cameraPath->clear();
 	cameraPath->append(camera_file_path.folder);
@@ -221,7 +221,7 @@ int QCamera::captureToFile(QFile *localFile)
 	int ret;
 	int fd;
     qDebug() << "capturing";
-    R_GP_CALL(ret, gp_camera_capture, camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
+    R_GP_CALL(ret, gp_camera_capture, m_camera, GP_CAPTURE_IMAGE, &camera_file_path, m_context);
     qDebug() << "downloading";
     emit downloading();
 
@@ -235,7 +235,7 @@ int QCamera::captureToFile(QFile *localFile)
         return handleError(ret, "file new");
     }
 
-    GP_CALL(ret, gp_camera_file_get, camera, camera_file_path.folder, camera_file_path.name, GP_FILE_TYPE_NORMAL, file, context);
+    GP_CALL(ret, gp_camera_file_get, m_camera, camera_file_path.folder, camera_file_path.name, GP_FILE_TYPE_NORMAL, file, m_context);
     if(ret < GP_OK) {
         localFile->close();
         return handleError(ret, "file get");
@@ -243,7 +243,7 @@ int QCamera::captureToFile(QFile *localFile)
 
     localFile->close();
 
-    R_GP_CALL(ret, gp_camera_file_delete, camera, camera_file_path.folder, camera_file_path.name, context);
+    R_GP_CALL(ret, gp_camera_file_delete, m_camera, camera_file_path.folder, camera_file_path.name, m_context);
     return GP_OK;
 }
 
@@ -274,11 +274,11 @@ void QCamera::captureToFile(QString path, int nbTry)
 }
 QString QCamera::getPort() const
 {
-    return port;
+    return m_port;
 }
 
 QString QCamera::getModel() const
 {
-    return model;
+    return m_model;
 }
 }
