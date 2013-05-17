@@ -94,6 +94,8 @@ unsigned int progress_start_func(GPContext *context, float target, const char *t
 	int id = 0; // TODO : Assigner un identifiant unique
 	QCamera* camera = static_cast<QCamera*>(data);
     emit camera->progress_start(task, target);
+    if(camera->getWatchdog()->isActive())
+        camera->getWatchdog()->start();
 	return id;
 }
 
