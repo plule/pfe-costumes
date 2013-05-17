@@ -255,7 +255,33 @@ void MainWindow::displayError(QString error)
 
 void MainWindow::handleNewPicture(QString path)
 {
+    /* Raw conversion */
     QString filename = QFileInfo(path).fileName();
+    if(m_rawHandler.IsRaw(path)) {
+
+        QStringList dcrawargs;
+
+        dcrawargs += "dcrawqt";
+        dcrawargs += "-c";
+        dcrawargs += "-W";
+        QByteArray *pixBytes = m_rawHandler.GetImage(path, dcrawargs);
+        QPixmap pix;
+        pix.loadFromData(*pixBytes, "PPM");
+        delete pixBytes;
+        if(pix.isNull()) {
+            QMessageBox::information(this, tr("Conversion error"), tr("Failed to convert raw to jpg. The raw file is conserved."));
+            m_captureActions.remove(path);
+            updateSaveButton();
+            return;
+        } else {
+            QFile file(path+".jpg");
+            filename += ".jpg";
+            file.open(QIODevice::WriteOnly);
+
+            pix.save(&file);
+        }
+    }
+
     if(m_massCaptureRunning) {
         ui->turntable->addPicture(filename);
         ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
@@ -321,7 +347,7 @@ void MainWindow::on_captureButton_clicked()
 void MainWindow::on_appendCaptureButton_clicked()
 {
     if(m_camera != 0) {
-        QString path = m_collection->getNewFilePath(getCurrentId(), "turntable", "jpg"); // TODO extension follow config
+        QString path = m_collection->getNewFilePath(getCurrentId(), "turntable", "nef"); // TODO extension follow config
         m_captureActions.insert(path, Append);
         m_camera->captureToFile(path);
     } else {

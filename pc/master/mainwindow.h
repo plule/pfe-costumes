@@ -119,6 +119,7 @@ private:
     int m_currentCostumeId;
     QList <QSlider *> m_morphoSliders;
     QStringList m_lastErrors;
+    DcRawQT m_rawHandler;
 
     void loadCollection(QString path);
     int getCurrentId();
