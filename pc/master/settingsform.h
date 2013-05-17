@@ -10,6 +10,7 @@
 #include "camerahandler/camerahandler.h"
 #include "common/communication.h"
 #include "qextserialenumerator.h"
+#include "dcrawqtoptions.h"
 
 namespace Ui {
 class SettingsForm;
@@ -25,6 +26,7 @@ public:
 
     QPhoto::QCamera *getCamera();
     QString getXbeePort();
+    QString rawCommand();
 
 signals:
     void cameraChanged(QPhoto::QCamera *m_camera);
@@ -33,6 +35,7 @@ signals:
 public slots:
     void apply();
     void cancel();
+    void dbgRawCommand(QStringList command);
 
 private slots:
     void on_detectCamerasButton_clicked();

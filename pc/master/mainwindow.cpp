@@ -261,12 +261,14 @@ void MainWindow::handleNewPicture(QString path)
 
         QStringList dcrawargs;
 
-        dcrawargs += "dcrawqt";
-        dcrawargs += "-c";
-        dcrawargs += "-W";
-        QByteArray *pixBytes = m_rawHandler.GetImage(path, dcrawargs);
+        //dcrawargs += "dcrawqt";
+        //dcrawargs += "-c";
+        //dcrawargs += "-W";
+        //QByteArray *pixBytes = m_rawHandler.GetImage(path, dcrawargs);
+        // TODO option for using real conversion
+        QByteArray *pixBytes = m_rawHandler.GetThumbNail(path);
         QPixmap pix;
-        pix.loadFromData(*pixBytes, "PPM");
+        pix.loadFromData(*pixBytes);//, "PPM");
         delete pixBytes;
         if(pix.isNull()) {
             QMessageBox::information(this, tr("Conversion error"), tr("Failed to convert raw to jpg. The raw file is conserved."));
@@ -369,24 +371,26 @@ void MainWindow::whenMassCaptureDone(bool success)
 
 void MainWindow::setCamera(QPhoto::QCamera *camera)
 {
-    this->m_camera = camera;
-    if(camera != 0) {
-        connect(camera, SIGNAL(error(QString)), m_logger, SLOT(error(QString)));
-        connect(camera, SIGNAL(idle()), m_logger, SLOT(idle()));
-        connect(camera, SIGNAL(status(QString)), m_logger, SLOT(message(QString)));
-        connect(camera, SIGNAL(message(QString)), m_logger, SLOT(message(QString)));
-        connect(camera, SIGNAL(progress_update(int)), m_logger, SLOT(progress_update(int)));
-        connect(camera, SIGNAL(progress_start(QString, int)), m_logger, SLOT(progress_start(QString, int)));
+    if(camera != m_camera) {
+        this->m_camera = camera;
+        if(camera != 0) {
+            connect(camera, SIGNAL(error(QString)), m_logger, SLOT(error(QString)));
+            connect(camera, SIGNAL(idle()), m_logger, SLOT(idle()));
+            connect(camera, SIGNAL(status(QString)), m_logger, SLOT(message(QString)));
+            connect(camera, SIGNAL(message(QString)), m_logger, SLOT(message(QString)));
+            connect(camera, SIGNAL(progress_update(int)), m_logger, SLOT(progress_update(int)));
+            connect(camera, SIGNAL(progress_start(QString, int)), m_logger, SLOT(progress_start(QString, int)));
 
-        connect(camera, SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
-        connect(camera, SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
-        connect(camera, SIGNAL(captured(QString)), this, SLOT(handleNewPicture(QString)));
+            connect(camera, SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
+            connect(camera, SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
+            connect(camera, SIGNAL(captured(QString)), this, SLOT(handleNewPicture(QString)));
 
-        connect(camera, SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
-        connect(camera, SIGNAL(error(QString)), this, SLOT(registerError(QString)));
-        connect(camera, SIGNAL(operation_success()), this, SLOT(clearErrors()));
-        connect(camera, SIGNAL(operation_failed(QString)), this, SLOT(displayError(QString)));
-        connect(camera->getWatchdog(), SIGNAL(timeout()), this, SLOT(timeout()));
+            connect(camera, SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
+            connect(camera, SIGNAL(error(QString)), this, SLOT(registerError(QString)));
+            connect(camera, SIGNAL(operation_success()), this, SLOT(clearErrors()));
+            connect(camera, SIGNAL(operation_failed(QString)), this, SLOT(displayError(QString)));
+            connect(camera->getWatchdog(), SIGNAL(timeout()), this, SLOT(timeout()));
+        }
     }
 }
 

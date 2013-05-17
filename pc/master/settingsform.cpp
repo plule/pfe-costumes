@@ -6,6 +6,7 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
     ui(new Ui::SettingsForm)
 {
     ui->setupUi(this);
+
     this->m_handler = handler;
 
     m_xbee = xbee;
@@ -18,6 +19,7 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
 
     connect(this, SIGNAL(accepted()), this, SLOT(apply()));
     connect(this, SIGNAL(rejected()), this, SLOT(cancel()));
+    connect(ui->rawOptions, SIGNAL(commandlinechanged(QStringList)), this, SLOT(dbgRawCommand(QStringList)));
 
     selectCurrentCamera();
     selectCurrentXbeePort();
@@ -102,6 +104,11 @@ QList<QString> SettingsForm::fillXBeePortList()
     return xbeePortList;
 }
 
+QString SettingsForm::rawCommand()
+{
+    return ui->rawOptions->commandline();
+}
+
 void SettingsForm::apply()
 {
     QPhoto::QCamera *newCamera = ui->cameraPortCombo->itemData(ui->cameraPortCombo->currentIndex()).value<QPhoto::QCamera*>();
@@ -126,6 +133,12 @@ void SettingsForm::cancel()
 {
     selectCurrentCamera();
     selectCurrentXbeePort();
+}
+
+void SettingsForm::dbgRawCommand(QStringList command)
+{
+    qDebug() << command;
+    qDebug() << ui->rawOptions->commandline();
 }
 
 void SettingsForm::on_detectCamerasButton_clicked()
