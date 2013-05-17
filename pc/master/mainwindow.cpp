@@ -341,7 +341,12 @@ void MainWindow::on_captureButton_clicked()
         m_captureActions.insert(path, Replace);
         m_camera->captureToFile(path);
     } else {
-        this->displayError(tr("No camera connected"));
+        m_settingsForm->refreshCameraList();
+        setCamera(m_settingsForm->getCamera());
+        if(m_camera == 0)
+            this->displayError(tr("No camera connected"));
+        else
+            on_appendCaptureButton_clicked();
     }
 }
 
@@ -353,7 +358,12 @@ void MainWindow::on_appendCaptureButton_clicked()
         m_captureActions.insert(path, Append);
         m_camera->captureToFile(path);
     } else {
-        this->displayError(tr("No camera connected"));
+        m_settingsForm->refreshCameraList();
+        setCamera(m_settingsForm->getCamera());
+        if(m_camera == 0)
+            this->displayError(tr("No camera connected"));
+        else
+            on_appendCaptureButton_clicked();
     }
 }
 

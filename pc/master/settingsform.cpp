@@ -35,6 +35,13 @@ QPhoto::QCamera *SettingsForm::getCamera()
     return m_camera;
 }
 
+void SettingsForm::refreshCameraList()
+{
+    m_handler->refreshCameraList();
+    m_camera = guessCamera(fillCameraList());
+    emit cameraChanged(m_camera);
+}
+
 QString SettingsForm::getXbeePort()
 {
     return m_xbeePort;
@@ -143,9 +150,7 @@ void SettingsForm::dbgRawCommand(QStringList command)
 
 void SettingsForm::on_detectCamerasButton_clicked()
 {
-    m_handler->refreshCameraList();
-    m_camera = guessCamera(fillCameraList());
-    emit cameraChanged(m_camera);
+    refreshCameraList();
 }
 
 void SettingsForm::on_detectPortsButton_clicked()

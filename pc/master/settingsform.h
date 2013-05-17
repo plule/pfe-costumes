@@ -25,6 +25,7 @@ public:
     ~SettingsForm();
 
     QPhoto::QCamera *getCamera();
+    void refreshCameraList();
     QString getXbeePort();
     QString rawCommand();
 
