@@ -95,8 +95,6 @@ private slots:
 
     void on_manButton_clicked();
 
-    void on_appendCaptureButton_clicked();
-
     void on_massCaptureButton_clicked();
 
     void on_actionSettings_triggered();

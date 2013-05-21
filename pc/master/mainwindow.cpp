@@ -346,24 +346,7 @@ void MainWindow::on_captureButton_clicked()
         if(m_camera == 0)
             this->displayError(tr("No camera connected"));
         else
-            on_appendCaptureButton_clicked();
-    }
-}
-
-
-void MainWindow::on_appendCaptureButton_clicked()
-{
-    if(m_camera != 0) {
-        QString path = m_collection->getNewFilePath(getCurrentId(), "turntable", "nef"); // TODO extension follow config
-        m_captureActions.insert(path, Append);
-        m_camera->captureToFile(path);
-    } else {
-        m_settingsForm->refreshCameraList();
-        setCamera(m_settingsForm->getCamera());
-        if(m_camera == 0)
-            this->displayError(tr("No camera connected"));
-        else
-            on_appendCaptureButton_clicked();
+            on_captureButton_clicked();
     }
 }
 
