@@ -74,7 +74,6 @@ private:
     QThread m_camThread;
     QTimer *m_watchdog;
 
-
     int handleError(int error, QString msg);
     int buildCamera(const char *m_model, const char *m_port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
 

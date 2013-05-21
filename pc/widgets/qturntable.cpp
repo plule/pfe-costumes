@@ -83,7 +83,6 @@ void QTurntable::loadDirs(QList<QDir> dirs, bool force)
     QStringList files = filenamesSet.toList();
     qSort(files);
     setNumber(files.size());
-    qDebug() << files;
 
     if(files.size()>0) {
         emit loadStart(tr("Loading 360° view"), files.size());

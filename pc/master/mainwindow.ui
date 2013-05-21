@@ -247,7 +247,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>246</width>
+               <width>224</width>
                <height>586</height>
               </rect>
              </property>
@@ -307,6 +307,13 @@
                   <widget class="QPushButton" name="captureButton">
                    <property name="text">
                     <string>Recapture current view</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButton">
+                   <property name="text">
+                    <string>Stop mass capture</string>
                    </property>
                   </widget>
                  </item>
