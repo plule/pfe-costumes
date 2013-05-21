@@ -29,6 +29,8 @@ MessageWatcher::MessageWatcher(MSG_TYPE type, int id, int dest, QList<QVariant> 
         m_doneTimer->setSingleShot(true);
         connect(m_doneTimer, SIGNAL(timeout()), this, SLOT(doneTimeout()));
         m_doneTimer->start(5000);
+    } else {
+        m_doneTimer = 0;
     }
 }
 

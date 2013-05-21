@@ -99,6 +99,8 @@ private slots:
 
     void on_actionSettings_triggered();
 
+    void on_rotateToViewButton_clicked();
+
 private:
 
     Ui::MainWindow *ui;

@@ -336,6 +336,7 @@ void MainWindow::timeout()
 void MainWindow::on_captureButton_clicked()
 {
     if(m_camera != 0) {
+        m_lastErrors.clear();
         QString filename = ui->turntable->getCurrentFileName();
         QString path = m_collection->getTempStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
         m_captureActions.insert(path, Replace);
@@ -538,7 +539,8 @@ void MainWindow::on_massCaptureButton_clicked()
         MassCapture *synchroniser = new MassCapture(this);
         connect(synchroniser, SIGNAL(done(bool)), this, SLOT(whenMassCaptureDone()));
         connect(synchroniser, SIGNAL(done(bool)), synchroniser, SLOT(deleteLater()));
-        synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), 36);
+        ui->turntable->setNumber(ui->numberOfPhotosSpin->value());
+        synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), ui->numberOfPhotosSpin->value());
     } else {
         this->displayError(tr("No camera connected"));
     }
@@ -547,4 +549,9 @@ void MainWindow::on_massCaptureButton_clicked()
 void MainWindow::on_actionSettings_triggered()
 {
     m_settingsForm->show();
+}
+
+void MainWindow::on_rotateToViewButton_clicked()
+{
+    m_arduinoCommunication->setRotation(ui->viewDial->value());
 }

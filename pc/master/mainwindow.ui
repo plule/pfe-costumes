@@ -282,7 +282,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="numberOfPhotosButton">
+                    <widget class="QSpinBox" name="numberOfPhotosSpin">
                      <property name="maximum">
                       <number>360</number>
                      </property>
@@ -321,7 +321,7 @@
                    <item>
                     <layout class="QVBoxLayout" name="angleLayout">
                      <item>
-                      <widget class="QDial" name="dial">
+                      <widget class="QDial" name="viewDial">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                          <horstretch>0</horstretch>
@@ -422,7 +422,7 @@
                  <item>
                   <widget class="QPushButton" name="rotateToViewButton">
                    <property name="text">
-                    <string>Rotate Mannequin</string>
+                    <string>Rotate Model</string>
                    </property>
                   </widget>
                  </item>
@@ -727,7 +727,7 @@
   <connection>
    <sender>turntable</sender>
    <signal>angleChanged(int)</signal>
-   <receiver>dial</receiver>
+   <receiver>viewDial</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -741,7 +741,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>dial</sender>
+   <sender>viewDial</sender>
    <signal>valueChanged(int)</signal>
    <receiver>turntable</receiver>
    <slot>setAngle(int)</slot>
@@ -997,7 +997,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>numberOfPhotosButton</sender>
+   <sender>numberOfPhotosSpin</sender>
    <signal>valueChanged(int)</signal>
    <receiver>globalWorkBar</receiver>
    <slot>setMaximum(int)</slot>
