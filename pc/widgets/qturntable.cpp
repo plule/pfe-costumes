@@ -78,10 +78,12 @@ void QTurntable::loadDirs(QList<QDir> dirs, bool force)
     QSet<QString> filenamesSet;
     foreach(QDir dir, dirs)
         foreach(QString file, dir.entryList(QDir::Files, QDir::Name))
-            filenamesSet.insert(file);
+            if(file.endsWith(".jpg"))
+                filenamesSet.insert(file);
     QStringList files = filenamesSet.toList();
     qSort(files);
     setNumber(files.size());
+    qDebug() << files;
 
     if(files.size()>0) {
         emit loadStart(tr("Loading 360° view"), files.size());
@@ -152,7 +154,7 @@ void QTurntable::addPicture(QString path)
 void QTurntable::setPicture(int index, QString path)
 {
     QPixmap pic(getPathOf(path));
-    if(index > m_pixmaps.size())
+    if(index >= m_pixmaps.size())
         setNumber(index+1);
     m_pixmaps[index] = QPair<QString,QPixmap>(path,pic);
     if(index == m_current)
@@ -179,6 +181,12 @@ void QTurntable::setView(int view)
             fitInView();
         emit angleChanged(360 * m_current / m_pixmaps.size());
     }
+}
+
+void QTurntable::setPictureAndView(int index, QString path)
+{
+    setPicture(index, path);
+    setView(index);
 }
 
 void QTurntable::setAngle(int angle)

@@ -62,7 +62,9 @@ public slots:
     void endWork();
     void updateStatusBar(QString message);
     void displayError(QString error);
+    QString convertRaw(QString path);
     void handleNewPicture(QString path);
+    void handleMassCapturePicture(int index, QString path);
     void updateSaveButton();
     void onModelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
     void populateList();

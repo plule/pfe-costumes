@@ -41,6 +41,7 @@ public slots:
     virtual void setPicture(int index, QString path);
     virtual void setCurrentPicture(QString path);
     virtual void setView(int view);
+    virtual void setPictureAndView(int index, QString path);
     virtual void setAngle(int angle);
     virtual void fitInView();
     virtual void resetScale();

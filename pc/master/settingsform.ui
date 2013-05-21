@@ -6,170 +6,65 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>598</width>
-    <height>443</height>
+    <width>577</width>
+    <height>358</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>1</number>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="cameraBox">
+     <property name="title">
+      <string>Camera</string>
      </property>
-     <widget class="QWidget" name="portTab">
-      <attribute name="title">
-       <string>Ports settings</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
-       <item>
-        <widget class="QGroupBox" name="xbeeBox">
-         <property name="title">
-          <string>XBee Port</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QComboBox" name="xbeePortCombo">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <item>
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="testPortButton">
-              <property name="text">
-               <string>Test Port</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="detectPortsButton">
-              <property name="text">
-               <string>Detect Ports</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="cameraBox">
-         <property name="title">
-          <string>Camera</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QComboBox" name="cameraPortCombo">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
-            <item>
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="testCameraButton">
-              <property name="text">
-               <string>Test Camera</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="detectCamerasButton">
-              <property name="text">
-               <string>Detect Cameras</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="rawTab">
-      <attribute name="title">
-       <string>Raw settings</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_5">
-       <item>
-        <widget class="QCheckBox" name="thumbnailCheckBox">
-         <property name="text">
-          <string>Use RAW file thumbnail (faster but not configurable)</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="DcRawQTOptions" name="rawOptions" native="true">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-      <zorder>rawBox</zorder>
-      <zorder>thumbnailCheckBox</zorder>
-      <zorder>thumbnailCheckBox</zorder>
-      <zorder>rawOptions</zorder>
-     </widget>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QComboBox" name="cameraPortCombo">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="testCameraButton">
+          <property name="text">
+           <string>Test Camera</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="detectCamerasButton">
+          <property name="text">
+           <string>Detect Cameras</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="6" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -179,16 +74,81 @@
      </property>
     </widget>
    </item>
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="xbeeBox">
+     <property name="title">
+      <string>XBee Port</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QComboBox" name="xbeePortCombo">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="testPortButton">
+          <property name="text">
+           <string>Test Port</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="detectPortsButton">
+          <property name="text">
+           <string>Detect Ports</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Capture</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Raw File extension (nef for Nikon, crw or cr2 for Canon)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="rawExtensionEdit">
+        <property name="text">
+         <string>nef</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>DcRawQTOptions</class>
-   <extends>QWidget</extends>
-   <header location="global">dcrawqtoptions.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections>
   <connection>
@@ -198,8 +158,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>266</x>
-     <y>433</y>
+     <x>275</x>
+     <y>348</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -214,28 +174,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>334</x>
-     <y>433</y>
+     <x>343</x>
+     <y>348</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>thumbnailCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>rawOptions</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>57</x>
-     <y>60</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>70</x>
-     <y>98</y>
     </hint>
    </hints>
   </connection>

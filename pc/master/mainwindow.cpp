@@ -253,13 +253,11 @@ void MainWindow::displayError(QString error)
     msg.exec();
 }
 
-void MainWindow::handleNewPicture(QString path)
+QString MainWindow::convertRaw(QString path)
 {
     /* Raw conversion */
     QString filename = QFileInfo(path).fileName();
     if(m_rawHandler.IsRaw(path)) {
-
-        QStringList dcrawargs;
 
         //dcrawargs += "dcrawqt";
         //dcrawargs += "-c";
@@ -274,7 +272,7 @@ void MainWindow::handleNewPicture(QString path)
             QMessageBox::information(this, tr("Conversion error"), tr("Failed to convert raw to jpg. The raw file is conserved."));
             m_captureActions.remove(path);
             updateSaveButton();
-            return;
+            return path;
         } else {
             QFile file(path+".jpg");
             filename += ".jpg";
@@ -283,11 +281,17 @@ void MainWindow::handleNewPicture(QString path)
             pix.save(&file);
         }
     }
+    return filename;
+}
+
+void MainWindow::handleNewPicture(QString path)
+{
 
     if(m_massCaptureRunning) {
-        ui->turntable->addPicture(filename);
+    //    ui->turntable->addPicture(filename);
         ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
     } else {
+        QString filename = convertRaw(path);
         switch(m_captureActions.value(path, Ignore))
         {
         case Ignore:
@@ -308,6 +312,12 @@ void MainWindow::handleNewPicture(QString path)
         m_captureActions.remove(path);
     }
     updateSaveButton();
+}
+
+void MainWindow::handleMassCapturePicture(int index, QString path)
+{
+    QString filename = convertRaw(path);
+    ui->turntable->setPictureAndView(index-1, filename);
 }
 
 void MainWindow::updateSaveButton()
@@ -537,8 +547,10 @@ void MainWindow::on_massCaptureButton_clicked()
     if(m_camera != 0) {
         m_massCaptureRunning = true;
         MassCapture *synchroniser = new MassCapture(this);
-        connect(synchroniser, SIGNAL(done(bool)), this, SLOT(whenMassCaptureDone()));
+        connect(synchroniser, SIGNAL(done(bool)), this, SLOT(whenMassCaptureDone(bool)));
         connect(synchroniser, SIGNAL(done(bool)), synchroniser, SLOT(deleteLater()));
+        connect(synchroniser, SIGNAL(progress(int,QString)), this, SLOT(handleMassCapturePicture(int,QString)));
+        connect(synchroniser, SIGNAL(progress(int,QString)), ui->globalWorkBar, SLOT(setValue(int)));
         ui->turntable->setNumber(ui->numberOfPhotosSpin->value());
         synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), ui->numberOfPhotosSpin->value());
     } else {

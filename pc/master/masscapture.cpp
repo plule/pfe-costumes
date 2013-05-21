@@ -16,15 +16,17 @@ void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *mor
     m_collection = collection;
     m_idCostume = idCostume;
 
-    connect(camera, SIGNAL(downloading()), this, SLOT(onCaptureDone()));
+    connect(camera, SIGNAL(captured(QString)), this, SLOT(onCaptureDone(QString)));
     connect(camera, SIGNAL(operation_failed(QString)), this, SLOT(onCaptureFail()));
 
     onCaptureDone();
 }
 
-void MassCapture::onCaptureDone()
+void MassCapture::onCaptureDone(QString path)
 {
     qDebug() << "capture done";
+    if(path != "")
+        emit progress(m_actionNumber, path);
     m_actionNumber++;
     if(m_actionNumber > m_target) {
         qDebug() << "mass capture finished";
@@ -46,7 +48,8 @@ void MassCapture::onRotationDone(bool success)
 {
     qDebug() << "rotation done";
     if(success) {
-        QString path = m_collection->getNewFilePath(m_idCostume, "turntable", "jpg"); // TODO extension follow config
+        qDebug() << m_settings.value("rawextension");
+        QString path = m_collection->getNewFilePath(m_idCostume, "turntable", m_settings.value("rawextension").toString());
         m_camera->captureToFile(path);
     } else {
         MessageWatcher *watcher = m_morphology->setRotation(m_step*m_actionNumber);

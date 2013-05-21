@@ -15,11 +15,18 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
     m_xbeePort = guessXbeePort(fillXBeePortList());
 
     /* Cameras list */
-    m_camera =guessCamera(fillCameraList());
+    m_camera = guessCamera(fillCameraList());
+
+    /* Raw file extension */
+    if(m_settings.value("rawextension").toString() != "")
+        ui->rawExtensionEdit->setText(m_settings.value("rawextension").toString());
+    else {
+        ui->rawExtensionEdit->setText("nef");
+        m_settings.setValue("rawextension", "nef");
+    }
 
     connect(this, SIGNAL(accepted()), this, SLOT(apply()));
     connect(this, SIGNAL(rejected()), this, SLOT(cancel()));
-    connect(ui->rawOptions, SIGNAL(commandlinechanged(QStringList)), this, SLOT(dbgRawCommand(QStringList)));
 
     selectCurrentCamera();
     selectCurrentXbeePort();
@@ -111,11 +118,6 @@ QList<QString> SettingsForm::fillXBeePortList()
     return xbeePortList;
 }
 
-QString SettingsForm::rawCommand()
-{
-    return ui->rawOptions->commandline();
-}
-
 void SettingsForm::apply()
 {
     QPhoto::QCamera *newCamera = ui->cameraPortCombo->itemData(ui->cameraPortCombo->currentIndex()).value<QPhoto::QCamera*>();
@@ -134,18 +136,14 @@ void SettingsForm::apply()
         m_settings.setValue("camera", m_camera->getModel());
     if(m_xbeePort != "")
         m_settings.setValue("xbeeport", m_xbeePort);
+    if(ui->rawExtensionEdit->text() != "")
+        m_settings.setValue("rawextension", ui->rawExtensionEdit->text());
 }
 
 void SettingsForm::cancel()
 {
     selectCurrentCamera();
     selectCurrentXbeePort();
-}
-
-void SettingsForm::dbgRawCommand(QStringList command)
-{
-    qDebug() << command;
-    qDebug() << ui->rawOptions->commandline();
 }
 
 void SettingsForm::on_detectCamerasButton_clicked()

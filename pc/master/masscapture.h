@@ -2,6 +2,7 @@
 #define SYNCHRONISER_H
 
 #include <QObject>
+#include <QSettings>
 #include "../camerahandler/qcamera.h"
 #include "../common/communication.h"
 #include "../common/collection.h"
@@ -14,12 +15,13 @@ public:
     void massCapture(QPhoto::QCamera *camera, ArduinoCommunication *morphology, Collection *collection, int idCostume, int nbPhoto);
     
 signals:
+    void progress(int value, QString photoPath);
     void done(bool success);
 
 public slots:
 
 private slots:
-    void onCaptureDone();
+    void onCaptureDone(QString path = "");
     void onCaptureFail();
     void onRotationDone(bool success);
 
@@ -30,6 +32,7 @@ private:
     QPhoto::QCamera *m_camera;
     ArduinoCommunication *m_morphology;
     Collection *m_collection;
+    QSettings m_settings;
     int m_idCostume;
 };
 
