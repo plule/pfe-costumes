@@ -31,7 +31,7 @@ void MassCapture::onCaptureDone(int status, QString path, QStringList errors)
     if(status != QPhoto::QCamera::OK) {
         disconnect(m_camera, 0, this, 0);
         emit done(false);
-    } else if(m_actionNumber > m_target) {
+    } else if(m_actionNumber >= m_target) {
         disconnect(m_camera, 0, this, 0);
         emit done(true);
     } else {
