@@ -8,6 +8,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QApplication>
+#include <QStringList>
 #include <gphoto2/gphoto2-camera.h>
 
 #include "cameraexception.h"
@@ -31,6 +32,7 @@ namespace QPhoto
 class QCamera : public QObject
 {
     Q_OBJECT
+    Q_ENUMS(Status)
 public:
     QCamera();
     QCamera(const char *m_model, const char *m_port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
@@ -40,12 +42,11 @@ public:
     QString getAbout();
     CameraAbilities getAbilities();
     QTimer *getWatchdog();
-    //void _captureToFile(QString path, int nbTry=3);
-
-
     QString getModel() const;
-
     QString getPort() const;
+    bool isConnected() const;
+
+    enum Status { OK, Error, Timeout, NotConnected };
 
 protected:
     friend void idle_func(GPContext *m_context, void *data);
@@ -62,7 +63,7 @@ protected:
     friend void message_func(GPContext *context, const char *, void *data);
     friend unsigned int progress_start_func(GPContext *context, float target, const char *, void *data);
 #endif
-    int captureToFile(QFile *file);
+    int _captureToFile(QFile *file);
 
 private:
     Camera *m_camera;
@@ -73,6 +74,8 @@ private:
     //GPPortInfo *portinfo;
     QThread m_camThread;
     QTimer *m_watchdog;
+    QStringList m_errors;
+    bool m_connected;
 
     int handleError(int error, QString msg);
     int buildCamera(const char *m_model, const char *m_port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
@@ -81,9 +84,14 @@ public slots:
     void captureToCamera(QString *camerapath);
     void captureToFile(const char *path, int nbTry=3);
     void captureToFile(QString path, int nbTry=3);
+    void appendError(QString error);
+    void _onTimeout();
+
+protected slots:
     void _captureToFile(QString path, int nbTry=3);
 
 signals:
+    /* GPhoto2 signals */
     void idle();
     //	void info(const char *info, const char *camera);
     void error(QString error);
@@ -92,17 +100,14 @@ signals:
     void progress_start(QString task, int target);
     void progress_update(int current);
     void progress_stop();
-    void captured(QString path);
-    void operation_failed(QString msg);
-    void operation_success();
+
+    /* Custom signals */
+    void finished(int status, QString path, QStringList errors);
+    void connectionLost();
+
+    /* Internal signals */
     void camera_answered();
     void wait_for_camera_answer();
-    void downloading();
-};
-
-class Sleeper : public QThread { // The horror...
-public:
-   void sleep(int ms) { QThread::sleep(ms); }
 };
 }
 #endif

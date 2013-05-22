@@ -46,7 +46,6 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     Q_PROPERTY(int m_currentCostumeId READ getCurrentCostumeId WRITE setCurrentCostumeId USER true)
 
-    enum CaptureAction {Ignore, Replace, Append};
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -61,20 +60,15 @@ public slots:
     void startWork(QString work, int target);
     void endWork();
     void updateStatusBar(QString message);
-    void displayError(QString error);
+    void displayError(QString error, QString details = "");
     QString convertRaw(QString path);
-    void handleNewPicture(QString path);
-    void handleMassCapturePicture(int index, QString path);
     void updateSaveButton();
     void onModelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
     void populateList();
     void addDevice(Arduino arduino);
     void removeDevice(Arduino arduino);
     int getCurrentArduino();
-    void whenMassCaptureDone(bool success);
     void setCamera(QPhoto::QCamera *m_camera);
-    void registerError(QString error);
-    void clearErrors();
     
 private slots:
     void timeout();
@@ -108,7 +102,6 @@ private:
     Ui::MainWindow *ui;
     SettingsForm *m_settingsForm;
     QPhoto::CameraHandler *m_handler;
-    QPhoto::QCamera *m_camera;
     SlotLog *m_logger;
     QList<QPixmap> *m_pics;
     QErrorMessage m_errorMessage;
@@ -116,12 +109,11 @@ private:
     Collection *m_collection;
     ArduinoCommunication *m_arduinoCommunication;
     QSettings m_settings;
-    QMap <QString, CaptureAction> m_captureActions;
-    bool m_massCaptureRunning;
     int m_currentCostumeId;
     QList <QSlider *> m_morphoSliders;
-    QStringList m_lastErrors;
     DcRawQT m_rawHandler;
+    QPhoto::QCamera *m_camera;
+    QMetaObject::Connection m_cameraConnection;
 
     void loadCollection(QString path);
     int getCurrentId();

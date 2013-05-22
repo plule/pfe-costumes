@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QSettings>
+#include <QStringList>
 #include "../camerahandler/qcamera.h"
 #include "../common/communication.h"
 #include "../common/collection.h"
@@ -21,7 +22,7 @@ signals:
 public slots:
 
 private slots:
-    void onCaptureDone(QString path = "");
+    void onCaptureDone(int status, QString path, QStringList errors);
     void onCaptureFail();
     void onRotationDone(bool success);
 

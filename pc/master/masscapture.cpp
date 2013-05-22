@@ -16,21 +16,23 @@ void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *mor
     m_collection = collection;
     m_idCostume = idCostume;
 
-    connect(camera, SIGNAL(captured(QString)), this, SLOT(onCaptureDone(QString)));
-    connect(camera, SIGNAL(operation_failed(QString)), this, SLOT(onCaptureFail()));
+    connect(camera, SIGNAL(finished(int,QString,QStringList)), this, SLOT(onCaptureDone(int,QString,QStringList)));
 
-    onCaptureDone();
+
+    MessageWatcher *watcher = m_morphology->setRotation(m_step*m_actionNumber);
+    connect(watcher, SIGNAL(done(bool)), this, SLOT(onRotationDone(bool)));
 }
 
-void MassCapture::onCaptureDone(QString path)
+void MassCapture::onCaptureDone(int status, QString path, QStringList errors)
 {
     qDebug() << "capture done";
-    if(path != "")
-        emit progress(m_actionNumber, path);
     m_actionNumber++;
-    if(m_actionNumber > m_target) {
-        qDebug() << "mass capture finished";
-        this->deleteLater();
+    emit progress(m_actionNumber, path);
+    if(status != QPhoto::QCamera::OK) {
+        disconnect(m_camera, 0, this, 0);
+        emit done(false);
+    } else if(m_actionNumber > m_target) {
+        disconnect(m_camera, 0, this, 0);
         emit done(true);
     } else {
         MessageWatcher *watcher = m_morphology->setRotation(m_step*m_actionNumber);

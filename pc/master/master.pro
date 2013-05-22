@@ -39,7 +39,7 @@ HEADERS += camerahandler/camerahandler.h \
     masscapture.h \
     settingsform.h
 
-CONFIG += qt warn_on release debug
+CONFIG += c++11 qt warn_on release debug
 
 LIBS += -lgphoto2 -lgphoto2_port
 

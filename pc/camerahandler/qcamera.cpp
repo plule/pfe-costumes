@@ -25,6 +25,7 @@ void error_func(GPContext *context, const char *error_msg, void *data)
 #endif
     (void)context;
     QCamera* camera = static_cast<QCamera*>(data);
+    camera->appendError(error_msg);
     emit camera->error(error_msg);
 }
 
@@ -137,6 +138,7 @@ QCamera::QCamera()
     m_camera = NULL;
     m_context = NULL;
     // TODO : init thread and watchdog ?
+    m_connected = false;
 }
 
 QCamera::~QCamera()
@@ -187,14 +189,19 @@ QCamera::QCamera(const char *model, const char *port, CameraAbilitiesList *abili
 
     if((ret = buildCamera(model, port, abilitiesList, portinfolist)) != GP_OK)
         throw CameraException(QString("Failed to connect to camera : ") + QString(gp_result_as_string(ret)));
+
     m_watchdog = new QTimer(QApplication::instance()->thread());
     m_watchdog->setSingleShot(true);
     m_watchdog->setInterval(5000);
+
     connect(this, SIGNAL(camera_answered()), m_watchdog, SLOT(stop()));
     connect(this, SIGNAL(wait_for_camera_answer()), m_watchdog, SLOT(start()));
+    connect(m_watchdog, SIGNAL(timeout()), this, SLOT(_onTimeout()), Qt::DirectConnection); // Direct connection to execute on watchdog thread
+
     m_camThread.start();
     this->moveToThread(&m_camThread);
     this->setObjectName(QString(model));
+    this->m_connected = true;
 }
 
 QString QCamera::getSummary()
@@ -216,16 +223,13 @@ void QCamera::captureToCamera(QString *cameraPath)
 	cameraPath->append(camera_file_path.name);
 }
 
-int QCamera::captureToFile(QFile *localFile)
+int QCamera::_captureToFile(QFile *localFile)
 {
 	CameraFilePath camera_file_path;
 	CameraFile *file;
 	int ret;
 	int fd;
-    qDebug() << "capturing";
     R_GP_CALL(ret, gp_camera_capture, m_camera, GP_CAPTURE_IMAGE, &camera_file_path, m_context);
-    qDebug() << "downloading";
-    emit downloading();
 
     if(!localFile->open(QIODevice::WriteOnly))
         return -1; // TODO : own error
@@ -251,17 +255,29 @@ int QCamera::captureToFile(QFile *localFile)
 
 void QCamera::_captureToFile(QString path, int nbTry)
 {
-    QFile localFile(path);
-    for(int i = 0; i < nbTry; i++) {
-        int ret = captureToFile(&localFile);
-        if( ret == GP_OK) {
-            emit captured(path);
-            emit operation_success();
-            return;
+    m_errors.clear();
+    if(isConnected()) {
+        QFile localFile(path);
+        for(int i = 0; i < nbTry; i++) {
+            int ret = _captureToFile(&localFile);
+            if( ret == GP_OK) {
+                emit finished(OK, path, m_errors);
+                return;
+            }
+            this->thread()->sleep(0.5);
         }
-        Sleeper().sleep(1);
+        emit finished(Error, path, m_errors);
+    } else {
+        emit finished(NotConnected, path, m_errors);
     }
-    emit operation_failed(tr("Could not capture image after %n try(es)", "", nbTry));
+}
+
+void QCamera::_onTimeout()
+{
+    m_connected = false;
+    m_errors.append(tr("Connection with camera lost. Disconnect and reconnect it."));
+    emit finished(Timeout, "", m_errors);
+    emit connectionLost();
 }
 
 void QCamera::captureToFile(const char *name, int nbTry)
@@ -274,9 +290,20 @@ void QCamera::captureToFile(QString path, int nbTry)
     QMetaObject::invokeMethod(this, "_captureToFile", Qt::QueuedConnection, Q_ARG(QString, path), Q_ARG(int, nbTry));
 
 }
+
+void QCamera::appendError(QString error)
+{
+    m_errors.append(error);
+}
+
 QString QCamera::getPort() const
 {
     return m_port;
+}
+
+bool QCamera::isConnected() const
+{
+    return m_connected;
 }
 
 QString QCamera::getModel() const

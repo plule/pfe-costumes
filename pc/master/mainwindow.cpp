@@ -7,7 +7,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_collection = 0;
     m_camera = 0;
-    m_massCaptureRunning = false;
     // Logger that show what goes through the slots
     m_logger = new SlotLog();
 
@@ -244,12 +243,13 @@ void MainWindow::updateStatusBar(QString message)
         this->statusBar()->showMessage(message);
 }
 
-void MainWindow::displayError(QString error)
+void MainWindow::displayError(QString error, QString details)
 {
     QMessageBox msg;
     msg.setIcon(QMessageBox::Warning);
     msg.setText(error);
-    msg.setDetailedText(m_lastErrors.join("\n"));
+    if(details != "")
+        msg.setDetailedText(details);
     msg.exec();
 }
 
@@ -270,7 +270,6 @@ QString MainWindow::convertRaw(QString path)
         delete pixBytes;
         if(pix.isNull()) {
             QMessageBox::information(this, tr("Conversion error"), tr("Failed to convert raw to jpg. The raw file is conserved."));
-            m_captureActions.remove(path);
             updateSaveButton();
             return path;
         } else {
@@ -282,42 +281,6 @@ QString MainWindow::convertRaw(QString path)
         }
     }
     return filename;
-}
-
-void MainWindow::handleNewPicture(QString path)
-{
-
-    if(m_massCaptureRunning) {
-    //    ui->turntable->addPicture(filename);
-        ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
-    } else {
-        QString filename = convertRaw(path);
-        switch(m_captureActions.value(path, Ignore))
-        {
-        case Ignore:
-            qWarning() << "Got a photo for unknown reason";
-            break;
-        case Append:
-            ui->turntable->addPicture(filename);
-            ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
-            break;
-        case Replace:
-            ui->turntable->setCurrentPicture(filename);
-            ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
-            break;
-        default:
-            qWarning() << "Got a photo for unknown reason";
-            break;
-        }
-        m_captureActions.remove(path);
-    }
-    updateSaveButton();
-}
-
-void MainWindow::handleMassCapturePicture(int index, QString path)
-{
-    QString filename = convertRaw(path);
-    ui->turntable->setPictureAndView(index-1, filename);
 }
 
 void MainWindow::updateSaveButton()
@@ -346,10 +309,29 @@ void MainWindow::timeout()
 void MainWindow::on_captureButton_clicked()
 {
     if(m_camera != 0) {
-        m_lastErrors.clear();
         QString filename = ui->turntable->getCurrentFileName();
         QString path = m_collection->getTempStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
-        m_captureActions.insert(path, Replace);
+        m_cameraConnection =  connect(m_camera, &QPhoto::QCamera::finished, [=](int status, QString path, QStringList errorList){
+            disconnect(m_cameraConnection);
+            switch(status) {
+            case QPhoto::QCamera::OK:
+            {
+                QString filename = convertRaw(path);
+                ui->turntable->setCurrentPicture(filename);
+                ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
+                updateSaveButton();
+                break;
+            }
+            case QPhoto::QCamera::Error:
+                displayError(tr("Failed to capture photo."), errorList.join("\n"));
+                break;
+            case QPhoto::QCamera::Timeout:
+                displayError(tr("Lost connection to the camera, you should disconnect and reconnect it."));
+                break;
+            }
+        });
+
+                //this, SLOT(onCameraCapture(int,QString,QStringList)));
         m_camera->captureToFile(path);
     } else {
         m_settingsForm->refreshCameraList();
@@ -366,13 +348,6 @@ int MainWindow::getCurrentArduino()
     return ui->ardListCombo->itemData(ui->ardListCombo->currentIndex(), Qt::UserRole).toInt();
 }
 
-void MainWindow::whenMassCaptureDone(bool success)
-{
-    m_massCaptureRunning = false;
-    if(!success)
-        this->displayError(tr("Mass capture failed"));
-}
-
 void MainWindow::setCamera(QPhoto::QCamera *camera)
 {
     if(camera != m_camera) {
@@ -387,25 +362,11 @@ void MainWindow::setCamera(QPhoto::QCamera *camera)
 
             connect(camera, SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
             connect(camera, SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
-            connect(camera, SIGNAL(captured(QString)), this, SLOT(handleNewPicture(QString)));
 
             connect(camera, SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
-            connect(camera, SIGNAL(error(QString)), this, SLOT(registerError(QString)));
-            connect(camera, SIGNAL(operation_success()), this, SLOT(clearErrors()));
-            connect(camera, SIGNAL(operation_failed(QString)), this, SLOT(displayError(QString)));
             connect(camera->getWatchdog(), SIGNAL(timeout()), this, SLOT(timeout()));
         }
     }
-}
-
-void MainWindow::clearErrors()
-{
-    m_lastErrors.clear();
-}
-
-void MainWindow::registerError(QString error)
-{
-    m_lastErrors.append(error);
 }
 
 void MainWindow::sendMs(int ms)
@@ -545,16 +506,17 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::on_massCaptureButton_clicked()
 {
     if(m_camera != 0) {
-        m_massCaptureRunning = true;
         MassCapture *synchroniser = new MassCapture(this);
-        connect(synchroniser, SIGNAL(done(bool)), this, SLOT(whenMassCaptureDone(bool)));
-        connect(synchroniser, SIGNAL(done(bool)), synchroniser, SLOT(deleteLater()));
-        connect(synchroniser, SIGNAL(progress(int,QString)), this, SLOT(handleMassCapturePicture(int,QString)));
-        connect(synchroniser, SIGNAL(progress(int,QString)), ui->globalWorkBar, SLOT(setValue(int)));
         ui->turntable->setNumber(ui->numberOfPhotosSpin->value());
+        connect(synchroniser, SIGNAL(done(bool)), synchroniser, SLOT(deleteLater()));
+        connect(synchroniser, &MassCapture::progress, [=](int index,QString path){
+            QString filename = convertRaw(path);
+            ui->turntable->setPictureAndView(index-1, filename);
+        });
+        connect(synchroniser, SIGNAL(progress(int,QString)), ui->globalWorkBar, SLOT(setValue(int)));
         synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), ui->numberOfPhotosSpin->value());
     } else {
-        this->displayError(tr("No camera connected"));
+        this->displayError(tr("No camera connected"), "");
     }
 }
 
