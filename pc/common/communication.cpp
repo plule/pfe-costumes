@@ -56,15 +56,15 @@ bool ArduinoCommunication::testPort(QString name)
     return false;
 }
 
-MessageWatcher *ArduinoCommunication::sendHelloMessage()
+Transaction *ArduinoCommunication::helloMessage()
 {
-    return sendMessage(MSG_DISCOVER);
+    return createTransaction(MSG_DISCOVER);
 }
 
-MessageWatcher *ArduinoCommunication::setMotorMicrosecond(int arduino, int motor, int ms)
+Transaction *ArduinoCommunication::motorMicrosecondMessage(int arduino, int motor, int ms)
 {
     for(int i=0; i<MAX_ID; i++) {
-        MessageWatcher *watcher = m_watchers[i];
+        Transaction *watcher = m_watchers[i];
         if(watcher != 0 && watcher->getDest() == arduino && watcher->getDatas().size() >= 1 && watcher->getDatas().first().toInt() == motor) {
             delete watcher;
             m_watchers[i] = 0;
@@ -73,10 +73,10 @@ MessageWatcher *ArduinoCommunication::setMotorMicrosecond(int arduino, int motor
     QList<QVariant> args;
     args.append(motor);
     args.append(ms);
-    return sendMessage(MSG_MORPHOLOGY, arduino, args);
+    return createTransaction(MSG_MORPHOLOGY, arduino, args);
 }
 
-MessageWatcher *ArduinoCommunication::setRotation(int angle)
+Transaction *ArduinoCommunication::rotationMessage(int angle)
 {
     for(int i=0; i<MAX_ID; i++) {
         if(m_watchers.value(i,0) != 0 && m_watchers.value(i)->getType() == MSG_ROTATION) {
@@ -88,14 +88,14 @@ MessageWatcher *ArduinoCommunication::setRotation(int angle)
     QList<QVariant> args;
     args.append(360-angle);
     if(m_arduinos.size() > 0)
-        return sendMessage(MSG_ROTATION, m_arduinos[0].id, args);
+        return createTransaction(MSG_ROTATION, m_arduinos[0].id, args);
     else
-        return new MessageWatcher(this);
+        return new Transaction(this);
 }
 
-MessageWatcher *ArduinoCommunication::getMotorsPosition(int arduino)
+Transaction *ArduinoCommunication::motorsPositionMessage(int arduino)
 {
-    return sendMessage(MSG_SERVO_POS, arduino);
+    return createTransaction(MSG_SERVO_POS, arduino);
 }
 
 void ArduinoCommunication::onDataAvailable()
@@ -116,7 +116,7 @@ void ArduinoCommunication::checkAliveDevices()
         QMutableListIterator<Arduino> i(m_arduinos);
         while(i.hasNext())
             i.next().hasAnswered = false;
-        sendHelloMessage();
+        helloMessage()->launch();
     }
     QTimer::singleShot(1000, this, SLOT(cleanUpDeadDevices()));
 }
@@ -193,7 +193,7 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
         break;
     case MSG_DONE:
         if(m_watchers.value(message.id,0) != 0 && m_watchers.value(message.id)->valid())
-            m_watchers.value(message.id)->setDone();
+            m_watchers.value(message.id)->setDone(true);
         break;
     case MSG_SERVO_POS:
     {
@@ -208,22 +208,20 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
     }
 }
 
-MessageWatcher *ArduinoCommunication::sendMessage(MSG_TYPE type, int dest, QList<QVariant> datas)
+Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, int dest, QList<QVariant> datas)
 {
     m_lastMessage++;
     m_lastMessage = m_lastMessage%MAX_ID;
-    if(m_lastMessage == DEST_BROADCAST)
+    if(m_lastMessage == DEST_BROADCAST) // TODO : verifier coherence
         m_lastMessage++;
     int id = m_lastMessage;
     delete m_watchers.value(id); // old old message
-    MessageWatcher *watcher = 0;
+    Transaction *watcher = new Transaction(type, id, dest, datas, this);
+    connect(watcher, SIGNAL(send(MSG_TYPE,int,int,QList<QVariant>)), this, SLOT(_sendMessage(MSG_TYPE,int,int,QList<QVariant>)));
     if(dest != DEST_BROADCAST) { // not a broadcast, so we watch for answer
-        watcher = new MessageWatcher(type, id, dest, datas, this);
-        connect(watcher, SIGNAL(needResend(MSG_TYPE,int,int,QList<QVariant>)), this, SLOT(_sendMessage(MSG_TYPE,int,int,QList<QVariant>)));
         m_watchers[id] = watcher;
+        watcher->watchForAck();
     }
-
-    _sendMessage(type, id, dest, datas);
     return watcher;
 }
 
@@ -253,6 +251,6 @@ void ArduinoCommunication::setPort(QString port)
         delete m_port;
         m_port = 0;
     } else {
-        sendHelloMessage();
+        helloMessage()->launch();
     }
 }

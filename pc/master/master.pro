@@ -15,12 +15,12 @@ SOURCES += master/main.cpp \
     mainwindow.cpp \
     ../common/collection.cpp \
     ../common/uniqueproxymodel.cpp \
-    ../common/messagewatcher.cpp \
     ../widgets/qloadedlistwidget.cpp \
     ../widgets/qturntable.cpp \
     ../common/communication.cpp \
     masscapture.cpp \
-    settingsform.cpp
+    settingsform.cpp \
+    ../common/transaction.cpp
 
 HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
@@ -30,12 +30,12 @@ HEADERS += camerahandler/camerahandler.h \
     ../common/uniqueproxymodel.h \
     ../../interfaces/interfaces.h \
     ../../interfaces/morphology.h \
-    ../common/messagewatcher.h \
     ../widgets/qturntable.h \
     ../widgets/qloadedlistwidget.h \
     ../common/communication.h \
     masscapture.h \
-    settingsform.h
+    settingsform.h \
+    ../common/transaction.h
 
 CONFIG += c++11 qt warn_on release debug
 

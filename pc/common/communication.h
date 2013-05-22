@@ -12,7 +12,7 @@
 #include <QMap>
 #include <QThread>
 #include "qextserialport.h"
-#include "messagewatcher.h"
+#include "transaction.h"
 #include "../../interfaces/interfaces.h"
 
 struct ArduinoMessage
@@ -57,10 +57,10 @@ signals:
     
 public slots:
     void setPort(QString port);
-    MessageWatcher *sendHelloMessage();
-    MessageWatcher *setMotorMicrosecond(int arduino, int motor, int ms);
-    MessageWatcher *setRotation(int angle);
-    MessageWatcher *getMotorsPosition(int arduino);
+    Transaction *helloMessage();
+    Transaction *motorMicrosecondMessage(int arduino, int motor, int ms);
+    Transaction *rotationMessage(int angle);
+    Transaction *motorsPositionMessage(int arduino);
     
 private slots:
     void onDataAvailable();
@@ -71,14 +71,14 @@ private slots:
 private:
     void handleMessage(QString message);
     void handleMessage(ArduinoMessage message);
-    MessageWatcher *sendMessage(MSG_TYPE type, int dest = DEST_BROADCAST, QList<QVariant> datas = QList<QVariant>());
+    Transaction *createTransaction(MSG_TYPE type, int dest = DEST_BROADCAST, QList<QVariant> datas = QList<QVariant>());
 
     QextSerialPort *m_port;
     QString m_port_name;
     QString m_messagePart;
     QList<Arduino> m_arduinos;
     QTimer m_aliveTimer;
-    QVector<MessageWatcher*> m_watchers;
+    QVector<Transaction*> m_watchers;
     int m_lastMessage;
     bool m_pinging;
 };

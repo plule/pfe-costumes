@@ -23,7 +23,6 @@ public slots:
 
 private slots:
     void onCaptureDone(int status, QString path, QStringList errors);
-    void onCaptureFail();
     void onRotationDone(bool success);
 
 private:

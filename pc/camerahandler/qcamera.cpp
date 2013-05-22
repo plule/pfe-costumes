@@ -118,7 +118,6 @@ void progress_stop_func(GPContext *context, unsigned int id, void *data)
 
 int QCamera::handleError(int error, QString msg)
 {
-    qDebug() << "error";
     qDebug() << QString(gp_result_as_string(error)) + " : " + msg;
     return error;
 }

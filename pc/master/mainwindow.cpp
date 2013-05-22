@@ -29,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Arduino comm configuration and ui init
     m_arduinoCommunication->setPort(m_settingsForm->getXbeePort());
-    connect(ui->rotationDial, SIGNAL(valueChanged(int)), m_arduinoCommunication, SLOT(setRotation(int)));
     for(int i=0; i < m_arduinoCommunication->getMotorsNumber(); i++) {
         QString name = QString(m_arduinoCommunication->getMotorsNames()[i]);
         QSlider *slider = new QSlider(Qt::Horizontal, this);
@@ -56,10 +55,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(m_arduinoCommunication, SIGNAL(motorMicrosecondChanged(int,int,int)), this, SLOT(setMotorMicroSecond(int,int,int)));
 
-    connect(ui->ardHelloButton, SIGNAL(clicked()), m_arduinoCommunication, SLOT(sendHelloMessage()));
+    connect(ui->ardHelloButton, SIGNAL(clicked()), m_arduinoCommunication, SLOT(sendHelloMessage())); // TODO replace
     connect(m_arduinoCommunication, SIGNAL(arduinoAdded(Arduino)), this, SLOT(addDevice(Arduino)));
     connect(m_arduinoCommunication, SIGNAL(arduinoRemoved(Arduino)), this, SLOT(removeDevice(Arduino)));
-    m_arduinoCommunication->sendHelloMessage();
+    m_arduinoCommunication->helloMessage()->launch();
     connect(m_settingsForm, SIGNAL(xbeePortChanged(QString)), m_arduinoCommunication, SLOT(setPort(QString)));
 
     // Load last collection
@@ -208,7 +207,7 @@ void MainWindow::addDevice(Arduino arduino)
 {
     ui->ardListCombo->addItem(QString::number(arduino.id), arduino.id);
     if(arduino.id == getCurrentArduino())
-        m_arduinoCommunication->getMotorsPosition(arduino.id);
+        m_arduinoCommunication->motorsPositionMessage(arduino.id)->launch();
 }
 
 void MainWindow::removeDevice(Arduino arduino)
@@ -305,7 +304,7 @@ void MainWindow::onModelDataChanged(const QModelIndex &topLeft, const QModelInde
 void MainWindow::on_captureButton_clicked()
 {
     if(m_camera != 0 && m_camera->isConnected()) {
-        QString filename = ui->turntable->getCurrentFileName();
+        QString filename = ui->turntable->getCurrentFileName(); // TODO if empty
         QString path = m_collection->getTempStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
         m_cameraConnection =  connect(m_camera, &QPhoto::QCamera::finished, [=](int status, QString path, QStringList errorList){
             disconnect(m_cameraConnection);
@@ -368,7 +367,7 @@ void MainWindow::sendMs(int ms)
 {
     int current = getCurrentArduino();
     int motor = sender()->property("motor").toInt();
-    m_arduinoCommunication->setMotorMicrosecond(current, motor, ms);
+    m_arduinoCommunication->motorMicrosecondMessage(current, motor, ms)->launch();
 }
 
 void MainWindow::setMotorMicroSecond(int arduino, int motor, int ms)
@@ -522,5 +521,5 @@ void MainWindow::on_actionSettings_triggered()
 
 void MainWindow::on_rotateToViewButton_clicked()
 {
-    m_arduinoCommunication->setRotation(ui->viewDial->value());
+    m_arduinoCommunication->rotationMessage(ui->viewDial->value())->launch();
 }

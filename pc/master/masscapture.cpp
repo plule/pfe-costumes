@@ -18,9 +18,10 @@ void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *mor
 
     connect(camera, SIGNAL(finished(int,QString,QStringList)), this, SLOT(onCaptureDone(int,QString,QStringList)));
 
-
-    MessageWatcher *watcher = m_morphology->setRotation(m_step*m_actionNumber);
+    Transaction *watcher = m_morphology->rotationMessage(m_step*m_actionNumber);
+    watcher->watchForDone();
     connect(watcher, SIGNAL(done(bool)), this, SLOT(onRotationDone(bool)));
+    watcher->launch();
 }
 
 void MassCapture::onCaptureDone(int status, QString path, QStringList errors)
@@ -35,26 +36,24 @@ void MassCapture::onCaptureDone(int status, QString path, QStringList errors)
         disconnect(m_camera, 0, this, 0);
         emit done(true);
     } else {
-        MessageWatcher *watcher = m_morphology->setRotation(m_step*m_actionNumber);
+        Transaction *watcher = m_morphology->rotationMessage(m_step*m_actionNumber);
+        watcher->watchForDone();
         connect(watcher, SIGNAL(done(bool)), this, SLOT(onRotationDone(bool)));
+        watcher->launch();
     }
-}
-
-void MassCapture::onCaptureFail()
-{
-    qDebug() << "sync fail";
-    emit done(false);
 }
 
 void MassCapture::onRotationDone(bool success)
 {
     qDebug() << "rotation done";
     if(success) {
-        qDebug() << m_settings.value("rawextension");
         QString path = m_collection->getNewFilePath(m_idCostume, "turntable", m_settings.value("rawextension").toString());
         m_camera->captureToFile(path);
     } else {
-        MessageWatcher *watcher = m_morphology->setRotation(m_step*m_actionNumber);
+        qDebug() << "failed, retry";
+        Transaction *watcher = m_morphology->rotationMessage(m_step*m_actionNumber);
+        watcher->watchForDone();
         connect(watcher, SIGNAL(done(bool)), this, SLOT(onRotationDone(bool)));
+        watcher->launch();
     }
 }
