@@ -13,7 +13,6 @@ SOURCES += master/main.cpp \
     camerahandler/qcamera.cpp \
     common/slotlog.cpp \
     mainwindow.cpp \
-    ../camerahandler/cameraexception.cpp \
     ../common/collection.cpp \
     ../common/uniqueproxymodel.cpp \
     ../common/messagewatcher.cpp \
@@ -27,7 +26,6 @@ HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
     common/slotlog.h \
     mainwindow.h \
-    ../cameraHandler/cameraexception.h \
     ../common/collection.h \
     ../common/uniqueproxymodel.h \
     ../../interfaces/interfaces.h \

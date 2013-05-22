@@ -9,7 +9,6 @@
 
 #include <gphoto2/gphoto2-camera.h>
 
-#include "cameraexception.h"
 #include "qcamera.h"
 
 namespace QPhoto

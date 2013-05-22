@@ -71,7 +71,6 @@ public slots:
     void setCamera(QPhoto::QCamera *m_camera);
     
 private slots:
-    void timeout();
     void sendMs(int ms);
     void setMotorMicroSecond(int arduino,int motor,int ms);
 

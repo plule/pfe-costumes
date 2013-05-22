@@ -11,8 +11,6 @@
 #include <QStringList>
 #include <gphoto2/gphoto2-camera.h>
 
-#include "cameraexception.h"
-
 #define LEGACY_GPHOTO
 
 /*qDebug() << #fn;\*/

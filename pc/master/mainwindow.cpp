@@ -250,6 +250,8 @@ void MainWindow::displayError(QString error, QString details)
     msg.setText(error);
     if(details != "")
         msg.setDetailedText(details);
+    qDebug() << error;
+    qDebug() << details;
     msg.exec();
 }
 
@@ -300,15 +302,9 @@ void MainWindow::onModelDataChanged(const QModelIndex &topLeft, const QModelInde
     }
 }
 
-void MainWindow::timeout()
-{
-    statusBar()->showMessage(tr("Lost camera."));
-    this->displayError(tr("Lost camera... You should try to disconnect and reconnect it."));
-}
-
 void MainWindow::on_captureButton_clicked()
 {
-    if(m_camera != 0) {
+    if(m_camera != 0 && m_camera->isConnected()) {
         QString filename = ui->turntable->getCurrentFileName();
         QString path = m_collection->getTempStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
         m_cameraConnection =  connect(m_camera, &QPhoto::QCamera::finished, [=](int status, QString path, QStringList errorList){
@@ -364,7 +360,6 @@ void MainWindow::setCamera(QPhoto::QCamera *camera)
             connect(camera, SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
 
             connect(camera, SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
-            connect(camera->getWatchdog(), SIGNAL(timeout()), this, SLOT(timeout()));
         }
     }
 }

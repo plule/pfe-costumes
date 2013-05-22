@@ -147,7 +147,9 @@ QCamera::~QCamera()
         gp_camera_exit(m_camera, m_context);
     delete m_watchdog;
     m_camThread.exit();
-    m_camThread.wait(); // TODO : dangerous ??
+    m_camThread.wait(100);
+    /*m_camThread.terminate();
+    m_camThread.wait(100);*/
 }
 
 int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist)
@@ -187,8 +189,9 @@ QCamera::QCamera(const char *model, const char *port, CameraAbilitiesList *abili
 //	gp_context_set_cancel_func (context, cancel_func, this);
     gp_context_set_message_func (m_context, message_func, this);
 
-    if((ret = buildCamera(model, port, abilitiesList, portinfolist)) != GP_OK)
-        throw CameraException(QString("Failed to connect to camera : ") + QString(gp_result_as_string(ret)));
+    if((ret = buildCamera(model, port, abilitiesList, portinfolist)) != GP_OK) {
+        this->m_connected = false;
+    }
 
     m_watchdog = new QTimer(QApplication::instance()->thread());
     m_watchdog->setSingleShot(true);
