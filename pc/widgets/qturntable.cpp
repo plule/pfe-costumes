@@ -5,6 +5,7 @@ QTurntable::QTurntable(QWidget *parent) :
 {
     this->setScene(new QGraphicsScene());
     m_current_pixmap = this->scene()->addPixmap(QPixmap());
+    m_current_pixmap->setTransformationMode(Qt::SmoothTransformation);
     m_current = -1;
     m_zoom = 1;
     m_zoom_step = 1.25;
@@ -153,6 +154,7 @@ void QTurntable::addPicture(QString path)
 void QTurntable::setPicture(int index, QString path)
 {
     QPixmap pic(getPathOf(path));
+    pic = pic.scaled(800,600, Qt::KeepAspectRatio);
     if(index >= m_pixmaps.size())
         setNumber(index+1);
     m_pixmaps[index] = QPair<QString,QPixmap>(path,pic);
