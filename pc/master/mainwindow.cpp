@@ -55,8 +55,6 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     connect(m_arduinoCommunication, SIGNAL(motorMicrosecondChanged(int,int,int)), this, SLOT(setMotorMicroSecond(int,int,int)));
-
-    connect(ui->ardHelloButton, SIGNAL(clicked()), m_arduinoCommunication, SLOT(sendHelloMessage())); // TODO replace
     connect(m_arduinoCommunication, SIGNAL(arduinoAdded(Arduino)), this, SLOT(addDevice(Arduino)));
     connect(m_arduinoCommunication, SIGNAL(arduinoRemoved(Arduino)), this, SLOT(removeDevice(Arduino)));
     m_arduinoCommunication->helloMessage()->launch();
@@ -542,16 +540,17 @@ void MainWindow::on_massCaptureButton_clicked()
         //m_progressDialog->setModal(Qt::WindowModal);
 
         ui->turntable->setNumber(ui->numberOfPhotosSpin->value());
+
         connect(synchroniser, SIGNAL(done()), synchroniser, SLOT(deleteLater()));
         connect(synchroniser, SIGNAL(problem(MassCapture::Problem)), this, SLOT(onMassCaptureProblem(MassCapture::Problem)));
+
         connect(synchroniser, &MassCapture::progress, [=](int index,QString path){
             QString filename = convertRaw(path);
             ui->turntable->setPictureAndView(index, filename);
         });
-        connect(synchroniser, SIGNAL(progress(int,QString)), ui->globalWorkBar, SLOT(setValue(int)));
+
         connect(synchroniser, SIGNAL(progress(int,QString)), m_progressDialog, SLOT(setValue(int)));
         connect(synchroniser, SIGNAL(destroyed()), ui->workBar, SLOT(reset()));
-        connect(synchroniser, SIGNAL(destroyed()), ui->globalWorkBar, SLOT(reset()));
         connect(synchroniser, SIGNAL(destroyed()), m_progressDialog, SLOT(reset()));
         connect(m_progressDialog, SIGNAL(canceled()), synchroniser, SLOT(deleteLater()));
         synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), ui->numberOfPhotosSpin->value());
