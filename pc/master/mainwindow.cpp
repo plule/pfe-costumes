@@ -541,6 +541,8 @@ void MainWindow::on_massCaptureButton_clicked()
             ui->turntable->setPictureAndView(index-1, filename);
         });
         connect(synchroniser, SIGNAL(progress(int,QString)), ui->globalWorkBar, SLOT(setValue(int)));
+        connect(synchroniser, SIGNAL(destroyed()), ui->workBar, SLOT(reset()));
+        connect(synchroniser, SIGNAL(destroyed()), ui->globalWorkBar, SLOT(reset()));
         synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), ui->numberOfPhotosSpin->value());
     } else {
         this->displayError(tr("No camera connected"), "");
