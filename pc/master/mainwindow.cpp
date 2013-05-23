@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_collection = 0;
     m_camera = 0;
+    m_progressDialog = new QProgressDialog();
     // Logger that show what goes through the slots
     m_logger = new SlotLog();
 
@@ -219,6 +220,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete m_handler;
+    delete m_progressDialog;
 }
 
 void MainWindow::startWork(QString work, int target)
@@ -533,16 +535,25 @@ void MainWindow::on_massCaptureButton_clicked()
 {
     if(m_camera != 0) {
         MassCapture *synchroniser = new MassCapture(this);
+        m_progressDialog->setLabelText(tr("Mass capture..."));
+        m_progressDialog->setCancelButtonText(tr("Abort Capture"));
+        m_progressDialog->setRange(0, ui->numberOfPhotosSpin->value()-1);
+        m_progressDialog->setValue(0);
+        //m_progressDialog->setModal(Qt::WindowModal);
+
         ui->turntable->setNumber(ui->numberOfPhotosSpin->value());
-        connect(synchroniser, SIGNAL(done(bool)), synchroniser, SLOT(deleteLater()));
+        connect(synchroniser, SIGNAL(done()), synchroniser, SLOT(deleteLater()));
         connect(synchroniser, SIGNAL(problem(MassCapture::Problem)), this, SLOT(onMassCaptureProblem(MassCapture::Problem)));
         connect(synchroniser, &MassCapture::progress, [=](int index,QString path){
             QString filename = convertRaw(path);
-            ui->turntable->setPictureAndView(index-1, filename);
+            ui->turntable->setPictureAndView(index, filename);
         });
         connect(synchroniser, SIGNAL(progress(int,QString)), ui->globalWorkBar, SLOT(setValue(int)));
+        connect(synchroniser, SIGNAL(progress(int,QString)), m_progressDialog, SLOT(setValue(int)));
         connect(synchroniser, SIGNAL(destroyed()), ui->workBar, SLOT(reset()));
         connect(synchroniser, SIGNAL(destroyed()), ui->globalWorkBar, SLOT(reset()));
+        connect(synchroniser, SIGNAL(destroyed()), m_progressDialog, SLOT(reset()));
+        connect(m_progressDialog, SIGNAL(canceled()), synchroniser, SLOT(deleteLater()));
         synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), ui->numberOfPhotosSpin->value());
     } else {
         this->displayError(tr("No camera connected"), "");

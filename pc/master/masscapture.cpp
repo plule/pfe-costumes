@@ -42,16 +42,18 @@ void MassCapture::onCaptureDone(int status, QString path, QStringList errors)
         disconnect(m_camera, 0, this, 0);
         m_problem = CameraProblem;
         emit problem(CameraProblem);
-    } else if(m_actionNumber >= m_target) {
-        disconnect(m_camera, 0, this, 0);
-        emit done();
     } else {
-        m_actionNumber++;
         emit progress(m_actionNumber, path);
-        Transaction *watcher = m_morphology->rotationMessage(m_step*m_actionNumber);
-        watcher->watchForDone();
-        connect(watcher, SIGNAL(done(bool)), this, SLOT(onRotationDone(bool)));
-        watcher->launch();
+        if(m_actionNumber >= m_target-1) {
+            disconnect(m_camera, 0, this, 0);
+            emit done();
+        } else {
+            m_actionNumber++;
+            Transaction *message = m_morphology->rotationMessage(m_step*m_actionNumber);
+            message->watchForDone();
+            connect(message, SIGNAL(done(bool)), this, SLOT(onRotationDone(bool)));
+            message->launch();
+        }
     }
 }
 

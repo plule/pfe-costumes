@@ -24,7 +24,7 @@ public:
     enum Problem {CameraProblem, RotationProblem, NoProblem};
     
 signals:
-    // Indicate that a new photo has been taken. Value is between 1 and nbPhoto
+    // Indicate that a new photo has been taken. Value is between 0 and nbPhoto-1
     void progress(int value, QString photoPath);
     // Indicate that work has been done with success
     void done();

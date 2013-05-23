@@ -101,6 +101,7 @@ private:
 
     Ui::MainWindow *ui;
     SettingsForm *m_settingsForm;
+    QProgressDialog *m_progressDialog;
     QPhoto::CameraHandler *m_handler;
     SlotLog *m_logger;
     QList<QPixmap> *m_pics;
