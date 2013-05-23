@@ -491,70 +491,97 @@
         <translation>Ouvrir Collection</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="342"/>
         <source>Lost camera.</source>
-        <translation>L&apos;appareil photo ne répond plus.</translation>
+        <translation type="obsolete">L&apos;appareil photo ne répond plus.</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="343"/>
         <source>Lost camera... You should try to disconnect and reconnect it.</source>
-        <translation>L&apos;appareil photo ne répond plus, vous devriez le débrancher et le rebrancher.</translation>
+        <translation type="obsolete">L&apos;appareil photo ne répond plus, vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="358"/>
-        <location filename="../master/mainwindow.cpp" line="557"/>
+        <location filename="../master/mainwindow.cpp" line="335"/>
+        <location filename="../master/mainwindow.cpp" line="541"/>
         <source>No camera connected</source>
         <translation>Aucun appareil photo détecté</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="146"/>
+        <location filename="../master/mainwindow.cpp" line="144"/>
         <source>Choose file(s)</source>
         <translation>Selectionner des fichiers</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="181"/>
+        <location filename="../master/mainwindow.cpp" line="179"/>
         <source>Save Collection</source>
         <translation>Sauvegarder la Collection</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="182"/>
+        <location filename="../master/mainwindow.cpp" line="180"/>
         <source>The collection has unsaved changes.
 Do you want to save the modifications?</source>
         <translation>La collection a des modification non enregistrées.\nVoulez vous sauvegarder ?</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="272"/>
+        <location filename="../master/mainwindow.cpp" line="273"/>
         <source>Conversion error</source>
         <translation>Erreur de conversion</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="272"/>
+        <location filename="../master/mainwindow.cpp" line="273"/>
         <source>Failed to convert raw to jpg. The raw file is conserved.</source>
         <translation>Impossible de convertir le fichier raw en jpg. Le fichier raw est conservé</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="373"/>
-        <source>Mass capture failed</source>
-        <translation>Échec des captures</translation>
+        <location filename="../master/mainwindow.cpp" line="321"/>
+        <source>Failed to capture photo.</source>
+        <translation>Impossible de prendre la photo.</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="428"/>
+        <location filename="../master/mainwindow.cpp" line="324"/>
+        <source>Lost connection to the camera, you should disconnect and reconnect it.</source>
+        <translation>La connection avec l&apos;appareil photo a été perdu. Vous devriez le débrancher et le rebrancher.</translation>
+    </message>
+    <message>
+        <location filename="../master/mainwindow.cpp" line="372"/>
+        <source>The camera has encountered a problem.</source>
+        <translation>L&apos;appareil photo a eu un problème.</translation>
+    </message>
+    <message>
+        <location filename="../master/mainwindow.cpp" line="374"/>
+        <source>The rotating model has encountered a problem.</source>
+        <translation>Le mannequin a eu un problème.</translation>
+    </message>
+    <message>
+        <location filename="../master/mainwindow.cpp" line="376"/>
+        <source>An unknown problem occured.</source>
+        <translation>Un problème inconnu est survennu.</translation>
+    </message>
+    <message>
+        <location filename="../master/mainwindow.cpp" line="377"/>
+        <source>Do you wish to try to continue the capture?</source>
+        <translation>Voulez-vous essayer de continuer les prises de vue ?</translation>
+    </message>
+    <message>
+        <source>Mass capture failed</source>
+        <translation type="obsolete">Échec des captures</translation>
+    </message>
+    <message>
+        <location filename="../master/mainwindow.cpp" line="410"/>
         <source>New Costume</source>
         <translation>Nouveau Costume</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="440"/>
-        <location filename="../master/mainwindow.cpp" line="460"/>
+        <location filename="../master/mainwindow.cpp" line="422"/>
+        <location filename="../master/mainwindow.cpp" line="442"/>
         <source>Loading views</source>
         <translation>Chargement des vues</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="481"/>
+        <location filename="../master/mainwindow.cpp" line="463"/>
         <source>New collection</source>
         <translation>Nouvelle collection</translation>
     </message>
     <message>
-        <location filename="../master/mainwindow.cpp" line="506"/>
+        <location filename="../master/mainwindow.cpp" line="488"/>
         <source>Open collection</source>
         <translation>Ouvrir collection</translation>
     </message>
@@ -573,12 +600,16 @@ Do you want to save the modifications?</source>
 <context>
     <name>QPhoto::QCamera</name>
     <message numerus="yes">
-        <location filename="../camerahandler/qcamera.cpp" line="264"/>
         <source>Could not capture image after %n try(es)</source>
-        <translation>
+        <translation type="obsolete">
             <numerusform>Impossible de capturer l&apos;image après %n essai</numerusform>
             <numerusform>Impossible de capturer l&apos;image après %n essais</numerusform>
         </translation>
+    </message>
+    <message>
+        <location filename="../camerahandler/qcamera.cpp" line="280"/>
+        <source>Connection with camera lost. Disconnect and reconnect it.</source>
+        <translation>L&apos;appareil photo ne répond plus, vous devriez le débrancher et le rebrancher.</translation>
     </message>
 </context>
 <context>

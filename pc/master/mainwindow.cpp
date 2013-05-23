@@ -363,6 +363,38 @@ void MainWindow::setCamera(QPhoto::QCamera *camera)
     }
 }
 
+void MainWindow::onMassCaptureProblem(MassCapture::Problem problem)
+{
+    MassCapture *synchroniser = (MassCapture *)sender();
+    if(synchroniser != 0) {
+        QMessageBox errorDialog;
+        if(problem == MassCapture::CameraProblem)
+            errorDialog.setText(tr("The camera has encountered a problem."));
+        else if(problem == MassCapture::RotationProblem)
+            errorDialog.setText(tr("The rotating model has encountered a problem."));
+        else
+            errorDialog.setText(tr("An unknown problem occured."));
+        errorDialog.setInformativeText(tr("Do you wish to try to continue the capture?"));
+        errorDialog.setIcon(QMessageBox::Warning);
+        errorDialog.setStandardButtons(QMessageBox::Retry | QMessageBox::Abort);
+        connect(&errorDialog, SIGNAL(accepted()), synchroniser, SLOT(resume()));
+        connect(&errorDialog, SIGNAL(rejected()), synchroniser, SLOT(deleteLater()));
+        switch(errorDialog.exec()) {
+        case QMessageBox::Retry:
+            if(problem == MassCapture::CameraProblem) {
+                m_settingsForm->refreshCameraList();
+                setCamera(m_settingsForm->getCamera());
+                synchroniser->setCamera(m_settingsForm->getCamera());
+            }
+            synchroniser->resume();
+            break;
+        case QMessageBox::Abort:
+            synchroniser->deleteLater();
+            break;
+        }
+    }
+}
+
 void MainWindow::sendMs(int ms)
 {
     int current = getCurrentArduino();
@@ -503,6 +535,7 @@ void MainWindow::on_massCaptureButton_clicked()
         MassCapture *synchroniser = new MassCapture(this);
         ui->turntable->setNumber(ui->numberOfPhotosSpin->value());
         connect(synchroniser, SIGNAL(done(bool)), synchroniser, SLOT(deleteLater()));
+        connect(synchroniser, SIGNAL(problem(MassCapture::Problem)), this, SLOT(onMassCaptureProblem(MassCapture::Problem)));
         connect(synchroniser, &MassCapture::progress, [=](int index,QString path){
             QString filename = convertRaw(path);
             ui->turntable->setPictureAndView(index-1, filename);

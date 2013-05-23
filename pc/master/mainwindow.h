@@ -69,6 +69,7 @@ public slots:
     void removeDevice(Arduino arduino);
     int getCurrentArduino();
     void setCamera(QPhoto::QCamera *m_camera);
+    void onMassCaptureProblem(MassCapture::Problem problem);
     
 private slots:
     void sendMs(int ms);
