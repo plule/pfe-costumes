@@ -4,13 +4,14 @@ QTurntable::QTurntable(QWidget *parent) :
     QGraphicsView(parent)
 {
     this->setScene(new QGraphicsScene());
-    m_current_pixmap = this->scene()->addPixmap(QPixmap());
-    m_current_pixmap->setTransformationMode(Qt::SmoothTransformation);
-    m_current = -1;
+    //m_current_pixmap = this->scene()->addPixmap(QPixmap());
+    //m_current_pixmap->setTransformationMode(Qt::SmoothTransformation);
+    m_current_angle = -1;
     m_zoom = 1;
     m_zoom_step = 1.25;
     m_min_zoom = 1;
     m_max_zoom = 200;
+    m_current_pixmap = 0;
     m_fit = false;
 }
 
@@ -43,12 +44,12 @@ int QTurntable::getNumber()
 
 int QTurntable::getView()
 {
-    return m_current;
+    return m_current_angle*getNumber()/360;
 }
 
 QString QTurntable::getCurrentFileName()
 {
-    return m_pixmaps.at(m_current).first;
+    return m_pixmaps.at(getView()).first;
 }
 
 void QTurntable::resizeEvent(QResizeEvent *event)
@@ -93,8 +94,8 @@ void QTurntable::loadDirs(QList<QDir> dirs, bool force)
         }
         emit loadComplete();
     }
-    if(m_current == -1 || m_current >= files.size())
-        setView(0);
+    if(m_current_angle == -1 | getView() >= files.size())
+        setAngle(0);
     if(m_fit)
         fitInView();
 }
@@ -139,15 +140,24 @@ void QTurntable::zoomOut()
 
 void QTurntable::setNumber(int n)
 {
+    for(int i=0; i<m_pixmaps.size(); i++)
+        delete m_pixmaps.value(i).second;
     m_pixmaps.resize(n);
+    for(int i=0; i<n; i++) {
+        m_pixmaps[i].second = new QGraphicsPixmapItem();
+        m_pixmaps[i].second->setVisible(false);
+        this->scene()->addItem(m_pixmaps[i].second);
+    }
     if(n == 0)
-        m_current_pixmap->setPixmap(QPixmap());
+        m_pixmaps.value(n).second->setPixmap(QPixmap());
 }
 
 void QTurntable::addPicture(QString path)
 {
     QPixmap pic(getPathOf(path));
-    m_pixmaps.append(QPair<QString,QPixmap>(path,pic));
+    QGraphicsPixmapItem *item = new QGraphicsPixmapItem(pic);
+    this->scene()->addItem(item);
+    m_pixmaps.append(QPair<QString,QGraphicsPixmapItem*>(path,item));
     setView(getNumber()-1);
 }
 
@@ -157,31 +167,30 @@ void QTurntable::setPicture(int index, QString path)
     pic = pic.scaled(800,600, Qt::KeepAspectRatio);
     if(index >= m_pixmaps.size())
         setNumber(index+1);
-    m_pixmaps[index] = QPair<QString,QPixmap>(path,pic);
+    m_pixmaps[index].second->setPixmap(pic);
+    if(index == getView()) {
+        m_current_pixmap = m_pixmaps[index].second;
+        m_current_pixmap->setVisible(true);
+    }
+    /*m_pixmaps[index] = QPair<QString,QPixmap>(path,pic);
     if(index == m_current)
     {
         m_current_pixmap->setPixmap(pic);
-    }
-    if(m_current < 0)
+    }*/
+    if(m_current_angle < 0)
         setView(0);
 }
 
 void QTurntable::setCurrentPicture(QString path)
 {
-    setPicture(m_current, path);
+    setPicture(getView(), path);
     if(m_fit)
         fitInView();
 }
 
 void QTurntable::setView(int view)
 {
-    if(view < m_pixmaps.size() && view != m_current) {
-        m_current = view;
-        m_current_pixmap->setPixmap(m_pixmaps[m_current].second);
-        if(m_fit)
-            fitInView();
-        emit angleChanged(360 * m_current / m_pixmaps.size());
-    }
+    setAngle(view*360/getNumber());
 }
 
 void QTurntable::setPictureAndView(int index, QString path)
@@ -192,7 +201,19 @@ void QTurntable::setPictureAndView(int index, QString path)
 
 void QTurntable::setAngle(int angle)
 {
-    setView(round(((double)m_pixmaps.size() * (double)angle) / 360.0));
+    if(getView() < m_pixmaps.size() && angle != m_current_angle) {
+        if(m_current_pixmap != 0) {
+            m_current_pixmap->setVisible(false);
+        }
+        m_current_pixmap = m_pixmaps[getView()].second;
+        m_current_pixmap->setVisible(true);
+        m_current_angle = angle;
+        //m_current_pixmap->setPixmap(m_pixmaps[m_current].second);
+        if(m_fit)
+            fitInView();
+        emit angleChanged(angle);
+    }
+    //setView(round(((double)m_pixmaps.size() * (double)angle) / 360.0));
 }
 
 void QTurntable::fitInView()

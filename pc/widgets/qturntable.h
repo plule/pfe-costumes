@@ -56,13 +56,14 @@ private:
     QString getPathOf(QString filename);
 
     QList<QDir> relativePaths;
-    QVector<QPair<QString,QPixmap> > m_pixmaps;
-    int m_current;
+    QVector<QPair<QString,QGraphicsPixmapItem*> > m_pixmaps;
+    QGraphicsPixmapItem *m_current_pixmap;
+    int m_current_angle;
     int m_zoom;
     int m_min_zoom,m_max_zoom;
     double m_zoom_step;
     bool m_fit;
-    QGraphicsPixmapItem *m_current_pixmap;
+    //QGraphicsPixmapItem *m_current_pixmap;
 };
 
 #endif // QTURNTABLE_H

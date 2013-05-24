@@ -21,7 +21,7 @@
     <item>
      <widget class="QTabWidget" name="tab">
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="preparationTab">
        <attribute name="title">
@@ -757,7 +757,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>784</x>
-     <y>497</y>
+     <y>530</y>
     </hint>
     <hint type="destinationlabel">
      <x>338</x>
@@ -777,7 +777,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>784</x>
-     <y>497</y>
+     <y>530</y>
     </hint>
    </hints>
   </connection>
@@ -789,7 +789,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>848</x>
-     <y>497</y>
+     <y>530</y>
     </hint>
     <hint type="destinationlabel">
      <x>338</x>
@@ -809,7 +809,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>848</x>
-     <y>497</y>
+     <y>530</y>
     </hint>
    </hints>
   </connection>

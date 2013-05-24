@@ -38,7 +38,8 @@ void Transaction::setAck()
 
 void Transaction::setDone(bool success)
 {
-    m_doneTimer->stop();
+    if(m_doneTimer != 0)
+        m_doneTimer->stop();
     m_finished = true;
     emit done(success);
 }
