@@ -28,6 +28,9 @@ typedef enum {
     MSG_INVALID
 } MSG_TYPE;
 
+/*
+ * Broadcast destination
+ */
 #define DEST_BROADCAST 0
 
 /*
@@ -65,6 +68,7 @@ enum MORPHO_MOTORS {
 };
 #undef X
 
+// TODO one per motor
 #define MORPHO_MIN 800
 #define MORPHO_MAX 2100
 

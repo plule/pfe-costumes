@@ -6,6 +6,9 @@
 #include <QFont>
 #include <QDebug>
 
+/**
+ * @brief The QLoadedListWidget class is a QListWidget with bolded and italiqued items
+ */
 class QLoadedListWidget : public QListWidget
 {
     Q_OBJECT

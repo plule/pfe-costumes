@@ -15,6 +15,9 @@
 #include "transaction.h"
 #include "../../interfaces/interfaces.h"
 
+/**
+ * @brief The ArduinoMessage struct describe a message sendable to a device
+ */
 struct ArduinoMessage
 {
     int dest;
@@ -39,27 +42,99 @@ struct Arduino
 
 Q_DECLARE_METATYPE(Arduino)
 
+/**
+ * @brief The ArduinoCommunication class allows communication via
+ * one xbee module to multible arduinos.
+ */
 class ArduinoCommunication : public QObject
 {
     Q_OBJECT
 public:
     explicit ArduinoCommunication(QObject *parent = 0);
+
+    /**
+     * @brief getMotorsNames
+     * @return list of morphology motor names. (compile time determined by interface/morphology.h)
+     */
     const char **getMotorsNames();
+
+    /**
+     * @brief getMotorsNumber
+     * @return Number of morphology motor. (compile time determined by interface/morphology.h
+     */
     int getMotorsNumber();
+
+    /**
+     * @brief isValid
+     * @return true if the port is opened
+     */
     bool isValid();
+
+    /**
+     * @brief testPort determines if the chosen port seems to be a xbee
+     * @param name
+     * @return
+     */
     bool testPort(QString name);
 
 
 signals:
+    /**
+     * @brief arduinoAdded is emitted when a new arduino is detected
+     * @param arduino
+     */
     void arduinoAdded(Arduino arduino);
+
+    /**
+     * @brief arduinoRemoved is emitted when a arduino stopped responding
+     * @param arduino
+     */
     void arduinoRemoved(Arduino arduino);
+
+    /**
+     * @brief motorMicrosecondChanged is emitted when a arduino indicate a motor rotation
+     * @param arduino
+     * @param motor
+     * @param ms
+     */
     void motorMicrosecondChanged(int arduino, int motor, int ms);
     
 public slots:
+    /**
+     * @brief setPort binds the object to a serial port. This should be the physical port
+     * (discovered by qExtSerialEnumerator physName)
+     * @param port
+     */
     void setPort(QString port);
+
+    /**
+     * @brief helloMessage creates a discovering broadcast message
+     * @return the message (sendable with ->launch)
+     */
     Transaction *helloMessage();
+
+    /**
+     * @brief motorMicrosecondMessage creates a message to rotate a motor
+     * @param arduino
+     * @param motor
+     * @param ms
+     * @return the message (sendable with ->launch)
+     */
     Transaction *motorMicrosecondMessage(int arduino, int motor, int ms);
+
+    /**
+     * @brief rotationMessage creates a message to do the global rotation
+     * @param angle
+     * @return the message (sendable with ->launch)
+     */
     Transaction *rotationMessage(int angle);
+
+    /**
+     * @brief motorsPositionMessage sends a message to get position of all motors of the arduino
+     *
+     * @param arduino
+     * @return the message (sendable with ->launch)
+     */
     Transaction *motorsPositionMessage(int arduino);
     
 private slots:

@@ -12,6 +12,9 @@
 #include <QSet>
 #include "math.h"
 
+/**
+ * @brief The QTurntable class allow displaying a 360 view of an object.
+ */
 class QTurntable : public QGraphicsView
 {
     Q_OBJECT
@@ -21,34 +24,125 @@ public:
     virtual void wheelEvent(QWheelEvent *event);
     int getZoomStep();
     int getAngleStep();
+
+    /**
+     * @brief getNumber
+     * @return number of pictures
+     */
     int getNumber();
+    /**
+     * @brief getView
+     * @return index of current view
+     */
     int getView();
+
+    /**
+     * @brief getCurrentFileName
+     * @return name of displayed file
+     */
     QString getCurrentFileName();
 
 protected:
     virtual void resizeEvent(QResizeEvent *event);
 
 signals:
+    /**
+     * @brief zoomChanged is emitted when zoom is changed
+     * @param zoom
+     */
     void zoomChanged(int zoom);
+    /**
+     * @brief angleChanged is emitted when angle of view changed
+     * @param angle
+     */
     void angleChanged(int angle);
+    /**
+     * @brief loadStart is emitted when loading of a serie of pic started
+     * @param task textual description of the task
+     * @param target max value
+     */
     void loadStart(QString task, int target);
+    /**
+     * @brief loadUpdate is emitted each time a new picture is loaded
+     * @param current
+     */
     void loadUpdate(int current);
+    /**
+     * @brief loadComplete is emitted when the pictures are all loaded
+     */
     void loadComplete();
     
 public slots:
+    /**
+     * @brief setNumber Modify the number of photo. This wipe all the photos.
+     * @param n
+     */
     virtual void setNumber(int n);
-    virtual void addPicture(QString path);
+    /**
+     * @brief addPicture append a picture
+     * @param path
+     */
+    virtual void addPicture(QString path); // TODO delete ?
+    /**
+     * @brief setPicture insert a picture at an index
+     * @param index between 0-number of pics
+     * @param path
+     */
     virtual void setPicture(int index, QString path);
+    /**
+     * @brief setCurrentPicture modifies current visualised picture
+     * @param path
+     */
     virtual void setCurrentPicture(QString path);
+    /**
+     * @brief setView rotate the model to the view
+     * @param view
+     */
     virtual void setView(int view);
+    /**
+     * @brief setPictureAndView modifies a picture and rotate to it
+     * @param index
+     * @param path
+     */
     virtual void setPictureAndView(int index, QString path);
+    /**
+     * @brief setAngle rotate the model
+     * @param angle between 0-360
+     */
     virtual void setAngle(int angle);
+
+    /**
+     * @brief fitInView fits the picture in the view.
+     */
     virtual void fitInView();
+    /**
+     * @brief resetScale do a 1:1 zoom
+     */
     virtual void resetScale();
+    /**
+     * @brief setZoom zooms to a value
+     * @param zoom (in percentage)
+     */
     virtual void setZoom(int zoom);
+    /**
+     * @brief zoomIn increases zoom
+     */
     virtual void zoomIn();
+    /**
+     * @brief zoomOut decreases zoom
+     */
     virtual void zoomOut();
+    /**
+     * @brief zoom zooms by a factor (2 will zoom in, -2 will zoom out)
+     * @param factor
+     */
     virtual void zoom(int factor);
+    /**
+     * @brief loadDirs loads the content of multiple dirs. Duplicate filenames
+     * will be displayed as one.
+     * @param dirs
+     * @param force
+     */
     virtual void loadDirs(QList<QDir> dirs, bool force=false);
 
 private:

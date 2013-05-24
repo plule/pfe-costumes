@@ -39,14 +39,35 @@ public:
     QString getSummary();
     QString getAbout();
     CameraAbilities getAbilities();
+
+    /**
+     * @brief getWatchdog
+     * @return The watchdog that will timeout when camera is lost
+     */
     QTimer *getWatchdog();
+    /**
+     * @brief getModel
+     * @return Description of the camera model
+     */
     QString getModel() const;
+    /**
+     * @brief getPort
+     * @return Port name
+     */
     QString getPort() const;
+
+    /**
+     * @brief isConnected
+     * @return Check camera connection
+     */
     bool isConnected() const;
 
     enum Status { OK, Error, Timeout, NotConnected };
 
 protected:
+    /*
+     * libgphoto context callback functions
+     */
     friend void idle_func(GPContext *m_context, void *data);
     friend void progress_update_func(GPContext *m_context, unsigned int id, float current, void *data);
     friend void progress_stop_func(GPContext *m_context, unsigned int id, void *data);
@@ -70,8 +91,8 @@ private:
     QString m_model;
     QString m_port;
     //GPPortInfo *portinfo;
-    QThread m_camThread;
-    QTimer *m_watchdog;
+    QThread m_camThread; // Each camera has its own thread to avoid global lock
+    QTimer *m_watchdog; // Each camera has a watchdog to monitor potentially lockable function
     QStringList m_errors;
     bool m_connected;
 
@@ -79,28 +100,70 @@ private:
     int buildCamera(const char *m_model, const char *m_port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
 
 public slots:
-    void captureToCamera(QString *camerapath);
+    void captureToCamera(QString *camerapath); // TODO delete ?
+    /**
+     * @brief captureToFile capture a photo to a file.
+     * The format depends on camera's configuration.
+     * Users should watch for the signal "finished" after calling this.
+     * @param path destination path
+     * @param nbTry number of retry
+     */
     void captureToFile(const char *path, int nbTry=3);
     void captureToFile(QString path, int nbTry=3);
-    void appendError(QString error);
-    void _onTimeout();
 
 protected slots:
+    void _onTimeout();
+    void appendError(QString error);
     void _captureToFile(QString path, int nbTry=3);
 
 signals:
     /* GPhoto2 signals */
+    /**
+     * @brief idle the camera is idle and program can do anything else
+     */
     void idle();
     //	void info(const char *info, const char *camera);
+    /**
+     * @brief The camera encountered an error described by the QString
+     */
     void error(QString error);
+    /**
+     * @brief The camera status changed
+     */
     void status(QString status);
+    /**
+     * @brief The camera said something
+     */
     void message(QString message);
+    /**
+     * @brief progress_start The camera has started a new task. Target is the max value.
+     * @param task
+     * @param target
+     */
     void progress_start(QString task, int target);
+    /**
+     * @brief progress_update The task progressed.
+     * @param current
+     */
     void progress_update(int current);
+    /**
+     * @brief progress_stop the task finished or stop
+     */
     void progress_stop();
 
     /* Custom signals */
+    /**
+     * @brief finished is emited some time after calling a capture.
+     * @param status indicate if the capture succeded
+     * @param path path of the saved photo (this path is the one given to captureToFile)
+     * @param errors encountered errors
+     */
     void finished(int status, QString path, QStringList errors);
+    /**
+     * @brief connectionLost This signal is emited when the camera stopped working.
+     * The QCamera object is now useless and broken. You must disconnect and reconnect the camera
+     * and recreate the QCamera object.
+     */
     void connectionLost();
 
     /* Internal signals */

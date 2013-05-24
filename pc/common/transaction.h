@@ -7,6 +7,12 @@
 #include <QDebug>
 #include "../../interfaces/interfaces.h"
 
+/**
+ * @brief The Transaction class represents a exchange between a arduino and a pc
+ * This object is created by the Communication object only.
+ * A message will be resent until ack() is received
+ * You can watch for a done message to
+ */
 class Transaction : public QObject
 {
     Q_OBJECT
@@ -14,9 +20,23 @@ public:
     explicit Transaction(QObject *parent = 0);
     Transaction(MSG_TYPE m_type, int m_id, int m_dest, QList<QVariant> m_datas, QObject *parent = 0);
     ~Transaction();
+
+    /**
+     * @brief valid
+     * @return validity
+     */
     bool valid();
+
+    /**
+     * @brief watchForDone tells to wait for a done message during «time» millis
+     * @param time
+     */
     void watchForDone(int time = 1000);
 
+    /**
+     * @brief watchForAck tells to wait for the ack. (default is alway on for not-broadcast)
+     * @param time
+     */
     void watchForAck(int time = 200);
     
     MSG_TYPE getType() const;
@@ -25,6 +45,10 @@ public:
 
     int getDest() const;
 
+    /**
+     * @brief getDatas
+     * @return The datas appended to the message
+     */
     QList<QVariant> getDatas() const;
 
 signals:

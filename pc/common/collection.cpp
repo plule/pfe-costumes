@@ -117,11 +117,6 @@ QSqlError Collection::lastError()
     return m_model->lastError();
 }
 
-int Collection::getIndexOf(QString key)
-{
-    return m_db->record("collection").indexOf(key);
-}
-
 QDir Collection::getStorageDir(int costumeId, QString key)
 {
     QDir ret = m_collectionDir;
@@ -246,6 +241,7 @@ bool Collection::submit()
 void Collection::revert()
 {
     m_model->revertAll();
+    cleanUp();
 }
 
 bool Collection::select()

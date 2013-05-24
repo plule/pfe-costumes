@@ -3,6 +3,9 @@
 #include <QObject>
 #include <QDebug>
 
+/**
+ * @brief The SlotLog class display debug info on message sent to it
+ */
 class SlotLog : public QObject
 {
 	Q_OBJECT
