@@ -88,8 +88,10 @@ void serialEvent() {
     digitalWrite(13, HIGH);
     char dest[9] = {0};
     char expe[9] = {0};
-    Serial.readBytesUntil(ARG_SEP, dest, 8);
-    Serial.readBytesUntil(ARG_SEP, expe, 8);
+    Serial.readBytesUntil(ARG_SEP, dest,9);
+    Serial.readBytesUntil(ARG_SEP, expe,9);
+    dest[8] = 0;
+    expe[8] = 0;
     int idMsg = Serial.parseInt();
     MSG_TYPE type = (MSG_TYPE)Serial.parseInt();
     if(type == MSG_DISCOVER) /* Server is looking for the arduinos */

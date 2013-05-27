@@ -205,8 +205,11 @@ void MainWindow::populateList()
 void MainWindow::addDevice(Arduino arduino)
 {
     ui->ardListCombo->addItem(arduino.id, arduino.id);
-    if(arduino.id == getCurrentArduino())
+    if(getCurrentArduino() == "") // First
+        ui->ardListCombo->setCurrentIndex(0);
+    if(arduino.id == getCurrentArduino()) {
         m_arduinoCommunication->motorsPositionMessage(arduino.id)->launch();
+    }
 }
 
 void MainWindow::removeDevice(Arduino arduino)
