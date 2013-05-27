@@ -25,6 +25,14 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
         m_settings.setValue("rawextension", "nef");
     }
 
+    /* Number of capture */
+    if(!m_settings.value("photonumber").isValid()) {
+        ui->captureNumber->setValue(36);
+        m_settings.setValue("photonumber",36);
+    } else {
+        ui->captureNumber->setValue(m_settings.value("photonumber").toInt());
+    }
+
     connect(this, SIGNAL(accepted()), this, SLOT(apply()));
     connect(this, SIGNAL(rejected()), this, SLOT(cancel()));
 
@@ -138,12 +146,15 @@ void SettingsForm::apply()
         m_settings.setValue("xbeeport", m_xbeePort);
     if(ui->rawExtensionEdit->text() != "")
         m_settings.setValue("rawextension", ui->rawExtensionEdit->text());
+
+    m_settings.setValue("photonumber",ui->captureNumber->value());
 }
 
 void SettingsForm::cancel()
 {
     selectCurrentCamera();
     selectCurrentXbeePort();
+    ui->captureNumber->setValue(m_settings.value("photonumber").toInt());
 }
 
 void SettingsForm::on_detectCamerasButton_clicked()

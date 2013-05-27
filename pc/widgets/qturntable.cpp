@@ -94,7 +94,7 @@ void QTurntable::loadDirs(QList<QDir> dirs, bool force)
         }
         emit loadComplete();
     }
-    if(m_current_angle == -1 | getView() >= files.size())
+    if((m_current_angle == -1) | (getView() >= files.size()))
         setAngle(0);
     if(m_fit)
         fitInView();
@@ -164,7 +164,7 @@ void QTurntable::addPicture(QString path)
 void QTurntable::setPicture(int index, QString path)
 {
     QPixmap pic(getPathOf(path));
-    pic = pic.scaled(800,600, Qt::KeepAspectRatio);
+    pic = pic.scaled(1024,768, Qt::KeepAspectRatio);
     if(index >= m_pixmaps.size())
         setNumber(index+1);
     m_pixmaps[index].second->setPixmap(pic);

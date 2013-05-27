@@ -538,11 +538,11 @@ void MainWindow::on_massCaptureButton_clicked()
         MassCapture *synchroniser = new MassCapture(this);
         m_progressDialog->setLabelText(tr("Mass capture..."));
         m_progressDialog->setCancelButtonText(tr("Abort Capture"));
-        m_progressDialog->setRange(0, ui->numberOfPhotosSpin->value()-1);
+        m_progressDialog->setRange(0, m_settings.value("photonumber").toInt()-1);
         m_progressDialog->setValue(0);
         //m_progressDialog->setModal(Qt::WindowModal);
 
-        ui->turntable->setNumber(ui->numberOfPhotosSpin->value());
+        ui->turntable->setNumber(m_settings.value("photonumber").toInt());
 
         connect(synchroniser, SIGNAL(done()), synchroniser, SLOT(deleteLater()));
         connect(synchroniser, SIGNAL(problem(MassCapture::Problem)), this, SLOT(onMassCaptureProblem(MassCapture::Problem)));
@@ -556,7 +556,7 @@ void MainWindow::on_massCaptureButton_clicked()
         connect(synchroniser, SIGNAL(destroyed()), ui->workBar, SLOT(reset()));
         connect(synchroniser, SIGNAL(destroyed()), m_progressDialog, SLOT(reset()));
         connect(m_progressDialog, SIGNAL(canceled()), synchroniser, SLOT(deleteLater()));
-        synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), ui->numberOfPhotosSpin->value());
+        synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), m_settings.value("photonumber").toInt());
     } else {
         this->displayError(tr("No camera connected"), "");
     }
