@@ -67,13 +67,13 @@ public slots:
     void populateList();
     void addDevice(Arduino arduino);
     void removeDevice(Arduino arduino);
-    int getCurrentArduino();
+    QString getCurrentArduino();
     void setCamera(QPhoto::QCamera *m_camera);
     void onMassCaptureProblem(MassCapture::Problem problem);
     
 private slots:
     void sendMs(int ms);
-    void setMotorMicroSecond(int arduino,int motor,int ms);
+    void setMotorMicroSecond(QString arduino, int motor, int ms);
 
     void on_captureButton_clicked();
 

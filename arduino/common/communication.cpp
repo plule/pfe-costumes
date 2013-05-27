@@ -1,9 +1,9 @@
 #include "communication.h"
 
-uint16_t Id = 0;
+char Id[9] = {0};
 ARD_ROLE Role;
 
-static void _sendArg(int arg)
+static void _sendArg(uint32_t arg)
 {
     Serial.print(ARG_SEP);
     Serial.print(arg);
@@ -15,7 +15,7 @@ static void _sendArg(const char *arg)
     Serial.print(arg);
 }
 
-static void _initSendMessage(MSG_TYPE type, int idMsg, int dest)
+static void _initSendMessage(MSG_TYPE type, int idMsg, const char *dest)
 {
     Serial.print(dest);
     _sendArg(Id);
@@ -28,20 +28,20 @@ static void _endSendMessage()
     Serial.print(MSG_SEP);
 }
 
-void sendMessage(MSG_TYPE type, int idMsg, int dest)
+void sendMessage(MSG_TYPE type, int idMsg, const char *dest)
 {
     _initSendMessage(type, idMsg, dest);
     _endSendMessage();
 }
 
-void sendMessage(MSG_TYPE type, int idMsg, int dest, int data)
+void sendMessage(MSG_TYPE type, int idMsg, const char *dest, int data)
 {
     _initSendMessage(type, idMsg, dest);
     _sendArg(data);
     _endSendMessage();
 }
 
-void sendMessage(MSG_TYPE type, int idMsg, int dest, int data1, int data2)
+void sendMessage(MSG_TYPE type, int idMsg, const char *dest, int data1, int data2)
 {
     _initSendMessage(type, idMsg, dest);
     _sendArg(data1);
@@ -49,7 +49,7 @@ void sendMessage(MSG_TYPE type, int idMsg, int dest, int data1, int data2)
     _endSendMessage();
 }
 
-void sendMessage(MSG_TYPE type, int idMsg, int dest, const char* data)
+void sendMessage(MSG_TYPE type, int idMsg, const char *dest, const char* data)
 {
     _initSendMessage(type, idMsg, dest);
     _sendArg(data);
@@ -59,24 +59,18 @@ void sendMessage(MSG_TYPE type, int idMsg, int dest, const char* data)
 /*
  * Read ATMY from XBee
  */
-int getId()
+void getId()
 {
-    uint16_t id;
-    char id_s[8];
+    uint32_t id;
+    Serial.setTimeout(3000);
     Serial.print("+++"); /* Enter xbee command mode */
-    while(Serial.available() == 0); /* Wait for XBee entering cmd mode (should be 3sec) */
-    Serial.readStringUntil('\n');
+    Serial.readStringUntil('\r'); /* Wait for XBee entering cmd mode (should be 3sec) and read "OK" */
 
     Serial.println("ATSL");
-    delay(10);
-    Serial.readBytesUntil('\n', id_s, 8);
-    sscanf(id_s, "%x", &id);
-    //id = Serial.parseInt();
-
+    Serial.readBytesUntil('\r', Id, 8);
+    Id[8] = 0;
     Serial.println("ATCN"); /* Exit command mode */
-    Serial.readStringUntil('\n');
-
-    return id;
+    Serial.readStringUntil('\r');
 }
 
 
@@ -84,25 +78,28 @@ void init_ard(ARD_ROLE role)
 {
     Serial.begin(9600);
     Role = role;
-    Id = 42;//getId();
+    getId();
+    Serial.println();
     sendMessage(MSG_HELLO, 0, ARD_MASTER, Role);
 }
 
 void serialEvent() {
     /* Got a message */
     digitalWrite(13, HIGH);
-    int dest = Serial.parseInt();
-    int expe = Serial.parseInt();
+    char dest[9] = {0};
+    char expe[9] = {0};
+    Serial.readBytesUntil(MSG_SEP, dest, 8);
+    Serial.readBytesUntil(MSG_SEP, expe, 8);
     int idMsg = Serial.parseInt();
     MSG_TYPE type = (MSG_TYPE)Serial.parseInt();
     if(type == MSG_DISCOVER) /* Server is looking for the arduinos */
     {
         sendMessage(MSG_HELLO, 0, ARD_MASTER, Role);
-    } else if(dest == Id && type != MSG_ACK) /* Message is for me */
+    } else if(strcmp(dest, Id) == 0 && type != MSG_ACK) /* Message is for me */
     {
         sendMessage(MSG_ACK, idMsg, expe, 0); /* Acknowledge reception */
         handleMessage(type, idMsg, expe, Serial);
-    } else if(dest != Id){
+    } else if(strcmp(dest, Id) != 0){
         DBG("Not for me");
     }
     Serial.readStringUntil(MSG_SEP);

@@ -8,7 +8,7 @@ extern "C"{
 #endif
 
 typedef uint8_t ard_size_t;
-typedef uint16_t ard_id_t;
+typedef char* ard_id_t;
 
 #define MAX_ID 1000
 
@@ -55,7 +55,7 @@ typedef enum {
 /*
  * Id of the master
  */
-#define ARD_MASTER 1
+#define ARD_MASTER "1"
 
 #define MSG_SEP '\n'
 #define ARG_SEP '|'

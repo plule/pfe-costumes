@@ -61,7 +61,7 @@ Transaction *ArduinoCommunication::helloMessage()
     return createTransaction(MSG_DISCOVER);
 }
 
-Transaction *ArduinoCommunication::motorMicrosecondMessage(int arduino, int motor, int ms)
+Transaction *ArduinoCommunication::motorMicrosecondMessage(QString arduino, int motor, int ms)
 {
     for(int i=0; i<MAX_ID; i++) {
         Transaction *watcher = m_watchers[i];
@@ -93,7 +93,7 @@ Transaction *ArduinoCommunication::rotationMessage(int angle)
         return new Transaction(this);
 }
 
-Transaction *ArduinoCommunication::motorsPositionMessage(int arduino)
+Transaction *ArduinoCommunication::motorsPositionMessage(QString arduino)
 {
     return createTransaction(MSG_SERVO_POS, arduino);
 }
@@ -139,11 +139,11 @@ void ArduinoCommunication::handleMessage(QString message)
     QStringList spl = message.split(ARG_SEP);
     if(spl.size() < ARG_NUMBER)
         return;
-    int dest = spl.takeFirst().toInt();
+    QString dest = spl.takeFirst();
     if(dest == ARD_MASTER) {
         ArduinoMessage msg;
         msg.dest = dest;
-        msg.expe = spl.takeFirst().toInt();
+        msg.expe = spl.takeFirst();
         msg.id = spl.takeFirst().toInt();
         msg.type = (MSG_TYPE)spl.takeFirst().toInt();
         msg.data = spl;
@@ -208,7 +208,7 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
     }
 }
 
-Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, int dest, QList<QVariant> datas)
+Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, QString dest, QList<QVariant> datas)
 {
     m_lastMessage++;
     m_lastMessage = m_lastMessage%MAX_ID;
@@ -217,7 +217,7 @@ Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, int dest, QL
     int id = m_lastMessage;
     delete m_watchers.value(id); // old old message
     Transaction *watcher = new Transaction(type, id, dest, datas, this);
-    connect(watcher, SIGNAL(send(MSG_TYPE,int,int,QList<QVariant>)), this, SLOT(_sendMessage(MSG_TYPE,int,int,QList<QVariant>)));
+    connect(watcher, SIGNAL(send(MSG_TYPE,int,QString,QList<QVariant>)), this, SLOT(_sendMessage(MSG_TYPE,int,QString,QList<QVariant>)));
     if(dest != DEST_BROADCAST) { // not a broadcast, so we watch for answer
         m_watchers[id] = watcher;
         watcher->watchForAck();
@@ -225,13 +225,14 @@ Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, int dest, QL
     return watcher;
 }
 
-void ArduinoCommunication::_sendMessage(MSG_TYPE type, int id, int dest, QList<QVariant> datas)
+void ArduinoCommunication::_sendMessage(MSG_TYPE type, int id, QString dest, QList<QVariant> datas)
 {
+    qDebug() << "DEST : " << dest;
     if(m_port != 0) {
         QStringList args;
         args
-                << QString::number(dest)
-                << QString::number(ARD_MASTER)
+                << dest
+                << ARD_MASTER
                 << QString::number(id)
                 << QString::number(type);
         foreach(QVariant data, datas) {

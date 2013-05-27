@@ -59,9 +59,9 @@ unsigned long sendTime;
 bool sent;
 MSG_TYPE futureMessageType;
 int futureMessageId;
-int futureMessageDest;
+char *futureMessageDest;
 
-void sendMessageIn(int time, MSG_TYPE type, int id, int dest)
+void sendMessageIn(int time, MSG_TYPE type, int id, char *dest)
 {
     futureMessageType = type;
     futureMessageId = id;
@@ -70,7 +70,7 @@ void sendMessageIn(int time, MSG_TYPE type, int id, int dest)
     sendTime = millis() + time;
 }
 
-void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
+void handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
 {
     switch(type) {
     case MSG_MORPHOLOGY:

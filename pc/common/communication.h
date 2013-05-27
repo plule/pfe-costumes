@@ -11,6 +11,7 @@
 #include <QStandardItemModel>
 #include <QMap>
 #include <QThread>
+#include <QString>
 #include "qextserialport.h"
 #include "transaction.h"
 #include "../../interfaces/interfaces.h"
@@ -20,22 +21,22 @@
  */
 struct ArduinoMessage
 {
-    int dest;
-    int expe;
+    QString dest;
+    QString expe;
     int id;
     MSG_TYPE type;
     QStringList data;
 
     QString toString() {
         QString ret = "from %1 to %2 : (%3)";
-        return ret.arg(QString::number(expe), QString::number(dest), QString::number(type));
+        return ret.arg(expe, dest, QString::number(type));
     }
 };
 
 
 struct Arduino
 {
-    ard_id_t id;
+    QString id;
     ARD_ROLE role;
     bool hasAnswered;
 };
@@ -97,7 +98,7 @@ signals:
      * @param motor
      * @param ms
      */
-    void motorMicrosecondChanged(int arduino, int motor, int ms);
+    void motorMicrosecondChanged(QString arduino, int motor, int ms);
     
 public slots:
     /**
@@ -120,7 +121,7 @@ public slots:
      * @param ms
      * @return the message (sendable with ->launch)
      */
-    Transaction *motorMicrosecondMessage(int arduino, int motor, int ms);
+    Transaction *motorMicrosecondMessage(QString arduino, int motor, int ms);
 
     /**
      * @brief rotationMessage creates a message to do the global rotation
@@ -135,18 +136,18 @@ public slots:
      * @param arduino
      * @return the message (sendable with ->launch)
      */
-    Transaction *motorsPositionMessage(int arduino);
+    Transaction *motorsPositionMessage(QString arduino);
     
 private slots:
     void onDataAvailable();
     void checkAliveDevices();
     void cleanUpDeadDevices();
-    void _sendMessage(MSG_TYPE type, int id, int dest, QList<QVariant> datas = QList<QVariant>());
+    void _sendMessage(MSG_TYPE type, int id, QString dest, QList<QVariant> datas = QList<QVariant>());
 
 private:
     void handleMessage(QString message);
     void handleMessage(ArduinoMessage message);
-    Transaction *createTransaction(MSG_TYPE type, int dest = DEST_BROADCAST, QList<QVariant> datas = QList<QVariant>());
+    Transaction *createTransaction(MSG_TYPE type, QString dest = DEST_BROADCAST, QList<QVariant> datas = QList<QVariant>());
 
     QextSerialPort *m_port;
     QString m_port_name;

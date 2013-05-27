@@ -10,12 +10,12 @@
 
 extern HardwareSerial Serial;
 
-void sendMessage(MSG_TYPE type, int idMsg, int dest, int data);
-void sendMessage(MSG_TYPE type, int idMsg, int dest);
-void sendMessage(MSG_TYPE type, int idMsg, int dest, int data1, int data2);
-void sendMessage(MSG_TYPE type, int idMsg, int dest, const char* data);
-int getId();
+void sendMessage(MSG_TYPE type, int idMsg, const char *dest, int data);
+void sendMessage(MSG_TYPE type, int idMsg, const char *dest);
+void sendMessage(MSG_TYPE type, int idMsg, const char *dest, int data1, int data2);
+void sendMessage(MSG_TYPE type, int idMsg, const char *dest, const char* data);
+void getId();
 void init_ard(ARD_ROLE role);
-void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial); // unimplemented !
+void handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial); // unimplemented !
 
 #endif // COMMUNICATION_H

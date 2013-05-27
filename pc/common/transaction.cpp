@@ -10,7 +10,7 @@ Transaction::Transaction(QObject *parent) :
     this->m_dest = -1;
 }
 
-Transaction::Transaction(MSG_TYPE type, int id, int dest, QList<QVariant> datas, QObject *parent) :
+Transaction::Transaction(MSG_TYPE type, int id, QString dest, QList<QVariant> datas, QObject *parent) :
     QObject(parent)
 {
     m_type = type;
@@ -137,7 +137,7 @@ QList<QVariant> Transaction::getDatas() const
     return m_datas;
 }
 
-int Transaction::getDest() const
+QString Transaction::getDest() const
 {
     return m_dest;
 }

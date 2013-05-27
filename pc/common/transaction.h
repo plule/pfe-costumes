@@ -18,7 +18,7 @@ class Transaction : public QObject
     Q_OBJECT
 public:
     explicit Transaction(QObject *parent = 0);
-    Transaction(MSG_TYPE m_type, int m_id, int m_dest, QList<QVariant> m_datas, QObject *parent = 0);
+    Transaction(MSG_TYPE m_type, int m_id, QString m_dest, QList<QVariant> m_datas, QObject *parent = 0);
     ~Transaction();
 
     /**
@@ -43,7 +43,7 @@ public:
 
     int getId() const;
 
-    int getDest() const;
+    QString getDest() const;
 
     /**
      * @brief getDatas
@@ -57,7 +57,7 @@ signals:
     // Work has been done by the device
     void done(bool success);
     // The message needs to be sent
-    void send(MSG_TYPE m_type, int m_id, int m_dest, QList<QVariant> m_datas);
+    void send(MSG_TYPE m_type, int m_id, QString m_dest, QList<QVariant> m_datas);
     
 public slots:
     // Send the message
@@ -79,7 +79,7 @@ private:
 
     MSG_TYPE m_type;
     int m_id;
-    int m_dest;
+    QString m_dest;
     bool m_finished;
 
     QList<QVariant> m_datas;

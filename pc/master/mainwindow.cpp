@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->adjustementForm->addRow(name, layout);
     }
 
-    connect(m_arduinoCommunication, SIGNAL(motorMicrosecondChanged(int,int,int)), this, SLOT(setMotorMicroSecond(int,int,int)));
+    connect(m_arduinoCommunication, SIGNAL(motorMicrosecondChanged(QString,int,int)), this, SLOT(setMotorMicroSecond(QString,int,int)));
     connect(m_arduinoCommunication, SIGNAL(arduinoAdded(Arduino)), this, SLOT(addDevice(Arduino)));
     connect(m_arduinoCommunication, SIGNAL(arduinoRemoved(Arduino)), this, SLOT(removeDevice(Arduino)));
     m_arduinoCommunication->helloMessage()->launch();
@@ -204,7 +204,7 @@ void MainWindow::populateList()
 
 void MainWindow::addDevice(Arduino arduino)
 {
-    ui->ardListCombo->addItem(QString::number(arduino.id), arduino.id);
+    ui->ardListCombo->addItem(arduino.id, arduino.id);
     if(arduino.id == getCurrentArduino())
         m_arduinoCommunication->motorsPositionMessage(arduino.id)->launch();
 }
@@ -338,9 +338,9 @@ void MainWindow::on_captureButton_clicked()
     }
 }
 
-int MainWindow::getCurrentArduino()
+QString MainWindow::getCurrentArduino()
 {
-    return ui->ardListCombo->itemData(ui->ardListCombo->currentIndex(), Qt::UserRole).toInt();
+    return ui->ardListCombo->itemData(ui->ardListCombo->currentIndex(), Qt::UserRole).toString();
 }
 
 void MainWindow::setCamera(QPhoto::QCamera *camera)
@@ -397,12 +397,12 @@ void MainWindow::onMassCaptureProblem(MassCapture::Problem problem)
 
 void MainWindow::sendMs(int ms)
 {
-    int current = getCurrentArduino();
+    QString current = getCurrentArduino();
     int motor = sender()->property("motor").toInt();
     m_arduinoCommunication->motorMicrosecondMessage(current, motor, ms)->launch();
 }
 
-void MainWindow::setMotorMicroSecond(int arduino, int motor, int ms)
+void MainWindow::setMotorMicroSecond(QString arduino, int motor, int ms)
 {
     if(arduino == getCurrentArduino() && motor < m_morphoSliders.size()) {
         m_morphoSliders.at(motor)->setValue(ms);
