@@ -70,7 +70,7 @@ enum MORPHO_MOTORS {
 
 // TODO one per motor
 #define MORPHO_MIN 800
-#define MORPHO_MAX 2100
+#define MORPHO_MAX 1900
 
 #ifdef __cplusplus
 } // extern c

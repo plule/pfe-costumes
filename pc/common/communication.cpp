@@ -155,7 +155,6 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
 {
     if(message.type != MSG_ACK && message.type != MSG_DEBUG)
         _sendMessage(MSG_ACK, message.id, message.expe);
-
     switch(message.type) {
     case MSG_HELLO:
     {

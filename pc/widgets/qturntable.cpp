@@ -148,8 +148,8 @@ void QTurntable::setNumber(int n)
         m_pixmaps[i].second->setVisible(false);
         this->scene()->addItem(m_pixmaps[i].second);
     }
-    if(n == 0)
-        m_pixmaps.value(n).second->setPixmap(QPixmap());
+    /*if(n == 0)
+        m_pixmaps.value(n).second->setPixmap(QPixmap());*/
 }
 
 void QTurntable::addPicture(QString path)
@@ -218,11 +218,13 @@ void QTurntable::setAngle(int angle)
 
 void QTurntable::fitInView()
 {
-    QGraphicsView::fitInView(this->items()[0], Qt::KeepAspectRatio);
-    int new_zoom = computeZoom();
-    if(new_zoom != m_zoom){
-        m_zoom = new_zoom;
-        emit zoomChanged(m_zoom);
+    if(this->items().size() > 0) {
+        QGraphicsView::fitInView(this->items()[0], Qt::KeepAspectRatio);
+        int new_zoom = computeZoom();
+        if(new_zoom != m_zoom){
+            m_zoom = new_zoom;
+            emit zoomChanged(m_zoom);
+        }
     }
     m_fit = true;
 }

@@ -59,13 +59,14 @@ unsigned long sendTime;
 bool sent;
 MSG_TYPE futureMessageType;
 int futureMessageId;
-char *futureMessageDest;
+char futureMessageDest[9];
 
 void sendMessageIn(int time, MSG_TYPE type, int id, char *dest)
 {
     futureMessageType = type;
     futureMessageId = id;
-    futureMessageDest = dest;
+    strcpy(futureMessageDest,dest);
+    //futureMessageDest = dest;
     sent = false;
     sendTime = millis() + time;
 }
