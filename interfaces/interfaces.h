@@ -31,7 +31,7 @@ typedef enum {
 /*
  * Broadcast destination
  */
-#define DEST_BROADCAST 0
+#define DEST_BROADCAST "0"
 
 /*
  * Arduino's roles

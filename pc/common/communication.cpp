@@ -212,8 +212,6 @@ Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, QString dest
 {
     m_lastMessage++;
     m_lastMessage = m_lastMessage%MAX_ID;
-    if(m_lastMessage == DEST_BROADCAST) // TODO : verifier coherence
-        m_lastMessage++;
     int id = m_lastMessage;
     delete m_watchers.value(id); // old old message
     Transaction *watcher = new Transaction(type, id, dest, datas, this);
@@ -227,7 +225,6 @@ Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, QString dest
 
 void ArduinoCommunication::_sendMessage(MSG_TYPE type, int id, QString dest, QList<QVariant> datas)
 {
-    qDebug() << "DEST : " << dest;
     if(m_port != 0) {
         QStringList args;
         args
