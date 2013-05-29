@@ -61,7 +61,7 @@ Transaction *ArduinoCommunication::helloMessage()
     return createTransaction(MSG_DISCOVER);
 }
 
-Transaction *ArduinoCommunication::motorMicrosecondMessage(QString arduino, int motor, int ms)
+Transaction *ArduinoCommunication::motorDistanceMessage(QString arduino, int motor, int distance)
 {
     for(int i=0; i<MAX_ID; i++) {
         Transaction *watcher = m_watchers[i];
@@ -72,7 +72,7 @@ Transaction *ArduinoCommunication::motorMicrosecondMessage(QString arduino, int 
     }
     QList<QVariant> args;
     args.append(motor);
-    args.append(ms);
+    args.append(distance);
     return createTransaction(MSG_MORPHOLOGY, arduino, args);
 }
 
@@ -197,8 +197,7 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
     case MSG_SERVO_POS:
     {
         if(message.data.size() == 2) {
-            qDebug() << message.data.at(1).toInt();
-            emit(motorMicrosecondChanged(message.expe, message.data.at(0).toInt(), message.data.at(1).toInt()));
+            emit(motorDistanceChanged(message.expe, message.data.at(0).toInt(), message.data.at(1).toInt()));
         } else
             qWarning() << "Invalid servo pos message.";
         break;

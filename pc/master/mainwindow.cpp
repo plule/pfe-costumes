@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
         QSpinBox *spin = new QSpinBox(this);
         spin->setMinimum(0);
         spin->setMaximum(MORPHO_DISTANCE);
+        spin->setSuffix("mm");
 
         QHBoxLayout *layout = new QHBoxLayout();
         layout->addWidget(slider);
@@ -54,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->adjustementForm->addRow(name, layout);
     }
 
-    connect(m_arduinoCommunication, SIGNAL(motorMicrosecondChanged(QString,int,int)), this, SLOT(setMotorMicroSecond(QString,int,int)));
+    connect(m_arduinoCommunication, SIGNAL(motorDistanceChanged(QString,int,int)), this, SLOT(setMotorMicroSecond(QString,int,int)));
     connect(m_arduinoCommunication, SIGNAL(arduinoAdded(Arduino)), this, SLOT(addDevice(Arduino)));
     connect(m_arduinoCommunication, SIGNAL(arduinoRemoved(Arduino)), this, SLOT(removeDevice(Arduino)));
     m_arduinoCommunication->helloMessage()->launch();
@@ -402,7 +403,7 @@ void MainWindow::sendMs(int ms)
 {
     QString current = getCurrentArduino();
     int motor = sender()->property("motor").toInt();
-    m_arduinoCommunication->motorMicrosecondMessage(current, motor, ms)->launch();
+    m_arduinoCommunication->motorDistanceMessage(current, motor, ms)->launch();
 }
 
 void MainWindow::setMotorMicroSecond(QString arduino, int motor, int ms)

@@ -93,12 +93,12 @@ signals:
     void arduinoRemoved(Arduino arduino);
 
     /**
-     * @brief motorMicrosecondChanged is emitted when a arduino indicate a motor rotation
+     * @brief motorDistanceChanged is emitted when a arduino indicate a motor rotation
      * @param arduino
      * @param motor
      * @param ms
      */
-    void motorMicrosecondChanged(QString arduino, int motor, int ms);
+    void motorDistanceChanged(QString arduino, int motor, int distance);
     
 public slots:
     /**
@@ -115,13 +115,13 @@ public slots:
     Transaction *helloMessage();
 
     /**
-     * @brief motorMicrosecondMessage creates a message to rotate a motor
+     * @brief motorDistanceMessage creates a message to rotate a motor
      * @param arduino
      * @param motor
-     * @param ms
+     * @param distance
      * @return the message (sendable with ->launch)
      */
-    Transaction *motorMicrosecondMessage(QString arduino, int motor, int ms);
+    Transaction *motorDistanceMessage(QString arduino, int motor, int distance);
 
     /**
      * @brief rotationMessage creates a message to do the global rotation
