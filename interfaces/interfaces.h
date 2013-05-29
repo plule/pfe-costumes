@@ -65,6 +65,7 @@ typedef enum {
 #define X(pin, define, string, umin, umax) define,
 enum MORPHO_MOTORS {
     #include "morphology.h"
+    MOTOR_NUMBER
 };
 #undef X
 
