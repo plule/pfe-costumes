@@ -16,6 +16,6 @@ void sendMessage(MSG_TYPE type, int idMsg, const char *dest, int data1, int data
 void sendMessage(MSG_TYPE type, int idMsg, const char *dest, const char* data);
 void getId();
 void init_ard(ARD_ROLE role);
-void handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial); // unimplemented !
+bool handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial); // unimplemented !
 
 #endif // COMMUNICATION_H

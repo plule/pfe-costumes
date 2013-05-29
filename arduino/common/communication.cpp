@@ -99,8 +99,8 @@ void serialEvent() {
         sendMessage(MSG_HELLO, 0, ARD_MASTER, Role);
     } else if(strcmp(dest, Id) == 0 && type != MSG_ACK) /* Message is for me */
     {
-        sendMessage(MSG_ACK, idMsg, expe, 0); /* Acknowledge reception */
-        handleMessage(type, idMsg, expe, Serial);
+        if(handleMessage(type, idMsg, expe, Serial))
+            sendMessage(MSG_ACK, idMsg, expe, 0); /* Acknowledge reception */
     } else if(strcmp(dest, Id) != 0){
         DBG("Not for me");
     }

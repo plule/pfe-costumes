@@ -10,14 +10,21 @@ unsigned long savePeriod = 2000;
 
 #define EEPROM_SERVO 0
 
+/*
+ * Everything needed to configure a morphology slider
+ */
 typedef struct {
     int pin;
+    /* umin to umax should correspond to 1 turn */
     int umin;
     int umax;
     uint16_t distance;
     Servo servo;
 } ServoInfo;
 
+/*
+ * Array of morphology motors' infos
+ */
 #define X(pin, define, string, umin, umax) {pin, umin, umax, 0, Servo()},
 ServoInfo morpho_motors[] = {
     #include "../../../interfaces/morphology.h"
@@ -27,11 +34,17 @@ ServoInfo morpho_motors[] = {
 
 int led=13;
 
+/*
+ * Return a space to store the position of a motor in the eeprom
+ */
 uint16_t *servoAdress(int index)
 {
     return (uint16_t *)EEPROM_SERVO+sizeof(int)*index;
 }
 
+/*
+ * Save in the eeprom the state of the modified morphology motors
+ */
 void saveState()
 {
     int i;
@@ -43,6 +56,9 @@ void saveState()
     }
 }
 
+/*
+ * Modifiy the distance (in mm) of a servo.
+ */
 bool setDistance(int motor, uint16_t distance)
 {
     if(distance > 0 && distance < MORPHO_DISTANCE && motor < MOTOR_NUMBER) {
@@ -59,7 +75,7 @@ void setup()
 {
     pinMode(led, OUTPUT);
     digitalWrite(led, HIGH);
-    init_ard(ROLE_MORPHOLOGY);
+    init_ard(ROLE_MORPHOLOGY); // init the id and send the hello message
     digitalWrite(led, LOW);
     int i;
     for(i=0; i<MOTOR_NUMBER; i++) {
@@ -77,6 +93,9 @@ MSG_TYPE futureMessageType;
 int futureMessageId;
 char futureMessageDest[9];
 
+/*
+ * Wait "time" ms then send a message
+ */
 void sendMessageIn(int time, MSG_TYPE type, int id, char *dest)
 {
     futureMessageType = type;
@@ -87,14 +106,17 @@ void sendMessageIn(int time, MSG_TYPE type, int id, char *dest)
     sendTime = millis() + time;
 }
 
-void handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
+/*
+ * React to a message (called by common communication.cpp file)
+ */
+bool handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
 {
     switch(type) {
     case MSG_MORPHOLOGY:
     {
         int motor = serial.parseInt();
         int distance = serial.parseInt();
-        setDistance(motor, distance);
+        return setDistance(motor, distance);
         break;
     }
     case MSG_ROTATION:
@@ -103,6 +125,7 @@ void handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
         int ms = 1000 + (float)angle*211.66/360.0;
         rotationMotor.writeMicroseconds(ms);
         sendMessageIn(400,MSG_DONE, idMsg, expe);
+        return true;
         break;
     }
     case MSG_SERVO_POS:
@@ -111,6 +134,7 @@ void handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
         for(i=0; i<MOTOR_NUMBER; i++) {
             sendMessage(MSG_SERVO_POS,0,ARD_MASTER,i,morpho_motors[i].distance);
         }
+        return true;
         break;
     }
     default:
