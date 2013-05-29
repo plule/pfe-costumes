@@ -14,10 +14,11 @@ typedef struct {
     int pin;
     int umin;
     int umax;
+    uint16_t distance;
     Servo servo;
 } ServoInfo;
 
-#define X(pin, define, string, umin, umax) {pin, umin, umax, Servo()},
+#define X(pin, define, string, umin, umax) {pin, umin, umax, 0, Servo()},
 ServoInfo morpho_motors[] = {
     #include "../../../interfaces/morphology.h"
 };
@@ -36,11 +37,22 @@ void saveState()
     int i;
     for(i=0; i<MOTOR_NUMBER; i++) {
         uint16_t value = eeprom_read_word(servoAdress(i));
-        if(value != morpho_motors[i].servo.readMicroseconds()) {
-            DBG("Saving...");
-            eeprom_write_word(servoAdress(i), morpho_motors[i].servo.readMicroseconds());
+        if(value != morpho_motors[i].distance) {
+            eeprom_write_word(servoAdress(i), morpho_motors[i].distance);
         }
     }
+}
+
+bool setDistance(int motor, uint16_t distance)
+{
+    if(distance > 0 && distance < MORPHO_DISTANCE && motor < MOTOR_NUMBER) {
+        ServoInfo info = morpho_motors[motor];
+        int time = info.umin + ((float)distance/(float)MORPHO_DISTANCE)*(info.umax - info.umin);
+        info.servo.writeMicroseconds(time);
+        morpho_motors[motor].distance = distance;
+        return true;
+    }
+    return false;
 }
 
 void setup()
@@ -51,10 +63,9 @@ void setup()
     digitalWrite(led, LOW);
     int i;
     for(i=0; i<MOTOR_NUMBER; i++) {
-        int pos = eeprom_read_word(servoAdress(i));
+        uint16_t pos = eeprom_read_word(servoAdress(i));
         morpho_motors[i].servo.attach(morpho_motors[i].pin, morpho_motors[i].umin, morpho_motors[i].umax);
-        morpho_motors[i].servo.writeMicroseconds(pos);
-        sendMessage(MSG_SERVO_POS,0,ARD_MASTER,i,pos);
+        setDistance(i, pos);
     }
     rotationMotor.attach(30, 800, 1300);
     rotationMotor.writeMicroseconds(1000);
@@ -82,10 +93,8 @@ void handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
     case MSG_MORPHOLOGY:
     {
         int motor = serial.parseInt();
-        int time = serial.parseInt();
-        if(motor < MOTOR_NUMBER && time >= morpho_motors[motor].umin && time <= morpho_motors[motor].umax) {
-            morpho_motors[motor].servo.writeMicroseconds(time);
-        }
+        int distance = serial.parseInt();
+        setDistance(motor, distance);
         break;
     }
     case MSG_ROTATION:
@@ -100,7 +109,7 @@ void handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
     {
         int i;
         for(i=0; i<MOTOR_NUMBER; i++) {
-            sendMessage(MSG_SERVO_POS,0,ARD_MASTER,i,morpho_motors[i].servo.readMicroseconds());
+            sendMessage(MSG_SERVO_POS,0,ARD_MASTER,i,morpho_motors[i].distance);
         }
         break;
     }

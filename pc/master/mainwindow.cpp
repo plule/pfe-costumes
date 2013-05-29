@@ -33,13 +33,13 @@ MainWindow::MainWindow(QWidget *parent) :
     for(int i=0; i < m_arduinoCommunication->getMotorsNumber(); i++) {
         QString name = QString(m_arduinoCommunication->getMotorsNames()[i]);
         QSlider *slider = new QSlider(Qt::Horizontal, this);
-        slider->setMinimum(1100); // TODO actual value
-        slider->setMaximum(1900);
+        slider->setMinimum(0);
+        slider->setMaximum(MORPHO_DISTANCE);
         slider->setProperty("motor", i);
 
         QSpinBox *spin = new QSpinBox(this);
-        spin->setMinimum(1100);
-        spin->setMaximum(1900);
+        spin->setMinimum(0);
+        spin->setMaximum(MORPHO_DISTANCE);
 
         QHBoxLayout *layout = new QHBoxLayout();
         layout->addWidget(slider);

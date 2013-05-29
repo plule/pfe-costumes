@@ -68,6 +68,9 @@ enum MORPHO_MOTORS {
 };
 #undef X
 
+// Morphology distance (mm)
+#define MORPHO_DISTANCE 50
+
 #ifdef __cplusplus
 } // extern c
 #endif

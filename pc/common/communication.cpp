@@ -196,9 +196,10 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
         break;
     case MSG_SERVO_POS:
     {
-        if(message.data.size() == 2)
+        if(message.data.size() == 2) {
+            qDebug() << message.data.at(1).toInt();
             emit(motorMicrosecondChanged(message.expe, message.data.at(0).toInt(), message.data.at(1).toInt()));
-        else
+        } else
             qWarning() << "Invalid servo pos message.";
         break;
     }
