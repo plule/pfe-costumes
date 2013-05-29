@@ -1,6 +1,6 @@
 #include "communication.h"
 
-#define X(pin, define, string) string,
+#define X(pin, define, string, umin, umax) string,
 static const char *morpho_motors_name[] = {
     #include "../../interfaces/morphology.h"
 };

@@ -3,8 +3,6 @@
 #include <avr/eeprom.h>
 
 //Servo servo;
-Servo servos[MOTOR_NUMBER];
-
 Servo rotationMotor;
 
 unsigned long lastSave;
@@ -12,12 +10,19 @@ unsigned long savePeriod = 2000;
 
 #define EEPROM_SERVO 0
 
+typedef struct {
+    int pin;
+    int umin;
+    int umax;
+    Servo servo;
+} ServoInfo;
 
-#define X(pin, define, string) pin,
-int morpho_pins[] = {
+#define X(pin, define, string, umin, umax) {pin, umin, umax, Servo()},
+ServoInfo morpho_motors[] = {
     #include "../../../interfaces/morphology.h"
 };
 #undef X
+
 
 int led=13;
 
@@ -31,9 +36,9 @@ void saveState()
     int i;
     for(i=0; i<MOTOR_NUMBER; i++) {
         uint16_t value = eeprom_read_word(servoAdress(i));
-        if(value != servos[i].readMicroseconds()) {
+        if(value != morpho_motors[i].servo.readMicroseconds()) {
             DBG("Saving...");
-            eeprom_write_word(servoAdress(i), servos[i].readMicroseconds());
+            eeprom_write_word(servoAdress(i), morpho_motors[i].servo.readMicroseconds());
         }
     }
 }
@@ -47,11 +52,11 @@ void setup()
     int i;
     for(i=0; i<MOTOR_NUMBER; i++) {
         int pos = eeprom_read_word(servoAdress(i));
-        servos[i].attach(morpho_pins[i], MORPHO_MIN, MORPHO_MAX);
-        servos[i].writeMicroseconds(pos);
+        morpho_motors[i].servo.attach(morpho_motors[i].pin, morpho_motors[i].umin, morpho_motors[i].umax);
+        morpho_motors[i].servo.writeMicroseconds(pos);
         sendMessage(MSG_SERVO_POS,0,ARD_MASTER,i,pos);
     }
-    rotationMotor.attach(30, MORPHO_MIN, MORPHO_MAX);
+    rotationMotor.attach(30, 800, 1300);
     rotationMotor.writeMicroseconds(1000);
 }
 
@@ -78,8 +83,8 @@ void handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
     {
         int motor = serial.parseInt();
         int time = serial.parseInt();
-        if(motor < MOTOR_NUMBER) {
-            servos[motor].writeMicroseconds(time);
+        if(motor < MOTOR_NUMBER && time >= morpho_motors[motor].umin && time <= morpho_motors[motor].umax) {
+            morpho_motors[motor].servo.writeMicroseconds(time);
         }
         break;
     }
@@ -95,7 +100,7 @@ void handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
     {
         int i;
         for(i=0; i<MOTOR_NUMBER; i++) {
-            sendMessage(MSG_SERVO_POS,0,ARD_MASTER,i,servos[i].readMicroseconds());
+            sendMessage(MSG_SERVO_POS,0,ARD_MASTER,i,morpho_motors[i].servo.readMicroseconds());
         }
         break;
     }

@@ -61,7 +61,7 @@ QSqlTableModel *Collection::loadContent(QSqlDatabase *db)
     m_content = QMap<QString, Costume_info>();
     /* System infos */
     m_content.insert("id", Costume_info(PK, tr("Id"), true));
-    m_content.insert("notdeleted", Costume_info(Bool, tr("Not Deleted costume"), false));
+    m_content.insert("notdeleted", Costume_info(Bool, tr("Not Deleted costume"), false, false));
 
     /* User infos */
     QSqlQuery q(*db);

@@ -4,7 +4,7 @@ AVR_TOOLS_DIR = /usr
 
 ARDUINO_LIBS = Servo common EEPROM
 BOARD_TAG = mega2560
-ARDUINO_PORT = /dev/ttyACM0
+ARDUINO_PORT = /dev/ttyACM1
 
 USER_LIB_PATH = ../..
 

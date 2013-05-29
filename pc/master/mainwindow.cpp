@@ -33,13 +33,13 @@ MainWindow::MainWindow(QWidget *parent) :
     for(int i=0; i < m_arduinoCommunication->getMotorsNumber(); i++) {
         QString name = QString(m_arduinoCommunication->getMotorsNames()[i]);
         QSlider *slider = new QSlider(Qt::Horizontal, this);
-        slider->setMinimum(MORPHO_MIN);
-        slider->setMaximum(MORPHO_MAX);
+        slider->setMinimum(1100); // TODO actual value
+        slider->setMaximum(1900);
         slider->setProperty("motor", i);
 
         QSpinBox *spin = new QSpinBox(this);
-        spin->setMinimum(MORPHO_MIN);
-        spin->setMaximum(MORPHO_MAX);
+        spin->setMinimum(1100);
+        spin->setMaximum(1900);
 
         QHBoxLayout *layout = new QHBoxLayout();
         layout->addWidget(slider);
@@ -558,7 +558,12 @@ void MainWindow::on_massCaptureButton_clicked()
         connect(m_progressDialog, SIGNAL(canceled()), synchroniser, SLOT(deleteLater()));
         synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), m_settings.value("photonumber").toInt());
     } else {
-        this->displayError(tr("No camera connected"), "");
+        m_settingsForm->refreshCameraList();
+        setCamera(m_settingsForm->getCamera());
+        if(m_camera != 0) {
+            on_massCaptureButton_clicked();
+        } else
+            this->displayError(tr("No camera connected"), "");
     }
 }
 

@@ -62,15 +62,11 @@ typedef enum {
 
 
 /* Morphology */
-#define X(pin, define, string) define,
+#define X(pin, define, string, umin, umax) define,
 enum MORPHO_MOTORS {
     #include "morphology.h"
 };
 #undef X
-
-// TODO one per motor
-#define MORPHO_MIN 800
-#define MORPHO_MAX 1900
 
 #ifdef __cplusplus
 } // extern c
