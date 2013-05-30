@@ -4,6 +4,7 @@
  QT += core widgets gui
 TARGET = DcRawQT
 TEMPLATE = lib
+CONFIG += staticlib
 INCLUDEPATH = ../CImg /usr/local/include
 DEFINES += DCRAWQT_LIBRARY \
     __MINGW__ \
@@ -27,6 +28,3 @@ HEADERS += dcrawqt.h \
     dcrawqt_global.h \
     dcrimage.h
 FORMS += dcrawqtoptions.ui
-
-OTHER_FILES += \
-    DcRawQT.pri

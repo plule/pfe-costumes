@@ -4,9 +4,9 @@
 #include <QObject>
 #include <QSettings>
 #include <QStringList>
-#include "../camerahandler/qcamera.h"
-#include "../common/communication.h"
-#include "../common/collection.h"
+#include "camerahandler/qcamera.h"
+#include "common/communication.h"
+#include "common/collection.h"
 
 /**
  * @brief Synchronise an arduino and a camera to take photos.
