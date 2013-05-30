@@ -1,10 +1,7 @@
 #DESTDIR = ../bin
 TEMPLATE = app
-INCLUDEPATH += ../common ../3rdparty/DcRawQT
+INCLUDEPATH += ../common ../3rdparty/DcRawQT ../3rdparty/qextserialport
 VPATH = ..
-
-include(../3rdparty/qextserialport/qextserialport.pri)
-#include(../3rdparty/DcRawQT/DcRawQT.pri)
 
 QT += widgets sql
 
@@ -44,7 +41,7 @@ DEFINES += DCRAWQT_LIBRARY \
     USE_CIMG \
     NODEPS
 
-LIBS += -lgphoto2 -lgphoto2_port ../3rdparty/DcRawQT/libDcRawQT.a
+LIBS += -lgphoto2 -lgphoto2_port ../3rdparty/DcRawQT/libDcRawQT.a ../3rdparty/qextserialport/libqextserialport.a
 
 TARGET = ../appli
 
