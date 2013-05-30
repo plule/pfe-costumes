@@ -1,6 +1,6 @@
 #include <Arduino.h>
 //#include "../../../interfaces/interfaces.h"
-//#include "../../common/communication.h"
+#include "../../common/communication.h"
 
 #define NBLED 6
 #define LIMIT 400
@@ -61,9 +61,9 @@ void loop()
     Serial.println(grayToBinary(grayValue));//,3);
     delay(100);
 }
-/*
-void handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
+
+bool handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
 {
+    return true;
     //DBG("fio");
 }
-*/

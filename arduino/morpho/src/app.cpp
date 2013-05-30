@@ -15,7 +15,7 @@ unsigned long savePeriod = 2000;
  */
 typedef struct {
     int pin;
-    /* umin to umax should correspond to 1 turn */
+    /* umin to umax should correspond to 5 cm */
     int umin;
     int umax;
     uint16_t distance;

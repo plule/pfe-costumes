@@ -5,7 +5,6 @@
 TARGET = DcRawQT
 TEMPLATE = lib
 CONFIG += staticlib
-INCLUDEPATH = ../CImg /usr/local/include
 DEFINES += DCRAWQT_LIBRARY \
     __MINGW__ \
     USE_CIMG \

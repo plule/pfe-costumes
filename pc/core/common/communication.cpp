@@ -234,7 +234,8 @@ void ArduinoCommunication::_sendMessage(MSG_TYPE type, int id, QString dest, QLi
         foreach(QVariant data, datas) {
             args << data.toString();
         };
-        m_port->write(args.join(ARG_SEP).append(MSG_SEP).toLatin1());
+        QString message = args.join(ARG_SEP).append(MSG_SEP);
+        m_port->write(message.toLatin1());
     }
 }
 

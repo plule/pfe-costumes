@@ -101,8 +101,6 @@ void serialEvent() {
     {
         if(handleMessage(type, idMsg, expe, Serial))
             sendMessage(MSG_ACK, idMsg, expe, 0); /* Acknowledge reception */
-    } else if(strcmp(dest, Id) != 0){
-        DBG("Not for me");
     }
     Serial.readStringUntil(MSG_SEP);
     digitalWrite(13,LOW);
