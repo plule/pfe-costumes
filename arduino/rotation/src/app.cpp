@@ -8,6 +8,7 @@
 extern HardwareSerial Serial;
 int i=0;
 int ledOn=4;
+int led=13;
 
 int leds[] = {12,11,10,9,8,7,6,5};
 unsigned char grayValue;
@@ -16,13 +17,13 @@ unsigned char value;
 
 void setup()
 {
-    //pinMode(led, OUTPUT);
-    Serial.begin(9600);
+    pinMode(led, OUTPUT);
     pinMode(ledOn, OUTPUT);
     digitalWrite(ledOn, HIGH);
-    //digitalWrite(led, HIGH);
-    //init_ard(ROTATION);
-    //digitalWrite(led, LOW);
+    Serial.begin(9600);
+    digitalWrite(led, HIGH);
+    init_ard(ROLE_ROTATION);
+    digitalWrite(led, LOW);
 }
 
 unsigned char grayToBinary(unsigned char num)
@@ -62,7 +63,7 @@ void loop()
     delay(100);
 }
 
-bool handleMessage(MSG_TYPE type, int idMsg, int expe, HardwareSerial serial)
+bool handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
 {
     return true;
     //DBG("fio");
