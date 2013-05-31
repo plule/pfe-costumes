@@ -35,14 +35,19 @@ public slots:
     // If a problem happened, try to resume execution
     void resume();
 
+
 private slots:
     void onCaptureDone(int status, QString path, QStringList errors);
     void onRotationDone(bool success);
+    void onAngleChanged(int angle);
+    void launchMassCapture();
+    void onCaptured(int status, QString path, QStringList errors);
 
 private:
     int m_actionNumber;
     int m_target;
     float m_step;
+    float m_nextAnglePhoto;
     QPhoto::QCamera *m_camera;
     ArduinoCommunication *m_morphology;
     Collection *m_collection;

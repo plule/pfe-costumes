@@ -17,11 +17,14 @@ void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *mor
     m_idCostume = idCostume;
     m_problem = NoProblem;
 
+    m_morphology->rotationMessage(0)->launch();
+    connect(m_camera, SIGNAL(finished(int,QString,QStringList)), this, SLOT(launchMassCapture()));
+    m_camera->captureToFile("/tmp/dummy.jpg");
 
-    Transaction *watcher = m_morphology->rotationMessage(m_step*m_actionNumber);
+    /*Transaction *watcher = m_morphology->rotationMessage(m_step*m_actionNumber);
     watcher->watchForDone();
     connect(watcher, SIGNAL(done(bool)), this, SLOT(onRotationDone(bool)));
-    watcher->launch();
+    watcher->launch();*/
 }
 
 void MassCapture::setCamera(QPhoto::QCamera *camera)
@@ -82,6 +85,37 @@ void MassCapture::onRotationDone(bool success)
     }
 }
 
+void MassCapture::onAngleChanged(int angle)
+{
+    qDebug() << angle;
+    if(angle > m_nextAnglePhoto) {
+        QString path = m_collection->getNewFilePath(m_idCostume, "turntable", m_settings.value("rawextension").toString());
+        m_camera->captureToFile(path);
+        // Take Photo
+        m_nextAnglePhoto += m_step;
+        qDebug() << "souriez";
+        qDebug() << m_nextAnglePhoto;
+    }
+}
+
+void MassCapture::launchMassCapture()
+{
+    disconnect(m_camera, 0, this, 0);
+    connect(m_camera, SIGNAL(finished(int,QString,QStringList)), this, SLOT(onCaptured(int,QString,QStringList)));
+    Transaction *watcher = m_morphology->completeTurnMessage();
+    watcher->watchForDone(3600*1000);
+    m_nextAnglePhoto = 0;
+    connect(watcher, SIGNAL(progress(int)), this, SLOT(onAngleChanged(int)));
+    connect(watcher, &Transaction::done, [=](bool success){
+        emit done();
+    });
+    watcher->launch();
+}
+
+void MassCapture::onCaptured(int status, QString path, QStringList errors)
+{
+    emit progress((m_nextAnglePhoto-1)/m_step, path);
+}
 
 void MassCapture::resume()
 {

@@ -99,6 +99,13 @@ signals:
      * @param ms
      */
     void motorDistanceChanged(QString arduino, int motor, int distance);
+
+    /**
+     * @brief angleChanged is emitted when the angle of the turntable changed
+     * @param arduino
+     * @param angle
+     */
+    void angleChanged(QString arduino, int angle);
     
 public slots:
     /**
@@ -137,11 +144,19 @@ public slots:
      * @return the message (sendable with ->launch)
      */
     Transaction *motorsPositionMessage(QString arduino);
+
+    /**
+     * @brief completeTurnMessage sends a message to do a complete rotation
+     * @param arduino
+     * @return
+     */
+    Transaction *completeTurnMessage();
     
 private slots:
     void onDataAvailable();
     void checkAliveDevices();
     void cleanUpDeadDevices();
+    void deleteTransaction(int transaction);
     void _sendMessage(MSG_TYPE type, int id, QString dest, QList<QVariant> datas = QList<QVariant>());
 
 private:
@@ -154,7 +169,8 @@ private:
     QString m_messagePart;
     QList<Arduino> m_arduinos;
     QTimer m_aliveTimer;
-    QVector<Transaction*> m_watchers;
+    QHash<int, Transaction*> m_watchers;
+    //QVector<Transaction*> m_watchers;
     int m_lastMessage;
     bool m_pinging;
 };

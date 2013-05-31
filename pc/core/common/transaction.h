@@ -58,6 +58,10 @@ signals:
     void done(bool success);
     // The message needs to be sent
     void send(MSG_TYPE m_type, int m_id, QString m_dest, QList<QVariant> m_datas);
+    // Arbitrary progress (eg. angle for complete turn)
+    void progress(int value);
+    // The transaction is over and the object can be destroyed
+    void finished(const int id);
     
 public slots:
     // Send the message
@@ -68,6 +72,8 @@ public slots:
     void setAck();
     // Indicate if work has been done
     void setDone(bool success);
+    // Indicate arbirtrary progress
+    void setProgress(int progressValue);
 
 protected slots:
     void ackTimeout();

@@ -31,8 +31,10 @@ Transaction::~Transaction()
 void Transaction::setAck()
 {
     m_ackTimer->stop();
-    if(m_doneTimer == 0)
+    if(m_doneTimer == 0) {
         m_finished = true;
+        emit finished(m_id);
+    }
     emit received();
 }
 
@@ -41,7 +43,13 @@ void Transaction::setDone(bool success)
     if(m_doneTimer != 0)
         m_doneTimer->stop();
     m_finished = true;
+    emit finished(m_id);
     emit done(success);
+}
+
+void Transaction::setProgress(int progressValue)
+{
+    emit progress(progressValue);
 }
 
 bool Transaction::valid()
@@ -89,6 +97,7 @@ void Transaction::watchForAck(int time)
 void Transaction::cancel()
 {
     this->m_finished = true;
+    emit finished(m_id);;
 }
 
 QString Transaction::typeToString()
@@ -99,9 +108,6 @@ QString Transaction::typeToString()
         break;
     case MSG_DISCOVER:
         return QString("Discover");
-        break;
-    case MSG_RENAME:
-        return QString("Rename");
         break;
     case MSG_MORPHOLOGY:
         return QString("Morphology");

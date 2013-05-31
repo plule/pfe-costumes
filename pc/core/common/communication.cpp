@@ -14,8 +14,6 @@ ArduinoCommunication::ArduinoCommunication(QObject *parent) :
     m_port = 0;
     m_aliveTimer.setInterval(5000);
     connect(&m_aliveTimer, SIGNAL(timeout()), this, SLOT(checkAliveDevices()));
-    m_watchers.resize(MAX_ID);
-    m_watchers.fill(0);
     m_aliveTimer.start();
 }
 
@@ -64,10 +62,9 @@ Transaction *ArduinoCommunication::helloMessage()
 Transaction *ArduinoCommunication::motorDistanceMessage(QString arduino, int motor, int distance)
 {
     for(int i=0; i<MAX_ID; i++) {
-        Transaction *watcher = m_watchers[i];
+        Transaction *watcher = m_watchers.value(i);
         if(watcher != 0 && watcher->getDest() == arduino && watcher->getDatas().size() >= 1 && watcher->getDatas().first().toInt() == motor) {
-            delete watcher;
-            m_watchers[i] = 0;
+            m_watchers.take(i)->deleteLater();
         }
     }
     QList<QVariant> args;
@@ -79,16 +76,19 @@ Transaction *ArduinoCommunication::motorDistanceMessage(QString arduino, int mot
 Transaction *ArduinoCommunication::rotationMessage(int angle)
 {
     for(int i=0; i<MAX_ID; i++) {
-        if(m_watchers.value(i,0) != 0 && m_watchers.value(i)->getType() == MSG_ROTATION) {
+        if(m_watchers.contains(i) && m_watchers.value(i)->getType() == MSG_ROTATION) {
+            deleteTransaction(i);
+        }
+        /*if(m_watchers.value(i,0) != 0 && m_watchers.value(i)->getType() == MSG_ROTATION) {
             delete m_watchers.value(i);
             m_watchers[i] = 0;
-        }
+        }*/
     }
 
     QList<QVariant> args;
-    args.append(360-angle);
+    args.append(angle);
     if(m_arduinos.size() > 0)
-        return createTransaction(MSG_ROTATION, m_arduinos[0].id, args);
+        return createTransaction(MSG_ROTATION, m_arduinos[0].id, args); // TODO select rotation arduino
     else
         return new Transaction(this);
 }
@@ -96,6 +96,14 @@ Transaction *ArduinoCommunication::rotationMessage(int angle)
 Transaction *ArduinoCommunication::motorsPositionMessage(QString arduino)
 {
     return createTransaction(MSG_SERVO_POS, arduino);
+}
+
+Transaction *ArduinoCommunication::completeTurnMessage()
+{
+    if(m_arduinos.size() > 0)
+        return createTransaction(MSG_TURN, m_arduinos.first().id);
+    else
+        return new Transaction(this);
 }
 
 void ArduinoCommunication::onDataAvailable()
@@ -132,6 +140,14 @@ void ArduinoCommunication::cleanUpDeadDevices()
         }
     }
     m_pinging = false;
+}
+
+void ArduinoCommunication::deleteTransaction(int id)
+{
+    if(m_watchers.contains(id)) {
+        //m_watchers.value(id)->deleteLater();
+        m_watchers.take(id)->deleteLater();
+    }
 }
 
 void ArduinoCommunication::handleMessage(QString message)
@@ -182,16 +198,21 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
     case MSG_DEBUG:
         qDebug() << message.data;
         break;
-    case MSG_RENAME:
+    case MSG_ANGLE:
+        if(!message.data.empty()) {
+            emit angleChanged(message.expe, message.data.first().toInt());
+            if(m_watchers.contains(message.id) && m_watchers.value(message.id)->valid())
+                m_watchers.value(message.id)->setProgress(message.data.first().toInt());
+        }
         break;
     case MSG_MORPHOLOGY:
         break;
     case MSG_ACK:
-        if(m_watchers.value(message.id,0) != 0 && m_watchers.value(message.id)->valid())
+        if(m_watchers.contains(message.id) && m_watchers.value(message.id)->valid())
             m_watchers.value(message.id)->setAck();
         break;
     case MSG_DONE:
-        if(m_watchers.value(message.id,0) != 0 && m_watchers.value(message.id)->valid())
+        if(m_watchers.contains(message.id) && m_watchers.value(message.id)->valid())
             m_watchers.value(message.id)->setDone(true);
         break;
     case MSG_SERVO_POS:
@@ -209,14 +230,25 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
 
 Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, QString dest, QList<QVariant> datas)
 {
-    m_lastMessage++;
+    int id = 0;
+    while(m_watchers.contains(id) && id++ <= MAX_ID);
+    /*for(id=0; id<=MAX_ID; id++)
+        if(!m_watchers.contains(id))
+            break;*/
+    if(id==MAX_ID) {
+        qWarning() << "Watcher pool full";
+        return new Transaction(this);
+    }
+/*    m_lastMessage++;
     m_lastMessage = m_lastMessage%MAX_ID;
-    int id = m_lastMessage;
-    delete m_watchers.value(id); // old old message
+    int id = m_lastMessage;*/
+    //delete m_watchers.value(id); // old old message
     Transaction *watcher = new Transaction(type, id, dest, datas, this);
     connect(watcher, SIGNAL(send(MSG_TYPE,int,QString,QList<QVariant>)), this, SLOT(_sendMessage(MSG_TYPE,int,QString,QList<QVariant>)));
+    connect(watcher, SIGNAL(finished(int)), watcher, SLOT(deleteLater()));
     if(dest != DEST_BROADCAST) { // not a broadcast, so we watch for answer
-        m_watchers[id] = watcher;
+        connect(watcher, SIGNAL(finished(int)), this, SLOT(deleteTransaction(int)));
+        m_watchers.insert(id, watcher);
         watcher->watchForAck();
     }
     return watcher;

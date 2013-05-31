@@ -7,6 +7,10 @@ Servo rotationMotor;
 
 unsigned long lastSave;
 unsigned long savePeriod = 2000;
+bool completeTurn = false;
+unsigned long completeTurnStart = 0;
+int completeTurnAngle;
+int completeTurnId;
 
 #define EEPROM_SERVO 0
 
@@ -121,7 +125,7 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
     }
     case MSG_ROTATION:
     {
-        int angle = serial.parseInt();
+        int angle = 360-serial.parseInt();
         int ms = 1000 + (float)angle*211.66/360.0;
         rotationMotor.writeMicroseconds(ms);
         sendMessageIn(400,MSG_DONE, idMsg, expe);
@@ -137,7 +141,15 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
         return true;
         break;
     }
+    case MSG_TURN:
+        completeTurnStart = millis();
+        completeTurnAngle = 361;
+        completeTurn = true;
+        completeTurnId = idMsg;
+        return true;
+        break;
     default:
+        return false;
         break;
     }
 }
@@ -152,5 +164,17 @@ void loop()
     if(time > sendTime && !sent) {
         sendMessage(futureMessageType, futureMessageId,futureMessageDest);
         sent = true;
+    }
+    if(completeTurn) {
+        float angle = 360-(millis()-completeTurnStart)/100;
+        if(angle < 0) {
+            completeTurn = false;
+            sendMessage(MSG_DONE, completeTurnId, ARD_MASTER);
+        } if((int)angle != completeTurnAngle) {
+            completeTurnAngle = (int)angle;
+            sendMessage(MSG_ANGLE, completeTurnId, ARD_MASTER, 360-(int)completeTurnAngle);
+        }
+        int ms = 1000 + angle*(211.66/360.0);
+        rotationMotor.writeMicroseconds(ms);
     }
 }
