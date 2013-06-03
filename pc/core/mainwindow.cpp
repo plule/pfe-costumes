@@ -469,8 +469,12 @@ void MainWindow::on_manButton_clicked()
 void MainWindow::on_actionNew_Collection_triggered()
 {
     QString path = "";
-    while(path.isEmpty())
+
+    while(path.isEmpty()) {
         path = QFileDialog::getSaveFileName(this, tr("New collection"), QDir::home().absolutePath());
+        if(path.isEmpty() && m_collection != 0)
+            return;
+    }
     QFile::remove(path);
     QFile::copy(":/default-db/default.db",path);
     QFile::setPermissions(path, QFileDevice::ReadOwner|QFileDevice::WriteOwner);
@@ -495,7 +499,9 @@ void MainWindow::on_actionNew_Collection_triggered()
 
 void MainWindow::on_actionOpen_Collection_triggered()
 {
-    loadCollection(QFileDialog::getOpenFileName(this, tr("Open collection"), QDir::home().absolutePath()));
+    QString path = QFileDialog::getOpenFileName(this, tr("Open collection"), QDir::home().absolutePath());
+    if(!path.isEmpty())
+        loadCollection(path);
 }
 
 void MainWindow::on_removeButton_clicked()

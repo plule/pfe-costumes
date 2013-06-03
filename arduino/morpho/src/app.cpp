@@ -52,9 +52,11 @@ uint16_t *servoAdress(int index)
 
 void setAngle(int angle)
 {
-    int ms = 2000 - (float)angle*211.66/360.0;
-    rotationAngle = angle;
-    rotationMotor.writeMicroseconds(ms);
+    if(angle != rotationAngle) {
+        int ms = 2000 - (float)angle*211.66/360.0;
+        rotationAngle = angle;
+        rotationMotor.writeMicroseconds(ms);
+    }
 }
 
 /*
