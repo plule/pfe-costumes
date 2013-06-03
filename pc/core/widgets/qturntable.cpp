@@ -167,6 +167,8 @@ void QTurntable::setPicture(int index, QString path)
     pic = pic.scaled(1024,768, Qt::KeepAspectRatio);
     if(index >= m_pixmaps.size())
         setNumber(index+1);
+    QFileInfo infos(getPathOf(path));
+    m_pixmaps[index].first = infos.fileName();
     m_pixmaps[index].second->setPixmap(pic);
     if(index == getView()) {
         m_current_pixmap = m_pixmaps[index].second;
