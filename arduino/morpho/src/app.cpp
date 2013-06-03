@@ -110,6 +110,12 @@ void sendMessageIn(int time, MSG_TYPE type, int id, char *dest)
     sendTime = millis() + time;
 }
 
+void setAngle(int angle)
+{
+    int ms = 2000 - (float)angle*211.66/360.0;
+    rotationMotor.writeMicroseconds(ms);
+}
+
 /*
  * React to a message (called by common communication.cpp file)
  */
@@ -125,9 +131,8 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
     }
     case MSG_ROTATION:
     {
-        int angle = 360-serial.parseInt();
-        int ms = 1000 + (float)angle*211.66/360.0;
-        rotationMotor.writeMicroseconds(ms);
+        int angle = serial.parseInt();
+        setAngle(angle);
         sendMessageIn(400,MSG_DONE, idMsg, expe);
         return true;
         break;
@@ -143,7 +148,7 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
     }
     case MSG_TURN:
         completeTurnStart = millis();
-        completeTurnAngle = 361;
+        completeTurnAngle = -1;
         completeTurn = true;
         completeTurnId = idMsg;
         return true;
@@ -166,15 +171,16 @@ void loop()
         sent = true;
     }
     if(completeTurn) {
-        float angle = 360-(millis()-completeTurnStart)/100;
-        if(angle < 0) {
+        float angle = (millis()-completeTurnStart)/100;
+        if(angle >= 360) {
             completeTurn = false;
             sendMessage(MSG_DONE, completeTurnId, ARD_MASTER);
-        } else if((int)angle != completeTurnAngle) {
-            completeTurnAngle = (int)angle;
-            sendMessage(MSG_ANGLE, completeTurnId, ARD_MASTER, 360-(int)completeTurnAngle);
+        } else {
+            setAngle(angle);
         }
-        int ms = 1000 + angle*(211.66/360.0);
-        rotationMotor.writeMicroseconds(ms);
+        if((int)angle != completeTurnAngle) {
+            completeTurnAngle = (int)angle;
+            sendMessage(MSG_ANGLE, completeTurnId, ARD_MASTER, (int)completeTurnAngle);
+        }
     }
 }
