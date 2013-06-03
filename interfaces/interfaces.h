@@ -18,13 +18,14 @@ typedef char* ard_id_t;
 typedef enum {
     MSG_ACK, // Acknowledgement
     MSG_DONE, // Work is done
-    MSG_HELLO, // Sent by a new arduino to identify itself
     MSG_DISCOVER, // Broadcast to find all arduinos
-    MSG_MORPHOLOGY, // Set position of a morphology motor
-    MSG_ROTATION, // Set the rotation of the turntable
+    MSG_HELLO, // Sent by a new arduino to identify itself
+    MSG_SET_MORPHOLOGY, // Set position of a morphology motor
+    MSG_GET_MORPHOLOGY, // Ask to get position of the morphology elements
+    MSG_MORPHOLOGY, // Send the position of a morphology servo
+    MSG_SET_ANGLE, // Set the rotation of the turntable
     MSG_TURN, // Do a complete rotation and notify angle evolution
     MSG_ANGLE, // Send current rotation angle
-    MSG_SERVO_POS, // Send the position of a morphology servo
     MSG_DEBUG, // send a debug message
     MSG_INVALID // invalid message
 } MSG_TYPE;

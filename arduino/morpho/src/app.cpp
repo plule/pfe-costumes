@@ -133,14 +133,14 @@ void sendMessageIn(int time, MSG_TYPE type, int id, char *dest)
 bool handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
 {
     switch(type) {
-    case MSG_MORPHOLOGY:
+    case MSG_SET_MORPHOLOGY:
     {
         int motor = serial.parseInt();
         int distance = serial.parseInt();
         return setDistance(motor, distance);
         break;
     }
-    case MSG_ROTATION:
+    case MSG_SET_ANGLE:
     {
         int angle = serial.parseInt();
         setAngle(angle);
@@ -148,11 +148,11 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
         return true;
         break;
     }
-    case MSG_SERVO_POS:
+    case MSG_GET_MORPHOLOGY:
     {
         int i;
         for(i=0; i<MOTOR_NUMBER; i++) {
-            sendMessage(MSG_SERVO_POS,0,ARD_MASTER,i,morpho_motors[i].distance);
+            sendMessage(MSG_MORPHOLOGY,0,ARD_MASTER,i,morpho_motors[i].distance);
         }
         return true;
         break;

@@ -109,10 +109,10 @@ QString Transaction::typeToString()
     case MSG_DISCOVER:
         return QString("Discover");
         break;
-    case MSG_MORPHOLOGY:
+    case MSG_SET_MORPHOLOGY:
         return QString("Morphology");
         break;
-    case MSG_ROTATION:
+    case MSG_SET_ANGLE:
         return QString("Rotation");
         break;
     case MSG_ACK:
@@ -121,7 +121,7 @@ QString Transaction::typeToString()
     case MSG_DONE:
         return QString("Done");
         break;
-    case MSG_SERVO_POS:
+    case MSG_MORPHOLOGY:
         return QString("Servo pos");
         break;
     case MSG_DEBUG:

@@ -70,13 +70,13 @@ Transaction *ArduinoCommunication::motorDistanceMessage(QString arduino, int mot
     QList<QVariant> args;
     args.append(motor);
     args.append(distance);
-    return createTransaction(MSG_MORPHOLOGY, arduino, args);
+    return createTransaction(MSG_SET_MORPHOLOGY, arduino, args);
 }
 
 Transaction *ArduinoCommunication::rotationMessage(int angle)
 {
     for(int i=0; i<MAX_ID; i++) {
-        if(m_watchers.contains(i) && m_watchers.value(i)->getType() == MSG_ROTATION) {
+        if(m_watchers.contains(i) && m_watchers.value(i)->getType() == MSG_SET_ANGLE) {
             deleteTransaction(i);
         }
         /*if(m_watchers.value(i,0) != 0 && m_watchers.value(i)->getType() == MSG_ROTATION) {
@@ -88,14 +88,14 @@ Transaction *ArduinoCommunication::rotationMessage(int angle)
     QList<QVariant> args;
     args.append(angle);
     if(m_arduinos.size() > 0)
-        return createTransaction(MSG_ROTATION, m_arduinos[0].id, args); // TODO select rotation arduino
+        return createTransaction(MSG_SET_ANGLE, m_arduinos[0].id, args); // TODO select rotation arduino
     else
         return new Transaction(this);
 }
 
 Transaction *ArduinoCommunication::motorsPositionMessage(QString arduino)
 {
-    return createTransaction(MSG_SERVO_POS, arduino);
+    return createTransaction(MSG_GET_MORPHOLOGY, arduino);
 }
 
 Transaction *ArduinoCommunication::completeTurnMessage()
@@ -205,8 +205,6 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
                 m_watchers.value(message.id)->setProgress(message.data.first().toInt());
         }
         break;
-    case MSG_MORPHOLOGY:
-        break;
     case MSG_ACK:
         if(m_watchers.contains(message.id) && m_watchers.value(message.id)->valid())
             m_watchers.value(message.id)->setAck();
@@ -215,7 +213,7 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
         if(m_watchers.contains(message.id) && m_watchers.value(message.id)->valid())
             m_watchers.value(message.id)->setDone(true);
         break;
-    case MSG_SERVO_POS:
+    case MSG_MORPHOLOGY:
     {
         if(message.data.size() == 2) {
             emit(motorDistanceChanged(message.expe, message.data.at(0).toInt(), message.data.at(1).toInt()));
