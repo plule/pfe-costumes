@@ -74,6 +74,7 @@ public slots:
 private slots:
     void sendMs(int ms);
     void setMotorMicroSecond(QString arduino, int motor, int ms);
+    void onCaptureDone(int status, QString path, QStringList errorList);
 
     void on_captureButton_clicked();
 

@@ -305,12 +305,34 @@ void MainWindow::onModelDataChanged(const QModelIndex &topLeft, const QModelInde
     }
 }
 
+void MainWindow::onCaptureDone(int status, QString path, QStringList errorList)
+{
+    disconnect(m_cameraConnection);
+    switch(status) {
+    case QPhoto::QCamera::OK:
+    {
+        QString filename = convertRaw(path);
+        ui->turntable->setCurrentPicture(filename);
+        ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
+        updateSaveButton();
+        break;
+    }
+    case QPhoto::QCamera::Error:
+        displayError(tr("Failed to capture photo."), errorList.join("\n"));
+        break;
+    case QPhoto::QCamera::Timeout:
+        displayError(tr("Lost connection to the camera, you should disconnect and reconnect it."));
+        break;
+    }
+}
+
 void MainWindow::on_captureButton_clicked()
 {
     if(m_camera != 0 && m_camera->isConnected()) {
         QString filename = ui->turntable->getCurrentFileName(); // TODO if empty
         QString path = m_collection->getTempStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
-        m_cameraConnection =  connect(m_camera, &QPhoto::QCamera::finished, [=](int status, QString path, QStringList errorList){
+        m_cameraConnection =  connect(m_camera, &QPhoto::QCamera::finished, this, &MainWindow::onCaptureDone);//[=](int status, QString path, QStringList errorList);
+        /*m_cameraConnection =  connect(m_camera, &QPhoto::QCamera::finished, [=](int status, QString path, QStringList errorList){
             disconnect(m_cameraConnection);
             switch(status) {
             case QPhoto::QCamera::OK:
@@ -322,13 +344,13 @@ void MainWindow::on_captureButton_clicked()
                 break;
             }
             case QPhoto::QCamera::Error:
-                displayError(tr("Failed to capture photo."), errorList.join("\n"));
+                //displayError(tr("Failed to capture photo."), errorList.join("\n"));
                 break;
             case QPhoto::QCamera::Timeout:
                 displayError(tr("Lost connection to the camera, you should disconnect and reconnect it."));
                 break;
             }
-        });
+        });*/
 
                 //this, SLOT(onCameraCapture(int,QString,QStringList)));
         m_camera->captureToFile(path);

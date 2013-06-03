@@ -20,12 +20,13 @@ error_func(GPContext *context, const char *format, va_list args, void *data)
     QString error_msg;
     error_msg.vsprintf(format, args);
 #else
-void error_func(GPContext *context, const char *error_msg, void *data)
+void error_func(GPContext *context, const char *error_msg_char, void *data)
 {
+    QString error_msg(error_msg_char);
 #endif
     (void)context;
     QCamera* camera = static_cast<QCamera*>(data);
-    camera->appendError(error_msg);
+    camera->appendError(QString::fromUtf8(error_msg.toLatin1()));
     emit camera->error(error_msg);
 }
 
@@ -39,12 +40,13 @@ status_func(GPContext *context, const char *format, va_list args, void *data)
     QString status;
     status.vsprintf(format, args);
 #else
-void status_func(GPContext *context, const char *status, void *data)
+void status_func(GPContext *context, const char *status_char, void *data)
 {
+    QString status(status_char);
 #endif
     (void)context;
     QCamera* camera = static_cast<QCamera*>(data);
-    emit camera->status(status);
+    emit camera->status(status.toLatin1());
 }
 
 #ifdef LEGACY_GPHOTO
@@ -57,8 +59,9 @@ message_func(GPContext *context, const char *format, va_list args, void *data)
     QString message;
     message.vsprintf(format, args);
 #else
-void message_func(GPContext *context, const char *message, void *data)
+void message_func(GPContext *context, const char *message_char, void *data)
 {
+    QString message(message_char);
 #endif
     (void)context;
 	QCamera* camera = static_cast<QCamera*>(data);
@@ -88,8 +91,9 @@ progress_start_func(GPContext *context, float target, const char *format, va_lis
     QString task;
     task.vsprintf(format, args);
 #else
-unsigned int progress_start_func(GPContext *context, float target, const char *task, void *data)
+unsigned int progress_start_func(GPContext *context, float target, const char *task_char, void *data)
 {
+    QString task(task_char);
 #endif
     (void)context;
 	int id = 0; // TODO : Assigner un identifiant unique

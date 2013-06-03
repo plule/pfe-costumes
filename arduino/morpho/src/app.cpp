@@ -170,7 +170,7 @@ void loop()
         if(angle < 0) {
             completeTurn = false;
             sendMessage(MSG_DONE, completeTurnId, ARD_MASTER);
-        } if((int)angle != completeTurnAngle) {
+        } else if((int)angle != completeTurnAngle) {
             completeTurnAngle = (int)angle;
             sendMessage(MSG_ANGLE, completeTurnId, ARD_MASTER, 360-(int)completeTurnAngle);
         }

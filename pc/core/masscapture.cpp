@@ -20,11 +20,6 @@ void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *mor
     m_morphology->rotationMessage(0)->launch();
     connect(m_camera, SIGNAL(finished(int,QString,QStringList)), this, SLOT(launchMassCapture()));
     m_camera->captureToFile("/tmp/dummy.jpg");
-
-    /*Transaction *watcher = m_morphology->rotationMessage(m_step*m_actionNumber);
-    watcher->watchForDone();
-    connect(watcher, SIGNAL(done(bool)), this, SLOT(onRotationDone(bool)));
-    watcher->launch();*/
 }
 
 void MassCapture::setCamera(QPhoto::QCamera *camera)
@@ -103,7 +98,7 @@ void MassCapture::launchMassCapture()
     disconnect(m_camera, 0, this, 0);
     connect(m_camera, SIGNAL(finished(int,QString,QStringList)), this, SLOT(onCaptured(int,QString,QStringList)));
     Transaction *watcher = m_morphology->completeTurnMessage();
-    watcher->watchForDone(3600*1000);
+    watcher->watchForDone(3600*1000); // One hour delay to make the complete turn
     m_nextAnglePhoto = 0;
     connect(watcher, SIGNAL(progress(int)), this, SLOT(onAngleChanged(int)));
     connect(watcher, &Transaction::done, [=](bool success){
