@@ -4,6 +4,7 @@
 
 //Servo servo;
 Servo rotationMotor;
+int rotationAngle;
 
 unsigned long lastSave;
 unsigned long savePeriod = 2000;
@@ -12,7 +13,9 @@ unsigned long completeTurnStart = 0;
 int completeTurnAngle;
 int completeTurnId;
 
+
 #define EEPROM_SERVO 0
+#define EEPROM_ROTATION (uint16_t*)100
 
 /*
  * Everything needed to configure a morphology slider
@@ -46,6 +49,14 @@ uint16_t *servoAdress(int index)
     return (uint16_t *)EEPROM_SERVO+sizeof(int)*index;
 }
 
+
+void setAngle(int angle)
+{
+    int ms = 2000 - (float)angle*211.66/360.0;
+    rotationAngle = angle;
+    rotationMotor.writeMicroseconds(ms);
+}
+
 /*
  * Save in the eeprom the state of the modified morphology motors
  */
@@ -58,6 +69,8 @@ void saveState()
             eeprom_write_word(servoAdress(i), morpho_motors[i].distance);
         }
     }
+    if(rotationAngle != eeprom_read_word(EEPROM_ROTATION))
+        eeprom_write_word(EEPROM_ROTATION, rotationAngle);
 }
 
 /*
@@ -88,7 +101,8 @@ void setup()
         setDistance(i, pos);
     }
     rotationMotor.attach(30, 800, 1300);
-    rotationMotor.writeMicroseconds(1000);
+    setAngle(eeprom_read_word(EEPROM_ROTATION));
+    //rotationMotor.writeMicroseconds(eeprom_r);
 }
 
 unsigned long sendTime;
@@ -110,11 +124,6 @@ void sendMessageIn(int time, MSG_TYPE type, int id, char *dest)
     sendTime = millis() + time;
 }
 
-void setAngle(int angle)
-{
-    int ms = 2000 - (float)angle*211.66/360.0;
-    rotationMotor.writeMicroseconds(ms);
-}
 
 /*
  * React to a message (called by common communication.cpp file)
