@@ -43,7 +43,7 @@ DEFINES += DCRAWQT_LIBRARY \
 
 LIBS += -lgphoto2 -lgphoto2_port ../3rdparty/DcRawQT/libDcRawQT.a ../3rdparty/qextserialport/libqextserialport.a
 
-TARGET = ../appli
+TARGET = ../mannequinage
 
 FORMS += \
     mainwindow.ui \

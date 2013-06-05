@@ -130,39 +130,50 @@ void sendMessageIn(int time, MSG_TYPE type, int id, char *dest)
 /*
  * React to a message (called by common communication.cpp file)
  */
-bool handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
+bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs)
 {
     switch(type) {
     case MSG_SET_MORPHOLOGY:
     {
-        int motor = serial.parseInt();
-        int distance = serial.parseInt();
-        return setDistance(motor, distance);
+        if(nargs == 2) {
+            int motor = atoi(pargs[0]);
+            int distance = atoi(pargs[1]);
+            return setDistance(motor, distance);
+        } else
+            return false;
         break;
     }
     case MSG_SET_ANGLE:
     {
-        int angle = serial.parseInt();
-        setAngle(angle);
-        sendMessageIn(400,MSG_DONE, idMsg, expe);
-        return true;
+        if(nargs == 1) {
+            int angle = atoi(pargs[0]);
+            setAngle(angle);
+            sendMessageIn(400,MSG_DONE, idMsg, expe);
+            return true;
+        } else
+            return false;
         break;
     }
     case MSG_GET_MORPHOLOGY:
     {
-        int i;
-        for(i=0; i<MOTOR_NUMBER; i++) {
-            sendMessage(MSG_MORPHOLOGY,0,ARD_MASTER,i,morpho_motors[i].distance);
+        if(nargs == 0) {
+            int i;
+            for(i=0; i<MOTOR_NUMBER; i++) {
+                sendMessage(MSG_MORPHOLOGY,0,ARD_MASTER,i,morpho_motors[i].distance);
+            }
+            return true;
         }
-        return true;
         break;
     }
     case MSG_TURN:
-        completeTurnStart = millis();
-        completeTurnAngle = -1;
-        completeTurn = true;
-        completeTurnId = idMsg;
-        return true;
+        if(nargs == 0) {
+            completeTurnStart = millis();
+            completeTurnAngle = -1;
+            completeTurn = true;
+            completeTurnId = idMsg;
+            return true;
+        } else
+            return false;
         break;
     default:
         return false;

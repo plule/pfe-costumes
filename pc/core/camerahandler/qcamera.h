@@ -11,7 +11,7 @@
 #include <QStringList>
 #include <gphoto2/gphoto2-camera.h>
 
-#define LEGACY_GPHOTO
+//#define LEGACY_GPHOTO
 
 /*qDebug() << #fn;\*/
 #define GP_CALL(ret, fn, ...) emit wait_for_camera_answer();\

@@ -11,7 +11,7 @@ typedef uint8_t ard_size_t;
 typedef char* ard_id_t;
 
 #define MAX_ID 1000
-
+#define MAX_ARGS 10
 /*
  * Possible type of messages
  */
@@ -62,6 +62,8 @@ typedef enum {
 #define MSG_SEP '\n'
 #define ARG_SEP '|'
 
+#define MSG_SEP_S "\n"
+#define ARG_SEP_S "|"
 
 /* Morphology */
 #define X(pin, define, string, umin, umax) define,
