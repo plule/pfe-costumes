@@ -75,8 +75,6 @@ void MassCapture::onCaptured(int status, QString path, QStringList errors)
         m_nextAnglePhoto -= m_step; // last pic failed
         emit problem(CameraProblem, errors.join("\n"));
     } else {
-        qDebug() << (m_nextAnglePhoto)/m_step-1;
-        qDebug() << path;
         emit progress((m_nextAnglePhoto)/m_step-1, path);
     }
 }
@@ -96,7 +94,9 @@ void MassCapture::resume()
     if(m_camera && m_camera->isConnected()) {
         m_problem = NoProblem;
         Transaction *watcher = m_morphology->completeTurnMessage(m_rotationTime, m_currentAngle);
+        watcher->watchForDone(3600*1000); // One hour delay to make the complete turn
         connect(watcher, &Transaction::done, this, &MassCapture::onRotationDone);
+        connect(watcher, &Transaction::progress, this, &MassCapture::onAngleChanged);
         watcher->launch();
     } else {
         m_problem = CameraProblem;
