@@ -72,6 +72,7 @@ void MassCapture::onCaptured(int status, QString path, QStringList errors)
     if(status != QPhoto::QCamera::OK) {
         m_problem = CameraProblem;
         m_morphology->cancelTurnMessage()->launch();
+        m_nextAnglePhoto -= m_step; // last pic failed
         emit problem(CameraProblem, errors.join("\n"));
     } else {
         qDebug() << (m_nextAnglePhoto)/m_step-1;
@@ -92,8 +93,13 @@ void MassCapture::onRotationDone(bool success)
 
 void MassCapture::resume()
 {
-    m_problem = NoProblem;
-    Transaction *watcher = m_morphology->completeTurnMessage(m_rotationTime, m_currentAngle);
-    connect(watcher, &Transaction::done, this, &MassCapture::onRotationDone);
-    watcher->launch();
+    if(m_camera && m_camera->isConnected()) {
+        m_problem = NoProblem;
+        Transaction *watcher = m_morphology->completeTurnMessage(m_rotationTime, m_currentAngle);
+        connect(watcher, &Transaction::done, this, &MassCapture::onRotationDone);
+        watcher->launch();
+    } else {
+        m_problem = CameraProblem;
+        emit problem(CameraProblem, tr("Camera seems to be disconnected."));
+    }
 }

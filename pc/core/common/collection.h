@@ -6,6 +6,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDir>
+#include <QTemporaryDir>
 #include <QDebug>
 #include <QStringList>
 #include <QSqlTableModel>

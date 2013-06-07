@@ -44,9 +44,7 @@ Collection::Collection(QObject *parent, QString collectionPath) : QObject(parent
     m_valid = true;
 
     /* Init temp storage path */
-    m_tempDir = QDir::temp();
-    m_tempDir.mkdir(coll.baseName()+"_FILES");
-    m_tempDir.cd(coll.baseName()+"_FILES");
+    m_tempDir = QDir(QTemporaryDir().path());
 }
 
 QSqlTableModel *Collection::loadContent(QSqlDatabase *db)
