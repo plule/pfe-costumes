@@ -69,7 +69,7 @@ public slots:
     void removeDevice(Arduino arduino);
     QString getCurrentArduino();
     void setCamera(QPhoto::QCamera *m_camera);
-    void onMassCaptureProblem(MassCapture::Problem problem);
+    void onMassCaptureProblem(MassCapture::Problem problem, QString description);
     
 private slots:
     void sendMs(int ms);

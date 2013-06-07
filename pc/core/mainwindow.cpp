@@ -368,7 +368,7 @@ void MainWindow::setCamera(QPhoto::QCamera *camera)
     }
 }
 
-void MainWindow::onMassCaptureProblem(MassCapture::Problem problem)
+void MainWindow::onMassCaptureProblem(MassCapture::Problem problem, QString description)
 {
     MassCapture *synchroniser = (MassCapture *)sender();
     if(synchroniser != 0) {
@@ -380,6 +380,7 @@ void MainWindow::onMassCaptureProblem(MassCapture::Problem problem)
         else
             errorDialog.setText(tr("An unknown problem occured."));
         errorDialog.setInformativeText(tr("Do you wish to try to continue the capture?"));
+        errorDialog.setDetailedText(description);
         errorDialog.setIcon(QMessageBox::Warning);
         errorDialog.setStandardButtons(QMessageBox::Retry | QMessageBox::Abort);
         connect(&errorDialog, SIGNAL(accepted()), synchroniser, SLOT(resume()));
@@ -553,7 +554,7 @@ void MainWindow::on_massCaptureButton_clicked()
         ui->turntable->setNumber(m_settings.value("photonumber").toInt());
 
         connect(synchroniser, SIGNAL(done()), synchroniser, SLOT(deleteLater()));
-        connect(synchroniser, SIGNAL(problem(MassCapture::Problem)), this, SLOT(onMassCaptureProblem(MassCapture::Problem)));
+        connect(synchroniser, SIGNAL(problem(MassCapture::Problem, QString)), this, SLOT(onMassCaptureProblem(MassCapture::Problem, QString)));
 
         connect(synchroniser, &MassCapture::progress, [=](int index,QString path){
             QString filename = convertRaw(path);

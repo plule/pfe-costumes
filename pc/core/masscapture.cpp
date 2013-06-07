@@ -31,7 +31,7 @@ void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *mor
 void MassCapture::setCamera(QPhoto::QCamera *camera)
 {
     if(camera != 0) {
-        connect(camera, SIGNAL(finished(int,QString,QStringList)), this, SLOT(onCaptured(int,QString,QStringList)));
+        connect(camera, &QPhoto::QCamera::finished, this, &MassCapture::onCaptured);
         connect(camera, &QPhoto::QCamera::destroyed, [=]() {
             m_camera = 0;
         });
@@ -49,7 +49,7 @@ void MassCapture::onAngleChanged(int angle)
             QString path = m_collection->getNewFilePath(m_idCostume, "turntable", m_settings.value("rawextension").toString());
             m_camera->captureToFile(path);
         } else {
-            emit problem(CameraProblem);
+            emit problem(CameraProblem, tr("Camera seems to be disconnected"));
             return;
         }
     }
@@ -62,12 +62,8 @@ void MassCapture::launchMassCapture()
     Transaction *watcher = m_morphology->completeTurnMessage(m_rotationTime);
     watcher->watchForDone(3600*1000); // One hour delay to make the complete turn
     m_nextAnglePhoto = 0;
-    connect(watcher, SIGNAL(progress(int)), this, SLOT(onAngleChanged(int)));
-    connect(watcher, &Transaction::done, [=](bool success){
-        if(m_problem == NoProblem)
-            emit done();
-    });
-    qDebug() << "launch";
+    connect(watcher, &Transaction::progress, this, &MassCapture::onAngleChanged);
+    connect(watcher, &Transaction::done, this, &MassCapture::onRotationDone);
     watcher->launch();
 }
 
@@ -76,10 +72,21 @@ void MassCapture::onCaptured(int status, QString path, QStringList errors)
     if(status != QPhoto::QCamera::OK) {
         m_problem = CameraProblem;
         m_morphology->cancelTurnMessage()->launch();
-
-        emit problem(CameraProblem);
+        emit problem(CameraProblem, errors.join("\n"));
     } else {
-        emit progress((m_nextAnglePhoto-1)/m_step, path);
+        qDebug() << (m_nextAnglePhoto)/m_step-1;
+        qDebug() << path;
+        emit progress((m_nextAnglePhoto)/m_step-1, path);
+    }
+}
+
+void MassCapture::onRotationDone(bool success)
+{
+    if(m_problem == NoProblem && success)
+        emit done();
+    else if(m_problem == NoProblem && !success) {
+        m_problem = RotationProblem;
+        emit problem(RotationProblem, "");
     }
 }
 
@@ -87,9 +94,6 @@ void MassCapture::resume()
 {
     m_problem = NoProblem;
     Transaction *watcher = m_morphology->completeTurnMessage(m_rotationTime, m_currentAngle);
-    connect(watcher, &Transaction::done, [=](bool success){
-        if(m_problem == NoProblem)
-            emit done();
-    });
+    connect(watcher, &Transaction::done, this, &MassCapture::onRotationDone);
     watcher->launch();
 }
