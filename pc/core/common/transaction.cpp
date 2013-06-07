@@ -49,6 +49,7 @@ void Transaction::setDone(bool success)
 
 void Transaction::setProgress(int progressValue)
 {
+    qDebug() << "progress";
     emit progress(progressValue);
 }
 

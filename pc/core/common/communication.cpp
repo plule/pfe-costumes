@@ -98,10 +98,21 @@ Transaction *ArduinoCommunication::motorsPositionMessage(QString arduino)
     return createTransaction(MSG_GET_MORPHOLOGY, arduino);
 }
 
-Transaction *ArduinoCommunication::completeTurnMessage()
+Transaction *ArduinoCommunication::completeTurnMessage(int time, int angle)
+{
+    QList<QVariant> args;
+    args.append(time);
+    args.append(angle);
+    if(m_arduinos.size() > 0)
+        return createTransaction(MSG_TURN, m_arduinos.first().id, args);
+    else
+        return new Transaction(this);
+}
+
+Transaction *ArduinoCommunication::cancelTurnMessage()
 {
     if(m_arduinos.size() > 0)
-        return createTransaction(MSG_TURN, m_arduinos.first().id);
+        return createTransaction(MSG_CANCEL_TURN, m_arduinos.first().id);
     else
         return new Transaction(this);
 }

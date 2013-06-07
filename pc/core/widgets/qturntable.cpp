@@ -164,7 +164,7 @@ void QTurntable::addPicture(QString path)
 void QTurntable::setPicture(int index, QString path)
 {
     QPixmap pic(getPathOf(path));
-    pic = pic.scaled(1024,768, Qt::KeepAspectRatio);
+    //pic = pic.scaled(1024,768, Qt::KeepAspectRatio);
     if(index >= m_pixmaps.size())
         setNumber(index+1);
     QFileInfo infos(getPathOf(path));

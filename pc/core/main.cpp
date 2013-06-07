@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     a.setOrganizationName("INSA-CNCS-MJCSteFoy");
 
     QTranslator translator;
-    translator.load(":/translations/master");
+    translator.load(":/translations/core");
     a.installTranslator(&translator);
 
     QTranslator translator_qt;

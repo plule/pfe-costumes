@@ -12,6 +12,8 @@ bool completeTurn = false;
 unsigned long completeTurnStart = 0;
 int completeTurnAngle;
 int completeTurnId;
+int completeTurnTime;
+int completeTurnStartAngle;
 
 
 #define EEPROM_SERVO 0
@@ -53,7 +55,7 @@ uint16_t *servoAdress(int index)
 void setAngle(int angle)
 {
     if(angle != rotationAngle) {
-        int ms = 2000 - (float)angle*211.66/360.0;
+        int ms = 1500 + (float)angle*232.55/360.0;
         rotationAngle = angle;
         rotationMotor.writeMicroseconds(ms);
     }
@@ -102,7 +104,7 @@ void setup()
         morpho_motors[i].servo.attach(morpho_motors[i].pin, morpho_motors[i].umin, morpho_motors[i].umax);
         setDistance(i, pos);
     }
-    rotationMotor.attach(30, 800, 1300);
+    rotationMotor.attach(30, 1100, 1900);
     setAngle(eeprom_read_word(EEPROM_ROTATION));
     //rotationMotor.writeMicroseconds(eeprom_r);
 }
@@ -126,32 +128,43 @@ void sendMessageIn(int time, MSG_TYPE type, int id, char *dest)
     sendTime = millis() + time;
 }
 
+/*
+ * Cancel a complete turn
+ */
+void cancelCompleteTurn()
+{
+    if(completeTurn) {
+        completeTurn = false;
+        sendMessage(MSG_DONE, completeTurnId, ARD_MASTER);
+    }
+}
+
 
 /*
  * React to a message (called by common communication.cpp file)
  */
 bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs)
 {
+    bool ok = false;
     switch(type) {
     case MSG_SET_MORPHOLOGY:
     {
         if(nargs == 2) {
             int motor = atoi(pargs[0]);
             int distance = atoi(pargs[1]);
-            return setDistance(motor, distance);
-        } else
-            return false;
+            ok = setDistance(motor, distance);
+        }
         break;
     }
     case MSG_SET_ANGLE:
     {
         if(nargs == 1) {
             int angle = atoi(pargs[0]);
+            cancelCompleteTurn();
             setAngle(angle);
             sendMessageIn(400,MSG_DONE, idMsg, expe);
-            return true;
-        } else
-            return false;
+            ok = true;
+        }
         break;
     }
     case MSG_GET_MORPHOLOGY:
@@ -161,24 +174,33 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
             for(i=0; i<MOTOR_NUMBER; i++) {
                 sendMessage(MSG_MORPHOLOGY,0,ARD_MASTER,i,morpho_motors[i].distance);
             }
-            return true;
+            ok = true;
         }
         break;
     }
     case MSG_TURN:
-        if(nargs == 0) {
+        DBG("turn");
+        if(nargs == 2 && atoi(pargs[0]) > 0 && atoi(pargs[1]) >= 0 && atoi(pargs[1]) <= 360) {
+            DBG("turnok");
             completeTurnStart = millis();
             completeTurnAngle = -1;
+            completeTurnStartAngle = atoi(pargs[1]);
+            completeTurnTime = atoi(pargs[0]);
             completeTurn = true;
             completeTurnId = idMsg;
-            return true;
-        } else
-            return false;
+            ok = true;
+        }
         break;
+    case MSG_CANCEL_TURN:
+        DBG("cancel turn");
+        if(nargs == 0) {
+            cancelCompleteTurn();
+            ok = true;
+        }
     default:
-        return false;
         break;
     }
+    return ok;
 }
 
 void loop()
@@ -193,7 +215,7 @@ void loop()
         sent = true;
     }
     if(completeTurn) {
-        float angle = (millis()-completeTurnStart)/100;
+        float angle = completeTurnStartAngle + 360*(millis()-completeTurnStart)/((float)completeTurnTime*1000.0);
         if(angle >= 360) {
             completeTurn = false;
             sendMessage(MSG_DONE, completeTurnId, ARD_MASTER);

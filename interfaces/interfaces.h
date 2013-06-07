@@ -25,6 +25,7 @@ typedef enum {
     MSG_MORPHOLOGY, // Send the position of a morphology servo
     MSG_SET_ANGLE, // Set the rotation of the turntable
     MSG_TURN, // Do a complete rotation and notify angle evolution
+    MSG_CANCEL_TURN, // Stop the complete rotation
     MSG_ANGLE, // Send current rotation angle
     MSG_DEBUG, // send a debug message
     MSG_INVALID // invalid message

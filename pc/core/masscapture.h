@@ -19,6 +19,7 @@ class MassCapture : public QObject
 
 public:
     explicit MassCapture(QObject *parent = 0);
+    ~MassCapture();
     void massCapture(QPhoto::QCamera *camera, ArduinoCommunication *morphology, Collection *collection, int idCostume, int nbPhoto);
     void setCamera(QPhoto::QCamera *camera);
     enum Problem {CameraProblem, RotationProblem, NoProblem};
@@ -37,8 +38,6 @@ public slots:
 
 
 private slots:
-    void onCaptureDone(int status, QString path, QStringList errors);
-    void onRotationDone(bool success);
     void onAngleChanged(int angle);
     void launchMassCapture();
     void onCaptured(int status, QString path, QStringList errors);
@@ -48,6 +47,8 @@ private:
     int m_target;
     float m_step;
     float m_nextAnglePhoto;
+    int m_rotationTime;
+    int m_currentAngle;
     QPhoto::QCamera *m_camera;
     ArduinoCommunication *m_morphology;
     Collection *m_collection;

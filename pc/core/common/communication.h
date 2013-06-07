@@ -146,11 +146,17 @@ public slots:
     Transaction *motorsPositionMessage(QString arduino);
 
     /**
-     * @brief completeTurnMessage sends a message to do a complete rotation
-     * @param arduino
+     * @brief completeTurnMessage sends a message to do a complete rotation.
+     * @param time is the total time required for the operation
      * @return
      */
-    Transaction *completeTurnMessage();
+    Transaction *completeTurnMessage(int time, int angle=0);
+
+    /**
+     * @brief cancelTurnMessage sends a message to stop a rotation
+     * @return
+     */
+    Transaction *cancelTurnMessage();
     
 private slots:
     void onDataAvailable();
