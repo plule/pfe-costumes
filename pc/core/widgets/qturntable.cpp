@@ -197,6 +197,7 @@ void QTurntable::setView(int view)
 
 void QTurntable::setPictureAndView(int index, QString path)
 {
+    qDebug() << "view " << QString::number(index) << " path " << path;
     setPicture(index, path);
     setView(index);
 }

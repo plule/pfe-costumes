@@ -13,7 +13,6 @@ MassCapture::~MassCapture()
 void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *morphology, Collection *collection, int idCostume, int nbPhoto)
 {
     m_step = 360.0 / nbPhoto;
-    m_actionNumber = 0;
     m_target = nbPhoto;
     setCamera(camera);
     m_morphology = morphology;
@@ -42,10 +41,9 @@ void MassCapture::setCamera(QPhoto::QCamera *camera)
 void MassCapture::onAngleChanged(int angle)
 {
     m_currentAngle = angle;
-    if(angle > m_nextAnglePhoto) {
-        m_nextAnglePhoto += m_step;
-
+    if(angle > m_step*m_index) {
         if(m_camera && m_camera->isConnected()) {
+            m_index++;
             QString path = m_collection->getNewFilePath(m_idCostume, "turntable", m_settings.value("rawextension").toString());
             m_camera->captureToFile(path);
         } else {
@@ -57,11 +55,9 @@ void MassCapture::onAngleChanged(int angle)
 
 void MassCapture::launchMassCapture()
 {
-    disconnect(m_camera, 0, this, 0);
-    connect(m_camera, SIGNAL(finished(int,QString,QStringList)), this, SLOT(onCaptured(int,QString,QStringList)));
     Transaction *watcher = m_morphology->completeTurnMessage(m_rotationTime);
     watcher->watchForDone(3600*1000); // One hour delay to make the complete turn
-    m_nextAnglePhoto = 0;
+    m_index = 0;
     connect(watcher, &Transaction::progress, this, &MassCapture::onAngleChanged);
     connect(watcher, &Transaction::done, this, &MassCapture::onRotationDone);
     watcher->launch();
@@ -72,10 +68,10 @@ void MassCapture::onCaptured(int status, QString path, QStringList errors)
     if(status != QPhoto::QCamera::OK) {
         m_problem = CameraProblem;
         m_morphology->cancelTurnMessage()->launch();
-        m_nextAnglePhoto -= m_step; // last pic failed
+        m_index--;
         emit problem(CameraProblem, errors.join("\n"));
     } else {
-        emit progress((m_nextAnglePhoto)/m_step-1, path);
+        emit progress(m_index-1, path);
     }
 }
 

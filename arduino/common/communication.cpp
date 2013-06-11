@@ -61,11 +61,9 @@ void sendMessage(MSG_TYPE type, int idMsg, const char *dest, const char* data)
  */
 void getId()
 {
-    uint32_t id;
-    Serial.setTimeout(3000);
-    Serial.print("+++"); /* Enter xbee command mode */
+    Serial.setTimeout(4000);
+    Serial.print("+++"); /* Enter xbee command mode (first bytes are often lost) */
     Serial.readStringUntil('\r'); /* Wait for XBee entering cmd mode (should be 3sec) and read "OK" */
-
     Serial.println("ATSL");
     Serial.readBytesUntil('\r', Id, 8);
     Id[8] = 0;

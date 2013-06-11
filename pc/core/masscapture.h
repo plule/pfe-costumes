@@ -44,10 +44,9 @@ private slots:
     void onRotationDone(bool success);
 
 private:
-    int m_actionNumber;
+    int m_index;
     int m_target;
     float m_step;
-    float m_nextAnglePhoto;
     int m_rotationTime;
     int m_currentAngle;
     QPhoto::QCamera *m_camera;
