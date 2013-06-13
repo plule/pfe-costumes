@@ -104,7 +104,7 @@
             <string>mm</string>
            </property>
            <property name="maximum">
-            <number>50</number>
+            <number>300</number>
            </property>
           </widget>
          </item>
@@ -134,7 +134,7 @@
             <string>mm</string>
            </property>
            <property name="maximum">
-            <number>50</number>
+            <number>300</number>
            </property>
           </widget>
          </item>
@@ -216,7 +216,7 @@
    <sender>valueSlider</sender>
    <signal>sliderMoved(int)</signal>
    <receiver>QEllipseSlider</receiver>
-   <slot>onValueChanged(int)</slot>
+   <slot>onPerimeterChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>135</x>
@@ -228,10 +228,106 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>sideMotorSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>sideMotorSpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>333</x>
+     <y>116</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>370</x>
+     <y>112</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sideMotorSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>sideMotorSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>375</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>317</x>
+     <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>frontMotorSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>frontMotorSpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>320</x>
+     <y>146</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>375</x>
+     <y>146</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>frontMotorSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>frontMotorSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>376</x>
+     <y>149</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>327</x>
+     <y>151</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sideMotorSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>QEllipseSlider</receiver>
+   <slot>setSideMotorValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>373</x>
+     <y>109</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>32</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>frontMotorSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>QEllipseSlider</receiver>
+   <slot>setFrontMotorValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>361</x>
+     <y>139</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>427</x>
+     <y>77</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>setSideMotorValue(int)</slot>
   <slot>setFrontMotorValue(int)</slot>
-  <slot>onValueChanged(int)</slot>
+  <slot>onPerimeterChanged(int)</slot>
  </slots>
 </ui>

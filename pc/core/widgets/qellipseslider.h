@@ -43,7 +43,7 @@ public:
 
     double getPerimeter();
 
-    bool valueLocked();
+    bool perimeterLocked();
 
     double frontSize() const;
     void setFrontSize(double frontSize, bool keepPerimeter=false);
@@ -59,7 +59,7 @@ public slots:
 protected slots:
     void setSideMotorValue(int value);
     void setFrontMotorValue(int value);
-    void onValueChanged(int value);
+    void onPerimeterChanged(int value);
     void updateSlidersPositions();
 
 signals:

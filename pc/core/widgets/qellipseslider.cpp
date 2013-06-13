@@ -98,42 +98,24 @@ double QEllipseSlider::getPerimeter()
     return ui->valueSlider->value(); // is in cm
 }
 
-bool QEllipseSlider::valueLocked()
+bool QEllipseSlider::perimeterLocked()
 {
     return ui->lockValueButton->isChecked();
 }
 
 void QEllipseSlider::setSideMotorValue(int value)
 {
-    //if(ui->sideMotorSlider->isSliderDown()) {
-        setSideSize(value, valueLocked());
-        updateSlidersPositions();
-    //}
-/*    if(valueLocked()) {
-        if(!ui->frontMotorSlider->isSliderDown()) { // avoid recursive propagation
-            setFrontSlider(calculateEllipseParameter(getPerimeter(), getSideSize()));
-        }
-    } else {
-        setPerimeterSlider(calculateEllipsePerimeter(getSideSize(), getFrontSize()));
-    }*/
+    setSideSize(value, perimeterLocked());
+    updateSlidersPositions();
 }
 
 void QEllipseSlider::setFrontMotorValue(int value)
 {
-    //if(ui->frontMotorSlider->isSliderDown()) {
-        setFrontSize(value, valueLocked());
-        updateSlidersPositions();
-    //}
-/*    if(valueLocked()) {
-        if(!ui->sideMotorSlider->isSliderDown()) {
-            setSideSlider(calculateEllipseParameter(getPerimeter(), getFrontSize()));
-        }
-    } else {
-        setPerimeterSlider(calculateEllipsePerimeter(getSideSize(), getFrontSize()));
-    }*/
+    setFrontSize(value, perimeterLocked());
+    updateSlidersPositions();
 }
 
-void QEllipseSlider::onValueChanged(int value)
+void QEllipseSlider::onPerimeterChanged(int value)
 {
     setPerimeter(value);
     updateSlidersPositions();
@@ -181,8 +163,7 @@ void QEllipseSlider::setPerimeter(double p)
         x = 1;
     else
         x = sideSize()/frontSize();
-    qDebug() << x;
-    double side = 0.225079*sqrt((p*p*x*x)/(x*x + 1.0));// / (M_SQRT2*M_PI);
+    double side = 0.225079*sqrt((p*p*x*x)/(x*x + 1.0));
     double front = side/x;
     setSideSize(side);
     setFrontSize(front);
