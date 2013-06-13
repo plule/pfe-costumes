@@ -16,15 +16,27 @@ public:
     explicit QEllipseSlider(QWidget *parent = 0);
     ~QEllipseSlider();
 
+    /*
+     * Constant width of the model
+     */
     int sideBaseOffset() const;
     void setSideBaseOffset(int sideBaseOffset);
 
+    /*
+     * Constant depth of the model
+     */
     int frontBaseOffset() const;
     void setFrontBaseOffset(int frontBaseOffset);
 
+    /*
+     * Size added by the sides block
+     */
     int sideBlockOffset() const;
     void setSideBlockOffset(int sideBlockOffset);
 
+    /*
+     * Size added by the front block
+     */
     int frontBlockOffset() const;
     void setFrontBlockOffset(int frontBlockOffset);
 
@@ -37,18 +49,33 @@ public:
     int maxSideMotor() const;
     void setMaxSideMotor(int maxSideMotor);
 
+    /*
+     * Smallest size of the model
+     */
     int getSideOffset();
     int getFrontOffset();
 
+    /*
+     * Perimeter should not vary (lock perimeter button)
+     */
     bool perimeterLocked();
 
+    /*
+     * Current size of the model
+     */
     double frontSize() const;
     void setFrontSize(double frontSize, bool keepPerimeter=false);
 
     double sideSize() const;
     void setSideSize(double sideSize, bool keepPerimeter=false);
 
+    /*
+     * Calculate perimeter
+     */
     double perimeter() const;
+    /*
+     * Modify proportionnally the model to reach a perimeter
+     */
     void setPerimeter(double p);
 
 public slots:
@@ -67,6 +94,9 @@ signals:
 
 protected:
     double calculateEllipsePerimeter(double side, double front);
+    /*
+     * Given the perimeter and a radius of an ellipse, get the other radius
+     */
     double calculateEllipseParameter(double perimeter, double otherParameter);
     
 private:

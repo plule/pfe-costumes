@@ -12,7 +12,7 @@ QEllipseSlider::QEllipseSlider(QWidget *parent) :
     m_frontBlockOffset = 10; // TODO liste de blocks
     m_sideBlockOffset = 15; // TODO liste de blocks
 
-    ui->warningLabel->setVisible(false);
+    //ui->warningLabel->setVisible(false);
 
     m_frontSize = 150;
     m_sideSize = 180;
@@ -130,9 +130,9 @@ void QEllipseSlider::updateSlidersPositions()
         ui->valueSlider->setValue(perimeter());
     if(side < ui->sideMotorSlider->minimum() || side > ui->sideMotorSlider->maximum()
             || front < ui->frontMotorSlider->minimum() || front > ui->frontMotorSlider->maximum())
-        ui->warningLabel->setVisible(true);
+        ui->warningLabel->setText(tr("Unreachable perimeter"));
     else
-        ui->warningLabel->setVisible(false);
+        ui->warningLabel->setText("");
 }
 
 int QEllipseSlider::maxFrontMotor() const
@@ -156,9 +156,6 @@ double QEllipseSlider::perimeter() const
 {
     double a = sideSize();
     double b = frontSize();
-    qDebug() << "-----------";
-    qDebug() << a;
-    qDebug() << b;
     return M_PI*sqrt((2.0*(a*a+b*b)));
     //return M_PI*(3.0*(a+b) - sqrt((3.0*a+b)*(a+3.0*b)));
 }
