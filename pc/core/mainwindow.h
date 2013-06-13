@@ -27,6 +27,7 @@
 #include "settingsform.h"
 #include "widgets/qloadedlistwidget.h"
 #include "widgets/qturntable.h"
+#include "widgets/qellipseslider.h"
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
 #include "common/slotlog.h"

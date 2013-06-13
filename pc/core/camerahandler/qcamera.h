@@ -64,6 +64,8 @@ public:
 
     enum Status { OK, Error, Timeout, NotConnected };
 
+    bool busy() const;
+
 protected:
     /*
      * libgphoto context callback functions
@@ -94,6 +96,7 @@ private:
     QThread m_camThread; // Each camera has its own thread to avoid global lock
     QTimer *m_watchdog; // Each camera has a watchdog to monitor potentially lockable function
     QStringList m_errors;
+    bool m_busy;
     bool m_connected;
 
     int handleError(int error, QString msg);

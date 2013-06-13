@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     common/communication.cpp \
     masscapture.cpp \
     settingsform.cpp \
-    common/transaction.cpp
+    common/transaction.cpp \
+    widgets/qellipseslider.cpp
 
 HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
@@ -32,7 +33,8 @@ HEADERS += camerahandler/camerahandler.h \
     common/communication.h \
     masscapture.h \
     settingsform.h \
-    common/transaction.h
+    common/transaction.h \
+    widgets/qellipseslider.h
 
 CONFIG += c++11 qt warn_on release debug
 
@@ -48,6 +50,7 @@ TARGET = ../mannequinage
 FORMS += \
     mainwindow.ui \
     settingsform.ui \
+    widgets/qellipseslider.ui
 
 TRANSLATIONS = resources/core_fr.ts
 

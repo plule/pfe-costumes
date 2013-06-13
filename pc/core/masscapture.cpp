@@ -42,11 +42,17 @@ void MassCapture::onAngleChanged(int angle)
 {
     m_currentAngle = angle;
     if(angle > m_step*m_index) {
+        qDebug() << "Capture at " << angle;
         if(m_camera && m_camera->isConnected()) {
+            /*if(m_camera->busy()) {
+                m_morphology->cancelTurnMessage()->launch();
+                emit problem(CameraProblem, tr("Turntable turns too quickly to capture."));
+            }*/
             m_index++;
             QString path = m_collection->getNewFilePath(m_idCostume, "turntable", m_settings.value("rawextension").toString());
             m_camera->captureToFile(path);
         } else {
+            m_morphology->cancelTurnMessage()->launch();
             emit problem(CameraProblem, tr("Camera seems to be disconnected"));
             return;
         }

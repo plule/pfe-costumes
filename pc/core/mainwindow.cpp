@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->adjustementForm->addRow(name, layout);
     }
 
+
     connect(m_arduinoCommunication, SIGNAL(motorDistanceChanged(QString,int,int)), this, SLOT(setMotorMicroSecond(QString,int,int)));
     connect(m_arduinoCommunication, SIGNAL(arduinoAdded(Arduino)), this, SLOT(addDevice(Arduino)));
     connect(m_arduinoCommunication, SIGNAL(arduinoRemoved(Arduino)), this, SLOT(removeDevice(Arduino)));

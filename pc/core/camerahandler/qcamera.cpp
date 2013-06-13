@@ -148,6 +148,7 @@ QCamera::QCamera()
     m_context = NULL;
     // TODO : init thread and watchdog ?
     m_connected = false;
+    m_busy = false;
 }
 
 QCamera::~QCamera()
@@ -267,19 +268,23 @@ int QCamera::_captureToFile(QFile *localFile)
 
 void QCamera::_captureToFile(QString path, int nbTry)
 {
+    m_busy = true;
     m_errors.clear();
     if(isConnected()) {
         QFile localFile(path);
         for(int i = 0; i < nbTry; i++) {
             int ret = _captureToFile(&localFile);
             if( ret == GP_OK) {
+                m_busy = false;
                 emit finished(OK, path, m_errors);
                 return;
             }
             this->thread()->sleep(0.5);
         }
+        m_busy = false;
         emit finished(Error, path, m_errors);
     } else {
+        m_busy = false;
         emit finished(NotConnected, path, m_errors);
     }
 }
@@ -321,5 +326,10 @@ bool QCamera::isConnected() const
 QString QCamera::getModel() const
 {
     return m_model;
+}
+
+bool QCamera::busy() const
+{
+    return m_busy;
 }
 }
