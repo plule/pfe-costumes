@@ -49,6 +49,8 @@ public:
     int maxSideMotor() const;
     void setMaxSideMotor(int maxSideMotor);
 
+    void setName(QString name);
+
     /*
      * Smallest size of the model
      */
@@ -103,6 +105,7 @@ private:
     Ui::QEllipseSlider *ui;
     int m_sideBaseOffset, m_frontBaseOffset, m_sideBlockOffset, m_frontBlockOffset;
     int m_maxFrontMotor, m_maxSideMotor;
+    QString m_valueName;
 
     double m_sideSize, m_frontSize;
 };

@@ -11,7 +11,8 @@ QEllipseSlider::QEllipseSlider(QWidget *parent) :
     m_sideBaseOffset = 100; // TODO adapter à conception
     m_frontBlockOffset = 10; // TODO liste de blocks
     m_sideBlockOffset = 15; // TODO liste de blocks
-
+    m_valueName = tr("perimeter");
+    ui->mainGroup->setTitle(m_valueName);
     //ui->warningLabel->setVisible(false);
 
     m_frontSize = 150;
@@ -85,6 +86,12 @@ void QEllipseSlider::setMaxSideMotor(int maxSideMotor)
     m_maxSideMotor = maxSideMotor;
 }
 
+void QEllipseSlider::setName(QString name)
+{
+    m_valueName = name;
+    ui->mainGroup->setTitle(name);
+}
+
 int QEllipseSlider::getSideOffset()
 {
     return m_sideBaseOffset+m_sideBlockOffset;
@@ -130,7 +137,7 @@ void QEllipseSlider::updateSlidersPositions()
         ui->valueSlider->setValue(perimeter());
     if(side < ui->sideMotorSlider->minimum() || side > ui->sideMotorSlider->maximum()
             || front < ui->frontMotorSlider->minimum() || front > ui->frontMotorSlider->maximum())
-        ui->warningLabel->setText(tr("Unreachable perimeter"));
+        ui->warningLabel->setText(tr("Unreachable %1").arg(m_valueName));
     else
         ui->warningLabel->setText("");
 }

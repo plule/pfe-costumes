@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setCamera(m_settingsForm->getCamera());
 
     // Arduino comm configuration and ui init
+    ui->ellipse->setName("tour de taille");
     m_arduinoCommunication->setPort(m_settingsForm->getXbeePort());
     for(int i=0; i < m_arduinoCommunication->getMotorsNumber(); i++) {
         QString name = QString(m_arduinoCommunication->getMotorsNames()[i]);
