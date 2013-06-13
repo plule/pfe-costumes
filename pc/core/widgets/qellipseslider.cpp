@@ -12,6 +12,8 @@ QEllipseSlider::QEllipseSlider(QWidget *parent) :
     m_frontBlockOffset = 10; // TODO liste de blocks
     m_sideBlockOffset = 15; // TODO liste de blocks
 
+    ui->warningLabel->setVisible(false);
+
     m_frontSize = 150;
     m_sideSize = 180;
 }
@@ -93,11 +95,6 @@ int QEllipseSlider::getFrontOffset()
     return m_frontBaseOffset+m_sideBlockOffset;
 }
 
-double QEllipseSlider::getPerimeter()
-{
-    return ui->valueSlider->value(); // is in cm
-}
-
 bool QEllipseSlider::perimeterLocked()
 {
     return ui->lockValueButton->isChecked();
@@ -105,13 +102,13 @@ bool QEllipseSlider::perimeterLocked()
 
 void QEllipseSlider::setSideMotorValue(int value)
 {
-    setSideSize(value, perimeterLocked());
+    setSideSize(value+getSideOffset(), perimeterLocked());
     updateSlidersPositions();
 }
 
 void QEllipseSlider::setFrontMotorValue(int value)
 {
-    setFrontSize(value, perimeterLocked());
+    setFrontSize(value+getFrontOffset(), perimeterLocked());
     updateSlidersPositions();
 }
 
@@ -123,12 +120,19 @@ void QEllipseSlider::onPerimeterChanged(int value)
 
 void QEllipseSlider::updateSlidersPositions()
 {
+    int side = sideSize()-getSideOffset();
+    int front = frontSize()-getFrontOffset();
     if(!ui->sideMotorSlider->isSliderDown())
-        ui->sideMotorSlider->setValue(sideSize());
+        ui->sideMotorSlider->setValue(side);
     if(!ui->frontMotorSlider->isSliderDown())
-        ui->frontMotorSlider->setValue(frontSize());
+        ui->frontMotorSlider->setValue(front);
     if(!ui->valueSlider->isSliderDown())
         ui->valueSlider->setValue(perimeter());
+    if(side < ui->sideMotorSlider->minimum() || side > ui->sideMotorSlider->maximum()
+            || front < ui->frontMotorSlider->minimum() || front > ui->frontMotorSlider->maximum())
+        ui->warningLabel->setVisible(true);
+    else
+        ui->warningLabel->setVisible(false);
 }
 
 int QEllipseSlider::maxFrontMotor() const
@@ -152,6 +156,9 @@ double QEllipseSlider::perimeter() const
 {
     double a = sideSize();
     double b = frontSize();
+    qDebug() << "-----------";
+    qDebug() << a;
+    qDebug() << b;
     return M_PI*sqrt((2.0*(a*a+b*b)));
     //return M_PI*(3.0*(a+b) - sqrt((3.0*a+b)*(a+3.0*b)));
 }

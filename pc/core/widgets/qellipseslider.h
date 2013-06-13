@@ -40,9 +40,6 @@ public:
     int getSideOffset();
     int getFrontOffset();
 
-
-    double getPerimeter();
-
     bool perimeterLocked();
 
     double frontSize() const;
