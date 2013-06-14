@@ -109,14 +109,18 @@ bool QEllipseSlider::perimeterLocked()
 
 void QEllipseSlider::setSideMotorValue(int value)
 {
-    setSideSize(value+getSideOffset(), perimeterLocked());
-    updateSlidersPositions();
+    if(!ui->valueSlider->isSliderDown()) { // avoid abusing rounding when perimeter slider moves
+        setSideSize(value+getSideOffset(), perimeterLocked());
+        updateSlidersPositions();
+    }
 }
 
 void QEllipseSlider::setFrontMotorValue(int value)
 {
-    setFrontSize(value+getFrontOffset(), perimeterLocked());
-    updateSlidersPositions();
+    if(!ui->valueSlider->isSliderDown()) { // avoid abusing rounding when perimeter slider moves
+        setFrontSize(value+getFrontOffset(), perimeterLocked());
+        updateSlidersPositions();
+    }
 }
 
 void QEllipseSlider::onPerimeterChanged(int value)
@@ -174,6 +178,7 @@ void QEllipseSlider::setPerimeter(double p)
         x = 1;
     else
         x = sideSize()/frontSize();
+    qDebug() << x;
     double side = 0.225079*sqrt((p*p*x*x)/(x*x + 1.0));
     double front = side/x;
     setSideSize(side);
