@@ -73,7 +73,6 @@ public slots:
     void onMassCaptureProblem(MassCapture::Problem problem, QString description);
     
 private slots:
-    void sendMs(int ms);
     void setMotorMicroSecond(QString arduino, int motor, int ms);
     void onCaptureDone(int status, QString path, QStringList errorList);
 
@@ -113,7 +112,7 @@ private:
     ArduinoCommunication *m_arduinoCommunication;
     QSettings m_settings;
     int m_currentCostumeId;
-    QList <QSlider *> m_morphoSliders;
+    QList <QEllipseSlider *> m_morphoSliders;
     DcRawQT m_rawHandler;
     QPhoto::QCamera *m_camera;
     QMetaObject::Connection m_cameraConnection;

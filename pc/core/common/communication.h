@@ -54,10 +54,17 @@ public:
     explicit ArduinoCommunication(QObject *parent = 0);
 
     /**
-     * @brief getMotorsNames
-     * @return list of morphology motor names. (compile time determined by interface/morphology.h)
+     * @brief getMotorsName
+     * @return Morphology motor names. (compile time determined by interface/morphology.h)
      */
-    const char **getMotorsNames();
+    const QString getMotorName(int id);
+
+    /**
+     * @brief getMotorType
+     * @param id
+     * @return the type of a motor (side or front), (compile time determined by interface/morphology.h)
+     */
+    MOTOR_TYPE getMotorType(int id);
 
     /**
      * @brief getMotorsNumber

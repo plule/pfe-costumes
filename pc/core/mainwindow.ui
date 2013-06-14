@@ -48,23 +48,39 @@
          </layout>
         </item>
         <item>
-         <layout class="QFormLayout" name="adjustementForm"/>
-        </item>
-        <item>
-         <widget class="QEllipseSlider" name="ellipse" native="true"/>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
+          <widget class="QWidget" name="adjustmentScroll">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>620</width>
+             <height>551</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_10">
+            <item>
+             <layout class="QVBoxLayout" name="adjustmentLayout"/>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -669,12 +685,6 @@
     <slot>load(int)</slot>
     <slot>load(QListWidgetItem*)</slot>
    </slots>
-  </customwidget>
-  <customwidget>
-   <class>QEllipseSlider</class>
-   <extends>QWidget</extends>
-   <header location="global">widgets/qellipseslider.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

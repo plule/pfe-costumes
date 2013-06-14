@@ -1,7 +1,13 @@
 #include "communication.h"
 
-#define X(pin, define, string, umin, umax) string,
-static const char *morpho_motors_name[] = {
+#define X(pin, role, define, string, umin, umax) string,
+static const QString morpho_motors_name[] = {
+    #include "../../interfaces/morphology.h"
+};
+#undef X
+
+#define X(pin, role, define, string, umin, umax) role,
+static const MOTOR_TYPE morpho_motors_role[] = {
     #include "../../interfaces/morphology.h"
 };
 #undef X
@@ -17,9 +23,16 @@ ArduinoCommunication::ArduinoCommunication(QObject *parent) :
     m_aliveTimer.start();
 }
 
-const char **ArduinoCommunication::getMotorsNames()
+const QString ArduinoCommunication::getMotorName(int id)
 {
-    return morpho_motors_name;
+    /* todo check bounds */
+    return morpho_motors_name[id];
+}
+
+MOTOR_TYPE ArduinoCommunication::getMotorType(int id)
+{
+    /* todo check bounds */
+    return morpho_motors_role[id];
 }
 
 int ArduinoCommunication::getMotorsNumber()

@@ -404,7 +404,7 @@ Do you want to save the modifications?</source>
     <message>
         <location filename="../widgets/qellipseslider.ui" line="60"/>
         <source>Lock</source>
-        <translation>Vérouiller</translation>
+        <translation type="unfinished">Verrouiller</translation>
     </message>
     <message>
         <location filename="../widgets/qellipseslider.ui" line="75"/>

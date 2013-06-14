@@ -29,31 +29,41 @@ MainWindow::MainWindow(QWidget *parent) :
     setCamera(m_settingsForm->getCamera());
 
     // Arduino comm configuration and ui init
-    ui->ellipse->setName("tour de taille");
     m_arduinoCommunication->setPort(m_settingsForm->getXbeePort());
+    QHash<QString,QEllipseSlider*> module_sliders;
     for(int i=0; i < m_arduinoCommunication->getMotorsNumber(); i++) {
-        QString name = QString(m_arduinoCommunication->getMotorsNames()[i]);
-        QSlider *slider = new QSlider(Qt::Horizontal, this);
-        slider->setMinimum(0);
-        slider->setMaximum(MORPHO_DISTANCE);
-        slider->setProperty("motor", i);
-
-        QSpinBox *spin = new QSpinBox(this);
-        spin->setMinimum(0);
-        spin->setMaximum(MORPHO_DISTANCE);
-        spin->setSuffix("mm");
-
-        QHBoxLayout *layout = new QHBoxLayout();
-        layout->addWidget(slider);
-        layout->addWidget(spin);
-
+        QString name = QString(m_arduinoCommunication->getMotorName(i));
+        QEllipseSlider *slider;
+        if(module_sliders.contains(name))
+            slider = module_sliders.value(name);
+        else {
+            slider = new QEllipseSlider(this);
+            slider->setName(name);
+            module_sliders.insert(name, slider);
+        }
+        switch(m_arduinoCommunication->getMotorType(i)) {
+        case FRONT_MOTOR:
+            slider->setProperty("motor_front", i);
+            connect(slider, &QEllipseSlider::frontMotorValueChanged, [=](int distance){
+                QString current = getCurrentArduino();
+                int motor = slider->property("motor_front").toInt();
+                m_arduinoCommunication->motorDistanceMessage(current, motor, distance)->launch();
+            });
+            break;
+        case SIDE_MOTOR:
+            slider->setProperty("motor_side", i);
+            connect(slider, &QEllipseSlider::frontMotorValueChanged, [=](int distance){
+                QString current = getCurrentArduino();
+                int motor = slider->property("motor_side").toInt();
+                m_arduinoCommunication->motorDistanceMessage(current, motor, distance)->launch();
+            });
+            break;
+        default:
+            qWarning() << "Malformed interface.h";
+            break;
+        }
         m_morphoSliders.append(slider);
-
-        connect(slider, SIGNAL(valueChanged(int)), spin, SLOT(setValue(int)));
-        connect(spin, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
-        connect(slider, SIGNAL(valueChanged(int)), this, SLOT(sendMs(int)));
-
-        ui->adjustementForm->addRow(name, layout);
+        ui->adjustmentLayout->addWidget(slider);
     }
 
 
@@ -403,18 +413,12 @@ void MainWindow::onMassCaptureProblem(MassCapture::Problem problem, QString desc
     }
 }
 
-void MainWindow::sendMs(int ms)
-{
-    QString current = getCurrentArduino();
-    int motor = sender()->property("motor").toInt();
-    m_arduinoCommunication->motorDistanceMessage(current, motor, ms)->launch();
-}
-
 void MainWindow::setMotorMicroSecond(QString arduino, int motor, int ms)
 {
-    if(arduino == getCurrentArduino() && motor < m_morphoSliders.size()) {
+    /* TODO */
+    /*if(arduino == getCurrentArduino() && motor < m_morphoSliders.size()) {
         m_morphoSliders.at(motor)->setValue(ms);
-    }
+    }*/
 }
 
 void MainWindow::on_newCostume_clicked()

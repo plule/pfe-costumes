@@ -11,10 +11,16 @@ class QEllipseSlider;
 class QEllipseSlider : public QWidget
 {
     Q_OBJECT
+    Q_ENUMS(MOTOR_TYPE)
     
 public:
     explicit QEllipseSlider(QWidget *parent = 0);
     ~QEllipseSlider();
+
+    enum MOTOR_TYPE {
+        FRONT,
+        SIDE
+    };
 
     /*
      * Constant width of the model
@@ -89,10 +95,8 @@ protected slots:
     void updateSlidersPositions();
 
 signals:
-    void motorValuesChanged(int sideMotor, int frontMotor);
     void sideMotorValueChanged(int value);
     void frontMotorValueChanged(int value);
-    void valueChanged(int value);
 
 protected:
     double calculateEllipsePerimeter(double side, double front);

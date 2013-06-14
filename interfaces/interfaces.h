@@ -67,7 +67,12 @@ typedef enum {
 #define ARG_SEP_S "|"
 
 /* Morphology */
-#define X(pin, define, string, umin, umax) define,
+typedef enum {
+    FRONT_MOTOR,
+    SIDE_MOTOR
+} MOTOR_TYPE;
+
+#define X(pin, role, define, string, umin, umax) define ## role,
 enum MORPHO_MOTORS {
     #include "morphology.h"
     MOTOR_NUMBER

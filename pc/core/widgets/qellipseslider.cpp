@@ -178,7 +178,6 @@ void QEllipseSlider::setPerimeter(double p)
         x = 1;
     else
         x = sideSize()/frontSize();
-    qDebug() << x;
     double side = 0.225079*sqrt((p*p*x*x)/(x*x + 1.0));
     double front = side/x;
     setSideSize(side);
@@ -196,6 +195,8 @@ void QEllipseSlider::setSideSize(double sideSize, bool keepPerimeter)
         double p = perimeter();
         setFrontSize(calculateEllipseParameter(p, sideSize));
     }
+    if((int)m_sideSize != (int)sideSize)
+        emit sideMotorValueChanged(sideSize);
     m_sideSize = sideSize;
 }
 
@@ -210,6 +211,8 @@ void QEllipseSlider::setFrontSize(double frontSize, bool keepPerimeter)
         double p = perimeter();
         setSideSize(calculateEllipseParameter(p, frontSize));
     }
+    if((int)m_frontSize != (int)frontSize)
+        emit frontMotorValueChanged(frontSize);
     m_frontSize = frontSize;
 }
 
