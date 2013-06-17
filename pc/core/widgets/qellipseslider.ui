@@ -159,40 +159,8 @@
  <resources/>
  <connections>
   <connection>
-   <sender>valueSlider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>valueSpinBox</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>200</x>
-     <y>52</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>294</x>
-     <y>41</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>valueSpinBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>valueSlider</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>298</x>
-     <y>54</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>256</x>
-     <y>54</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>sideMotorSlider</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>QEllipseSlider</receiver>
    <slot>setSideMotorValue(int)</slot>
    <hints>
@@ -208,7 +176,7 @@
   </connection>
   <connection>
    <sender>frontMotorSlider</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>QEllipseSlider</receiver>
    <slot>setFrontMotorValue(int)</slot>
    <hints>
@@ -224,7 +192,7 @@
   </connection>
   <connection>
    <sender>valueSlider</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>QEllipseSlider</receiver>
    <slot>onPerimeterChanged(int)</slot>
    <hints>
@@ -239,66 +207,34 @@
    </hints>
   </connection>
   <connection>
-   <sender>sideMotorSlider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>sideMotorSpinBox</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>333</x>
-     <y>116</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>370</x>
-     <y>112</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>sideMotorSpinBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>sideMotorSlider</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>375</x>
-     <y>101</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>317</x>
-     <y>106</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>frontMotorSlider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>frontMotorSpinBox</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>320</x>
-     <y>146</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>375</x>
-     <y>146</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>frontMotorSpinBox</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>frontMotorSlider</receiver>
-   <slot>setValue(int)</slot>
+   <receiver>QEllipseSlider</receiver>
+   <slot>setFrontMotorValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>376</x>
-     <y>149</y>
+     <x>512</x>
+     <y>163</y>
     </hint>
     <hint type="destinationlabel">
-     <x>327</x>
-     <y>151</y>
+     <x>427</x>
+     <y>77</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>valueSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>QEllipseSlider</receiver>
+   <slot>onPerimeterChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>398</x>
+     <y>53</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>504</x>
+     <y>2</y>
     </hint>
    </hints>
   </connection>
@@ -309,28 +245,12 @@
    <slot>setSideMotorValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>373</x>
+     <x>475</x>
      <y>109</y>
     </hint>
     <hint type="destinationlabel">
-     <x>424</x>
-     <y>32</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>frontMotorSpinBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>QEllipseSlider</receiver>
-   <slot>setFrontMotorValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>361</x>
-     <y>139</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>427</x>
-     <y>77</y>
+     <x>532</x>
+     <y>33</y>
     </hint>
    </hints>
   </connection>
