@@ -112,6 +112,7 @@ private:
     QString m_valueName;
 
     double m_sideSize, m_frontSize;
+    int m_lastSideMotor, m_lastFrontMotor;
 };
 
 #endif // QELLIPSESLIDER_H

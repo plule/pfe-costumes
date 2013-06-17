@@ -34,7 +34,7 @@ typedef struct {
 /*
  * Array of morphology motors' infos
  */
-#define X(pin, define, string, umin, umax) {pin, umin, umax, 0, Servo()},
+#define X(pin, role, define, string, umin, umax) {pin, umin, umax, 0, Servo()},
 ServoInfo morpho_motors[] = {
     #include "../../../interfaces/morphology.h"
 };

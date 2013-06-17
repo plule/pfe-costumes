@@ -43,19 +43,15 @@ MainWindow::MainWindow(QWidget *parent) :
         }
         switch(m_arduinoCommunication->getMotorType(i)) {
         case FRONT_MOTOR:
-            slider->setProperty("motor_front", i);
             connect(slider, &QEllipseSlider::frontMotorValueChanged, [=](int distance){
                 QString current = getCurrentArduino();
-                int motor = slider->property("motor_front").toInt();
-                m_arduinoCommunication->motorDistanceMessage(current, motor, distance)->launch();
+                m_arduinoCommunication->motorDistanceMessage(current, i, distance)->launch();
             });
             break;
         case SIDE_MOTOR:
-            slider->setProperty("motor_side", i);
-            connect(slider, &QEllipseSlider::frontMotorValueChanged, [=](int distance){
+            connect(slider, &QEllipseSlider::sideMotorValueChanged, [=](int distance){
                 QString current = getCurrentArduino();
-                int motor = slider->property("motor_side").toInt();
-                m_arduinoCommunication->motorDistanceMessage(current, motor, distance)->launch();
+                m_arduinoCommunication->motorDistanceMessage(current, i, distance)->launch();
             });
             break;
         default:

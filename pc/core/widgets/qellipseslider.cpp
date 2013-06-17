@@ -17,6 +17,9 @@ QEllipseSlider::QEllipseSlider(QWidget *parent) :
 
     m_frontSize = 150;
     m_sideSize = 180;
+
+    m_lastFrontMotor = -1;
+    m_lastSideMotor = -1;
 }
 
 QEllipseSlider::~QEllipseSlider()
@@ -109,18 +112,14 @@ bool QEllipseSlider::perimeterLocked()
 
 void QEllipseSlider::setSideMotorValue(int value)
 {
-    if(!ui->valueSlider->isSliderDown()) { // avoid abusing rounding when perimeter slider moves
-        setSideSize(value+getSideOffset(), perimeterLocked());
-        updateSlidersPositions();
-    }
+    setSideSize(value+getSideOffset(), perimeterLocked());
+    updateSlidersPositions();
 }
 
 void QEllipseSlider::setFrontMotorValue(int value)
 {
-    if(!ui->valueSlider->isSliderDown()) { // avoid abusing rounding when perimeter slider moves
-        setFrontSize(value+getFrontOffset(), perimeterLocked());
-        updateSlidersPositions();
-    }
+    setFrontSize(value+getFrontOffset(), perimeterLocked());
+    updateSlidersPositions();
 }
 
 void QEllipseSlider::onPerimeterChanged(int value)
@@ -133,6 +132,14 @@ void QEllipseSlider::updateSlidersPositions()
 {
     int side = sideSize()-getSideOffset();
     int front = frontSize()-getFrontOffset();
+    if(side != m_lastSideMotor) {
+        emit sideMotorValueChanged(side);
+        m_lastSideMotor = side;
+    }
+    if(front != m_lastFrontMotor) {
+        emit frontMotorValueChanged(front);
+        m_lastFrontMotor = front;
+    }
 
     // Block signals to avoid ping pong of rounded values
     ui->sideMotorSlider->blockSignals(true);
@@ -159,7 +166,7 @@ void QEllipseSlider::updateSlidersPositions()
     ui->valueSpinBox->blockSignals(false);
     if(side < ui->sideMotorSlider->minimum() || side > ui->sideMotorSlider->maximum()
             || front < ui->frontMotorSlider->minimum() || front > ui->frontMotorSlider->maximum())
-        ui->warningLabel->setText(tr("Unreachable %1").arg(m_valueName));
+        ui->warningLabel->setText(tr("Unreachable %1").arg(m_valueName.toLower()));
     else
         ui->warningLabel->setText("");
 }
@@ -213,8 +220,6 @@ void QEllipseSlider::setSideSize(double sideSize, bool keepPerimeter)
         double p = perimeter();
         setFrontSize(calculateEllipseParameter(p, sideSize));
     }
-    if((int)m_sideSize != (int)sideSize)
-        emit sideMotorValueChanged(sideSize);
     m_sideSize = sideSize;
 }
 
@@ -229,8 +234,6 @@ void QEllipseSlider::setFrontSize(double frontSize, bool keepPerimeter)
         double p = perimeter();
         setSideSize(calculateEllipseParameter(p, frontSize));
     }
-    if((int)m_frontSize != (int)frontSize)
-        emit frontMotorValueChanged(frontSize);
     m_frontSize = frontSize;
 }
 
