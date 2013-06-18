@@ -91,7 +91,7 @@
          <item row="0" column="1">
           <widget class="QSlider" name="sideMotorSlider">
            <property name="maximum">
-            <number>80</number>
+            <number>50</number>
            </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -104,7 +104,7 @@
             <string>mm</string>
            </property>
            <property name="maximum">
-            <number>300</number>
+            <number>50</number>
            </property>
           </widget>
          </item>
@@ -121,7 +121,7 @@
          <item row="1" column="1">
           <widget class="QSlider" name="frontMotorSlider">
            <property name="maximum">
-            <number>80</number>
+            <number>50</number>
            </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -134,7 +134,7 @@
             <string>mm</string>
            </property>
            <property name="maximum">
-            <number>300</number>
+            <number>50</number>
            </property>
           </widget>
          </item>

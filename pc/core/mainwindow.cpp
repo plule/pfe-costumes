@@ -43,12 +43,14 @@ MainWindow::MainWindow(QWidget *parent) :
         }
         switch(m_arduinoCommunication->getMotorType(i)) {
         case FRONT_MOTOR:
+            m_frontSliders.insert(i, slider);
             connect(slider, &QEllipseSlider::frontMotorValueChanged, [=](int distance){
                 QString current = getCurrentArduino();
                 m_arduinoCommunication->motorDistanceMessage(current, i, distance)->launch();
             });
             break;
         case SIDE_MOTOR:
+            m_sideSliders.insert(i, slider);
             connect(slider, &QEllipseSlider::sideMotorValueChanged, [=](int distance){
                 QString current = getCurrentArduino();
                 m_arduinoCommunication->motorDistanceMessage(current, i, distance)->launch();
@@ -58,12 +60,11 @@ MainWindow::MainWindow(QWidget *parent) :
             qWarning() << "Malformed interface.h";
             break;
         }
-        m_morphoSliders.append(slider);
         ui->adjustmentLayout->addWidget(slider);
     }
 
-
-    connect(m_arduinoCommunication, SIGNAL(motorDistanceChanged(QString,int,int)), this, SLOT(setMotorMicroSecond(QString,int,int)));
+    // Handle messages from the arduino
+    connect(m_arduinoCommunication, SIGNAL(motorDistanceChanged(QString,int,int)), this, SLOT(setMotorDistance(QString,int,int)));
     connect(m_arduinoCommunication, SIGNAL(arduinoAdded(Arduino)), this, SLOT(addDevice(Arduino)));
     connect(m_arduinoCommunication, SIGNAL(arduinoRemoved(Arduino)), this, SLOT(removeDevice(Arduino)));
     m_arduinoCommunication->helloMessage()->launch();
@@ -409,12 +410,16 @@ void MainWindow::onMassCaptureProblem(MassCapture::Problem problem, QString desc
     }
 }
 
-void MainWindow::setMotorMicroSecond(QString arduino, int motor, int ms)
+void MainWindow::setMotorDistance(QString arduino, int motor, int distance)
 {
-    /* TODO */
-    /*if(arduino == getCurrentArduino() && motor < m_morphoSliders.size()) {
-        m_morphoSliders.at(motor)->setValue(ms);
-    }*/
+    if(arduino == getCurrentArduino()) {
+        if(m_sideSliders.contains(motor)) {
+            m_sideSliders.value(motor)->setSideMotorValue(distance);
+        }
+        if(m_frontSliders.contains(motor)) {
+            m_frontSliders.value(motor)->setFrontMotorValue(distance);
+        }
+    }
 }
 
 void MainWindow::on_newCostume_clicked()

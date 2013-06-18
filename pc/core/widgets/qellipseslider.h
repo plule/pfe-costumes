@@ -87,10 +87,10 @@ public:
     void setPerimeter(double p);
 
 public slots:
-
-protected slots:
     void setSideMotorValue(int value);
     void setFrontMotorValue(int value);
+
+protected slots:
     void onPerimeterChanged(int value);
     void updateSlidersPositions();
 

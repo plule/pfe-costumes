@@ -179,9 +179,7 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
         break;
     }
     case MSG_TURN:
-        DBG("turn");
         if(nargs == 2 && atoi(pargs[0]) > 0 && atoi(pargs[1]) >= 0 && atoi(pargs[1]) <= 360) {
-            DBG("turnok");
             completeTurnStart = millis();
             completeTurnAngle = -1;
             completeTurnStartAngle = atoi(pargs[1]);
@@ -192,7 +190,6 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
         }
         break;
     case MSG_CANCEL_TURN:
-        DBG("cancel turn");
         if(nargs == 0) {
             cancelCompleteTurn();
             ok = true;

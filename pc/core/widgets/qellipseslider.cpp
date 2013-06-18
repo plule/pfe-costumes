@@ -15,11 +15,12 @@ QEllipseSlider::QEllipseSlider(QWidget *parent) :
     ui->mainGroup->setTitle(m_valueName);
     //ui->warningLabel->setVisible(false);
 
-    m_frontSize = 150;
-    m_sideSize = 180;
+    setFrontSize(150);
+    setSideSize(150);
 
     m_lastFrontMotor = -1;
     m_lastSideMotor = -1;
+    updateSlidersPositions();
 }
 
 QEllipseSlider::~QEllipseSlider()
@@ -133,12 +134,12 @@ void QEllipseSlider::updateSlidersPositions()
     int side = sideSize()-getSideOffset();
     int front = frontSize()-getFrontOffset();
     if(side != m_lastSideMotor) {
-        emit sideMotorValueChanged(side);
         m_lastSideMotor = side;
+        emit sideMotorValueChanged(side);
     }
     if(front != m_lastFrontMotor) {
-        emit frontMotorValueChanged(front);
         m_lastFrontMotor = front;
+        emit frontMotorValueChanged(front);
     }
 
     // Block signals to avoid ping pong of rounded values
