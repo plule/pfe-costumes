@@ -38,13 +38,11 @@ public:
      * Size added by the sides block
      */
     int sideBlockOffset() const;
-    void setSideBlockOffset(int sideBlockOffset);
 
     /*
      * Size added by the front block
      */
     int frontBlockOffset() const;
-    void setFrontBlockOffset(int frontBlockOffset);
 
     void setBaseOffset(int sideOffset, int frontOffset);
     void setBlockOffset(int sideOffset, int frontOffset);
@@ -89,6 +87,9 @@ public:
 public slots:
     void setSideMotorValue(int value);
     void setFrontMotorValue(int value);
+    void setFrontBlockOffset(int frontBlockOffset);
+    void setSideBlockOffset(int sideBlockOffset);
+
 
 protected slots:
     void onPerimeterChanged(int value);

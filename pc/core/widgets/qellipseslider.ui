@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>496</width>
-    <height>146</height>
+    <height>190</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,16 +20,42 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QGroupBox" name="mainGroup">
+     <property name="styleSheet">
+      <string notr="true">QGroupBox {
+    border: 2px solid darkgray;
+    border-radius: 5px;
+    margin-top: 0.5em;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 3px 0 3px;
+}
+</string>
+     </property>
      <property name="title">
       <string>GroupBox</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <layout class="QHBoxLayout" name="valueLayout">
+       <layout class="QHBoxLayout" name="perimeterLayout">
         <item>
-         <widget class="QSlider" name="valueSlider">
+         <widget class="QSlider" name="perimeterSlider">
           <property name="minimum">
            <number>400</number>
           </property>
@@ -42,7 +68,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="valueSpinBox">
+         <widget class="QSpinBox" name="perimeterSpinBox">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -85,42 +111,77 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QHBoxLayout" name="motorsLayout">
         <item>
-         <widget class="QLabel" name="sideMotorLabel">
-          <property name="text">
-           <string>Side</string>
-          </property>
-          <property name="buddy">
-           <cstring>sideMotorSlider</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSlider" name="sideMotorSlider">
-          <property name="maximum">
-           <number>50</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="sideMotorSpinBox">
-          <property name="minimumSize">
-           <size>
-            <width>70</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="suffix">
-           <string>mm</string>
-          </property>
-          <property name="maximum">
-           <number>50</number>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="sideLayout">
+          <item>
+           <widget class="QLabel" name="sideMotorLabel">
+            <property name="text">
+             <string>Side</string>
+            </property>
+            <property name="buddy">
+             <cstring>sideMotorSlider</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="sideMotorLayout">
+            <item>
+             <widget class="QSlider" name="sideMotorSlider">
+              <property name="maximum">
+               <number>50</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="sideMotorSpinBox">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="suffix">
+               <string>mm</string>
+              </property>
+              <property name="maximum">
+               <number>50</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QComboBox" name="sideBlockSelection">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="sideBlockSize">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="suffix">
+               <string>mm</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="Line" name="line">
@@ -130,45 +191,86 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="frontMotorLabel">
-          <property name="text">
-           <string>Front</string>
-          </property>
-          <property name="buddy">
-           <cstring>frontMotorSlider</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSlider" name="frontMotorSlider">
-          <property name="maximum">
-           <number>50</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="frontMotorSpinBox">
-          <property name="minimumSize">
-           <size>
-            <width>70</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="suffix">
-           <string>mm</string>
-          </property>
-          <property name="maximum">
-           <number>50</number>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QLabel" name="frontMotorLabel">
+            <property name="text">
+             <string>Front</string>
+            </property>
+            <property name="buddy">
+             <cstring>frontMotorSlider</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QSlider" name="frontMotorSlider">
+              <property name="maximum">
+               <number>50</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="frontMotorSpinBox">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="suffix">
+               <string>mm</string>
+              </property>
+              <property name="maximum">
+               <number>50</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QComboBox" name="frontBlockSelection">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="frontBlockSize">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="suffix">
+               <string>mm</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
       <item>
        <widget class="QLabel" name="warningLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="styleSheet">
          <string notr="true">color:rgb(255, 0, 0)</string>
         </property>
@@ -192,7 +294,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>162</x>
-     <y>112</y>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
      <x>109</x>
@@ -207,8 +309,8 @@
    <slot>setFrontMotorValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>212</x>
-     <y>146</y>
+     <x>405</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
      <x>201</x>
@@ -217,14 +319,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>valueSlider</sender>
+   <sender>perimeterSlider</sender>
    <signal>valueChanged(int)</signal>
    <receiver>QEllipseSlider</receiver>
    <slot>onPerimeterChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>135</x>
-     <y>49</y>
+     <x>147</x>
+     <y>46</y>
     </hint>
     <hint type="destinationlabel">
      <x>318</x>
@@ -239,8 +341,8 @@
    <slot>setFrontMotorValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>512</x>
-     <y>163</y>
+     <x>481</x>
+     <y>114</y>
     </hint>
     <hint type="destinationlabel">
      <x>427</x>
@@ -249,17 +351,17 @@
    </hints>
   </connection>
   <connection>
-   <sender>valueSpinBox</sender>
+   <sender>perimeterSpinBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>QEllipseSlider</receiver>
    <slot>onPerimeterChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>398</x>
-     <y>53</y>
+     <x>392</x>
+     <y>50</y>
     </hint>
     <hint type="destinationlabel">
-     <x>504</x>
+     <x>495</x>
      <y>2</y>
     </hint>
    </hints>
@@ -271,12 +373,44 @@
    <slot>setSideMotorValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>475</x>
-     <y>109</y>
+     <x>238</x>
+     <y>114</y>
     </hint>
     <hint type="destinationlabel">
-     <x>532</x>
+     <x>495</x>
      <y>33</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sideBlockSize</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>QEllipseSlider</receiver>
+   <slot>setSideBlockOffset(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>196</x>
+     <y>139</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>79</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>frontBlockSize</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>QEllipseSlider</receiver>
+   <slot>setFrontBlockOffset(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>450</x>
+     <y>145</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-2</x>
+     <y>145</y>
     </hint>
    </hints>
   </connection>
@@ -285,5 +419,7 @@
   <slot>setSideMotorValue(int)</slot>
   <slot>setFrontMotorValue(int)</slot>
   <slot>onPerimeterChanged(int)</slot>
+  <slot>setSideBlockOffset(int)</slot>
+  <slot>setFrontBlockOffset(int)</slot>
  </slots>
 </ui>

@@ -9,8 +9,8 @@ QEllipseSlider::QEllipseSlider(QWidget *parent) :
     ui->setupUi(this);
     m_frontBaseOffset = 124; // TODO adapter à conception
     m_sideBaseOffset = 100; // TODO adapter à conception
-    m_frontBlockOffset = 10; // TODO liste de blocks
-    m_sideBlockOffset = 15; // TODO liste de blocks
+    setFrontBlockOffset(10); // TODO liste de blocks
+    setSideBlockOffset(15); // TODO liste de blocks
     m_valueName = tr("perimeter");
     ui->mainGroup->setTitle(m_valueName);
     //ui->warningLabel->setVisible(false);
@@ -35,7 +35,9 @@ int QEllipseSlider::frontBlockOffset() const
 
 void QEllipseSlider::setFrontBlockOffset(int frontBlockOffset)
 {
+    ui->frontBlockSize->setValue(frontBlockOffset);
     m_frontBlockOffset = frontBlockOffset;
+    updateSlidersPositions();
 }
 
 void QEllipseSlider::setBaseOffset(int sideOffset, int frontOffset)
@@ -57,7 +59,9 @@ int QEllipseSlider::sideBlockOffset() const
 
 void QEllipseSlider::setSideBlockOffset(int sideBlockOffset)
 {
+    ui->sideBlockSize->setValue(sideBlockOffset);
     m_sideBlockOffset = sideBlockOffset;
+    updateSlidersPositions();
 }
 
 int QEllipseSlider::frontBaseOffset() const
@@ -147,24 +151,24 @@ void QEllipseSlider::updateSlidersPositions()
     ui->sideMotorSpinBox->blockSignals(true);
     ui->frontMotorSlider->blockSignals(true);
     ui->frontMotorSpinBox->blockSignals(true);
-    ui->valueSlider->blockSignals(true);
-    ui->valueSpinBox->blockSignals(true);
+    ui->perimeterSlider->blockSignals(true);
+    ui->perimeterSpinBox->blockSignals(true);
 
     // Do the update
     ui->sideMotorSlider->setValue(side);
     ui->sideMotorSpinBox->setValue(side);
     ui->frontMotorSlider->setValue(front);
     ui->frontMotorSpinBox->setValue(front);
-    ui->valueSlider->setValue(perimeter());
-    ui->valueSpinBox->setValue(perimeter());
+    ui->perimeterSlider->setValue(perimeter());
+    ui->perimeterSpinBox->setValue(perimeter());
 
     // Release the signals
     ui->sideMotorSlider->blockSignals(false);
     ui->sideMotorSpinBox->blockSignals(false);
     ui->frontMotorSlider->blockSignals(false);
     ui->frontMotorSpinBox->blockSignals(false);
-    ui->valueSlider->blockSignals(false);
-    ui->valueSpinBox->blockSignals(false);
+    ui->perimeterSlider->blockSignals(false);
+    ui->perimeterSpinBox->blockSignals(false);
     if(side < ui->sideMotorSlider->minimum() || side > ui->sideMotorSlider->maximum()
             || front < ui->frontMotorSlider->minimum() || front > ui->frontMotorSlider->maximum())
         ui->warningLabel->setText(tr("Unreachable %1").arg(m_valueName.toLower()));
