@@ -73,4 +73,7 @@
         <file>suzanne/035.jpg</file>
         <file>suzanne/036.jpg</file>
     </qresource>
+    <qresource prefix="/pics">
+        <file>buste.png</file>
+    </qresource>
 </RCC>
