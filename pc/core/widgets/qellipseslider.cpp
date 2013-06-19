@@ -46,6 +46,10 @@ void QEllipseSlider::setFrontBlockOffset(int frontBlockOffset)
 {
     ui->frontBlockSize->setValue(frontBlockOffset);
     m_frontBlockOffset = frontBlockOffset;
+
+    if(!perimeterLocked())
+        setFrontMotorValue(m_lastFrontMotor);
+
     updateSlidersPositions();
 }
 
@@ -57,8 +61,8 @@ void QEllipseSlider::setBaseOffset(int sideOffset, int frontOffset)
 
 void QEllipseSlider::setBlockOffset(int sideOffset, int frontOffset)
 {
-    m_sideBlockOffset = sideOffset;
-    m_frontBlockOffset = frontOffset;
+    setSideBlockOffset(sideOffset);
+    setFrontBlockOffset(frontOffset);
 }
 
 int QEllipseSlider::sideBlockOffset() const
@@ -70,6 +74,9 @@ void QEllipseSlider::setSideBlockOffset(int sideBlockOffset)
 {
     ui->sideBlockSize->setValue(sideBlockOffset);
     m_sideBlockOffset = sideBlockOffset;
+    if(!perimeterLocked())
+        setSideMotorValue(m_lastSideMotor);
+
     updateSlidersPositions();
 }
 
@@ -144,15 +151,16 @@ void QEllipseSlider::onPerimeterChanged(int value)
 
 void QEllipseSlider::updateSlidersPositions()
 {
-    int side = sideSize()-getSideOffset();
-    int front = frontSize()-getFrontOffset();
+    int side,front;
+    side = sideSize()-getSideOffset();
+    front = frontSize()-getFrontOffset();
     if(side != m_lastSideMotor) {
-        m_lastSideMotor = side;
         emit sideMotorValueChanged(side);
+        m_lastSideMotor = side;
     }
     if(front != m_lastFrontMotor) {
-        m_lastFrontMotor = front;
         emit frontMotorValueChanged(front);
+        m_lastFrontMotor = front;
     }
 
     // Block signals to avoid ping pong of rounded values
