@@ -20,8 +20,6 @@ QEllipseSlider::QEllipseSlider(QWidget *parent) :
     ui->frontBlockSelection->addItem(tr("Custom Block"), QVariant(-1));
     ui->frontBlockSize->setProperty("custom", QVariant(-1)); // Remind the custom value
 
-    //setFrontBlockOffset(10); // TODO liste de blocks
-    //setSideBlockOffset(15); // TODO liste de blocks
     m_valueName = tr("perimeter");
     ui->mainGroup->setTitle(m_valueName);
     //ui->warningLabel->setVisible(false);
