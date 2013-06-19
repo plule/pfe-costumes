@@ -13,10 +13,12 @@ QEllipseSlider::QEllipseSlider(QWidget *parent) :
     ui->sideBlockSelection->addItem(tr("Block A"), QVariant(15));
     ui->sideBlockSelection->addItem(tr("Block B"), QVariant(12));
     ui->sideBlockSelection->addItem(tr("Custom Block"), QVariant(-1));
+    ui->sideBlockSize->setProperty("custom", QVariant(-1)); // Remind the custom value
 
     ui->frontBlockSelection->addItem(tr("Block A"), QVariant(10));
     ui->frontBlockSelection->addItem(tr("Block C"), QVariant(7));
     ui->frontBlockSelection->addItem(tr("Custom Block"), QVariant(-1));
+    ui->frontBlockSize->setProperty("custom", QVariant(-1)); // Remind the custom value
 
     //setFrontBlockOffset(10); // TODO liste de blocks
     //setSideBlockOffset(15); // TODO liste de blocks
@@ -45,6 +47,8 @@ int QEllipseSlider::frontBlockOffset() const
 void QEllipseSlider::setFrontBlockOffset(int frontBlockOffset)
 {
     ui->frontBlockSize->setValue(frontBlockOffset);
+    if(ui->frontBlockSize->isEnabled()) // User entered the value
+        ui->frontBlockSize->setProperty("custom", QVariant(frontBlockOffset));
     m_frontBlockOffset = frontBlockOffset;
 
     if(!perimeterLocked())
@@ -73,6 +77,8 @@ int QEllipseSlider::sideBlockOffset() const
 void QEllipseSlider::setSideBlockOffset(int sideBlockOffset)
 {
     ui->sideBlockSize->setValue(sideBlockOffset);
+    if(ui->sideBlockSize->isEnabled()) // User entered the value
+        ui->sideBlockSize->setProperty("custom", QVariant(sideBlockOffset));
     m_sideBlockOffset = sideBlockOffset;
     if(!perimeterLocked())
         setSideMotorValue(m_lastSideMotor);
@@ -267,9 +273,11 @@ double QEllipseSlider::calculateEllipseParameter(double p, double b)
 void QEllipseSlider::on_sideBlockSelection_currentIndexChanged(int index)
 {
     int offset = ui->sideBlockSelection->itemData(index).toInt();
-    if(offset == -1)
+    if(offset == -1) {
         ui->sideBlockSize->setEnabled(true);
-    else {
+        if(ui->sideBlockSize->property("custom").toInt() != -1)
+            ui->sideBlockSize->setValue(ui->sideBlockSize->property("custom").toInt());
+    } else {
         ui->sideBlockSize->setEnabled(false);
         ui->sideBlockSize->setValue(offset);
     }
@@ -278,9 +286,11 @@ void QEllipseSlider::on_sideBlockSelection_currentIndexChanged(int index)
 void QEllipseSlider::on_frontBlockSelection_currentIndexChanged(int index)
 {
     int offset = ui->frontBlockSelection->itemData(index).toInt();
-    if(offset == -1)
+    if(offset == -1) {
         ui->frontBlockSize->setEnabled(true);
-    else {
+        if(ui->frontBlockSize->property("custom").toInt() != -1)
+            ui->frontBlockSize->setValue(ui->frontBlockSize->property("custom").toInt());
+    } else {
         ui->frontBlockSize->setEnabled(false);
         ui->frontBlockSize->setValue(offset);
     }
