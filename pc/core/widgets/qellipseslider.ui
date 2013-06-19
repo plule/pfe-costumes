@@ -383,22 +383,6 @@ QGroupBox::title {
    </hints>
   </connection>
   <connection>
-   <sender>sideBlockSize</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>QEllipseSlider</receiver>
-   <slot>setSideBlockOffset(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>196</x>
-     <y>139</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>79</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>frontBlockSize</sender>
    <signal>valueChanged(int)</signal>
    <receiver>QEllipseSlider</receiver>
@@ -411,6 +395,22 @@ QGroupBox::title {
     <hint type="destinationlabel">
      <x>-2</x>
      <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sideBlockSize</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>QEllipseSlider</receiver>
+   <slot>setSideBlockOffset(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>213</x>
+     <y>137</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>215</x>
+     <y>192</y>
     </hint>
    </hints>
   </connection>

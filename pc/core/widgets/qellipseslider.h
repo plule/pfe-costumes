@@ -106,6 +106,11 @@ protected:
      */
     double calculateEllipseParameter(double perimeter, double otherParameter);
     
+private slots:
+    void on_sideBlockSelection_currentIndexChanged(int index);
+
+    void on_frontBlockSelection_currentIndexChanged(int index);
+
 private:
     Ui::QEllipseSlider *ui;
     int m_sideBaseOffset, m_frontBaseOffset, m_sideBlockOffset, m_frontBlockOffset;

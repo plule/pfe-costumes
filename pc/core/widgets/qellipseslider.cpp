@@ -9,8 +9,17 @@ QEllipseSlider::QEllipseSlider(QWidget *parent) :
     ui->setupUi(this);
     m_frontBaseOffset = 124; // TODO adapter à conception
     m_sideBaseOffset = 100; // TODO adapter à conception
-    setFrontBlockOffset(10); // TODO liste de blocks
-    setSideBlockOffset(15); // TODO liste de blocks
+
+    ui->sideBlockSelection->addItem(tr("Block A"), QVariant(15));
+    ui->sideBlockSelection->addItem(tr("Block B"), QVariant(12));
+    ui->sideBlockSelection->addItem(tr("Custom Block"), QVariant(-1));
+
+    ui->frontBlockSelection->addItem(tr("Block A"), QVariant(10));
+    ui->frontBlockSelection->addItem(tr("Block C"), QVariant(7));
+    ui->frontBlockSelection->addItem(tr("Custom Block"), QVariant(-1));
+
+    //setFrontBlockOffset(10); // TODO liste de blocks
+    //setSideBlockOffset(15); // TODO liste de blocks
     m_valueName = tr("perimeter");
     ui->mainGroup->setTitle(m_valueName);
     //ui->warningLabel->setVisible(false);
@@ -107,7 +116,7 @@ int QEllipseSlider::getSideOffset()
 
 int QEllipseSlider::getFrontOffset()
 {
-    return m_frontBaseOffset+m_sideBlockOffset;
+    return m_frontBaseOffset+m_frontBlockOffset;
 }
 
 bool QEllipseSlider::perimeterLocked()
@@ -245,4 +254,26 @@ void QEllipseSlider::setFrontSize(double frontSize, bool keepPerimeter)
 double QEllipseSlider::calculateEllipseParameter(double p, double b)
 {
     return sqrt( p*p / (2.0*M_PI*M_PI) - b*b );
+}
+
+void QEllipseSlider::on_sideBlockSelection_currentIndexChanged(int index)
+{
+    int offset = ui->sideBlockSelection->itemData(index).toInt();
+    if(offset == -1)
+        ui->sideBlockSize->setEnabled(true);
+    else {
+        ui->sideBlockSize->setEnabled(false);
+        ui->sideBlockSize->setValue(offset);
+    }
+}
+
+void QEllipseSlider::on_frontBlockSelection_currentIndexChanged(int index)
+{
+    int offset = ui->frontBlockSelection->itemData(index).toInt();
+    if(offset == -1)
+        ui->frontBlockSize->setEnabled(true);
+    else {
+        ui->frontBlockSize->setEnabled(false);
+        ui->frontBlockSize->setValue(offset);
+    }
 }
