@@ -274,74 +274,74 @@
         <translation type="obsolete">L&apos;appareil photo ne répond plus, vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="349"/>
-        <location filename="../mainwindow.cpp" line="582"/>
+        <location filename="../mainwindow.cpp" line="353"/>
+        <location filename="../mainwindow.cpp" line="586"/>
         <source>No camera connected</source>
         <translation>Aucun appareil photo détecté</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="153"/>
+        <location filename="../mainwindow.cpp" line="157"/>
         <source>Choose file(s)</source>
         <translation>Selectionner des fichiers</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="188"/>
+        <location filename="../mainwindow.cpp" line="192"/>
         <source>Save Collection</source>
         <translation>Sauvegarder la Collection</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="189"/>
+        <location filename="../mainwindow.cpp" line="193"/>
         <source>The collection has unsaved changes.
 Do you want to save the modifications?</source>
         <translation>La collection a des modification non enregistrées.\nVoulez vous sauvegarder ?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="286"/>
+        <location filename="../mainwindow.cpp" line="290"/>
         <source>Conversion error</source>
         <translation>Erreur de conversion</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="286"/>
+        <location filename="../mainwindow.cpp" line="290"/>
         <source>Failed to convert raw to jpg. The raw file is conserved.</source>
         <translation>Impossible de convertir le fichier raw en jpg. Le fichier raw est conservé.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="330"/>
+        <location filename="../mainwindow.cpp" line="334"/>
         <source>Failed to capture photo.</source>
         <translation>Impossible de prendre la photo.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="333"/>
+        <location filename="../mainwindow.cpp" line="337"/>
         <source>Lost connection to the camera, you should disconnect and reconnect it.</source>
         <translation>La connection avec l&apos;appareil photo a été perdu. Vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="386"/>
+        <location filename="../mainwindow.cpp" line="390"/>
         <source>The camera has encountered a problem.</source>
         <translation>L&apos;appareil photo a eu un problème.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="388"/>
+        <location filename="../mainwindow.cpp" line="392"/>
         <source>The rotating model has encountered a problem.</source>
         <translation>Le mannequin a eu un problème.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="390"/>
+        <location filename="../mainwindow.cpp" line="394"/>
         <source>An unknown problem occured.</source>
         <translation>Un problème inconnu est survennu.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="391"/>
+        <location filename="../mainwindow.cpp" line="395"/>
         <source>Do you wish to try to continue the capture?</source>
         <translation>Voulez-vous essayer de continuer les prises de vue ?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="555"/>
+        <location filename="../mainwindow.cpp" line="559"/>
         <source>Mass capture...</source>
         <translation>Prises de vue en cours...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="556"/>
+        <location filename="../mainwindow.cpp" line="560"/>
         <source>Abort Capture</source>
         <translation>Abandonner les prises de vue</translation>
     </message>
@@ -350,23 +350,23 @@ Do you want to save the modifications?</source>
         <translation type="obsolete">Échec des captures</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="428"/>
+        <location filename="../mainwindow.cpp" line="432"/>
         <source>New Costume</source>
         <translation>Nouveau Costume</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="440"/>
-        <location filename="../mainwindow.cpp" line="460"/>
+        <location filename="../mainwindow.cpp" line="444"/>
+        <location filename="../mainwindow.cpp" line="464"/>
         <source>Loading views</source>
         <translation>Chargement des vues</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="482"/>
+        <location filename="../mainwindow.cpp" line="486"/>
         <source>New collection</source>
         <translation>Nouvelle collection</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="510"/>
+        <location filename="../mainwindow.cpp" line="514"/>
         <source>Open collection</source>
         <translation>Ouvrir collection</translation>
     </message>
@@ -430,7 +430,7 @@ Do you want to save the modifications?</source>
     </message>
     <message>
         <location filename="../widgets/qellipseslider.cpp" line="13"/>
-        <location filename="../widgets/qellipseslider.cpp" line="17"/>
+        <location filename="../widgets/qellipseslider.cpp" line="18"/>
         <source>Block A</source>
         <translation>Bloc A</translation>
     </message>
@@ -441,12 +441,12 @@ Do you want to save the modifications?</source>
     </message>
     <message>
         <location filename="../widgets/qellipseslider.cpp" line="15"/>
-        <location filename="../widgets/qellipseslider.cpp" line="19"/>
+        <location filename="../widgets/qellipseslider.cpp" line="20"/>
         <source>Custom Block</source>
         <translation>Bloc personnalisé</translation>
     </message>
     <message>
-        <location filename="../widgets/qellipseslider.cpp" line="18"/>
+        <location filename="../widgets/qellipseslider.cpp" line="19"/>
         <source>Block C</source>
         <translation>Bloc C</translation>
     </message>
@@ -456,7 +456,7 @@ Do you want to save the modifications?</source>
         <translation>périmêtre</translation>
     </message>
     <message>
-        <location filename="../widgets/qellipseslider.cpp" line="191"/>
+        <location filename="../widgets/qellipseslider.cpp" line="201"/>
         <source>Unreachable %1</source>
         <translation>%1 inatteignable</translation>
     </message>
@@ -552,12 +552,33 @@ Do you want to save the modifications?</source>
         <translation>Nombre de captures</translation>
     </message>
     <message>
-        <location filename="../settingsform.cpp" line="181"/>
+        <location filename="../settingsform.ui" line="182"/>
+        <source>Model</source>
+        <translation>Mannequin</translation>
+    </message>
+    <message>
+        <location filename="../settingsform.ui" line="188"/>
+        <source>Model&apos;s structure width (default : 100mm)</source>
+        <translation>Largeur du mannequin (défaut : 100mm)</translation>
+    </message>
+    <message>
+        <location filename="../settingsform.ui" line="195"/>
+        <location filename="../settingsform.ui" line="215"/>
+        <source>mm</source>
+        <translation>mm</translation>
+    </message>
+    <message>
+        <location filename="../settingsform.ui" line="208"/>
+        <source>Model&apos;s structure depth (default : 124mm)</source>
+        <translation>Profondeur du mannequin (défaut : 124mm)</translation>
+    </message>
+    <message>
+        <location filename="../settingsform.cpp" line="224"/>
         <source>The port seems to be valid</source>
         <translation>Le port semble être valide</translation>
     </message>
     <message>
-        <location filename="../settingsform.cpp" line="184"/>
+        <location filename="../settingsform.cpp" line="227"/>
         <source>The port seems to be invalid</source>
         <translation>Le port semple être invalide</translation>
     </message>
