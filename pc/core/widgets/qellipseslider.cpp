@@ -162,8 +162,8 @@ void QEllipseSlider::onPerimeterChanged(int value)
 void QEllipseSlider::updateSlidersPositions()
 {
     int side,front;
-    side = sideSize()-getSideOffset();
-    front = frontSize()-getFrontOffset();
+    side = round(sideSize()-getSideOffset());
+    front = round(frontSize()-getFrontOffset());
     if(side != m_lastSideMotor) {
         emit sideMotorValueChanged(side);
         m_lastSideMotor = side;
@@ -186,8 +186,8 @@ void QEllipseSlider::updateSlidersPositions()
     ui->sideMotorSpinBox->setValue(side);
     ui->frontMotorSlider->setValue(front);
     ui->frontMotorSpinBox->setValue(front);
-    ui->perimeterSlider->setValue(perimeter());
-    ui->perimeterSpinBox->setValue(perimeter());
+    ui->perimeterSlider->setValue(round(perimeter()));
+    ui->perimeterSpinBox->setValue(round(perimeter()));
 
     // Release the signals
     ui->sideMotorSlider->blockSignals(false);
