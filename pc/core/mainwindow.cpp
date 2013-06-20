@@ -61,6 +61,10 @@ MainWindow::MainWindow(QWidget *parent) :
             break;
         }
         ui->adjustmentLayout->addWidget(slider);
+        // Handle model's dimension change
+        connect(m_settingsForm, &SettingsForm::modelDepthChanged, slider, &QEllipseSlider::setFrontBaseOffset);
+        connect(m_settingsForm, &SettingsForm::modelWidthChanged, slider, &QEllipseSlider::setSideBaseOffset);
+        slider->setBaseOffset(m_settingsForm->getModelWidth(), m_settingsForm->getModelDepth());
     }
 
     // Handle messages from the arduino

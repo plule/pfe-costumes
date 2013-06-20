@@ -26,13 +26,11 @@ public:
      * Constant width of the model
      */
     int sideBaseOffset() const;
-    void setSideBaseOffset(int sideBaseOffset);
 
     /*
      * Constant depth of the model
      */
     int frontBaseOffset() const;
-    void setFrontBaseOffset(int frontBaseOffset);
 
     /*
      * Size added by the sides block
@@ -89,6 +87,8 @@ public slots:
     void setFrontMotorValue(int value);
     void setFrontBlockOffset(int frontBlockOffset);
     void setSideBlockOffset(int sideBlockOffset);
+    void setFrontBaseOffset(int frontBaseOffset);
+    void setSideBaseOffset(int sideBaseOffset);
 
 
 protected slots:

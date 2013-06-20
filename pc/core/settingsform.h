@@ -26,10 +26,14 @@ public:
     QPhoto::QCamera *getCamera();
     void refreshCameraList();
     QString getXbeePort();
+    int getModelWidth();
+    int getModelDepth();
 
 signals:
     void cameraChanged(QPhoto::QCamera *m_camera);
     void xbeePortChanged(QString port);
+    void modelWidthChanged(int modelWidth);
+    void modelDepthChanged(int modelDepth);
     
 public slots:
     void apply();

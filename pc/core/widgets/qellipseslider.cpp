@@ -57,8 +57,8 @@ void QEllipseSlider::setFrontBlockOffset(int frontBlockOffset)
 
 void QEllipseSlider::setBaseOffset(int sideOffset, int frontOffset)
 {
-    m_sideBaseOffset = sideOffset;
-    m_frontBaseOffset = frontOffset;
+    setSideBaseOffset(sideOffset);
+    setFrontBaseOffset(frontOffset);
 }
 
 void QEllipseSlider::setBlockOffset(int sideOffset, int frontOffset)
@@ -92,6 +92,9 @@ int QEllipseSlider::frontBaseOffset() const
 void QEllipseSlider::setFrontBaseOffset(int frontBaseOffset)
 {
     m_frontBaseOffset = frontBaseOffset;
+    if(!perimeterLocked())
+        setFrontMotorValue(m_lastFrontMotor);
+    updateSlidersPositions();
 }
 
 int QEllipseSlider::sideBaseOffset() const
@@ -102,6 +105,9 @@ int QEllipseSlider::sideBaseOffset() const
 void QEllipseSlider::setSideBaseOffset(int sideBaseOffset)
 {
     m_sideBaseOffset = sideBaseOffset;
+    if(!perimeterLocked())
+        setSideMotorValue(m_lastSideMotor);
+    updateSlidersPositions();
 }
 
 int QEllipseSlider::maxSideMotor() const

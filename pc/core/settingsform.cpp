@@ -33,6 +33,21 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
         ui->captureNumber->setValue(m_settings.value("photonumber").toInt());
     }
 
+    /* Model dimension */
+    if(!m_settings.value("modelwidth").isValid()) {
+        ui->modelWidthBox->setValue(100);
+        m_settings.setValue("modelwidth",100);
+    } else {
+        ui->modelWidthBox->setValue(m_settings.value("modelwidth").toInt());
+    }
+
+    if(!m_settings.value("modeldepth").isValid()) {
+        ui->modelDepthBox->setValue(124);
+        m_settings.setValue("modeldepth",100);
+    } else {
+        ui->modelDepthBox->setValue(m_settings.value("modeldepth").toInt());
+    }
+
     connect(this, SIGNAL(accepted()), this, SLOT(apply()));
     connect(this, SIGNAL(rejected()), this, SLOT(cancel()));
 
@@ -60,6 +75,20 @@ void SettingsForm::refreshCameraList()
 QString SettingsForm::getXbeePort()
 {
     return m_xbeePort;
+}
+
+int SettingsForm::getModelWidth()
+{
+    if(m_settings.value("modelwidth").isValid())
+        return m_settings.value("modelwidth").toInt();
+    return 100;
+}
+
+int SettingsForm::getModelDepth()
+{
+    if(m_settings.value("modeldepth").isValid())
+        return m_settings.value("modeldepth").toInt();
+    return 124;
 }
 
 QString SettingsForm::guessXbeePort(QList<QString> candidates)
@@ -140,6 +169,18 @@ void SettingsForm::apply()
         emit xbeePortChanged(m_xbeePort);
     }
 
+    int newModelWidth = ui->modelWidthBox->value();
+    if(m_settings.value("modelwidth").toInt() != newModelWidth) {
+        m_settings.setValue("modelwidth", ui->modelWidthBox->value());
+        emit modelWidthChanged(newModelWidth);
+    }
+
+    int newModelDepth = ui->modelDepthBox->value();
+    if(m_settings.value("modeldepth").toInt() != newModelDepth) {
+        m_settings.setValue("modeldepth", ui->modelDepthBox->value());
+        emit modelDepthChanged(newModelDepth);
+    }
+
     if(m_camera != 0)
         m_settings.setValue("camera", m_camera->getModel());
     if(m_xbeePort != "")
@@ -155,6 +196,8 @@ void SettingsForm::cancel()
     selectCurrentCamera();
     selectCurrentXbeePort();
     ui->captureNumber->setValue(m_settings.value("photonumber").toInt());
+    ui->modelDepthBox->setValue(m_settings.value("modeldepth").toInt());
+    ui->modelWidthBox->setValue(m_settings.value("modelwidth").toInt());
 }
 
 void SettingsForm::on_detectCamerasButton_clicked()
