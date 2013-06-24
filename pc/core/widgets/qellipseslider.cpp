@@ -241,6 +241,16 @@ void QEllipseSlider::setPerimeter(double p)
     setFrontSize(front);
 }
 
+QString QEllipseSlider::sideBlockName() const
+{
+    return ui->sideBlockSelection->currentText();
+}
+
+QString QEllipseSlider::frontBlockName() const
+{
+    return ui->sideBlockSelection->currentText();
+}
+
 double QEllipseSlider::sideSize() const
 {
     return m_sideSize;

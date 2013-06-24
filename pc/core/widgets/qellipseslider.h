@@ -82,6 +82,12 @@ public:
      */
     void setPerimeter(double p);
 
+    /*
+     * Get current block name
+     */
+    QString sideBlockName() const;
+    QString frontBlockName() const;
+
 public slots:
     void setSideMotorValue(int value);
     void setFrontMotorValue(int value);
