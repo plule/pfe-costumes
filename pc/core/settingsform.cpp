@@ -229,3 +229,18 @@ void SettingsForm::on_testPortButton_clicked()
     QGuiApplication::restoreOverrideCursor();
     msg.exec();
 }
+
+void SettingsForm::on_minimumPositionButton_clicked()
+{
+    m_xbee->setOpenPosition("",0)->launch();
+}
+
+void SettingsForm::on_maximumPositionButton_clicked()
+{
+    m_xbee->setClosePosition("",0)->launch();
+}
+
+void SettingsForm::on_servoPosSlider_sliderMoved(int position)
+{
+    m_xbee->setRawMotorPosition("",0, position)->launch();
+}

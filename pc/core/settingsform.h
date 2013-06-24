@@ -46,6 +46,12 @@ private slots:
 
     void on_testPortButton_clicked();
 
+    void on_minimumPositionButton_clicked();
+
+    void on_maximumPositionButton_clicked();
+
+    void on_servoPosSlider_sliderMoved(int position);
+
 private:
     QString guessXbeePort(QList<QString> candidates);
     QPhoto::QCamera *guessCamera(QList<QPhoto::QCamera*> candidates);

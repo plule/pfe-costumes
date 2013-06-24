@@ -67,6 +67,24 @@ bool ArduinoCommunication::testPort(QString name)
     return false;
 }
 
+Transaction *ArduinoCommunication::setRawMotorPosition(QString arduino, int motor, int position)
+{
+    // TODO
+    return new Transaction(this);
+}
+
+Transaction *ArduinoCommunication::setClosePosition(QString arduino, int motor)
+{
+    // TODO
+    return new Transaction(this);
+}
+
+Transaction *ArduinoCommunication::setOpenPosition(QString arduino, int motor)
+{
+    // TODO
+    return new Transaction(this);
+}
+
 Transaction *ArduinoCommunication::helloMessage()
 {
     return createTransaction(MSG_DISCOVER);

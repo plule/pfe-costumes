@@ -216,44 +216,44 @@
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
-       <string>Model Configuration</string>
+       <string>Model Calibration</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
         <layout class="QFormLayout" name="formLayout_3">
          <item row="0" column="0">
-          <widget class="QLabel" name="label_5">
+          <widget class="QLabel" name="modelLabel">
            <property name="text">
             <string>Model</string>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="comboBox"/>
+          <widget class="QComboBox" name="modelCalibBox"/>
          </item>
          <item row="1" column="0">
-          <widget class="QLabel" name="label_6">
+          <widget class="QLabel" name="motorLbel">
            <property name="text">
             <string>Motor</string>
            </property>
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QComboBox" name="comboBox_2"/>
+          <widget class="QComboBox" name="motorCalibBox"/>
          </item>
         </layout>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QLabel" name="label_9">
+          <widget class="QLabel" name="servoPosLabel">
            <property name="text">
             <string>Servo Position</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QSlider" name="horizontalSlider">
+          <widget class="QSlider" name="servoPosSlider">
            <property name="minimum">
             <number>500</number>
            </property>
@@ -266,7 +266,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="spinBox_3">
+          <widget class="QSpinBox" name="servoPosSpin">
            <property name="minimum">
             <number>500</number>
            </property>
@@ -280,14 +280,14 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="minimumPositionButton">
            <property name="text">
             <string>Store Minimum position</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="maximumPositionButton">
            <property name="text">
             <string>Store Maximum position</string>
            </property>

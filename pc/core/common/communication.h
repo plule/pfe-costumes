@@ -85,6 +85,31 @@ public:
      */
     bool testPort(QString name);
 
+    /**
+     * @brief setRawMotorPosition put one motor given a position (in us)
+     * @param arduino
+     * @param motor
+     * @param position
+     * @return
+     */
+    Transaction *setRawMotorPosition(QString arduino, int motor, int position);
+
+    /**
+     * @brief setClosePosition indicate to the arduino the "closed" position of a motor
+     * @param arduino
+     * @param motor
+     * @return
+     */
+    Transaction *setClosePosition(QString arduino, int motor);
+
+    /**
+     * @brief setOpenPosition indicate to the arduino the "opened" position of a motor
+     * @param arduino
+     * @param motor
+     * @return
+     */
+    Transaction *setOpenPosition(QString arduino, int motor);
+
 
 signals:
     /**
