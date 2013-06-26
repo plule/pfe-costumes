@@ -110,6 +110,12 @@ public:
      */
     Transaction *setOpenPosition(QString arduino, int motor);
 
+    /**
+     * @brief listModel
+     * @return the list of all the known models' id
+     */
+    QList<QString> listModel();
+
 
 signals:
     /**

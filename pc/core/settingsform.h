@@ -59,6 +59,7 @@ private:
     void selectCurrentXbeePort();
     QList<QPhoto::QCamera*> fillCameraList();
     QList<QString> fillXBeePortList();
+    QList<QString> fillArduinoList();
 
     Ui::SettingsForm *ui;
     QPhoto::CameraHandler *m_handler;

@@ -27,6 +27,9 @@ typedef enum {
     MSG_TURN, // Do a complete rotation and notify angle evolution
     MSG_CANCEL_TURN, // Stop the complete rotation
     MSG_ANGLE, // Send current rotation angle
+    MSG_SET_RAW_MOTOR, // Set motor position by giving microsec (for calibration only)
+    MSG_SET_START, // Set starting position of a motor
+    MSG_SET_STOP, // Set stopping position of a motor
     MSG_DEBUG, // send a debug message
     MSG_INVALID // invalid message
 } MSG_TYPE;
@@ -72,7 +75,7 @@ typedef enum {
     SIDE_MOTOR
 } MOTOR_TYPE;
 
-#define X(pin, role, define, string, umin, umax) define ## role,
+#define X(pin, role, define, string) define ## role,
 enum MORPHO_MOTORS {
     #include "morphology.h"
     MOTOR_NUMBER

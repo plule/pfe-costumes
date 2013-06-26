@@ -16,8 +16,8 @@ int completeTurnTime;
 int completeTurnStartAngle;
 
 
-#define EEPROM_SERVO 0
-#define EEPROM_ROTATION (uint16_t*)100
+#define EEPROM_ROTATION 0
+#define EEPROM_SERVO (EEPROM_ROTATION+sizeof(uint16_t))
 
 /*
  * Everything needed to configure a morphology slider
@@ -34,7 +34,7 @@ typedef struct {
 /*
  * Array of morphology motors' infos
  */
-#define X(pin, role, define, string, umin, umax) {pin, umin, umax, 0, Servo()},
+#define X(pin, role, define, string) {pin, 0, 0, 0, Servo()},
 ServoInfo morpho_motors[] = {
     #include "../../../interfaces/morphology.h"
 };
@@ -46,9 +46,20 @@ int led=13;
 /*
  * Return a space to store the position of a motor in the eeprom
  */
-uint16_t *servoAdress(int index)
+uint16_t *servoAddress(int index)
 {
-    return (uint16_t *)EEPROM_SERVO+sizeof(int)*index;
+    return (uint16_t *)EEPROM_SERVO + 3*index*sizeof(int);
+    //return (uint16_t *)(EEPROM_SERVO+3*index*(sizeof int)); // space to store 3 ints
+}
+
+uint16_t *uminAddress(int index)
+{
+    return servoAddress(index) + sizeof(int);
+}
+
+uint16_t *umaxAddress(int index)
+{
+    return servoAddress(index) + 2*sizeof(int);
 }
 
 
@@ -68,9 +79,9 @@ void saveState()
 {
     int i;
     for(i=0; i<MOTOR_NUMBER; i++) {
-        uint16_t value = eeprom_read_word(servoAdress(i));
+        uint16_t value = eeprom_read_word(servoAddress(i));
         if(value != morpho_motors[i].distance) {
-            eeprom_write_word(servoAdress(i), morpho_motors[i].distance);
+            eeprom_write_word(servoAddress(i), morpho_motors[i].distance);
         }
     }
     if(rotationAngle != eeprom_read_word(EEPROM_ROTATION))
@@ -100,8 +111,12 @@ void setup()
     digitalWrite(led, LOW);
     int i;
     for(i=0; i<MOTOR_NUMBER; i++) {
-        uint16_t pos = eeprom_read_word(servoAdress(i));
-        morpho_motors[i].servo.attach(morpho_motors[i].pin, morpho_motors[i].umin, morpho_motors[i].umax);
+        uint16_t pos = eeprom_read_word(servoAddress(i));
+        uint16_t umin = eeprom_read_word(uminAddress(i));
+        uint16_t umax = eeprom_read_word(umaxAddress(i));
+        morpho_motors[i].umin = umin;
+        morpho_motors[i].umax = umax;
+        morpho_motors[i].servo.attach(morpho_motors[i].pin, 500, 3000);
         setDistance(i, pos);
     }
     rotationMotor.attach(30, 1100, 1900);
@@ -194,6 +209,27 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
             cancelCompleteTurn();
             ok = true;
         }
+    case MSG_SET_START:
+        if(nargs == 2 && atoi(pargs[0]) > 0 && atoi(pargs[0]) < MOTOR_NUMBER) {
+            int motor = atoi(pargs[0]);
+            int umin = atoi(pargs[1]);
+            morpho_motors[motor].umin = umin;
+            eeprom_write_word(uminAddress(motor), umin);
+        }
+        break;
+    case MSG_SET_STOP:
+        if(nargs == 2 && atoi(pargs[0]) > 0 && atoi(pargs[0]) < MOTOR_NUMBER) {
+            int motor = atoi(pargs[0]);
+            int umax = atoi(pargs[1]);
+            morpho_motors[motor].umax = umax;
+            eeprom_write_word(umaxAddress(motor), umax);
+        }
+        break;
+    case MSG_SET_RAW_MOTOR:
+        if(nargs == 2 && atoi(pargs[0] > 0 && atoi(pargs[0]) < MOTOR_NUMBER)) {
+            morpho_motors[atoi(pargs[0])].servo.writeMicroseconds(atoi(pargs[1]));
+        }
+        break;
     default:
         break;
     }

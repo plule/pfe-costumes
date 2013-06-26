@@ -1,12 +1,12 @@
 #include "communication.h"
 
-#define X(pin, role, define, string, umin, umax) string,
+#define X(pin, role, define, string) string,
 static const QString morpho_motors_name[] = {
     #include "../../interfaces/morphology.h"
 };
 #undef X
 
-#define X(pin, role, define, string, umin, umax) role,
+#define X(pin, role, define, string) role,
 static const MOTOR_TYPE morpho_motors_role[] = {
     #include "../../interfaces/morphology.h"
 };
@@ -69,20 +69,37 @@ bool ArduinoCommunication::testPort(QString name)
 
 Transaction *ArduinoCommunication::setRawMotorPosition(QString arduino, int motor, int position)
 {
-    // TODO
-    return new Transaction(this);
+    // TODO test
+    QList<QVariant> arguments;
+    arguments.append(motor);
+    arguments.append(position);
+    return createTransaction(MSG_SET_RAW_MOTOR, arduino, arguments);
 }
 
 Transaction *ArduinoCommunication::setClosePosition(QString arduino, int motor)
 {
-    // TODO
-    return new Transaction(this);
+    // TODO test
+    QList<QVariant> arguments;
+    arguments.append(QString::number(motor));
+    return createTransaction(MSG_SET_STOP, arduino, arguments);
 }
 
 Transaction *ArduinoCommunication::setOpenPosition(QString arduino, int motor)
 {
-    // TODO
-    return new Transaction(this);
+    // TODO test
+    QList<QVariant> arguments;
+    arguments.append(QString::number(motor));
+    return createTransaction(MSG_SET_START, arduino, arguments);
+}
+
+QList<QString> ArduinoCommunication::listModel()
+{
+    QList<QString> list;
+    foreach(Arduino arduino, m_arduinos) {
+        if(arduino.role == ROLE_MORPHOLOGY)
+            list.append(arduino.id);
+    }
+    return list;
 }
 
 Transaction *ArduinoCommunication::helloMessage()

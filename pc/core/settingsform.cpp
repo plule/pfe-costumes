@@ -148,11 +148,22 @@ QList<QPhoto::QCamera *> SettingsForm::fillCameraList()
 QList<QString> SettingsForm::fillXBeePortList()
 {
     QList<QString> xbeePortList;
+    ui->xbeePortCombo->clear();
     foreach(QextPortInfo portInfo, QextSerialEnumerator::getPorts()) {
         ui->xbeePortCombo->addItem(portInfo.friendName + " (" + portInfo.portName +")",QVariant(portInfo.physName));
         xbeePortList.append(portInfo.physName);
     }
     return xbeePortList;
+}
+
+QList<QString> SettingsForm::fillArduinoList()
+{
+    QList<QString> arduinoList = m_xbee->listModel();
+    ui->modelCalibBox->clear();
+    foreach(QString arduino, arduinoList) {
+        ui->modelCalibBox->addItem(arduino);
+    }
+    return arduinoList;
 }
 
 void SettingsForm::apply()
