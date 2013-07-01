@@ -1,6 +1,7 @@
 #include "../../common/communication.h"
 #include <Servo.h>
 #include <avr/eeprom.h>
+#include <util/crc16.h>
 
 //Servo servo;
 Servo rotationMotor;
@@ -46,22 +47,44 @@ int led=13;
 /*
  * Return a space to store the position of a motor in the eeprom
  */
-uint16_t *servoAddress(int index)
+uint16_t *servoDistanceAddress(int index)
 {
-    return (uint16_t *)EEPROM_SERVO + 3*index*sizeof(int);
-    //return (uint16_t *)(EEPROM_SERVO+3*index*(sizeof int)); // space to store 3 ints
+    return (uint16_t *)EEPROM_SERVO + 4*index*sizeof(int);
 }
 
 uint16_t *uminAddress(int index)
 {
-    return servoAddress(index) + sizeof(int);
+    return servoDistanceAddress(index) + sizeof(int);
 }
 
 uint16_t *umaxAddress(int index)
 {
-    return servoAddress(index) + 2*sizeof(int);
+    return servoDistanceAddress(index) + 2*sizeof(int);
 }
 
+uint16_t *crcServoAddress(int index)
+{
+    return servoDistanceAddress(index) + 3*sizeof(int);
+}
+
+static uint16_t calculateCrc(int index)
+{
+    uint16_t crc = 0;
+    uint8_t *address;
+    for (address = (uint8_t*)servoDistanceAddress(index); address < (uint8_t*)crcServoAddress(index); address++)
+        crc = _crc16_update(crc, eeprom_read_byte(address));
+    return crc;
+}
+
+static uint16_t getCrc(int index)
+{
+    return eeprom_read_word(crcServoAddress(index));
+}
+
+static void storeCrc(int index)
+{
+    eeprom_write_word(crcServoAddress(index), calculateCrc(index));
+}
 
 void setAngle(int angle)
 {
@@ -79,9 +102,24 @@ void saveState()
 {
     int i;
     for(i=0; i<MOTOR_NUMBER; i++) {
-        uint16_t value = eeprom_read_word(servoAddress(i));
-        if(value != morpho_motors[i].distance) {
-            eeprom_write_word(servoAddress(i), morpho_motors[i].distance);
+        bool changed = false;
+        uint16_t distance = eeprom_read_word(servoDistanceAddress(i));
+        if(distance != morpho_motors[i].distance) {
+            eeprom_write_word(servoDistanceAddress(i), morpho_motors[i].distance);
+            changed = true;
+        }
+        uint16_t umin = eeprom_read_word(uminAddress(i));
+        if(umin != morpho_motors[i].umin) {
+            eeprom_write_word(uminAddress(i), morpho_motors[i].umin);
+            changed = true;
+        }
+        uint16_t umax = eeprom_read_word(umaxAddress(i));
+        if(umax != morpho_motors[i].umax) {
+            eeprom_write_word(umaxAddress(i), morpho_motors[i].umax);
+            changed = true;
+        }
+        if(changed) {
+            storeCrc(i);
         }
     }
     if(rotationAngle != eeprom_read_word(EEPROM_ROTATION))
@@ -93,9 +131,14 @@ void saveState()
  */
 bool setDistance(int motor, uint16_t distance)
 {
-    if(distance > 0 && distance < MORPHO_DISTANCE && motor < MOTOR_NUMBER) {
+    if(morpho_motors[motor].umin == 0 || morpho_motors[motor].umax == 0) {
+        DBG("not calibrated motor");
+        DBG(motor);
+        return false;
+    }
+    if(distance < MORPHO_DISTANCE && motor < MOTOR_NUMBER) {
         ServoInfo info = morpho_motors[motor];
-        int time = info.umax - ((float)distance/(float)MORPHO_DISTANCE)*(info.umax - info.umin);
+        int time = info.umin + ((float)distance/(float)MORPHO_DISTANCE)*(info.umax - info.umin);
         info.servo.writeMicroseconds(time);
         morpho_motors[motor].distance = distance;
         return true;
@@ -111,13 +154,20 @@ void setup()
     digitalWrite(led, LOW);
     int i;
     for(i=0; i<MOTOR_NUMBER; i++) {
-        uint16_t pos = eeprom_read_word(servoAddress(i));
-        uint16_t umin = eeprom_read_word(uminAddress(i));
-        uint16_t umax = eeprom_read_word(umaxAddress(i));
-        morpho_motors[i].umin = umin;
-        morpho_motors[i].umax = umax;
         morpho_motors[i].servo.attach(morpho_motors[i].pin, 500, 3000);
-        setDistance(i, pos);
+        if(getCrc(i) == calculateCrc(i)) {
+            /* Read config from eeprom */
+            uint16_t pos = eeprom_read_word(servoDistanceAddress(i));
+            morpho_motors[i].umin = eeprom_read_word(uminAddress(i));
+            morpho_motors[i].umax = eeprom_read_word(umaxAddress(i));
+            setDistance(i, pos);
+        } else {
+            /* Reset because of bad crc */
+            DBG("invalid crc, resetting");
+            morpho_motors[i].umin = 0; // means not calibrated
+            morpho_motors[i].umax = 0;
+            setDistance(i, 0);
+        }
     }
     rotationMotor.attach(30, 1100, 1900);
     setAngle(eeprom_read_word(EEPROM_ROTATION));
@@ -209,24 +259,26 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
             cancelCompleteTurn();
             ok = true;
         }
-    case MSG_SET_START:
-        if(nargs == 2 && atoi(pargs[0]) > 0 && atoi(pargs[0]) < MOTOR_NUMBER) {
+    case MSG_SET_CLOSE:
+        if(nargs == 2 && atoi(pargs[0]) >= 0 && atoi(pargs[0]) < MOTOR_NUMBER) {
             int motor = atoi(pargs[0]);
             int umin = atoi(pargs[1]);
             morpho_motors[motor].umin = umin;
             eeprom_write_word(uminAddress(motor), umin);
+            ok = true;
         }
         break;
-    case MSG_SET_STOP:
-        if(nargs == 2 && atoi(pargs[0]) > 0 && atoi(pargs[0]) < MOTOR_NUMBER) {
+    case MSG_SET_OPEN:
+        if(nargs == 2 && atoi(pargs[0]) >= 0 && atoi(pargs[0]) < MOTOR_NUMBER) {
             int motor = atoi(pargs[0]);
             int umax = atoi(pargs[1]);
             morpho_motors[motor].umax = umax;
             eeprom_write_word(umaxAddress(motor), umax);
+            ok = true;
         }
         break;
     case MSG_SET_RAW_MOTOR:
-        if(nargs == 2 && atoi(pargs[0] > 0 && atoi(pargs[0]) < MOTOR_NUMBER)) {
+        if(nargs == 2 && atoi(pargs[0]) >= 0 && atoi(pargs[0]) < MOTOR_NUMBER) {
             morpho_motors[atoi(pargs[0])].servo.writeMicroseconds(atoi(pargs[1]));
         }
         break;

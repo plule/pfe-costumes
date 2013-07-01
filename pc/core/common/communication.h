@@ -12,6 +12,8 @@
 #include <QMap>
 #include <QThread>
 #include <QString>
+#include <QStringListModel>
+#include <QPersistentModelIndex>
 #include "qextserialport.h"
 #include "transaction.h"
 #include "../../interfaces/interfaces.h"
@@ -38,6 +40,7 @@ struct Arduino
 {
     QString id;
     ARD_ROLE role;
+    QPersistentModelIndex position;
     bool hasAnswered;
 };
 
@@ -100,7 +103,7 @@ public:
      * @param motor
      * @return
      */
-    Transaction *setClosePosition(QString arduino, int motor);
+    Transaction *setClosePosition(QString arduino, int motor, int position);
 
     /**
      * @brief setOpenPosition indicate to the arduino the "opened" position of a motor
@@ -108,13 +111,19 @@ public:
      * @param motor
      * @return
      */
-    Transaction *setOpenPosition(QString arduino, int motor);
+    Transaction *setOpenPosition(QString arduino, int motor, int position);
 
     /**
      * @brief listModel
      * @return the list of all the known models' id
      */
     QList<QString> listModel();
+
+    /**
+     * @brief model
+     * @return the model listing all the ids
+     */
+    QStringListModel *model();
 
 
 signals:
@@ -212,6 +221,7 @@ private:
     QString m_port_name;
     QString m_messagePart;
     QList<Arduino> m_arduinos;
+    QStringListModel m_arduinosModel;
     QTimer m_aliveTimer;
     QHash<int, Transaction*> m_watchers;
     //QVector<Transaction*> m_watchers;

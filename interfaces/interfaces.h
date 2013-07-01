@@ -28,8 +28,8 @@ typedef enum {
     MSG_CANCEL_TURN, // Stop the complete rotation
     MSG_ANGLE, // Send current rotation angle
     MSG_SET_RAW_MOTOR, // Set motor position by giving microsec (for calibration only)
-    MSG_SET_START, // Set starting position of a motor
-    MSG_SET_STOP, // Set stopping position of a motor
+    MSG_SET_CLOSE, // Set starting position of a motor
+    MSG_SET_OPEN, // Set stopping position of a motor
     MSG_DEBUG, // send a debug message
     MSG_INVALID // invalid message
 } MSG_TYPE;

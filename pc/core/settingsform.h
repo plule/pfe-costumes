@@ -46,11 +46,11 @@ private slots:
 
     void on_testPortButton_clicked();
 
-    void on_minimumPositionButton_clicked();
+    void on_servoPosSpin_valueChanged(int position);
 
-    void on_maximumPositionButton_clicked();
+    void on_closedPositionButton_clicked();
 
-    void on_servoPosSlider_sliderMoved(int position);
+    void on_openedPositionButton_clicked();
 
 private:
     QString guessXbeePort(QList<QString> candidates);
@@ -72,3 +72,4 @@ private:
 };
 
 #endif // SETTINGSFORM_H
+

@@ -76,20 +76,22 @@ Transaction *ArduinoCommunication::setRawMotorPosition(QString arduino, int moto
     return createTransaction(MSG_SET_RAW_MOTOR, arduino, arguments);
 }
 
-Transaction *ArduinoCommunication::setClosePosition(QString arduino, int motor)
+Transaction *ArduinoCommunication::setClosePosition(QString arduino, int motor, int position)
 {
     // TODO test
     QList<QVariant> arguments;
-    arguments.append(QString::number(motor));
-    return createTransaction(MSG_SET_STOP, arduino, arguments);
+    arguments.append(motor);
+    arguments.append(position);
+    return createTransaction(MSG_SET_CLOSE, arduino, arguments);
 }
 
-Transaction *ArduinoCommunication::setOpenPosition(QString arduino, int motor)
+Transaction *ArduinoCommunication::setOpenPosition(QString arduino, int motor, int position)
 {
     // TODO test
     QList<QVariant> arguments;
-    arguments.append(QString::number(motor));
-    return createTransaction(MSG_SET_START, arduino, arguments);
+    arguments.append(motor);
+    arguments.append(position);
+    return createTransaction(MSG_SET_OPEN, arduino, arguments);
 }
 
 QList<QString> ArduinoCommunication::listModel()
@@ -100,6 +102,11 @@ QList<QString> ArduinoCommunication::listModel()
             list.append(arduino.id);
     }
     return list;
+}
+
+QStringListModel *ArduinoCommunication::model()
+{
+    return &m_arduinosModel;
 }
 
 Transaction *ArduinoCommunication::helloMessage()
@@ -195,6 +202,8 @@ void ArduinoCommunication::cleanUpDeadDevices()
         if(!i.next().hasAnswered)
         {
             emit(arduinoRemoved(i.value()));
+            if(i.value().position.isValid())
+                m_arduinosModel.removeRow(i.value().position.row());
             i.remove();
         }
     }
@@ -247,6 +256,11 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
             }
         }
         if(isNew) {
+            m_arduinosModel.insertRow(0);
+            QModelIndex index = m_arduinosModel.index(0);
+            narduino.position = QPersistentModelIndex(index);
+            m_arduinosModel.setData(index,narduino.id);
+            m_arduinosModel.setData(index,narduino.id,Qt::UserRole);
             m_arduinos.append(narduino);
             emit(arduinoAdded(narduino));
         }

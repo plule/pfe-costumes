@@ -117,7 +117,6 @@ void serialEvent() {
         nargs++;
         parg = strtok(NULL, ARG_SEP_S);
     }
-
     if(type == MSG_DISCOVER)
         sendMessage(MSG_HELLO, 0, expe, Role);
     else if(strcmp(dest, Id) == 0 && type != MSG_ACK) {

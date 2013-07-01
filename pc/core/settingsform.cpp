@@ -48,6 +48,13 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
         ui->modelDepthBox->setValue(m_settings.value("modeldepth").toInt());
     }
 
+    /* Calibration tab */
+    ui->modelCalibBox->setModel(m_xbee->model());
+    for(int i = 0; i < m_xbee->getMotorsNumber(); i++) {
+        QString type = (m_xbee->getMotorType(i) == FRONT_MOTOR ? tr("Front") : tr("Side"));
+        ui->motorCalibBox->addItem(QString("%1 (%2)").arg(m_xbee->getMotorName(i),type),i);
+    }
+
     connect(this, SIGNAL(accepted()), this, SLOT(apply()));
     connect(this, SIGNAL(rejected()), this, SLOT(cancel()));
 
@@ -241,17 +248,26 @@ void SettingsForm::on_testPortButton_clicked()
     msg.exec();
 }
 
-void SettingsForm::on_minimumPositionButton_clicked()
+void SettingsForm::on_servoPosSpin_valueChanged(int position)
 {
-    m_xbee->setOpenPosition("",0)->launch();
+    m_xbee->setRawMotorPosition(
+                ui->modelCalibBox->currentText(),
+                ui->motorCalibBox->itemData(ui->motorCalibBox->currentIndex()).toInt(),
+                position)->launch();
 }
 
-void SettingsForm::on_maximumPositionButton_clicked()
+void SettingsForm::on_closedPositionButton_clicked()
 {
-    m_xbee->setClosePosition("",0)->launch();
+    m_xbee->setClosePosition(
+                ui->modelCalibBox->currentText(),
+                ui->motorCalibBox->itemData(ui->motorCalibBox->currentIndex()).toInt(),
+                ui->servoPosSlider->value())->launch();
 }
 
-void SettingsForm::on_servoPosSlider_sliderMoved(int position)
+void SettingsForm::on_openedPositionButton_clicked()
 {
-    m_xbee->setRawMotorPosition("",0, position)->launch();
+    m_xbee->setOpenPosition(
+                ui->modelCalibBox->currentText(),
+                ui->motorCalibBox->itemData(ui->motorCalibBox->currentIndex()).toInt(),
+                ui->servoPosSlider->value())->launch();
 }

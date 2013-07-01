@@ -280,16 +280,16 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
-          <widget class="QPushButton" name="minimumPositionButton">
+          <widget class="QPushButton" name="closedPositionButton">
            <property name="text">
-            <string>Store Minimum position</string>
+            <string>Store closed position</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="maximumPositionButton">
+          <widget class="QPushButton" name="openedPositionButton">
            <property name="text">
-            <string>Store Maximum position</string>
+            <string>Store opened position</string>
            </property>
           </widget>
          </item>
@@ -333,8 +333,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>275</x>
-     <y>348</y>
+     <x>284</x>
+     <y>513</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -349,12 +349,44 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>343</x>
-     <y>348</y>
+     <x>352</x>
+     <y>513</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>servoPosSlider</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>servoPosSpin</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>362</x>
+     <y>136</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>413</x>
+     <y>133</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>servoPosSpin</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>servoPosSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>151</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>327</x>
+     <y>145</y>
     </hint>
    </hints>
   </connection>
