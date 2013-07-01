@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     masscapture.cpp \
     settingsform.cpp \
     common/transaction.cpp \
-    widgets/qellipseslider.cpp
+    widgets/qellipseslider.cpp \
+    common/qlistmodel.cpp
 
 HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
@@ -34,7 +35,8 @@ HEADERS += camerahandler/camerahandler.h \
     masscapture.h \
     settingsform.h \
     common/transaction.h \
-    widgets/qellipseslider.h
+    widgets/qellipseslider.h \
+    common/qlistmodel.h
 
 CONFIG += c++11 qt warn_on release debug
 

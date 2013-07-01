@@ -360,8 +360,8 @@ void MainWindow::on_captureButton_clicked()
 QString MainWindow::getCurrentArduino()
 {
     int row = ui->ardListCombo->currentIndex();
-    QModelIndex index = ui->ardListCombo->model()->index(row,0);
-    return ui->ardListCombo->model()->data(index).toString();
+    //QModelIndex index = ui->ardListCombo->model()->index(row,0);
+    return ui->ardListCombo->itemData(row, Qt::UserRole).toString();// ->model()->data(index, Qt::UserRole).toString();
 }
 
 void MainWindow::setCamera(QPhoto::QCamera *camera)

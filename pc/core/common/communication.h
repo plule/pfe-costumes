@@ -12,8 +12,8 @@
 #include <QMap>
 #include <QThread>
 #include <QString>
-#include <QStringListModel>
 #include <QPersistentModelIndex>
+#include "qlistmodel.h"
 #include "qextserialport.h"
 #include "transaction.h"
 #include "../../interfaces/interfaces.h"
@@ -121,9 +121,10 @@ public:
 
     /**
      * @brief model
-     * @return the model listing all the ids
+     * @return the model listing all the ids. In Qt::DisplayRole is stored displayable value
+     * In Qt::UserRole is stored the ids
      */
-    QStringListModel *model();
+    QAbstractListModel *model();
 
 
 signals:
@@ -221,7 +222,7 @@ private:
     QString m_port_name;
     QString m_messagePart;
     QList<Arduino> m_arduinos;
-    QStringListModel m_arduinosModel;
+    QListModel m_arduinosModel;
     QTimer m_aliveTimer;
     QHash<int, Transaction*> m_watchers;
     //QVector<Transaction*> m_watchers;

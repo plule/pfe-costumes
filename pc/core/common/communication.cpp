@@ -104,7 +104,7 @@ QList<QString> ArduinoCommunication::listModel()
     return list;
 }
 
-QStringListModel *ArduinoCommunication::model()
+QAbstractListModel *ArduinoCommunication::model()
 {
     return &m_arduinosModel;
 }
@@ -259,7 +259,7 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
             m_arduinosModel.insertRow(0);
             QModelIndex index = m_arduinosModel.index(0);
             narduino.position = QPersistentModelIndex(index);
-            m_arduinosModel.setData(index,narduino.id);
+            m_arduinosModel.setData(index,"id : " + narduino.id,Qt::DisplayRole);
             m_arduinosModel.setData(index,narduino.id,Qt::UserRole);
             m_arduinos.append(narduino);
             emit(arduinoAdded(narduino));
