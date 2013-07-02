@@ -3,6 +3,10 @@
 
 #include <QAbstractListModel>
 
+/**
+ * @brief The QListModel class implements a simple list model that stores all
+ * the given roles.
+ */
 class QListModel : public QAbstractListModel
 {
     Q_OBJECT

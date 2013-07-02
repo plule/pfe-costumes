@@ -30,6 +30,7 @@ typedef enum {
     MSG_SET_RAW_MOTOR, // Set motor position by giving microsec (for calibration only)
     MSG_SET_CLOSE, // Set starting position of a motor
     MSG_SET_OPEN, // Set stopping position of a motor
+    MSG_RENAME, // Set the name of a model
     MSG_DEBUG, // send a debug message
     MSG_INVALID // invalid message
 } MSG_TYPE;
@@ -68,6 +69,8 @@ typedef enum {
 
 #define MSG_SEP_S "\n"
 #define ARG_SEP_S "|"
+
+#define NAME_SIZE 16
 
 /* Morphology */
 typedef enum {

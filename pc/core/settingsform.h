@@ -52,6 +52,8 @@ private slots:
 
     void on_openedPositionButton_clicked();
 
+    void on_renameButton_clicked();
+
 private:
     QString guessXbeePort(QList<QString> candidates);
     QPhoto::QCamera *guessCamera(QList<QPhoto::QCamera*> candidates);

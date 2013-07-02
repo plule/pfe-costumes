@@ -1,6 +1,7 @@
 #include "communication.h"
 
 char Id[9] = {0};
+char Name[NAME_SIZE+1] = {0};
 ARD_ROLE Role;
 
 static void _sendArg(uint32_t arg)
@@ -56,6 +57,44 @@ void sendMessage(MSG_TYPE type, int idMsg, const char *dest, const char* data)
     _endSendMessage();
 }
 
+void sendMessage(MSG_TYPE type, int idMsg, const char *dest, int data1, const char *data2)
+{
+    _initSendMessage(type, idMsg, dest);
+    _sendArg(data1);
+    _sendArg(data2);
+    _endSendMessage();
+}
+
+static uint16_t nameCrc(char *name) {
+    uint16_t crc = 0;
+    int i;
+    for(i = 0; i < NAME_SIZE; i++) {
+        if(name[i] == 0)
+            break;
+        crc = _crc16_update(crc, name[i]);
+    }
+    return crc;
+}
+
+void setName(char *name)
+{
+    for(int i = 0; i < NAME_SIZE; i++) { // Name[16] will always stay at 0
+        Name[i] = name[i];
+        eeprom_write_byte((uint8_t*)EEPROM_NAME+i,Name[i]);
+    }
+    eeprom_write_word(EEPROM_NAME_CRC, nameCrc(Name));
+}
+
+void loadName()
+{
+    for(int i = 0; i < NAME_SIZE; i++) {
+        Name[i] = eeprom_read_byte(EEPROM_NAME+i);
+    }
+    uint16_t storedCrc = eeprom_read_word(EEPROM_NAME_CRC);
+    if(storedCrc != nameCrc(Name))
+        strcpy(Name, "Unnamed");
+}
+
 /*
  * Read ATMY from XBee
  */
@@ -78,8 +117,9 @@ void init_ard(ARD_ROLE role)
     Serial.begin(9600);
     Role = role;
     getId();
+    loadName();
     Serial.setTimeout(200);
-    sendMessage(MSG_HELLO, 0, ARD_MASTER, Role);
+    sendMessage(MSG_HELLO, 0, ARD_MASTER, Role, Name);
 }
 
 void serialEvent() {
@@ -118,8 +158,13 @@ void serialEvent() {
         parg = strtok(NULL, ARG_SEP_S);
     }
     if(type == MSG_DISCOVER)
-        sendMessage(MSG_HELLO, 0, expe, Role);
-    else if(strcmp(dest, Id) == 0 && type != MSG_ACK) {
+        sendMessage(MSG_HELLO, 0, expe, Role, Name);
+    else if(type == MSG_RENAME) {
+        sendMessage(MSG_ACK, idMsg, expe);
+        setName(pargs[0]);
+        DBG("renamed");
+        DBG(Name);
+    } else if(strcmp(dest, Id) == 0 && type != MSG_ACK) {
         if(handleMessage(type, idMsg, expe, pargs, nargs))
             sendMessage(MSG_ACK, idMsg, expe);
     }

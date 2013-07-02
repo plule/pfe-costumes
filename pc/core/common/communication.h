@@ -39,6 +39,7 @@ struct ArduinoMessage
 struct Arduino
 {
     QString id;
+    QString name;
     ARD_ROLE role;
     QPersistentModelIndex position;
     bool hasAnswered;
@@ -112,6 +113,14 @@ public:
      * @return
      */
     Transaction *setOpenPosition(QString arduino, int motor, int position);
+
+    /**
+     * @brief renameMessage set the name of a arduino
+     * @param arduino
+     * @param name
+     * @return
+     */
+    Transaction *renameMessage(QString arduino, QString name);
 
     /**
      * @brief listModel
@@ -217,11 +226,13 @@ private:
     void handleMessage(QString message);
     void handleMessage(ArduinoMessage message);
     Transaction *createTransaction(MSG_TYPE type, QString dest = DEST_BROADCAST, QList<QVariant> datas = QList<QVariant>());
+    Arduino getArduinoAt(int row);
+    void setArduinoAt(int row, Arduino arduino);
 
     QextSerialPort *m_port;
     QString m_port_name;
     QString m_messagePart;
-    QList<Arduino> m_arduinos;
+    //QList<Arduino> m_arduinos;
     QListModel m_arduinosModel;
     QTimer m_aliveTimer;
     QHash<int, Transaction*> m_watchers;

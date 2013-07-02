@@ -1,7 +1,5 @@
 #include "../../common/communication.h"
 #include <Servo.h>
-#include <avr/eeprom.h>
-#include <util/crc16.h>
 
 //Servo servo;
 Servo rotationMotor;
@@ -15,10 +13,6 @@ int completeTurnAngle;
 int completeTurnId;
 int completeTurnTime;
 int completeTurnStartAngle;
-
-
-#define EEPROM_ROTATION 0
-#define EEPROM_SERVO (EEPROM_ROTATION+sizeof(uint16_t))
 
 /*
  * Everything needed to configure a morphology slider
@@ -49,7 +43,7 @@ int led=13;
  */
 uint16_t *servoDistanceAddress(int index)
 {
-    return (uint16_t *)EEPROM_SERVO + 4*index*sizeof(int);
+    return EEPROM_SERVO + 4*index*sizeof(int);
 }
 
 uint16_t *uminAddress(int index)
@@ -122,8 +116,8 @@ void saveState()
             storeCrc(i);
         }
     }
-    if(rotationAngle != eeprom_read_word(EEPROM_ROTATION))
-        eeprom_write_word(EEPROM_ROTATION, rotationAngle);
+    if(rotationAngle != eeprom_read_word((uint16_t*)EEPROM_ROTATION))
+        eeprom_write_word((uint16_t*)EEPROM_ROTATION, rotationAngle);
 }
 
 /*
@@ -132,8 +126,6 @@ void saveState()
 bool setDistance(int motor, uint16_t distance)
 {
     if(morpho_motors[motor].umin == 0 || morpho_motors[motor].umax == 0) {
-        DBG("not calibrated motor");
-        DBG(motor);
         return false;
     }
     if(distance < MORPHO_DISTANCE && motor < MOTOR_NUMBER) {
@@ -170,7 +162,7 @@ void setup()
         }
     }
     rotationMotor.attach(30, 1100, 1900);
-    setAngle(eeprom_read_word(EEPROM_ROTATION));
+    setAngle(eeprom_read_word((uint16_t*)EEPROM_ROTATION));
     //rotationMotor.writeMicroseconds(eeprom_r);
 }
 
@@ -260,11 +252,13 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
             ok = true;
         }
     case MSG_SET_CLOSE:
+        DBG("close?");
         if(nargs == 2 && atoi(pargs[0]) >= 0 && atoi(pargs[0]) < MOTOR_NUMBER) {
             int motor = atoi(pargs[0]);
             int umin = atoi(pargs[1]);
             morpho_motors[motor].umin = umin;
             eeprom_write_word(uminAddress(motor), umin);
+            DBG("close");
             ok = true;
         }
         break;
@@ -274,6 +268,7 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
             int umax = atoi(pargs[1]);
             morpho_motors[motor].umax = umax;
             eeprom_write_word(umaxAddress(motor), umax);
+            DBG("open");
             ok = true;
         }
         break;

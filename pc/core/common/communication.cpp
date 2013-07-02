@@ -12,6 +12,8 @@ static const MOTOR_TYPE morpho_motors_role[] = {
 };
 #undef X
 
+#define ARDUINO_ROLE Qt::UserRole+1
+
 ArduinoCommunication::ArduinoCommunication(QObject *parent) :
     QObject(parent)
 {
@@ -94,10 +96,19 @@ Transaction *ArduinoCommunication::setOpenPosition(QString arduino, int motor, i
     return createTransaction(MSG_SET_OPEN, arduino, arguments);
 }
 
+Transaction *ArduinoCommunication::renameMessage(QString arduino, QString name)
+{
+    QList<QVariant> arguments;
+    arguments.append(name);
+    return createTransaction(MSG_RENAME, arduino, arguments);
+}
+
 QList<QString> ArduinoCommunication::listModel()
 {
     QList<QString> list;
-    foreach(Arduino arduino, m_arduinos) {
+    const int rows = m_arduinosModel.rowCount();
+    for(int i = 0; i < rows; i++) {
+        Arduino arduino = getArduinoAt(i);
         if(arduino.role == ROLE_MORPHOLOGY)
             list.append(arduino.id);
     }
@@ -142,8 +153,8 @@ Transaction *ArduinoCommunication::rotationMessage(int angle)
 
     QList<QVariant> args;
     args.append(angle);
-    if(m_arduinos.size() > 0)
-        return createTransaction(MSG_SET_ANGLE, m_arduinos[0].id, args); // TODO select rotation arduino
+    if(m_arduinosModel.rowCount() > 0)
+        return createTransaction(MSG_SET_ANGLE, getArduinoAt(0).id, args); // TODO select rotation arduino
     else
         return new Transaction(this);
 }
@@ -158,16 +169,16 @@ Transaction *ArduinoCommunication::completeTurnMessage(int time, int angle)
     QList<QVariant> args;
     args.append(time);
     args.append(angle);
-    if(m_arduinos.size() > 0)
-        return createTransaction(MSG_TURN, m_arduinos.first().id, args);
+    if(m_arduinosModel.rowCount() > 0)
+        return createTransaction(MSG_TURN, getArduinoAt(0).id, args);
     else
         return new Transaction(this);
 }
 
 Transaction *ArduinoCommunication::cancelTurnMessage()
 {
-    if(m_arduinos.size() > 0)
-        return createTransaction(MSG_CANCEL_TURN, m_arduinos.first().id);
+    if(m_arduinosModel.rowCount() > 0)
+        return createTransaction(MSG_CANCEL_TURN, getArduinoAt(0).id);
     else
         return new Transaction(this);
 }
@@ -187,9 +198,11 @@ void ArduinoCommunication::checkAliveDevices()
 {
     if(!m_pinging) {
         m_pinging = true;
-        QMutableListIterator<Arduino> i(m_arduinos);
-        while(i.hasNext())
-            i.next().hasAnswered = false;
+        for(int i = 0; i < m_arduinosModel.rowCount(); i++) {
+            Arduino arduino = getArduinoAt(i);
+            arduino.hasAnswered = false;
+            setArduinoAt(i,arduino);
+        }
         helloMessage()->launch();
     }
     QTimer::singleShot(1000, this, SLOT(cleanUpDeadDevices()));
@@ -197,14 +210,13 @@ void ArduinoCommunication::checkAliveDevices()
 
 void ArduinoCommunication::cleanUpDeadDevices()
 {
-    QMutableListIterator<Arduino> i(m_arduinos);
-    while(i.hasNext()) {
-        if(!i.next().hasAnswered)
+    for(int i = 0; i < m_arduinosModel.rowCount(); i++) {
+        Arduino arduino = getArduinoAt(i);
+        if(!arduino.hasAnswered)
         {
-            emit(arduinoRemoved(i.value()));
-            if(i.value().position.isValid())
-                m_arduinosModel.removeRow(i.value().position.row());
-            i.remove();
+            emit(arduinoRemoved(arduino));
+            if(arduino.position.isValid())
+                m_arduinosModel.removeRow(arduino.position.row());
         }
     }
     m_pinging = false;
@@ -244,25 +256,34 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
     {
         Arduino narduino;
         narduino.id = message.expe;
-        narduino.role = (ARD_ROLE)message.data.first().toInt();
-        narduino.hasAnswered = true;
-        bool isNew = true;
-        QMutableListIterator<Arduino> i(m_arduinos);
-        while(i.hasNext()) {
-            if(i.next().id == narduino.id) {
-                isNew = false;
-                i.value().role = narduino.role;
-                i.value().hasAnswered = true;
+        if(message.data.size() == 2) {
+            narduino.role = (ARD_ROLE)message.data.takeFirst().toInt();
+            narduino.name = message.data.takeFirst();
+            narduino.hasAnswered = true;
+            bool isNew = true;
+            for(int i = 0; i < m_arduinosModel.rowCount(); i++) {
+                Arduino arduino = getArduinoAt(i);
+                if(arduino.id == narduino.id) {
+                    isNew = false;
+                    arduino.role = narduino.role;
+                    arduino.name = narduino.name;
+                    arduino.hasAnswered = true;
+                    setArduinoAt(i, arduino);
+                }
             }
-        }
-        if(isNew) {
-            m_arduinosModel.insertRow(0);
-            QModelIndex index = m_arduinosModel.index(0);
-            narduino.position = QPersistentModelIndex(index);
-            m_arduinosModel.setData(index,"id : " + narduino.id,Qt::DisplayRole);
-            m_arduinosModel.setData(index,narduino.id,Qt::UserRole);
-            m_arduinos.append(narduino);
-            emit(arduinoAdded(narduino));
+            if(isNew) {
+                m_arduinosModel.insertRow(0);
+                QModelIndex index = m_arduinosModel.index(0);
+                narduino.position = QPersistentModelIndex(index);
+                m_arduinosModel.setData(index,narduino.name,Qt::DisplayRole);
+                m_arduinosModel.setData(index,narduino.id,Qt::UserRole);
+                QVariant v;
+                v.setValue(narduino);
+                m_arduinosModel.setData(index,v,ARDUINO_ROLE);
+                emit(arduinoAdded(narduino));
+            }
+        } else {
+            qWarning() << "Invalid hello message from model";
         }
         break;
     }
@@ -323,6 +344,18 @@ Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, QString dest
         watcher->watchForAck();
     }
     return watcher;
+}
+
+Arduino ArduinoCommunication::getArduinoAt(int row)
+{
+    return m_arduinosModel.index(row).data(ARDUINO_ROLE).value<Arduino>();
+}
+
+void ArduinoCommunication::setArduinoAt(int row, Arduino arduino)
+{
+    QVariant v;
+    v.setValue(arduino);
+    m_arduinosModel.setData(m_arduinosModel.index(row), v, ARDUINO_ROLE);
 }
 
 void ArduinoCommunication::_sendMessage(MSG_TYPE type, int id, QString dest, QList<QVariant> datas)

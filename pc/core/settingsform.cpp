@@ -251,7 +251,7 @@ void SettingsForm::on_testPortButton_clicked()
 void SettingsForm::on_servoPosSpin_valueChanged(int position)
 {
     m_xbee->setRawMotorPosition(
-                ui->modelCalibBox->currentText(),
+                ui->modelCalibBox->itemData(ui->modelCalibBox->currentIndex()).toString(),
                 ui->motorCalibBox->itemData(ui->motorCalibBox->currentIndex()).toInt(),
                 position)->launch();
 }
@@ -259,7 +259,7 @@ void SettingsForm::on_servoPosSpin_valueChanged(int position)
 void SettingsForm::on_closedPositionButton_clicked()
 {
     m_xbee->setClosePosition(
-                ui->modelCalibBox->currentText(),
+                ui->modelCalibBox->itemData(ui->modelCalibBox->currentIndex()).toString(),
                 ui->motorCalibBox->itemData(ui->motorCalibBox->currentIndex()).toInt(),
                 ui->servoPosSlider->value())->launch();
 }
@@ -267,7 +267,12 @@ void SettingsForm::on_closedPositionButton_clicked()
 void SettingsForm::on_openedPositionButton_clicked()
 {
     m_xbee->setOpenPosition(
-                ui->modelCalibBox->currentText(),
+                ui->modelCalibBox->itemData(ui->modelCalibBox->currentIndex()).toString(),
                 ui->motorCalibBox->itemData(ui->motorCalibBox->currentIndex()).toInt(),
                 ui->servoPosSlider->value())->launch();
+}
+
+void SettingsForm::on_renameButton_clicked()
+{
+    m_xbee->renameMessage(ui->modelCalibBox->itemData(ui->modelCalibBox->currentIndex()).toString(), ui->renameEdit->text())->launch();
 }
