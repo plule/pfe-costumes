@@ -60,7 +60,8 @@ MainWindow::MainWindow(QWidget *parent) :
             qWarning() << "Malformed interface.h";
             break;
         }
-        ui->adjustmentLayout->addWidget(slider);
+        ui->adjustmentGroup->layout()->addWidget(slider);
+
         // Handle model's dimension change
         connect(m_settingsForm, &SettingsForm::modelDepthChanged, slider, &QEllipseSlider::setFrontBaseOffset);
         connect(m_settingsForm, &SettingsForm::modelWidthChanged, slider, &QEllipseSlider::setSideBaseOffset);
@@ -74,7 +75,19 @@ MainWindow::MainWindow(QWidget *parent) :
             m_arduinoCommunication->motorsPositionMessage(arduino)->launch();
         }
     });
+
+
     ui->ardListCombo->setModel(m_arduinoCommunication->model());
+    void (QComboBox:: *signal)(int) = &QComboBox::currentIndexChanged;
+    connect(ui->ardListCombo, signal, [=](int index){
+        if(index >= 0) {
+            ui->adjustmentGroup->setEnabled(true);
+            m_arduinoCommunication->motorsPositionMessage(ui->ardListCombo->itemData(index, Qt::UserRole).toString())->launch();
+        } else {
+            ui->adjustmentGroup->setEnabled(false);
+        }
+    });
+    ui->adjustmentGroup->setEnabled(false);
     m_arduinoCommunication->helloMessage()->launch();
     connect(m_settingsForm, SIGNAL(xbeePortChanged(QString)), m_arduinoCommunication, SLOT(setPort(QString)));
 
