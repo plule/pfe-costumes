@@ -65,6 +65,15 @@ void sendMessage(MSG_TYPE type, int idMsg, const char *dest, int data1, const ch
     _endSendMessage();
 }
 
+void sendMessage(MSG_TYPE type, int idMsg, const char *dest, int data1, const char *data2, const char *data3)
+{
+    _initSendMessage(type, idMsg, dest);
+    _sendArg(data1);
+    _sendArg(data2);
+    _sendArg(data3);
+    _endSendMessage();
+}
+
 static uint16_t nameCrc(char *name) {
     uint16_t crc = 0;
     int i;

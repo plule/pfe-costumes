@@ -66,8 +66,6 @@ public slots:
     void updateSaveButton();
     void onModelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
     void populateList();
-    void addDevice(Arduino arduino);
-    void removeDevice(Arduino arduino);
     QString getCurrentArduino();
     void setCamera(QPhoto::QCamera *m_camera);
     void onMassCaptureProblem(MassCapture::Problem problem, QString description);

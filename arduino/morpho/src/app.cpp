@@ -229,7 +229,10 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
         if(nargs == 0) {
             int i;
             for(i=0; i<MOTOR_NUMBER; i++) {
-                sendMessage(MSG_MORPHOLOGY,0,ARD_MASTER,i,morpho_motors[i].distance);
+                int calibrated = 1;
+                if(morpho_motors[i].umax == 0 || morpho_motors[i].umin == 0)
+                    calibrated = 0;
+                sendMessage(MSG_MORPHOLOGY,0,ARD_MASTER,i,morpho_motors[i].distance, calibrated);
             }
             ok = true;
         }

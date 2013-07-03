@@ -12,8 +12,6 @@ static const MOTOR_TYPE morpho_motors_role[] = {
 };
 #undef X
 
-#define ARDUINO_ROLE Qt::UserRole+1
-
 ArduinoCommunication::ArduinoCommunication(QObject *parent) :
     QObject(parent)
 {
@@ -71,7 +69,6 @@ bool ArduinoCommunication::testPort(QString name)
 
 Transaction *ArduinoCommunication::setRawMotorPosition(QString arduino, int motor, int position)
 {
-    // TODO test
     QList<QVariant> arguments;
     arguments.append(motor);
     arguments.append(position);
@@ -80,7 +77,6 @@ Transaction *ArduinoCommunication::setRawMotorPosition(QString arduino, int moto
 
 Transaction *ArduinoCommunication::setClosePosition(QString arduino, int motor, int position)
 {
-    // TODO test
     QList<QVariant> arguments;
     arguments.append(motor);
     arguments.append(position);
@@ -89,7 +85,6 @@ Transaction *ArduinoCommunication::setClosePosition(QString arduino, int motor, 
 
 Transaction *ArduinoCommunication::setOpenPosition(QString arduino, int motor, int position)
 {
-    // TODO test
     QList<QVariant> arguments;
     arguments.append(motor);
     arguments.append(position);
@@ -108,9 +103,9 @@ QList<QString> ArduinoCommunication::listModel()
     QList<QString> list;
     const int rows = m_arduinosModel.rowCount();
     for(int i = 0; i < rows; i++) {
-        Arduino arduino = getArduinoAt(i);
-        if(arduino.role == ROLE_MORPHOLOGY)
-            list.append(arduino.id);
+        QModelIndex index = m_arduinosModel.index(i);
+        if(index.data(ROLE_ROLE) == ROLE_MORPHOLOGY)
+            list.append(index.data(ID_ROLE).toString());
     }
     return list;
 }
@@ -145,16 +140,12 @@ Transaction *ArduinoCommunication::rotationMessage(int angle)
         if(m_watchers.contains(i) && m_watchers.value(i)->getType() == MSG_SET_ANGLE) {
             deleteTransaction(i);
         }
-        /*if(m_watchers.value(i,0) != 0 && m_watchers.value(i)->getType() == MSG_ROTATION) {
-            delete m_watchers.value(i);
-            m_watchers[i] = 0;
-        }*/
     }
 
     QList<QVariant> args;
     args.append(angle);
     if(m_arduinosModel.rowCount() > 0)
-        return createTransaction(MSG_SET_ANGLE, getArduinoAt(0).id, args); // TODO select rotation arduino
+        return createTransaction(MSG_SET_ANGLE, m_arduinosModel.index(0).data(ID_ROLE).toString(), args); // TODO select rotation arduino
     else
         return new Transaction(this);
 }
@@ -170,7 +161,7 @@ Transaction *ArduinoCommunication::completeTurnMessage(int time, int angle)
     args.append(time);
     args.append(angle);
     if(m_arduinosModel.rowCount() > 0)
-        return createTransaction(MSG_TURN, getArduinoAt(0).id, args);
+        return createTransaction(MSG_TURN, m_arduinosModel.index(0).data(ID_ROLE).toString(), args);
     else
         return new Transaction(this);
 }
@@ -178,7 +169,7 @@ Transaction *ArduinoCommunication::completeTurnMessage(int time, int angle)
 Transaction *ArduinoCommunication::cancelTurnMessage()
 {
     if(m_arduinosModel.rowCount() > 0)
-        return createTransaction(MSG_CANCEL_TURN, getArduinoAt(0).id);
+        return createTransaction(MSG_CANCEL_TURN, m_arduinosModel.index(0).data(ID_ROLE).toString());
     else
         return new Transaction(this);
 }
@@ -199,9 +190,7 @@ void ArduinoCommunication::checkAliveDevices()
     if(!m_pinging) {
         m_pinging = true;
         for(int i = 0; i < m_arduinosModel.rowCount(); i++) {
-            Arduino arduino = getArduinoAt(i);
-            arduino.hasAnswered = false;
-            setArduinoAt(i,arduino);
+            m_arduinosModel.setData(m_arduinosModel.index(i), false, ANSWERED_ROLE);
         }
         helloMessage()->launch();
     }
@@ -211,12 +200,10 @@ void ArduinoCommunication::checkAliveDevices()
 void ArduinoCommunication::cleanUpDeadDevices()
 {
     for(int i = 0; i < m_arduinosModel.rowCount(); i++) {
-        Arduino arduino = getArduinoAt(i);
-        if(!arduino.hasAnswered)
+        if(!m_arduinosModel.index(i).data(ANSWERED_ROLE).toBool())
         {
-            emit(arduinoRemoved(arduino));
-            if(arduino.position.isValid())
-                m_arduinosModel.removeRow(arduino.position.row());
+            emit arduinoLost(m_arduinosModel.index(i).data(ID_ROLE).toString());
+            m_arduinosModel.removeRow(i);
         }
     }
     m_pinging = false;
@@ -254,33 +241,27 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
     switch(message.type) {
     case MSG_HELLO:
     {
-        Arduino narduino;
-        narduino.id = message.expe;
         if(message.data.size() == 2) {
-            narduino.role = (ARD_ROLE)message.data.takeFirst().toInt();
-            narduino.name = message.data.takeFirst();
-            narduino.hasAnswered = true;
+            QString id = message.expe;
+            ARD_ROLE role = (ARD_ROLE)message.data.takeFirst().toInt();
+            QString name = message.data.takeFirst();
             bool isNew = true;
             for(int i = 0; i < m_arduinosModel.rowCount(); i++) {
-                Arduino arduino = getArduinoAt(i);
-                if(arduino.id == narduino.id) {
+                QModelIndex index = m_arduinosModel.index(i);
+                if(index.data(ID_ROLE).toString() == id) {
                     isNew = false;
-                    arduino.role = narduino.role;
-                    arduino.name = narduino.name;
-                    arduino.hasAnswered = true;
-                    setArduinoAt(i, arduino);
+                    m_arduinosModel.setData(index,role,ROLE_ROLE);
+                    m_arduinosModel.setData(index, name, NAME_ROLE);
+                    m_arduinosModel.setData(index, true, ANSWERED_ROLE);
                 }
             }
             if(isNew) {
                 m_arduinosModel.insertRow(0);
                 QModelIndex index = m_arduinosModel.index(0);
-                narduino.position = QPersistentModelIndex(index);
-                m_arduinosModel.setData(index,narduino.name,Qt::DisplayRole);
-                m_arduinosModel.setData(index,narduino.id,Qt::UserRole);
-                QVariant v;
-                v.setValue(narduino);
-                m_arduinosModel.setData(index,v,ARDUINO_ROLE);
-                emit(arduinoAdded(narduino));
+                m_arduinosModel.setData(index,name,Qt::DisplayRole);
+                m_arduinosModel.setData(index,id,Qt::UserRole);
+                m_arduinosModel.setData(index, true, ANSWERED_ROLE);
+                emit arduinoDetected(id);
             }
         } else {
             qWarning() << "Invalid hello message from model";
@@ -324,17 +305,11 @@ Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, QString dest
 {
     int id = 0;
     while(m_watchers.contains(id) && id++ <= MAX_ID);
-    /*for(id=0; id<=MAX_ID; id++)
-        if(!m_watchers.contains(id))
-            break;*/
     if(id==MAX_ID) {
         qWarning() << "Watcher pool full";
         return new Transaction(this);
     }
-/*    m_lastMessage++;
-    m_lastMessage = m_lastMessage%MAX_ID;
-    int id = m_lastMessage;*/
-    //delete m_watchers.value(id); // old old message
+
     Transaction *watcher = new Transaction(type, id, dest, datas, this);
     connect(watcher, SIGNAL(send(MSG_TYPE,int,QString,QList<QVariant>)), this, SLOT(_sendMessage(MSG_TYPE,int,QString,QList<QVariant>)));
     connect(watcher, SIGNAL(finished(int)), watcher, SLOT(deleteLater()));
@@ -344,18 +319,6 @@ Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, QString dest
         watcher->watchForAck();
     }
     return watcher;
-}
-
-Arduino ArduinoCommunication::getArduinoAt(int row)
-{
-    return m_arduinosModel.index(row).data(ARDUINO_ROLE).value<Arduino>();
-}
-
-void ArduinoCommunication::setArduinoAt(int row, Arduino arduino)
-{
-    QVariant v;
-    v.setValue(arduino);
-    m_arduinosModel.setData(m_arduinosModel.index(row), v, ARDUINO_ROLE);
 }
 
 void ArduinoCommunication::_sendMessage(MSG_TYPE type, int id, QString dest, QList<QVariant> datas)

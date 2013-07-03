@@ -69,8 +69,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Handle messages from the arduino
     connect(m_arduinoCommunication, SIGNAL(motorDistanceChanged(QString,int,int)), this, SLOT(setMotorDistance(QString,int,int)));
-    connect(m_arduinoCommunication, SIGNAL(arduinoAdded(Arduino)), this, SLOT(addDevice(Arduino)));
-    connect(m_arduinoCommunication, SIGNAL(arduinoRemoved(Arduino)), this, SLOT(removeDevice(Arduino)));
+    connect(m_arduinoCommunication, &ArduinoCommunication::arduinoDetected, [=](QString arduino){
+        if(arduino == getCurrentArduino()) {
+            m_arduinoCommunication->motorsPositionMessage(arduino)->launch();
+        }
+    });
     ui->ardListCombo->setModel(m_arduinoCommunication->model());
     m_arduinoCommunication->helloMessage()->launch();
     connect(m_settingsForm, SIGNAL(xbeePortChanged(QString)), m_arduinoCommunication, SLOT(setPort(QString)));
@@ -217,21 +220,6 @@ void MainWindow::populateList()
     }
 }
 
-void MainWindow::addDevice(Arduino arduino)
-{
-    /*ui->ardListCombo->addItem(arduino.id, arduino.id);
-    if(getCurrentArduino() == "") // First
-        ui->ardListCombo->setCurrentIndex(0);*/
-    if(arduino.id == getCurrentArduino()) {
-        m_arduinoCommunication->motorsPositionMessage(arduino.id)->launch();
-    }
-}
-
-void MainWindow::removeDevice(Arduino arduino)
-{
-    //ui->ardListCombo->removeItem(ui->ardListCombo->findData(arduino.id));
-}
-
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -360,8 +348,7 @@ void MainWindow::on_captureButton_clicked()
 QString MainWindow::getCurrentArduino()
 {
     int row = ui->ardListCombo->currentIndex();
-    //QModelIndex index = ui->ardListCombo->model()->index(row,0);
-    return ui->ardListCombo->itemData(row, Qt::UserRole).toString();// ->model()->data(index, Qt::UserRole).toString();
+    return ui->ardListCombo->itemData(row, Qt::UserRole).toString();
 }
 
 void MainWindow::setCamera(QPhoto::QCamera *camera)

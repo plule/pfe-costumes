@@ -35,17 +35,10 @@ struct ArduinoMessage
     }
 };
 
-
-struct Arduino
-{
-    QString id;
-    QString name;
-    ARD_ROLE role;
-    QPersistentModelIndex position;
-    bool hasAnswered;
-};
-
-Q_DECLARE_METATYPE(Arduino)
+#define NAME_ROLE Qt::DisplayRole /* QString */
+#define ID_ROLE Qt::UserRole /* QString */
+#define ROLE_ROLE Qt::UserRole+1 /* int (ARD_ROLE) */
+#define ANSWERED_ROLE Qt::UserRole+2 /* bool */
 
 /**
  * @brief The ArduinoCommunication class allows communication via
@@ -138,18 +131,6 @@ public:
 
 signals:
     /**
-     * @brief arduinoAdded is emitted when a new arduino is detected
-     * @param arduino
-     */
-    void arduinoAdded(Arduino arduino);
-
-    /**
-     * @brief arduinoRemoved is emitted when a arduino stopped responding
-     * @param arduino
-     */
-    void arduinoRemoved(Arduino arduino);
-
-    /**
      * @brief motorDistanceChanged is emitted when a arduino indicate a motor rotation
      * @param arduino
      * @param motor
@@ -163,6 +144,9 @@ signals:
      * @param angle
      */
     void angleChanged(QString arduino, int angle);
+
+    void arduinoDetected(QString arduino);
+    void arduinoLost(QString arduino);
     
 public slots:
     /**
@@ -226,8 +210,6 @@ private:
     void handleMessage(QString message);
     void handleMessage(ArduinoMessage message);
     Transaction *createTransaction(MSG_TYPE type, QString dest = DEST_BROADCAST, QList<QVariant> datas = QList<QVariant>());
-    Arduino getArduinoAt(int row);
-    void setArduinoAt(int row, Arduino arduino);
 
     QextSerialPort *m_port;
     QString m_port_name;
