@@ -60,6 +60,12 @@ typedef enum {
 } MSG_CONTENT;
 
 /*
+ * State of a motor
+ */
+#define NOT_CALIBRATED_MOTOR 0
+#define CALIBRATED_MOTOR 1
+
+/*
  * Id of the master
  */
 #define ARD_MASTER "1"

@@ -136,7 +136,7 @@ signals:
      * @param motor
      * @param ms
      */
-    void motorDistanceChanged(QString arduino, int motor, int distance);
+    void motorDistanceChanged(QString arduino, int motor, int distance, bool calibrated);
 
     /**
      * @brief angleChanged is emitted when the angle of the turntable changed

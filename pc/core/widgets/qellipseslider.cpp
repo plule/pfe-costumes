@@ -110,6 +110,16 @@ void QEllipseSlider::setSideBaseOffset(int sideBaseOffset)
     updateSlidersPositions();
 }
 
+void QEllipseSlider::setSideSliderEnabled(bool enabled)
+{
+    ui->sideGroup->setEnabled(enabled);
+}
+
+void QEllipseSlider::setFrontSliderEnabled(bool enabled)
+{
+    ui->frontGroup->setEnabled(enabled);
+}
+
 int QEllipseSlider::maxSideMotor() const
 {
     return m_maxSideMotor;

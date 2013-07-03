@@ -290,8 +290,9 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
         break;
     case MSG_MORPHOLOGY:
     {
-        if(message.data.size() == 2) {
-            emit(motorDistanceChanged(message.expe, message.data.at(0).toInt(), message.data.at(1).toInt()));
+        if(message.data.size() == 3) {
+            bool calibrated = (message.data.at(2).toInt() == CALIBRATED_MOTOR);
+            emit(motorDistanceChanged(message.expe, message.data.at(0).toInt(), message.data.at(1).toInt(), calibrated));
         } else
             qWarning() << "Invalid servo pos message.";
         break;

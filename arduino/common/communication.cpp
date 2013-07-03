@@ -65,7 +65,7 @@ void sendMessage(MSG_TYPE type, int idMsg, const char *dest, int data1, const ch
     _endSendMessage();
 }
 
-void sendMessage(MSG_TYPE type, int idMsg, const char *dest, int data1, const char *data2, const char *data3)
+void sendMessage(MSG_TYPE type, int idMsg, const char *dest, int data1, int data2, int data3)
 {
     _initSendMessage(type, idMsg, dest);
     _sendArg(data1);

@@ -68,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     // Handle messages from the arduino
-    connect(m_arduinoCommunication, SIGNAL(motorDistanceChanged(QString,int,int)), this, SLOT(setMotorDistance(QString,int,int)));
+    connect(m_arduinoCommunication, SIGNAL(motorDistanceChanged(QString,int,int,bool)), this, SLOT(setMotorDistance(QString,int,int,bool)));
     connect(m_arduinoCommunication, &ArduinoCommunication::arduinoDetected, [=](QString arduino){
         if(arduino == getCurrentArduino()) {
             m_arduinoCommunication->motorsPositionMessage(arduino)->launch();
@@ -404,14 +404,16 @@ void MainWindow::onMassCaptureProblem(MassCapture::Problem problem, QString desc
     }
 }
 
-void MainWindow::setMotorDistance(QString arduino, int motor, int distance)
+void MainWindow::setMotorDistance(QString arduino, int motor, int distance, bool calibrated)
 {
     if(arduino == getCurrentArduino()) {
         if(m_sideSliders.contains(motor)) {
             m_sideSliders.value(motor)->setSideMotorValue(distance);
+            m_sideSliders.value(motor)->setSideSliderEnabled(calibrated);
         }
         if(m_frontSliders.contains(motor)) {
             m_frontSliders.value(motor)->setFrontMotorValue(distance);
+            m_frontSliders.value(motor)->setFrontSliderEnabled(calibrated);
         }
     }
 }

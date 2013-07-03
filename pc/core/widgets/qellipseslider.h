@@ -95,6 +95,11 @@ public slots:
     void setSideBlockOffset(int sideBlockOffset);
     void setFrontBaseOffset(int frontBaseOffset);
     void setSideBaseOffset(int sideBaseOffset);
+    /*
+     * Enable or disable sliders
+     */
+    void setSideSliderEnabled(bool enabled);
+    void setFrontSliderEnabled(bool enabled);
 
 
 protected slots:

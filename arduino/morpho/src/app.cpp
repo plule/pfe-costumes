@@ -229,9 +229,9 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
         if(nargs == 0) {
             int i;
             for(i=0; i<MOTOR_NUMBER; i++) {
-                int calibrated = 1;
-                if(morpho_motors[i].umax == 0 || morpho_motors[i].umin == 0)
-                    calibrated = 0;
+                int calibrated = CALIBRATED_MOTOR;
+                if((morpho_motors[i].umax == 0) || (morpho_motors[i].umin == 0))
+                    calibrated = NOT_CALIBRATED_MOTOR;
                 sendMessage(MSG_MORPHOLOGY,0,ARD_MASTER,i,morpho_motors[i].distance, calibrated);
             }
             ok = true;
@@ -255,12 +255,12 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
             ok = true;
         }
     case MSG_SET_CLOSE:
-        DBG("close?");
         if(nargs == 2 && atoi(pargs[0]) >= 0 && atoi(pargs[0]) < MOTOR_NUMBER) {
             int motor = atoi(pargs[0]);
             int umin = atoi(pargs[1]);
             morpho_motors[motor].umin = umin;
             eeprom_write_word(uminAddress(motor), umin);
+            storeCrc(motor);;
             DBG("close");
             ok = true;
         }
@@ -271,6 +271,7 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
             int umax = atoi(pargs[1]);
             morpho_motors[motor].umax = umax;
             eeprom_write_word(umaxAddress(motor), umax);
+            storeCrc(motor);
             DBG("open");
             ok = true;
         }

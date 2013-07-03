@@ -71,7 +71,7 @@ public slots:
     void onMassCaptureProblem(MassCapture::Problem problem, QString description);
     
 private slots:
-    void setMotorDistance(QString arduino, int motor, int distance);
+    void setMotorDistance(QString arduino, int motor, int distance, bool calibrated);
     void onCaptureDone(int status, QString path, QStringList errorList);
 
     void on_captureButton_clicked();
