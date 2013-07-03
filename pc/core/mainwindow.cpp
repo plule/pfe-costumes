@@ -45,15 +45,13 @@ MainWindow::MainWindow(QWidget *parent) :
         case FRONT_MOTOR:
             m_frontSliders.insert(i, slider);
             connect(slider, &QEllipseSlider::frontMotorValueChanged, [=](int distance){
-                QString current = getCurrentArduino();
-                m_arduinoCommunication->motorDistanceMessage(current, i, distance)->launch();
+                m_dirtyMotors.insert(i,distance);
             });
             break;
         case SIDE_MOTOR:
             m_sideSliders.insert(i, slider);
             connect(slider, &QEllipseSlider::sideMotorValueChanged, [=](int distance){
-                QString current = getCurrentArduino();
-                m_arduinoCommunication->motorDistanceMessage(current, i, distance)->launch();
+                m_dirtyMotors.insert(i,distance);
             });
             break;
         default:
@@ -68,6 +66,20 @@ MainWindow::MainWindow(QWidget *parent) :
         slider->setBaseOffset(m_settingsForm->getModelWidth(), m_settingsForm->getModelDepth());
     }
 
+    m_motorTimer = new QTimer(this);
+    m_motorTimer->setSingleShot(false);
+    connect(m_motorTimer, &QTimer::timeout, [=](){
+        if(!m_dirtyMotors.isEmpty()) {
+            QString current = getCurrentArduino();
+            int key = m_dirtyMotors.keys().first();
+            int distance = m_dirtyMotors.value(key);
+            m_dirtyMotors.remove(key);
+            m_arduinoCommunication->motorDistanceMessage(current,key,distance)->launch();
+        }
+    });
+
+    m_motorTimer->start(200);
+
     // Handle messages from the arduino
     connect(m_arduinoCommunication, SIGNAL(motorDistanceChanged(QString,int,int,bool)), this, SLOT(setMotorDistance(QString,int,int,bool)));
     connect(m_arduinoCommunication, &ArduinoCommunication::arduinoDetected, [=](QString arduino){
@@ -75,7 +87,6 @@ MainWindow::MainWindow(QWidget *parent) :
             m_arduinoCommunication->motorsPositionMessage(arduino)->launch();
         }
     });
-
 
     ui->ardListCombo->setModel(m_arduinoCommunication->model());
     void (QComboBox:: *signal)(int) = &QComboBox::currentIndexChanged;
@@ -238,6 +249,7 @@ MainWindow::~MainWindow()
     delete ui;
     delete m_handler;
     delete m_progressDialog;
+    delete m_motorTimer;
 }
 
 void MainWindow::startWork(QString work, int target)

@@ -261,6 +261,16 @@ QString QEllipseSlider::frontBlockName() const
     return ui->sideBlockSelection->currentText();
 }
 
+int QEllipseSlider::sideMotorValue()
+{
+    return round(sideSize()-getSideOffset());
+}
+
+int QEllipseSlider::frontMotorValue()
+{
+    return round(frontSize()-getFrontOffset());
+}
+
 double QEllipseSlider::sideSize() const
 {
     return m_sideSize;

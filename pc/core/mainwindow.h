@@ -115,6 +115,8 @@ private:
     DcRawQT m_rawHandler;
     QPhoto::QCamera *m_camera;
     QMetaObject::Connection m_cameraConnection;
+    QTimer *m_motorTimer;
+    QHash<int,int> m_dirtyMotors; // stores the modified sliders and the asked value
 
     void loadCollection(QString path);
     int getCurrentId();

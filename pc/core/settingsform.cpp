@@ -55,6 +55,20 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
         ui->motorCalibBox->addItem(QString("%1 (%2)").arg(m_xbee->getMotorName(i),type),i);
     }
 
+    /* Calibration slider timer to limit number of messages */
+    m_motorSliderTimer = new QTimer(this);
+    m_motorSliderChanged = false;
+    connect(m_motorSliderTimer, &QTimer::timeout, [=]() {
+        if(m_motorSliderChanged) {
+            m_motorSliderChanged = false;
+            m_xbee->setRawMotorPosition(
+                        ui->modelCalibBox->itemData(ui->modelCalibBox->currentIndex()).toString(),
+                        ui->motorCalibBox->itemData(ui->motorCalibBox->currentIndex()).toInt(),
+                        ui->servoPosSpin->value())->launch();
+        }
+    });
+    m_motorSliderTimer->start(100);
+
     connect(this, SIGNAL(accepted()), this, SLOT(apply()));
     connect(this, SIGNAL(rejected()), this, SLOT(cancel()));
 
@@ -65,6 +79,7 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
 SettingsForm::~SettingsForm()
 {
     delete ui;
+    delete m_motorSliderTimer;
 }
 
 QPhoto::QCamera *SettingsForm::getCamera()
@@ -250,10 +265,7 @@ void SettingsForm::on_testPortButton_clicked()
 
 void SettingsForm::on_servoPosSpin_valueChanged(int position)
 {
-    m_xbee->setRawMotorPosition(
-                ui->modelCalibBox->itemData(ui->modelCalibBox->currentIndex()).toString(),
-                ui->motorCalibBox->itemData(ui->motorCalibBox->currentIndex()).toInt(),
-                position)->launch();
+    m_motorSliderChanged = true;
 }
 
 void SettingsForm::on_closedPositionButton_clicked()

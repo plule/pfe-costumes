@@ -128,7 +128,7 @@ bool setDistance(int motor, uint16_t distance)
     if(morpho_motors[motor].umin == 0 || morpho_motors[motor].umax == 0) {
         return false;
     }
-    if(distance < MORPHO_DISTANCE && motor < MOTOR_NUMBER) {
+    if(distance <= MORPHO_DISTANCE && motor < MOTOR_NUMBER) {
         ServoInfo info = morpho_motors[motor];
         int time = info.umin + ((float)distance/(float)MORPHO_DISTANCE)*(info.umax - info.umin);
         info.servo.writeMicroseconds(time);

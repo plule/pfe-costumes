@@ -88,6 +88,12 @@ public:
     QString sideBlockName() const;
     QString frontBlockName() const;
 
+    /*
+     * Get motor values
+     */
+    int sideMotorValue();
+    int frontMotorValue();
+
 public slots:
     void setSideMotorValue(int value);
     void setFrontMotorValue(int value);

@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QGuiApplication>
 #include <QCursor>
+#include <QTimer>
 #include "camerahandler/camerahandler.h"
 #include "common/communication.h"
 #include "qextserialenumerator.h"
@@ -66,6 +67,9 @@ private:
     Ui::SettingsForm *ui;
     QPhoto::CameraHandler *m_handler;
     ArduinoCommunication *m_xbee;
+
+    QTimer *m_motorSliderTimer;
+    bool m_motorSliderChanged;
 
     QPhoto::QCamera *m_camera;
 
