@@ -240,10 +240,10 @@ void SettingsForm::on_detectCamerasButton_clicked()
 
 void SettingsForm::on_detectPortsButton_clicked()
 {
+    fillXBeePortList();
     QString newPort = guessXbeePort(fillXBeePortList());
-    if(newPort != m_xbeePort) {
-        m_xbeePort = newPort;
-        emit xbeePortChanged(m_xbeePort);
+    if(newPort != "") {
+        ui->xbeePortCombo->setCurrentIndex(ui->xbeePortCombo->findData(newPort));
     }
 }
 
