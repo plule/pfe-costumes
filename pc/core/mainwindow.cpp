@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_logger = new SlotLog();
 
     // Ui init and tweaks
-    QIcon::setThemeName("elementary-xfce"); // TODO fix this.
+    QIcon::setThemeName("humility-icons"); // TODO fix this.
     ui->setupUi(this);
 
     // Handler and arduino communication modules

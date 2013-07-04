@@ -21,7 +21,7 @@
     <item>
      <widget class="QTabWidget" name="tab">
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="preparationTab">
        <attribute name="title">
@@ -147,9 +147,8 @@
                  </sizepolicy>
                 </property>
                 <property name="icon">
-                 <iconset theme="zoom-fit-best">
-                  <normaloff/>
-                 </iconset>
+                 <iconset resource="resources/icons/icons.qrc">
+                  <normaloff>:/icons/zoom-fit.png</normaloff>:/icons/zoom-fit.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -171,9 +170,8 @@
                  </sizepolicy>
                 </property>
                 <property name="icon">
-                 <iconset theme="zoom-out">
-                  <normaloff/>
-                 </iconset>
+                 <iconset resource="resources/icons/icons.qrc">
+                  <normaloff>:/icons/zoom-out.png</normaloff>:/icons/zoom-out.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -195,9 +193,8 @@
                  </sizepolicy>
                 </property>
                 <property name="icon">
-                 <iconset theme="zoom-original">
-                  <normaloff/>
-                 </iconset>
+                 <iconset resource="resources/icons/icons.qrc">
+                  <normaloff>:/icons/zoom-100.png</normaloff>:/icons/zoom-100.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -219,9 +216,8 @@
                  </sizepolicy>
                 </property>
                 <property name="icon">
-                 <iconset theme="zoom-in">
-                  <normaloff/>
-                 </iconset>
+                 <iconset resource="resources/icons/icons.qrc">
+                  <normaloff>:/icons/zoom-in.png</normaloff>:/icons/zoom-in.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -270,7 +266,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>212</width>
+               <width>231</width>
                <height>586</height>
               </rect>
              </property>
@@ -300,12 +296,32 @@
                    <property name="text">
                     <string>Launch mass capture</string>
                    </property>
+                   <property name="icon">
+                    <iconset resource="resources/icons/icons.qrc">
+                     <normaloff>:/icons/camera.png</normaloff>:/icons/camera.png</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>16</width>
+                     <height>16</height>
+                    </size>
+                   </property>
                   </widget>
                  </item>
                  <item>
                   <widget class="QPushButton" name="captureButton">
                    <property name="text">
                     <string>Recapture current view</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="resources/icons/icons.qrc">
+                     <normaloff>:/icons/camera.png</normaloff>:/icons/camera.png</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>16</width>
+                     <height>16</height>
+                    </size>
                    </property>
                   </widget>
                  </item>
@@ -563,9 +579,8 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset theme="document-open">
-           <normaloff/>
-          </iconset>
+          <iconset resource="resources/icons/icons.qrc">
+           <normaloff>:/icons/apply.png</normaloff>:/icons/apply.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -581,9 +596,8 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset theme="document-new">
-           <normaloff/>
-          </iconset>
+          <iconset resource="resources/icons/icons.qrc">
+           <normaloff>:/icons/add.png</normaloff>:/icons/add.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -599,9 +613,8 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset theme="edit-delete">
-           <normaloff/>
-          </iconset>
+          <iconset resource="resources/icons/icons.qrc">
+           <normaloff>:/icons/remove.png</normaloff>:/icons/remove.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -620,9 +633,8 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset theme="document-save">
-           <normaloff/>
-          </iconset>
+          <iconset resource="resources/icons/icons.qrc">
+           <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -652,9 +664,8 @@
   </widget>
   <action name="actionNew_Collection">
    <property name="icon">
-    <iconset theme="document-new">
-     <normaloff/>
-    </iconset>
+    <iconset resource="resources/icons/icons.qrc">
+     <normaloff>:/icons/new.png</normaloff>:/icons/new.png</iconset>
    </property>
    <property name="text">
     <string>New Collection</string>
@@ -662,15 +673,18 @@
   </action>
   <action name="actionOpen_Collection">
    <property name="icon">
-    <iconset theme="document-open">
-     <normaloff/>
-    </iconset>
+    <iconset resource="resources/icons/icons.qrc">
+     <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
    </property>
    <property name="text">
     <string>Open Collection</string>
    </property>
   </action>
   <action name="actionSettings">
+   <property name="icon">
+    <iconset resource="resources/icons/icons.qrc">
+     <normaloff>:/icons/settings.png</normaloff>:/icons/settings.png</iconset>
+   </property>
    <property name="text">
     <string>Settings</string>
    </property>
@@ -710,6 +724,7 @@
  </customwidgets>
  <resources>
   <include location="resources/pics/pics.qrc"/>
+  <include location="resources/icons/icons.qrc"/>
  </resources>
  <connections>
   <connection>

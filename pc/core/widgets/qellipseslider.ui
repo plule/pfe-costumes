@@ -100,6 +100,16 @@ QGroupBox::title#mainGroup {
           <property name="text">
            <string>Lock</string>
           </property>
+          <property name="icon">
+           <iconset resource="../resources/icons/icons.qrc">
+            <normaloff>:/icons/lock.png</normaloff>:/icons/lock.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>16</width>
+            <height>16</height>
+           </size>
+          </property>
           <property name="checkable">
            <bool>true</bool>
           </property>
@@ -188,7 +198,6 @@ QGroupBox::title#mainGroup {
             </layout>
            </item>
           </layout>
-          <zorder>sideMotorSlider</zorder>
           <zorder></zorder>
           <zorder></zorder>
          </widget>
@@ -301,7 +310,9 @@ QGroupBox::title#mainGroup {
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources/icons/icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>sideMotorSlider</sender>

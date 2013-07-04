@@ -59,7 +59,8 @@ TRANSLATIONS = resources/core_fr.ts
 RESOURCES += \
     resources/translations.qrc \
     resources/pics/pics.qrc \
-    resources/default-db.qrc
+    resources/default-db.qrc \
+    resources/icons/icons.qrc
 
 OTHER_FILES += \
     core_fr.qm

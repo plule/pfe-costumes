@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -67,6 +67,16 @@
               <property name="text">
                <string>Detect Ports</string>
               </property>
+              <property name="icon">
+               <iconset resource="resources/icons/icons.qrc">
+                <normaloff>:/icons/refresh.png</normaloff>:/icons/refresh.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
+              </property>
              </widget>
             </item>
            </layout>
@@ -109,6 +119,16 @@
              <widget class="QPushButton" name="detectCamerasButton">
               <property name="text">
                <string>Detect Cameras</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resources/icons/icons.qrc">
+                <normaloff>:/icons/refresh.png</normaloff>:/icons/refresh.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -338,7 +358,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources/icons/icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>
