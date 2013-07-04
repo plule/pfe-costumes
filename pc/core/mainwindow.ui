@@ -21,7 +21,7 @@
     <item>
      <widget class="QTabWidget" name="tab">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="preparationTab">
        <attribute name="title">
@@ -42,6 +42,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="editable">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -674,7 +677,7 @@
   <action name="actionOpen_Collection">
    <property name="icon">
     <iconset resource="resources/icons/icons.qrc">
-     <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+     <normaloff>:/icons/open.png</normaloff>:/icons/open.png</iconset>
    </property>
    <property name="text">
     <string>Open Collection</string>
