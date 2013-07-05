@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QIcon::setThemeName("humility-icons"); // TODO fix this.
     ui->setupUi(this);
 
-    // Handler and arduino communication modules
+    // Camera handler and arduino communication modules
     m_handler = new QPhoto::CameraHandler();
     m_arduinoCommunication = new ArduinoCommunication(this);
 
@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // Arduino comm configuration and ui init
     m_arduinoCommunication->setPort(m_settingsForm->getXbeePort());
 
+    // This timer check 5 time a second if there is motor distance messages to send to the arduinos.
+    // It will send only one message each time (to avoid overflowing arduino's serial)
     m_motorTimer = new QTimer(this);
     m_motorTimer->setSingleShot(false);
     connect(m_motorTimer, &QTimer::timeout, [=](){
@@ -47,6 +49,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_motorTimer->start(200);
 
     // Handle messages from the arduino
+
+    // Update slider's position according to arduino's messages
     connect(m_arduinoCommunication, &ArduinoCommunication::motorDistanceChanged, [=](QString arduino, int motor, int distance, bool calibrated){
         if(m_adjustmentGroups.contains(arduino)) {
             QWidget *group = m_adjustmentGroups.value(arduino);
@@ -68,14 +72,19 @@ MainWindow::MainWindow(QWidget *parent) :
             qWarning() << tr("Distance motor message from unknown model");
         }
     });
+
+    // When a new arduino is detected, a group of QEllipseSlider is created (one per module)
     connect(m_arduinoCommunication, &ArduinoCommunication::arduinoDetected, [=](QString arduino,QString name){
         QWidget *adjGroup = createAdjustmentGroup(arduino);
-        adjGroup->setVisible(false);
+        if(ui->ardListCombo->itemData(ui->ardListCombo->currentIndex()).toString() != arduino) // do not hide if it's the current arduino
+            adjGroup->setVisible(false);
         m_adjustmentGroups.insert(arduino,adjGroup);
         ui->adjustmentScroll->layout()->addWidget(adjGroup);
         m_arduinoCommunication->motorsPositionMessage(arduino)->launch();
         statusBar()->showMessage(tr("Model %1 connected").arg(name));
     });
+
+    // When an arduino is disconnected, its QEllipseSlider group is distroyed
     connect(m_arduinoCommunication, &ArduinoCommunication::arduinoLost, [=](QString arduino,QString name) {
         if(m_adjustmentGroups.contains(arduino)) {
             m_adjustmentGroups.value(arduino)->deleteLater();
@@ -84,27 +93,26 @@ MainWindow::MainWindow(QWidget *parent) :
         }
     });
 
-    ui->ardListCombo->setModel(m_arduinoCommunication->model());
-    void (QComboBox:: *signal)(const QString&) = &QComboBox::currentTextChanged;
-    connect(ui->ardListCombo, signal, [=](QString text){
-        int index = ui->ardListCombo->currentIndex();
-        if(index >= 0) {
-            QString arduino = ui->ardListCombo->itemData(index, Qt::UserRole).toString();
-            if(m_adjustmentGroups.contains(arduino)) {
-                ui->adjustmentGroup->setEnabled(true);
-                QWidget *newGroup = m_adjustmentGroups.value(arduino);
-                foreach(QWidget *group, m_adjustmentGroups) {
-                    if(newGroup != group)
-                        group->setVisible(false);
-                    else
-                        group->setVisible(true);
-                }
+
+    // When the user changes the selected arduino, its qellipseslider group is set visible
+    void (QComboBox:: *signal)(int) = &QComboBox::currentIndexChanged; // bad qt5 signal hack
+    connect(ui->ardListCombo, signal, [=](int index){
+        //int index = ui->ardListCombo->currentIndex();
+        QString arduino = ui->ardListCombo->itemData(index, Qt::UserRole).toString();
+        if(index >= 0 && m_adjustmentGroups.contains(arduino)) {
+            QWidget *newGroup = m_adjustmentGroups.value(arduino);
+            foreach(QWidget *group, m_adjustmentGroups) {
+                if(newGroup != group)
+                    group->setVisible(false);
+                else
+                    group->setVisible(true);
             }
-        } else {
-            ui->adjustmentGroup->setEnabled(false);
         }
     });
-    ui->adjustmentGroup->setEnabled(false);
+
+    // The combo displaying the arduinos shares its model with the object communicating with the arduinos
+    ui->ardListCombo->setModel(m_arduinoCommunication->model());
+
     m_arduinoCommunication->helloMessage()->launch();
     connect(m_settingsForm, SIGNAL(xbeePortChanged(QString)), m_arduinoCommunication, SLOT(setPort(QString)));
 

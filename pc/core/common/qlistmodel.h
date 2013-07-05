@@ -21,6 +21,8 @@ public:
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
+    bool insertWithDatas(int row, QHash<int,QVariant> datas, const QModelIndex &parent = QModelIndex());
+
     
 signals:
     

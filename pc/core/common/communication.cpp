@@ -258,11 +258,11 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
                 }
             }
             if(isNew) {
-                m_arduinosModel.insertRow(0);
-                QModelIndex index = m_arduinosModel.index(0);
-                m_arduinosModel.setData(index,name,Qt::DisplayRole);
-                m_arduinosModel.setData(index,id,Qt::UserRole);
-                m_arduinosModel.setData(index, true, ANSWERED_ROLE);
+                QHash<int,QVariant> datas;
+                datas.insert(NAME_ROLE,name);
+                datas.insert(ID_ROLE,id);
+                datas.insert(ANSWERED_ROLE,true);
+                m_arduinosModel.insertWithDatas(0,datas);
                 emit arduinoDetected(id,name);
             }
         } else {

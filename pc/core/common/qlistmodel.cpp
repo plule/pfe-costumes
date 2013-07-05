@@ -50,3 +50,13 @@ bool QListModel::removeRows(int row, int count, const QModelIndex &parent)
     endRemoveRows();
     return true;
 }
+
+bool QListModel::insertWithDatas(int row, QHash<int, QVariant> datas, const QModelIndex &parent)
+{
+    if (row < 0 || row > rowCount(parent))
+        return false;
+    beginInsertRows(QModelIndex(), row, row);
+    lst.insert(row, datas);
+    endInsertRows();
+    return true;
+}
