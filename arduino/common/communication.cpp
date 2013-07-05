@@ -168,7 +168,7 @@ void serialEvent() {
     }
     if(type == MSG_DISCOVER)
         sendMessage(MSG_HELLO, 0, expe, Role, Name);
-    else if(type == MSG_RENAME) {
+    else if(type == MSG_RENAME && strcmp(dest,Id) == 0) {
         sendMessage(MSG_ACK, idMsg, expe);
         setName(pargs[0]);
         DBG("renamed");

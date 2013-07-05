@@ -286,5 +286,9 @@ void SettingsForm::on_openedPositionButton_clicked()
 
 void SettingsForm::on_renameButton_clicked()
 {
-    m_xbee->renameMessage(ui->modelCalibBox->itemData(ui->modelCalibBox->currentIndex()).toString(), ui->renameEdit->text())->launch();
+    Transaction *transaction = m_xbee->renameMessage(ui->modelCalibBox->itemData(ui->modelCalibBox->currentIndex()).toString(), ui->renameEdit->text());
+    connect(transaction, &Transaction::finished, [=](int id){
+        m_xbee->helloMessage()->launch();
+    });
+    transaction->launch();
 }
