@@ -81,7 +81,8 @@ typedef enum {
 /* Morphology */
 typedef enum {
     FRONT_MOTOR,
-    SIDE_MOTOR
+    SIDE_MOTOR,
+    INVALID_MOTOR
 } MOTOR_TYPE;
 
 #define X(pin, role, define, string) define ## role,

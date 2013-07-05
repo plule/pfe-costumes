@@ -30,61 +30,58 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Arduino comm configuration and ui init
     m_arduinoCommunication->setPort(m_settingsForm->getXbeePort());
-    QHash<QString,QEllipseSlider*> module_sliders;
-    for(int i=0; i < m_arduinoCommunication->getMotorsNumber(); i++) {
-        QString name = QString(m_arduinoCommunication->getMotorName(i));
-        QEllipseSlider *slider;
-        if(module_sliders.contains(name))
-            slider = module_sliders.value(name);
-        else {
-            slider = new QEllipseSlider(this);
-            slider->setName(name);
-            module_sliders.insert(name, slider);
-        }
-        switch(m_arduinoCommunication->getMotorType(i)) {
-        case FRONT_MOTOR:
-            m_frontSliders.insert(i, slider);
-            connect(slider, &QEllipseSlider::frontMotorValueChanged, [=](int distance){
-                m_dirtyMotors.insert(i,distance);
-            });
-            break;
-        case SIDE_MOTOR:
-            m_sideSliders.insert(i, slider);
-            connect(slider, &QEllipseSlider::sideMotorValueChanged, [=](int distance){
-                m_dirtyMotors.insert(i,distance);
-            });
-            break;
-        default:
-            qWarning() << "Malformed interface.h";
-            break;
-        }
-        ui->adjustmentGroup->layout()->addWidget(slider);
-
-        // Handle model's dimension change
-        connect(m_settingsForm, &SettingsForm::modelDepthChanged, slider, &QEllipseSlider::setFrontBaseOffset);
-        connect(m_settingsForm, &SettingsForm::modelWidthChanged, slider, &QEllipseSlider::setSideBaseOffset);
-        slider->setBaseOffset(m_settingsForm->getModelWidth(), m_settingsForm->getModelDepth());
-    }
+    // TODO CREATE
 
     m_motorTimer = new QTimer(this);
     m_motorTimer->setSingleShot(false);
     connect(m_motorTimer, &QTimer::timeout, [=](){
         if(!m_dirtyMotors.isEmpty()) {
-            QString current = getCurrentArduino();
-            int key = m_dirtyMotors.keys().first();
+            QPair<QString,int> key = m_dirtyMotors.keys().first();
             int distance = m_dirtyMotors.value(key);
             m_dirtyMotors.remove(key);
-            m_arduinoCommunication->motorDistanceMessage(current,key,distance)->launch();
+            QString arduino = key.first;
+            int motor = key.second;
+            m_arduinoCommunication->motorDistanceMessage(arduino,motor,distance)->launch();
         }
     });
 
     m_motorTimer->start(200);
 
     // Handle messages from the arduino
-    connect(m_arduinoCommunication, SIGNAL(motorDistanceChanged(QString,int,int,bool)), this, SLOT(setMotorDistance(QString,int,int,bool)));
-    connect(m_arduinoCommunication, &ArduinoCommunication::arduinoDetected, [=](QString arduino){
-        if(arduino == getCurrentArduino()) {
-            m_arduinoCommunication->motorsPositionMessage(arduino)->launch();
+    connect(m_arduinoCommunication, &ArduinoCommunication::motorDistanceChanged, [=](QString arduino, int motor, int distance, bool calibrated){
+        if(m_adjustmentGroups.contains(arduino)) {
+            QWidget *group = m_adjustmentGroups.value(arduino);
+            for(int i=0; i<group->layout()->count(); ++i) {
+                QEllipseSlider *ellipseSlider = (QEllipseSlider *)group->layout()->itemAt(i)->widget();
+                if(ellipseSlider->property("side_motor").toInt() == motor) {
+                    ellipseSlider->setSideSliderEnabled(calibrated);
+                    ellipseSlider->setSideMotorValue(distance);
+                    return;
+                }
+                if(ellipseSlider->property("front_motor").toInt() == motor) {
+                    ellipseSlider->setFrontSliderEnabled(calibrated);
+                    ellipseSlider->setFrontMotorValue(distance);
+                    return;
+                }
+            }
+            qWarning() << tr("Distance motor message from known model for unknown motor");
+        } else {
+            qWarning() << tr("Distance motor message from unknown model");
+        }
+    });
+    connect(m_arduinoCommunication, &ArduinoCommunication::arduinoDetected, [=](QString arduino,QString name){
+        QWidget *adjGroup = createAdjustmentGroup(arduino);
+        adjGroup->setVisible(false);
+        m_adjustmentGroups.insert(arduino,adjGroup);
+        ui->adjustmentScroll->layout()->addWidget(adjGroup);
+        m_arduinoCommunication->motorsPositionMessage(arduino)->launch();
+        statusBar()->showMessage(tr("Model %1 connected").arg(name));
+    });
+    connect(m_arduinoCommunication, &ArduinoCommunication::arduinoLost, [=](QString arduino,QString name) {
+        if(m_adjustmentGroups.contains(arduino)) {
+            m_adjustmentGroups.value(arduino)->deleteLater();
+            m_adjustmentGroups.remove(arduino);
+            statusBar()->showMessage(tr("Model %1 disconnected").arg(name));
         }
     });
 
@@ -92,8 +89,14 @@ MainWindow::MainWindow(QWidget *parent) :
     void (QComboBox:: *signal)(int) = &QComboBox::currentIndexChanged;
     connect(ui->ardListCombo, signal, [=](int index){
         if(index >= 0) {
-            ui->adjustmentGroup->setEnabled(true);
-            m_arduinoCommunication->motorsPositionMessage(ui->ardListCombo->itemData(index, Qt::UserRole).toString())->launch();
+            QString arduino = ui->ardListCombo->itemData(index, Qt::UserRole).toString();
+            if(m_adjustmentGroups.contains(arduino)) {
+                ui->adjustmentGroup->setEnabled(true);
+                foreach(QWidget *group, m_adjustmentGroups) {
+                    group->setVisible(false);
+                }
+                m_adjustmentGroups.value(arduino)->setVisible(true);
+            }
         } else {
             ui->adjustmentGroup->setEnabled(false);
         }
@@ -370,12 +373,6 @@ void MainWindow::on_captureButton_clicked()
     }
 }
 
-QString MainWindow::getCurrentArduino()
-{
-    int row = ui->ardListCombo->currentIndex();
-    return ui->ardListCombo->itemData(row, Qt::UserRole).toString();
-}
-
 void MainWindow::setCamera(QPhoto::QCamera *camera)
 {
     if(camera != m_camera) {
@@ -425,20 +422,6 @@ void MainWindow::onMassCaptureProblem(MassCapture::Problem problem, QString desc
         case QMessageBox::Abort:
             synchroniser->deleteLater();
             break;
-        }
-    }
-}
-
-void MainWindow::setMotorDistance(QString arduino, int motor, int distance, bool calibrated)
-{
-    if(arduino == getCurrentArduino()) {
-        if(m_sideSliders.contains(motor)) {
-            m_sideSliders.value(motor)->setSideMotorValue(distance);
-            m_sideSliders.value(motor)->setSideSliderEnabled(calibrated);
-        }
-        if(m_frontSliders.contains(motor)) {
-            m_frontSliders.value(motor)->setFrontMotorValue(distance);
-            m_frontSliders.value(motor)->setFrontSliderEnabled(calibrated);
         }
     }
 }
@@ -612,4 +595,47 @@ void MainWindow::on_actionSettings_triggered()
 void MainWindow::on_rotateToViewButton_clicked()
 {
     m_arduinoCommunication->rotationMessage(ui->viewDial->value())->launch();
+}
+
+QWidget *MainWindow::createAdjustmentGroup(QString arduinoId)
+{
+    QGroupBox *group = new QGroupBox(this);
+    QVBoxLayout *layout = new QVBoxLayout(group);
+
+    QHash<QString,QEllipseSlider*> module_sliders;
+    for(int i=0; i < m_arduinoCommunication->getMotorsNumber(); i++) {
+        QString name = QString(m_arduinoCommunication->getMotorName(i));
+        QEllipseSlider *slider;
+        if(module_sliders.contains(name))
+            slider = module_sliders.value(name);
+        else {
+            slider = new QEllipseSlider(this);
+            slider->setName(name);
+            module_sliders.insert(name, slider);
+            layout->addWidget(slider);
+        }
+        switch(m_arduinoCommunication->getMotorType(i)) {
+        case FRONT_MOTOR:
+            slider->setProperty("front_motor",i);
+            connect(slider, &QEllipseSlider::frontMotorValueChanged, [=](int distance){
+                m_dirtyMotors.insert(QPair<QString,int>(arduinoId,i),distance);
+            });
+            break;
+        case SIDE_MOTOR:
+            slider->setProperty("side_motor",i);
+            connect(slider, &QEllipseSlider::sideMotorValueChanged, [=](int distance){
+                m_dirtyMotors.insert(QPair<QString,int>(arduinoId,i),distance);
+            });
+            break;
+        default:
+            qWarning() << "Malformed interface.h";
+            break;
+        }
+
+        // Handle model's dimension change
+        connect(m_settingsForm, &SettingsForm::modelDepthChanged, slider, &QEllipseSlider::setFrontBaseOffset);
+        connect(m_settingsForm, &SettingsForm::modelWidthChanged, slider, &QEllipseSlider::setSideBaseOffset);
+        slider->setBaseOffset(m_settingsForm->getModelWidth(), m_settingsForm->getModelDepth());
+    }
+    return group;
 }

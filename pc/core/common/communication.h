@@ -145,8 +145,8 @@ signals:
      */
     void angleChanged(QString arduino, int angle);
 
-    void arduinoDetected(QString arduino);
-    void arduinoLost(QString arduino);
+    void arduinoDetected(QString arduino, QString name);
+    void arduinoLost(QString arduino, QString name);
     
 public slots:
     /**

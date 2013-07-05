@@ -25,14 +25,16 @@ ArduinoCommunication::ArduinoCommunication(QObject *parent) :
 
 const QString ArduinoCommunication::getMotorName(int id)
 {
-    /* todo check bounds */
-    return morpho_motors_name[id];
+    if(id >= 0 && id < MOTOR_NUMBER)
+        return morpho_motors_name[id];
+    return "";
 }
 
 MOTOR_TYPE ArduinoCommunication::getMotorType(int id)
 {
-    /* todo check bounds */
-    return morpho_motors_role[id];
+    if(id >= 0 && id < MOTOR_NUMBER)
+        return morpho_motors_role[id];
+    return INVALID_MOTOR;
 }
 
 int ArduinoCommunication::getMotorsNumber()
@@ -202,7 +204,7 @@ void ArduinoCommunication::cleanUpDeadDevices()
     for(int i = 0; i < m_arduinosModel.rowCount(); i++) {
         if(!m_arduinosModel.index(i).data(ANSWERED_ROLE).toBool())
         {
-            emit arduinoLost(m_arduinosModel.index(i).data(ID_ROLE).toString());
+            emit arduinoLost(m_arduinosModel.index(i).data(ID_ROLE).toString(),m_arduinosModel.index(i).data(NAME_ROLE).toString());
             m_arduinosModel.removeRow(i);
         }
     }
@@ -261,7 +263,7 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
                 m_arduinosModel.setData(index,name,Qt::DisplayRole);
                 m_arduinosModel.setData(index,id,Qt::UserRole);
                 m_arduinosModel.setData(index, true, ANSWERED_ROLE);
-                emit arduinoDetected(id);
+                emit arduinoDetected(id,name);
             }
         } else {
             qWarning() << "Invalid hello message from model";
