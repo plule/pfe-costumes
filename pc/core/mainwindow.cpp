@@ -30,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Arduino comm configuration and ui init
     m_arduinoCommunication->setPort(m_settingsForm->getXbeePort());
-    // TODO CREATE
 
     m_motorTimer = new QTimer(this);
     m_motorTimer->setSingleShot(false);
@@ -86,16 +85,20 @@ MainWindow::MainWindow(QWidget *parent) :
     });
 
     ui->ardListCombo->setModel(m_arduinoCommunication->model());
-    void (QComboBox:: *signal)(int) = &QComboBox::currentIndexChanged;
-    connect(ui->ardListCombo, signal, [=](int index){
+    void (QComboBox:: *signal)(const QString&) = &QComboBox::currentTextChanged;
+    connect(ui->ardListCombo, signal, [=](QString text){
+        int index = ui->ardListCombo->currentIndex();
         if(index >= 0) {
             QString arduino = ui->ardListCombo->itemData(index, Qt::UserRole).toString();
             if(m_adjustmentGroups.contains(arduino)) {
                 ui->adjustmentGroup->setEnabled(true);
+                QWidget *newGroup = m_adjustmentGroups.value(arduino);
                 foreach(QWidget *group, m_adjustmentGroups) {
-                    group->setVisible(false);
+                    if(newGroup != group)
+                        group->setVisible(false);
+                    else
+                        group->setVisible(true);
                 }
-                m_adjustmentGroups.value(arduino)->setVisible(true);
             }
         } else {
             ui->adjustmentGroup->setEnabled(false);
