@@ -21,6 +21,14 @@ public:
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
+    /**
+     * @brief insertWithDatas inserts a new row at the given position and insert immediately the
+     * given datas.
+     * @param row the datas will be inserted after this row.
+     * @param datas The datas are represented with a hash associating QVariants to roles
+     * @param parent
+     * @return
+     */
     bool insertWithDatas(int row, QHash<int,QVariant> datas, const QModelIndex &parent = QModelIndex());
 
     

@@ -30,9 +30,8 @@
 #include "widgets/qellipseslider.h"
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
-#include "common/slotlog.h"
 #include "common/collection.h"
-#include "common/communication.h"
+#include "common/arduinocommunication.h"
 #include "masscapture.h"
 #include "dcrawqt.h"
 
@@ -101,7 +100,6 @@ private:
     SettingsForm *m_settingsForm;
     QProgressDialog *m_progressDialog;
     QPhoto::CameraHandler *m_handler;
-    SlotLog *m_logger;
     QList<QPixmap> *m_pics;
     QErrorMessage m_errorMessage;
     QDataWidgetMapper m_mapper;

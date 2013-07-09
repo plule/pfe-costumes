@@ -1,4 +1,4 @@
-#include "communication.h"
+#include "arduinocommunication.h"
 
 #define X(pin, role, define, string) string,
 static const QString morpho_motors_name[] = {

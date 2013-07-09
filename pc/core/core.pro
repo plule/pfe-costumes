@@ -8,22 +8,20 @@ QT += widgets sql
 SOURCES += main.cpp \
     camerahandler/camerahandler.cpp \
     camerahandler/qcamera.cpp \
-    common/slotlog.cpp \
     mainwindow.cpp \
     common/collection.cpp \
     common/uniqueproxymodel.cpp \
     widgets/qloadedlistwidget.cpp \
     widgets/qturntable.cpp \
-    common/communication.cpp \
     masscapture.cpp \
     settingsform.cpp \
     common/transaction.cpp \
     widgets/qellipseslider.cpp \
-    common/qlistmodel.cpp
+    common/qlistmodel.cpp \
+    common/arduinocommunication.cpp
 
 HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
-    common/slotlog.h \
     mainwindow.h \
     common/collection.h \
     common/uniqueproxymodel.h \
@@ -31,12 +29,12 @@ HEADERS += camerahandler/camerahandler.h \
     ../../interfaces/morphology.h \
     widgets/qturntable.h \
     widgets/qloadedlistwidget.h \
-    common/communication.h \
     masscapture.h \
     settingsform.h \
     common/transaction.h \
     widgets/qellipseslider.h \
-    common/qlistmodel.h
+    common/qlistmodel.h \
+    common/arduinocommunication.h
 
 CONFIG += c++11 qt warn_on release debug
 

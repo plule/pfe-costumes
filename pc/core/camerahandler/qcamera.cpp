@@ -96,7 +96,7 @@ unsigned int progress_start_func(GPContext *context, float target, const char *t
     QString task(task_char);
 #endif
     (void)context;
-	int id = 0; // TODO : Assigner un identifiant unique
+    int id = 0; // TODO : Assigner un identifiant unique (finalement inutile dans le projet)
 	QCamera* camera = static_cast<QCamera*>(data);
     emit camera->progress_start(task, target);
     if(camera->getWatchdog()->isActive()) {
@@ -109,7 +109,7 @@ unsigned int progress_start_func(GPContext *context, float target, const char *t
 void progress_update_func(GPContext *context, unsigned int id, float current, void *data)
 {
 	(void)context;
-    (void)id; // TODO utiliser l'id
+    (void)id; // TODO utiliser l'id (annulé, inutile)
 	QCamera* camera = static_cast<QCamera*>(data);
     if(camera->getWatchdog()->isActive()) {
         camera->getWatchdog()->stop();
@@ -121,7 +121,7 @@ void progress_update_func(GPContext *context, unsigned int id, float current, vo
 void progress_stop_func(GPContext *context, unsigned int id, void *data)
 {
 	(void)context;
-    (void)id; // TODO utiliser l'id
+    (void)id; // TODO utiliser l'id (annulé, inutile)
 	QCamera* camera = static_cast<QCamera*>(data);
     emit camera->progress_stop();
 }
@@ -146,7 +146,6 @@ QCamera::QCamera()
 {
     m_camera = NULL;
     m_context = NULL;
-    // TODO : init thread and watchdog ?
     m_connected = false;
     m_busy = false;
 }
@@ -158,8 +157,6 @@ QCamera::~QCamera()
     delete m_watchdog;
     m_camThread.exit();
     m_camThread.wait(100);
-    /*m_camThread.terminate();
-    m_camThread.wait(100);*/
 }
 
 int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist)
@@ -245,7 +242,7 @@ int QCamera::_captureToFile(QFile *localFile)
     R_GP_CALL(ret, gp_camera_capture, m_camera, GP_CAPTURE_IMAGE, &camera_file_path, m_context);
 
     if(!localFile->open(QIODevice::WriteOnly))
-        return -1; // TODO : own error
+        return -1;
     fd = localFile->handle();
 
     GP_CALL(ret, gp_file_new_from_fd, &file, fd);
