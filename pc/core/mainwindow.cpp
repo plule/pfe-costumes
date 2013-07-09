@@ -8,8 +8,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_collection = 0;
     m_camera = 0;
     m_progressDialog = new QProgressDialog();
-    // Logger that show what goes through the slots
-    m_logger = new SlotLog();
 
     // Ui init and tweaks
     QIcon::setThemeName("humility-icons"); // TODO fix this.
@@ -389,13 +387,6 @@ void MainWindow::setCamera(QPhoto::QCamera *camera)
     if(camera != m_camera) {
         this->m_camera = camera;
         if(camera != 0) {
-            connect(camera, SIGNAL(error(QString)), m_logger, SLOT(error(QString)));
-            connect(camera, SIGNAL(idle()), m_logger, SLOT(idle()));
-            connect(camera, SIGNAL(status(QString)), m_logger, SLOT(message(QString)));
-            connect(camera, SIGNAL(message(QString)), m_logger, SLOT(message(QString)));
-            connect(camera, SIGNAL(progress_update(int)), m_logger, SLOT(progress_update(int)));
-            connect(camera, SIGNAL(progress_start(QString, int)), m_logger, SLOT(progress_start(QString, int)));
-
             connect(camera, SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
             connect(camera, SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
 

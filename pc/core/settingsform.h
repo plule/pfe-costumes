@@ -9,7 +9,7 @@
 #include <QCursor>
 #include <QTimer>
 #include "camerahandler/camerahandler.h"
-#include "common/communication.h"
+#include "common/arduinocommunication.h"
 #include "qextserialenumerator.h"
 
 namespace Ui {
