@@ -5,7 +5,7 @@
 #include <QList>
 #include <QTimer>
 #include <QDebug>
-#include "../../interfaces/interfaces.h"
+#include "interfaces.h"
 
 /**
  * @brief The Transaction class represents a exchange between a arduino and a pc

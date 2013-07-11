@@ -2,13 +2,13 @@
 
 #define X(pin, role, define, string) string,
 static const QString morpho_motors_name[] = {
-    #include "../../interfaces/morphology.h"
+    #include "morphology.h"
 };
 #undef X
 
 #define X(pin, role, define, string) role,
 static const MOTOR_TYPE morpho_motors_role[] = {
-    #include "../../interfaces/morphology.h"
+    #include "morphology.h"
 };
 #undef X
 

@@ -1,6 +1,6 @@
 #DESTDIR = ../bin
 TEMPLATE = app
-INCLUDEPATH += ../common ../3rdparty/DcRawQT ../3rdparty/qextserialport
+INCLUDEPATH += ../common ../3rdparty/DcRawQT ../3rdparty/qextserialport ../../interfaces
 VPATH = ..
 
 QT += widgets sql

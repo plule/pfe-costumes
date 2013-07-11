@@ -16,7 +16,7 @@
 #include "qlistmodel.h"
 #include "qextserialport.h"
 #include "transaction.h"
-#include "../../interfaces/interfaces.h"
+#include "interfaces.h"
 
 /**
  * @brief The ArduinoMessage struct describe a message sendable to a device
