@@ -25,8 +25,8 @@ HEADERS += camerahandler/camerahandler.h \
     mainwindow.h \
     common/collection.h \
     common/uniqueproxymodel.h \
-    ../../interfaces/interfaces.h \
-    ../../interfaces/morphology.h \
+    includes/interfaces.h \
+    includes/morphology.h \
     widgets/qturntable.h \
     widgets/qloadedlistwidget.h \
     masscapture.h \
