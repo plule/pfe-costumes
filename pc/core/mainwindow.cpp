@@ -34,13 +34,19 @@ MainWindow::MainWindow(QWidget *parent) :
     m_motorTimer = new QTimer(this);
     m_motorTimer->setSingleShot(false);
     connect(m_motorTimer, &QTimer::timeout, [=](){
-        if(!m_dirtyMotors.isEmpty()) {
+        QList<Transaction*> messages;
+        while(!m_dirtyMotors.isEmpty()) {
+        //if(!m_dirtyMotors.isEmpty()) {
             QPair<QString,int> key = m_dirtyMotors.keys().first();
             int distance = m_dirtyMotors.value(key);
             m_dirtyMotors.remove(key);
             QString arduino = key.first;
             int motor = key.second;
-            m_arduinoCommunication->motorDistanceMessage(arduino,motor,distance)->launch();
+            messages.append(m_arduinoCommunication->motorDistanceMessage(arduino,motor,distance));
+            //m_arduinoCommunication->motorDistanceMessage(arduino,motor,distance)->launch();
+        }
+        foreach(Transaction* message,messages) {
+            message->launch();
         }
     });
 
