@@ -33,6 +33,29 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
         ui->captureNumber->setValue(m_settings.value("photonumber").toInt());
     }
 
+    /* Rotation settings */
+    if(!m_settings.value("rpm").isValid()) {
+        ui->rotationSpeedSpin->setValue(0.8);
+        m_settings.setValue("rpm",0.8);
+    } else {
+        ui->captureNumber->setValue(m_settings.value("rpm").toDouble());
+    }
+
+    if(!m_settings.value("automatedrotation").isValid()) {
+        ui->automatedRotationCheck->setChecked(false);
+        m_settings.setValue("automatedrotation",false);
+    } else {
+        ui->captureNumber->setValue(m_settings.value("automatedrotation").toBool());
+    }
+
+    ui->delaySpin->setEnabled(m_settings.value("automatedrotation").toBool());
+    if(!m_settings.value("rotationdelay").isValid()) {
+        ui->delaySpin->setValue(15);
+        m_settings.setValue("rotationdelay",15);
+    } else {
+        ui->delaySpin->setValue(m_settings.value("rotationdelay").toInt());
+    }
+
     /* Model dimension */
     if(!m_settings.value("modelwidth").isValid()) {
         ui->modelWidthBox->setValue(100);
