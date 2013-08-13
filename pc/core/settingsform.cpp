@@ -18,58 +18,37 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
     m_camera = guessCamera(fillCameraList());
 
     /* Raw file extension */
-    if(m_settings.value("rawextension").toString() != "")
-        ui->rawExtensionEdit->setText(m_settings.value("rawextension").toString());
-    else {
-        ui->rawExtensionEdit->setText("nef");
+    if(!m_settings.value("rawextension").isValid())
         m_settings.setValue("rawextension", "nef");
-    }
+    ui->rawExtensionEdit->setText(m_settings.value("rawextension").toString());
 
     /* Number of capture */
-    if(!m_settings.value("photonumber").isValid()) {
-        ui->captureNumber->setValue(36);
+    if(!m_settings.value("photonumber").isValid())
         m_settings.setValue("photonumber",36);
-    } else {
-        ui->captureNumber->setValue(m_settings.value("photonumber").toInt());
-    }
+    ui->captureNumber->setValue(m_settings.value("photonumber").toInt());
 
     /* Rotation settings */
-    if(!m_settings.value("rpm").isValid()) {
-        ui->rotationSpeedSpin->setValue(0.8);
+    if(!m_settings.value("rpm").isValid())
         m_settings.setValue("rpm",0.8);
-    } else {
-        ui->captureNumber->setValue(m_settings.value("rpm").toDouble());
-    }
+    ui->captureNumber->setValue(m_settings.value("rpm").toDouble());
 
-    if(!m_settings.value("automatedrotation").isValid()) {
-        ui->automatedRotationCheck->setChecked(false);
+    if(!m_settings.value("automatedrotation").isValid())
         m_settings.setValue("automatedrotation",false);
-    } else {
-        ui->captureNumber->setValue(m_settings.value("automatedrotation").toBool());
-    }
+    ui->captureNumber->setValue(m_settings.value("automatedrotation").toBool());
 
     ui->delaySpin->setEnabled(m_settings.value("automatedrotation").toBool());
-    if(!m_settings.value("rotationdelay").isValid()) {
-        ui->delaySpin->setValue(15);
+    if(!m_settings.value("rotationdelay").isValid())
         m_settings.setValue("rotationdelay",15);
-    } else {
-        ui->delaySpin->setValue(m_settings.value("rotationdelay").toInt());
-    }
+    ui->delaySpin->setValue(m_settings.value("rotationdelay").toInt());
 
     /* Model dimension */
-    if(!m_settings.value("modelwidth").isValid()) {
-        ui->modelWidthBox->setValue(100);
+    if(!m_settings.value("modelwidth").isValid())
         m_settings.setValue("modelwidth",100);
-    } else {
-        ui->modelWidthBox->setValue(m_settings.value("modelwidth").toInt());
-    }
+    ui->modelWidthBox->setValue(m_settings.value("modelwidth").toInt());
 
-    if(!m_settings.value("modeldepth").isValid()) {
-        ui->modelDepthBox->setValue(124);
-        m_settings.setValue("modeldepth",100);
-    } else {
-        ui->modelDepthBox->setValue(m_settings.value("modeldepth").toInt());
-    }
+    if(!m_settings.value("modeldepth").isValid())
+        m_settings.setValue("modeldepth",124);
+    ui->modelDepthBox->setValue(m_settings.value("modeldepth").toInt());
 
     /* Calibration tab */
     ui->modelCalibBox->setModel(m_xbee->model());
