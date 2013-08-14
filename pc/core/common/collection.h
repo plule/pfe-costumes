@@ -117,6 +117,16 @@ public:
     QString getNewFilePath(int costumeId, QString key, QString extension);
 
     /**
+     * @brief getFilePath
+     * @param costumeId
+     * @param key
+     * @param extension
+     * @param index
+     * @return The file path of a (maybe existing file) with an index (number appended to the file name)
+     */
+    QString getFilePath(int costumeId, QString key, QString extension, int index);
+
+    /**
      * @brief fileExists
      * @param costumeId
      * @param key

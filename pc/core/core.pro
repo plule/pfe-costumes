@@ -34,7 +34,8 @@ HEADERS += camerahandler/camerahandler.h \
     common/transaction.h \
     widgets/qellipseslider.h \
     common/qlistmodel.h \
-    common/arduinocommunication.h
+    common/arduinocommunication.h \
+    includes/settings.h
 
 CONFIG += c++11 qt warn_on release debug
 

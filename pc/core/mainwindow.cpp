@@ -121,8 +121,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_settingsForm, SIGNAL(xbeePortChanged(QString)), m_arduinoCommunication, SLOT(setPort(QString)));
 
     // Load last collection
-    if(m_settings.value("collection").type() == QVariant::String && QFile::exists(m_settings.value("collection").toString()))
-        loadCollection(m_settings.value("collection").toString());
+    if(m_settings.value(S_COLLECTION).type() == QVariant::String && QFile::exists(m_settings.value("collection").toString()))
+        loadCollection(m_settings.value(S_COLLECTION).toString());
     else
         on_actionNew_Collection_triggered();
 
@@ -151,7 +151,7 @@ void MainWindow::loadCollection(QString path)
 {
     if(m_collection)
         delete m_collection;
-    m_settings.setValue("collection", path);
+    m_settings.setValue(S_COLLECTION, path);
     m_collection = new Collection(this, path);
     if(m_collection->isValid()) {
         QSqlTableModel *model = m_collection->getCollectionModel();
@@ -566,11 +566,11 @@ void MainWindow::on_massCaptureButton_clicked()
         MassCapture *synchroniser = new MassCapture(this);
         m_progressDialog->setLabelText(tr("Mass capture..."));
         m_progressDialog->setCancelButtonText(tr("Abort Capture"));
-        m_progressDialog->setRange(0, m_settings.value("photonumber").toInt()-1);
+        m_progressDialog->setRange(0, m_settings.value(S_PHOTONUMBER).toInt()-1);
         m_progressDialog->setValue(0);
         //m_progressDialog->setModal(Qt::WindowModal);
 
-        ui->turntable->setNumber(m_settings.value("photonumber").toInt());
+        ui->turntable->setNumber(m_settings.value(S_PHOTONUMBER).toInt());
 
         connect(synchroniser, SIGNAL(done()), synchroniser, SLOT(deleteLater()));
         connect(synchroniser, SIGNAL(problem(MassCapture::Problem, QString)), this, SLOT(onMassCaptureProblem(MassCapture::Problem, QString)));
@@ -584,7 +584,7 @@ void MainWindow::on_massCaptureButton_clicked()
         connect(synchroniser, SIGNAL(destroyed()), ui->workBar, SLOT(reset()));
         connect(synchroniser, SIGNAL(destroyed()), m_progressDialog, SLOT(reset()));
         connect(m_progressDialog, SIGNAL(canceled()), synchroniser, SLOT(deleteLater()));
-        synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), m_settings.value("photonumber").toInt());
+        synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), m_settings.value(S_PHOTONUMBER).toInt());
     } else {
         m_settingsForm->refreshCameraList();
         setCamera(m_settingsForm->getCamera());

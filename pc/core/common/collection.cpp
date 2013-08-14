@@ -153,6 +153,16 @@ QString Collection::getNewFilePath(int costumeId, QString key,QString extension)
     return "";
 }
 
+QString Collection::getFilePath(int costumeId, QString key, QString extension, int index)
+{
+    QString filename =  QString("%1.%2").arg(QString::number(index), 3, QLatin1Char('0')).arg(extension);
+    QString path = getTempStorageDir(costumeId, key).absoluteFilePath(filename);
+    QFile f(path);
+    f.open( QIODevice::WriteOnly ); // ensure creation
+    f.close();
+    return path;
+}
+
 bool Collection::fileExists(int costumeId, QString key, QString filename)
 {
     QDir tempDir = getTempStorageDir(costumeId, key);

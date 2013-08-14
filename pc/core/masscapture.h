@@ -7,6 +7,7 @@
 #include "camerahandler/qcamera.h"
 #include "common/arduinocommunication.h"
 #include "common/collection.h"
+#include "includes/settings.h"
 
 /**
  * @brief Synchronise an arduino and a camera to take photos.
@@ -38,10 +39,8 @@ public slots:
 
 
 private slots:
-    void onAngleChanged(int angle);
     void launchMassCapture();
     void onCaptured(int status, QString path, QStringList errors);
-    void onRotationDone(bool success);
 
 private:
     int m_index;
@@ -54,6 +53,7 @@ private:
     Collection *m_collection;
     QSettings m_settings;
     Problem m_problem;
+    QTimer *m_captureTimer;
     int m_idCostume;
 };
 

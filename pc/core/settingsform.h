@@ -10,6 +10,7 @@
 #include <QTimer>
 #include "camerahandler/camerahandler.h"
 #include "common/arduinocommunication.h"
+#include "includes/settings.h"
 #include "qextserialenumerator.h"
 
 namespace Ui {

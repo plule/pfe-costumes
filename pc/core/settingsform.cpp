@@ -18,37 +18,37 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
     m_camera = guessCamera(fillCameraList());
 
     /* Raw file extension */
-    if(!m_settings.value("rawextension").isValid())
-        m_settings.setValue("rawextension", "nef");
-    ui->rawExtensionEdit->setText(m_settings.value("rawextension").toString());
+    if(!m_settings.value(S_RAWEXTENSION).isValid())
+        m_settings.setValue(S_RAWEXTENSION, "nef");
+    ui->rawExtensionEdit->setText(m_settings.value(S_RAWEXTENSION).toString());
 
     /* Number of capture */
-    if(!m_settings.value("photonumber").isValid())
-        m_settings.setValue("photonumber",36);
-    ui->captureNumber->setValue(m_settings.value("photonumber").toInt());
+    if(!m_settings.value(S_PHOTONUMBER).isValid())
+        m_settings.setValue(S_PHOTONUMBER,36);
+    ui->captureNumber->setValue(m_settings.value(S_PHOTONUMBER).toInt());
 
     /* Rotation settings */
-    if(!m_settings.value("rpm").isValid())
-        m_settings.setValue("rpm",0.8);
-    ui->captureNumber->setValue(m_settings.value("rpm").toDouble());
+    if(!m_settings.value(S_RPM).isValid())
+        m_settings.setValue(S_RPM,0.8);
+    ui->captureNumber->setValue(m_settings.value(S_RPM).toDouble());
 
-    if(!m_settings.value("automatedrotation").isValid())
-        m_settings.setValue("automatedrotation",false);
-    ui->captureNumber->setValue(m_settings.value("automatedrotation").toBool());
+    if(!m_settings.value(S_AUTOMATEDROTATION).isValid())
+        m_settings.setValue(S_AUTOMATEDROTATION,false);
+    ui->captureNumber->setValue(m_settings.value(S_AUTOMATEDROTATION).toBool());
 
-    ui->delaySpin->setEnabled(m_settings.value("automatedrotation").toBool());
-    if(!m_settings.value("rotationdelay").isValid())
-        m_settings.setValue("rotationdelay",15);
-    ui->delaySpin->setValue(m_settings.value("rotationdelay").toInt());
+    ui->delaySpin->setEnabled(m_settings.value(S_AUTOMATEDROTATION).toBool());
+    if(!m_settings.value(S_ROTATIONDELAY).isValid())
+        m_settings.setValue(S_ROTATIONDELAY,15);
+    ui->delaySpin->setValue(m_settings.value(S_ROTATIONDELAY).toInt());
 
     /* Model dimension */
-    if(!m_settings.value("modelwidth").isValid())
-        m_settings.setValue("modelwidth",100);
-    ui->modelWidthBox->setValue(m_settings.value("modelwidth").toInt());
+    if(!m_settings.value(S_MODELWIDTH).isValid())
+        m_settings.setValue(S_MODELWIDTH,100);
+    ui->modelWidthBox->setValue(m_settings.value(S_MODELWIDTH).toInt());
 
-    if(!m_settings.value("modeldepth").isValid())
-        m_settings.setValue("modeldepth",124);
-    ui->modelDepthBox->setValue(m_settings.value("modeldepth").toInt());
+    if(!m_settings.value(S_MODELDEPTH).isValid())
+        m_settings.setValue(S_MODELDEPTH,124);
+    ui->modelDepthBox->setValue(m_settings.value(S_MODELDEPTH).toInt());
 
     /* Calibration tab */
     ui->modelCalibBox->setModel(m_xbee->model());
@@ -103,22 +103,22 @@ QString SettingsForm::getXbeePort()
 
 int SettingsForm::getModelWidth()
 {
-    if(m_settings.value("modelwidth").isValid())
-        return m_settings.value("modelwidth").toInt();
+    if(m_settings.value(S_MODELWIDTH).isValid())
+        return m_settings.value(S_MODELWIDTH).toInt();
     return 100;
 }
 
 int SettingsForm::getModelDepth()
 {
-    if(m_settings.value("modeldepth").isValid())
-        return m_settings.value("modeldepth").toInt();
+    if(m_settings.value(S_MODELDEPTH).isValid())
+        return m_settings.value(S_MODELWIDTH).toInt();
     return 124;
 }
 
 QString SettingsForm::guessXbeePort(QList<QString> candidates)
 {
-    if(candidates.contains(m_settings.value("xbeeport").toString()))
-        return m_settings.value("xbeeport").toString();
+    if(candidates.contains(m_settings.value(S_XBEEPORT).toString()))
+        return m_settings.value(S_XBEEPORT).toString();
 
     foreach(QString candidate, candidates) {
         if(candidate.toLower().contains("usb"))
@@ -134,7 +134,7 @@ QString SettingsForm::guessXbeePort(QList<QString> candidates)
 QPhoto::QCamera *SettingsForm::guessCamera(QList<QPhoto::QCamera*> candidates)
 {
     foreach(QPhoto::QCamera *candidate, candidates)
-        if(candidate->getModel() == m_settings.value("camera").toString())
+        if(candidate->getModel() == m_settings.value(S_CAMERA).toString())
             return candidate;
     if(candidates.size() > 0)
         return candidates.first();
@@ -205,34 +205,34 @@ void SettingsForm::apply()
     }
 
     int newModelWidth = ui->modelWidthBox->value();
-    if(m_settings.value("modelwidth").toInt() != newModelWidth) {
-        m_settings.setValue("modelwidth", ui->modelWidthBox->value());
+    if(m_settings.value(S_MODELWIDTH).toInt() != newModelWidth) {
+        m_settings.setValue(S_MODELWIDTH, ui->modelWidthBox->value());
         emit modelWidthChanged(newModelWidth);
     }
 
     int newModelDepth = ui->modelDepthBox->value();
-    if(m_settings.value("modeldepth").toInt() != newModelDepth) {
-        m_settings.setValue("modeldepth", ui->modelDepthBox->value());
+    if(m_settings.value(S_MODELDEPTH).toInt() != newModelDepth) {
+        m_settings.setValue(S_MODELDEPTH, ui->modelDepthBox->value());
         emit modelDepthChanged(newModelDepth);
     }
 
     if(m_camera != 0)
-        m_settings.setValue("camera", m_camera->getModel());
+        m_settings.setValue(S_CAMERA, m_camera->getModel());
     if(m_xbeePort != "")
-        m_settings.setValue("xbeeport", m_xbeePort);
+        m_settings.setValue(S_XBEEPORT, m_xbeePort);
     if(ui->rawExtensionEdit->text() != "")
-        m_settings.setValue("rawextension", ui->rawExtensionEdit->text());
+        m_settings.setValue(S_RAWEXTENSION, ui->rawExtensionEdit->text());
 
-    m_settings.setValue("photonumber",ui->captureNumber->value());
+    m_settings.setValue(S_PHOTONUMBER,ui->captureNumber->value());
 }
 
 void SettingsForm::cancel()
 {
     selectCurrentCamera();
     selectCurrentXbeePort();
-    ui->captureNumber->setValue(m_settings.value("photonumber").toInt());
-    ui->modelDepthBox->setValue(m_settings.value("modeldepth").toInt());
-    ui->modelWidthBox->setValue(m_settings.value("modelwidth").toInt());
+    ui->captureNumber->setValue(m_settings.value(S_PHOTONUMBER).toInt());
+    ui->modelDepthBox->setValue(m_settings.value(S_MODELDEPTH).toInt());
+    ui->modelWidthBox->setValue(m_settings.value(S_MODELWIDTH).toInt());
 }
 
 void SettingsForm::on_detectCamerasButton_clicked()
