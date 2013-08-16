@@ -19,7 +19,7 @@ void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *mor
     m_collection = collection;
     m_idCostume = idCostume;
     m_problem = NoProblem;
-    m_rotationTime = 60.0 / m_settings.value(S_RPM).toDouble();
+    m_rotationTime = round(60.0 / m_settings.value(S_RPM).toDouble());
     m_captureTimer = new QTimer(this);
 
     if(m_settings.value(S_AUTOMATEDROTATION).toBool()) {
@@ -49,9 +49,9 @@ void MassCapture::launchMassCapture()
 {
     m_index = 0;
     m_captureTimer->setSingleShot(false);
-    m_captureTimer->setInterval((1000 * m_rotationTime) / m_settings.value(S_PHOTONUMBER).toInt());
+    m_captureTimer->setInterval((1000 * m_rotationTime) / m_settings.value(S_PHOTONUMBER).toInt()); // delay between each shot in ms
     connect(m_captureTimer, &QTimer::timeout, [=]() {
-        if(m_index > m_target) {
+        if(m_index >= m_target) {
             m_captureTimer->stop();
             if(m_settings.value(S_AUTOMATEDROTATION).toBool())
                 m_morphology->cancelTurnMessage()->launch();
@@ -59,25 +59,30 @@ void MassCapture::launchMassCapture()
         } else if(m_camera && m_camera->isConnected()) {
             m_index++;
             QString path = m_collection->getFilePath(m_idCostume, "turntable", m_settings.value(S_RAWEXTENSION).toString(), m_index);
+            m_pathIndex.insert(path, m_index);
             m_camera->captureToFile(path);
         } else {
             m_morphology->cancelTurnMessage()->launch();
             emit problem(CameraProblem, tr("Camera seems to be disconnected"));
         }
     });
+    m_pathIndex.clear();
     m_captureTimer->start();
 }
 
 void MassCapture::onCaptured(int status, QString path, QStringList errors)
 {
+    qDebug() << "Captured " << path << " with status " << QString::number(status);
     if(status != QPhoto::QCamera::OK) {
         m_problem = CameraProblem;
         m_captureTimer->stop(); // stop trying to capture photos
         m_morphology->cancelTurnMessage()->launch();
         m_index--;
         emit problem(CameraProblem, errors.join("\n"));
+    } else if(m_pathIndex.contains(path)) {
+        emit progress(m_pathIndex.value(path)-1, path);
     } else {
-        emit progress(m_index-1, path);
+        qWarning() << "Camera captured a photo for an unknown reason";
     }
 }
 

@@ -307,7 +307,7 @@ QString MainWindow::convertRaw(QString path)
 {
     /* Raw conversion */
     QString filename = QFileInfo(path).fileName();
-    if(m_rawHandler.IsRaw(path)) {
+    /*if(m_rawHandler.IsRaw(path)) {
 
         //dcrawargs += "dcrawqt";
         //dcrawargs += "-c";
@@ -329,7 +329,7 @@ QString MainWindow::convertRaw(QString path)
 
             pix.save(&file);
         }
-    }
+    }*/
     return filename;
 }
 

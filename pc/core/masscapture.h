@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QSettings>
 #include <QStringList>
+#include <cmath>
 #include "camerahandler/qcamera.h"
 #include "common/arduinocommunication.h"
 #include "common/collection.h"
@@ -55,6 +56,7 @@ private:
     Problem m_problem;
     QTimer *m_captureTimer;
     int m_idCostume;
+    QMap<QString,int> m_pathIndex;
 };
 
 #endif // SYNCHRONISER_H

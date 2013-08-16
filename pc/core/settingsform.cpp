@@ -30,11 +30,11 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
     /* Rotation settings */
     if(!m_settings.value(S_RPM).isValid())
         m_settings.setValue(S_RPM,0.8);
-    ui->captureNumber->setValue(m_settings.value(S_RPM).toDouble());
+    ui->rotationSpeedSpin->setValue(m_settings.value(S_RPM).toDouble());
 
     if(!m_settings.value(S_AUTOMATEDROTATION).isValid())
         m_settings.setValue(S_AUTOMATEDROTATION,false);
-    ui->captureNumber->setValue(m_settings.value(S_AUTOMATEDROTATION).toBool());
+    ui->automatedRotationCheck->setChecked(m_settings.value(S_AUTOMATEDROTATION).toBool());
 
     ui->delaySpin->setEnabled(m_settings.value(S_AUTOMATEDROTATION).toBool());
     if(!m_settings.value(S_ROTATIONDELAY).isValid())
@@ -223,7 +223,9 @@ void SettingsForm::apply()
     if(ui->rawExtensionEdit->text() != "")
         m_settings.setValue(S_RAWEXTENSION, ui->rawExtensionEdit->text());
 
+    qDebug() << ui->captureNumber->value();
     m_settings.setValue(S_PHOTONUMBER,ui->captureNumber->value());
+    m_settings.setValue(S_RPM,ui->rotationSpeedSpin->value());
 }
 
 void SettingsForm::cancel()
