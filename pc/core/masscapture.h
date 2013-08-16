@@ -5,6 +5,7 @@
 #include <QSettings>
 #include <QStringList>
 #include <cmath>
+#include <QTemporaryFile>
 #include "camerahandler/qcamera.h"
 #include "common/arduinocommunication.h"
 #include "common/collection.h"

@@ -37,7 +37,6 @@ void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *mor
 void MassCapture::setCamera(QPhoto::QCamera *camera)
 {
     if(camera != 0) {
-        connect(camera, &QPhoto::QCamera::finished, this, &MassCapture::onCaptured);
         connect(camera, &QPhoto::QCamera::destroyed, [=]() {
             m_camera = 0;
         });
@@ -50,6 +49,10 @@ void MassCapture::launchMassCapture()
     m_index = 0;
     m_captureTimer->setSingleShot(false);
     m_captureTimer->setInterval((1000 * m_rotationTime) / m_settings.value(S_PHOTONUMBER).toInt()); // delay between each shot in ms
+
+    m_camera->captureToFile("/tmp/dummy.jpg"); // ensure camera is initialized
+
+    connect(m_camera, &QPhoto::QCamera::finished, this, &MassCapture::onCaptured);
     connect(m_captureTimer, &QTimer::timeout, [=]() {
         if(m_index >= m_target) {
             m_captureTimer->stop();
