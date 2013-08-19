@@ -1,1 +1,5 @@
 Projet numérisation de costumes
+
+qt5-default
+libqt5sql5-sqlite
+libgphoto2 (>= 2.5.2)
