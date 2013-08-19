@@ -22,6 +22,7 @@ void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *mor
     m_rotationTime = round(60.0 / m_settings.value(S_RPM).toDouble());
     m_captureTimer = new QTimer(this);
 
+    qDebug() << "Mass Capture object created";
     if(m_settings.value(S_AUTOMATEDROTATION).toBool()) {
         m_morphology->completeTurnMessage(m_rotationTime);
         QTimer *delayStart = new QTimer(this);
@@ -30,7 +31,8 @@ void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *mor
         connect(delayStart, &QTimer::timeout, this, &MassCapture::launchMassCapture);
         delayStart->start();
     } else {
-        launchMassCapture();
+        connect(m_camera, &QPhoto::QCamera::finished, this, &MassCapture::launchMassCapture);
+        m_camera->captureToFile("/tmp/dummy.jpg"); // ensure camera is initialized
     }
 }
 
@@ -46,25 +48,29 @@ void MassCapture::setCamera(QPhoto::QCamera *camera)
 
 void MassCapture::launchMassCapture()
 {
+    disconnect(m_camera, 0, this, 0);
+    qDebug() << "camera synced and capture launched";
     m_index = 0;
     m_captureTimer->setSingleShot(false);
     m_captureTimer->setInterval((1000 * m_rotationTime) / m_settings.value(S_PHOTONUMBER).toInt()); // delay between each shot in ms
 
-    m_camera->captureToFile("/tmp/dummy.jpg"); // ensure camera is initialized
-
     connect(m_camera, &QPhoto::QCamera::finished, this, &MassCapture::onCaptured);
     connect(m_captureTimer, &QTimer::timeout, [=]() {
+        qDebug() << "launching capture";
         if(m_index >= m_target) {
+            qDebug() << "capture finished without problem";
             m_captureTimer->stop();
             if(m_settings.value(S_AUTOMATEDROTATION).toBool())
                 m_morphology->cancelTurnMessage()->launch();
             emit done();
         } else if(m_camera && m_camera->isConnected()) {
             m_index++;
-            QString path = m_collection->getFilePath(m_idCostume, "turntable", m_settings.value(S_RAWEXTENSION).toString(), m_index);
+            qDebug() << "capture n°" << QString::number(m_index);
+            QString path = m_collection->getFilePath(m_idCostume, "turntable", "jpg", m_index);
             m_pathIndex.insert(path, m_index);
             m_camera->captureToFile(path);
         } else {
+            qDebug() << "camera problem";
             m_morphology->cancelTurnMessage()->launch();
             emit problem(CameraProblem, tr("Camera seems to be disconnected"));
         }

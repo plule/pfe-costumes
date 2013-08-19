@@ -23,11 +23,6 @@
       <property name="currentIndex">
        <number>1</number>
       </property>
-      <widget class="QWidget" name="preparationTab">
-       <attribute name="title">
-        <string>Preparation</string>
-       </attribute>
-      </widget>
       <widget class="QWidget" name="adjustmentTab">
        <attribute name="title">
         <string>Adjustment</string>

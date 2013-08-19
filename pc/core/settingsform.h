@@ -56,6 +56,10 @@ private slots:
 
     void on_renameButton_clicked();
 
+    void on_turnDurationSpin_valueChanged(double s);
+
+    void on_rotationSpeedSpin_valueChanged(double rpm);
+
 private:
     QString guessXbeePort(QList<QString> candidates);
     QPhoto::QCamera *guessCamera(QList<QPhoto::QCamera*> candidates);

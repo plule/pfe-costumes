@@ -31,6 +31,7 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
     if(!m_settings.value(S_RPM).isValid())
         m_settings.setValue(S_RPM,0.8);
     ui->rotationSpeedSpin->setValue(m_settings.value(S_RPM).toDouble());
+    ui->turnDurationSpin->setValue(60.0/m_settings.value(S_RPM).toDouble());
 
     if(!m_settings.value(S_AUTOMATEDROTATION).isValid())
         m_settings.setValue(S_AUTOMATEDROTATION,false);
@@ -295,4 +296,16 @@ void SettingsForm::on_renameButton_clicked()
         m_xbee->helloMessage()->launch();
     });
     transaction->launch();
+}
+
+void SettingsForm::on_turnDurationSpin_valueChanged(double s)
+{
+    if(s > 0)
+        ui->rotationSpeedSpin->setValue(60.0/s);
+}
+
+void SettingsForm::on_rotationSpeedSpin_valueChanged(double rpm)
+{
+    if(rpm > 0)
+        ui->turnDurationSpin->setValue(60.0/rpm);
 }

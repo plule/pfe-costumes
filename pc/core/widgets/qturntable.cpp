@@ -13,6 +13,10 @@ QTurntable::QTurntable(QWidget *parent) :
     m_max_zoom = 200;
     m_current_pixmap = 0;
     m_fit = false;
+
+    m_resize_preview = true;
+    m_preview_dimension.first = 1024;
+    m_preview_dimension.second = 768;
 }
 
 void QTurntable::wheelEvent(QWheelEvent *e)
@@ -52,6 +56,17 @@ QString QTurntable::getCurrentFileName()
     return m_pixmaps.at(getView()).first;
 }
 
+void QTurntable::enableResizePreview(bool resize)
+{
+    m_resize_preview = resize;
+}
+
+void QTurntable::setPreviewSize(int width, int size)
+{
+    m_preview_dimension.first = width;
+    m_preview_dimension.second = size;
+}
+
 void QTurntable::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
@@ -84,6 +99,7 @@ void QTurntable::loadDirs(QList<QDir> dirs, bool force)
                 filenamesSet.insert(file);
     QStringList files = filenamesSet.toList();
     qSort(files);
+    setNumber(0); // ensure cleaning m_pixmaps
     setNumber(files.size());
 
     if(files.size()>0) {
@@ -164,12 +180,14 @@ void QTurntable::addPicture(QString path)
 void QTurntable::setPicture(int index, QString path)
 {
     QPixmap pic(getPathOf(path));
-    //pic = pic.scaled(1024,768, Qt::KeepAspectRatio);
+    if(m_resize_preview)
+        pic = pic.scaled(m_preview_dimension.first, m_preview_dimension.second, Qt::KeepAspectRatio);
     if(index >= m_pixmaps.size())
         setNumber(index+1);
     QFileInfo infos(getPathOf(path));
     m_pixmaps[index].first = infos.fileName();
     m_pixmaps[index].second->setPixmap(pic);
+    qDebug() << "index " << QString::number(index) << " view " << QString::number(getView());
     if(index == getView()) {
         m_current_pixmap = m_pixmaps[index].second;
         m_current_pixmap->setVisible(true);
@@ -206,7 +224,7 @@ void QTurntable::setAngle(int angle)
 {
     if(getView() < m_pixmaps.size() && angle != m_current_angle) {
         if(m_current_pixmap != 0) {
-            m_current_pixmap->setVisible(false);
+            m_current_pixmap->setVisible(false); // TODO segfault
         }
         m_current_pixmap = m_pixmaps[getView()].second;
         m_current_pixmap->setVisible(true);

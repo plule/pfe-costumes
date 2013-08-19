@@ -42,6 +42,20 @@ public:
      */
     QString getCurrentFileName();
 
+    /**
+     * @brief enableResizePreview enable or disable resizing of the displayed picture
+     * (for RAM/GPU economy)
+     * @param resize
+     */
+    void enableResizePreview(bool resize);
+
+    /**
+     * @brief setPreviewSize set the displayed picture size
+     * @param width
+     * @param size
+     */
+    void setPreviewSize(int width, int size);
+
 protected:
     virtual void resizeEvent(QResizeEvent *event);
 
@@ -152,6 +166,8 @@ private:
     QList<QDir> relativePaths;
     QVector<QPair<QString,QGraphicsPixmapItem*> > m_pixmaps;
     QGraphicsPixmapItem *m_current_pixmap;
+    bool m_resize_preview;
+    QPair<int,int> m_preview_dimension;
     int m_current_angle;
     int m_zoom;
     int m_min_zoom,m_max_zoom;
