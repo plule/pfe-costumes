@@ -164,6 +164,7 @@ void QTurntable::setNumber(int n)
         m_pixmaps[i].second->setVisible(false);
         this->scene()->addItem(m_pixmaps[i].second);
     }
+    m_current_pixmap = 0;
     /*if(n == 0)
         m_pixmaps.value(n).second->setPixmap(QPixmap());*/
 }
