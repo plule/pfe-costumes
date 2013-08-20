@@ -112,6 +112,8 @@ void progress_update_func(GPContext *context, unsigned int id, float current, vo
     (void)id; // TODO utiliser l'id (annulé, inutile)
 	QCamera* camera = static_cast<QCamera*>(data);
     if(camera->getWatchdog()->isActive()) {
+        qDebug() << camera;
+        qDebug() << camera->getWatchdog();
         camera->getWatchdog()->stop();
         camera->getWatchdog()->start();
     }
@@ -152,6 +154,7 @@ QCamera::QCamera()
 
 QCamera::~QCamera()
 {
+    qDebug() << "~QCamera";
     if(m_camera)
         gp_camera_exit(m_camera, m_context);
     delete m_watchdog;

@@ -5,6 +5,10 @@ VPATH = ..
 
 QT += widgets sql
 
+QMAKE_CXXFLAGS_DEBUG += -pg
+
+QMAKE_LFLAGS_DEBUG += -pg
+
 SOURCES += main.cpp \
     camerahandler/camerahandler.cpp \
     camerahandler/qcamera.cpp \

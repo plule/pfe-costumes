@@ -74,6 +74,7 @@ void MassCapture::launchMassCapture()
             m_morphology->cancelTurnMessage()->launch();
             emit problem(CameraProblem, tr("Camera seems to be disconnected"));
         }
+        qDebug() << "exiting timer timeout routine";
     });
     m_pathIndex.clear();
     m_captureTimer->start();
@@ -93,6 +94,7 @@ void MassCapture::onCaptured(int status, QString path, QStringList errors)
     } else {
         qWarning() << "Camera captured a photo for an unknown reason";
     }
+    qDebug() << "exiting captured routine";
 }
 
 void MassCapture::resume()
