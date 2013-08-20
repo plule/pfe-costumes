@@ -391,6 +391,7 @@ void MainWindow::on_captureButton_clicked()
 void MainWindow::setCamera(QPhoto::QCamera *camera)
 {
     if(camera != m_camera) {
+        qDebug() << "set camera " << camera;
         this->m_camera = camera;
         if(camera != 0) {
             connect(camera, SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));

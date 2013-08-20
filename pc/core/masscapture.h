@@ -42,7 +42,6 @@ public slots:
 
 private slots:
     void launchMassCapture();
-    void onCaptured(int status, QString path, QStringList errors);
 
 private:
     int m_index;
@@ -57,7 +56,6 @@ private:
     Problem m_problem;
     QTimer *m_captureTimer;
     int m_idCostume;
-    QMap<QString,int> m_pathIndex;
 };
 
 #endif // SYNCHRONISER_H

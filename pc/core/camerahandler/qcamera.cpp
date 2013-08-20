@@ -99,10 +99,10 @@ unsigned int progress_start_func(GPContext *context, float target, const char *t
     int id = 0; // TODO : Assigner un identifiant unique (finalement inutile dans le projet)
 	QCamera* camera = static_cast<QCamera*>(data);
     emit camera->progress_start(task, target);
-    if(camera->getWatchdog()->isActive()) {
+/*    if(camera->getWatchdog()->isActive()) {
         camera->getWatchdog()->stop();
         camera->getWatchdog()->start();
-    }
+    }*/
 	return id;
 }
 
@@ -110,13 +110,12 @@ void progress_update_func(GPContext *context, unsigned int id, float current, vo
 {
 	(void)context;
     (void)id; // TODO utiliser l'id (annulé, inutile)
+    qDebug() << current;
 	QCamera* camera = static_cast<QCamera*>(data);
-    if(camera->getWatchdog()->isActive()) {
-        qDebug() << camera;
-        qDebug() << camera->getWatchdog();
+    /*if(camera->getWatchdog()->isActive()) {
         camera->getWatchdog()->stop();
         camera->getWatchdog()->start();
-    }
+    }*/
     emit camera->progress_update(int(current));
 }
 
@@ -139,10 +138,10 @@ CameraAbilities QCamera::getAbilities()
     return m_abilities;
 }
 
-QTimer *QCamera::getWatchdog()
+/*QTimer *QCamera::getWatchdog()
 {
     return m_watchdog;
-}
+}*/
 
 QCamera::QCamera()
 {
@@ -157,9 +156,9 @@ QCamera::~QCamera()
     qDebug() << "~QCamera";
     if(m_camera)
         gp_camera_exit(m_camera, m_context);
-    delete m_watchdog;
-    m_camThread.exit();
-    m_camThread.wait(100);
+    //delete m_watchdog;
+    /*m_camThread.exit();
+    m_camThread.wait(100);*/
 }
 
 int QCamera::buildCamera(const char *model, const char *port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist)
@@ -203,16 +202,16 @@ QCamera::QCamera(const char *model, const char *port, CameraAbilitiesList *abili
         this->m_connected = false;
     }
 
-    m_watchdog = new QTimer(QApplication::instance()->thread());
+    /*m_watchdog = new QTimer(QApplication::instance()->thread());
     m_watchdog->setSingleShot(true);
-    m_watchdog->setInterval(5000);
+    m_watchdog->setInterval(5000);*/
 
-    connect(this, SIGNAL(camera_answered()), m_watchdog, SLOT(stop()));
-    connect(this, SIGNAL(wait_for_camera_answer()), m_watchdog, SLOT(start()));
-    connect(m_watchdog, SIGNAL(timeout()), this, SLOT(_onTimeout()), Qt::DirectConnection); // Direct connection to execute on watchdog thread
+    //connect(this, SIGNAL(camera_answered()), m_watchdog, SLOT(stop()));
+    //connect(this, SIGNAL(wait_for_camera_answer()), m_watchdog, SLOT(start()));
+    //connect(m_watchdog, SIGNAL(timeout()), this, SLOT(_onTimeout()), Qt::DirectConnection); // Direct connection to execute on watchdog thread
 
-    m_camThread.start();
-    this->moveToThread(&m_camThread);
+    /*m_camThread.start();
+    this->moveToThread(&m_camThread);*/
     this->setObjectName(QString(model));
     this->m_connected = true;
 }
@@ -289,13 +288,13 @@ void QCamera::_captureToFile(QString path, int nbTry)
     }
 }
 
-void QCamera::_onTimeout()
+/*void QCamera::_onTimeout()
 {
     m_connected = false;
     m_errors.append(tr("Connection with camera lost. Disconnect and reconnect it."));
     emit finished(Timeout, "", m_errors);
     emit connectionLost();
-}
+}*/
 
 void QCamera::captureToFile(const char *name, int nbTry)
 {
@@ -304,8 +303,8 @@ void QCamera::captureToFile(const char *name, int nbTry)
 
 void QCamera::captureToFile(QString path, int nbTry)
 {
-    QMetaObject::invokeMethod(this, "_captureToFile", Qt::QueuedConnection, Q_ARG(QString, path), Q_ARG(int, nbTry));
-
+    _captureToFile(path, nbTry);
+//    QMetaObject::invokeMethod(this, "_captureToFile", Qt::QueuedConnection, Q_ARG(QString, path), Q_ARG(int, nbTry));
 }
 
 void QCamera::appendError(QString error)

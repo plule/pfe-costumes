@@ -54,7 +54,6 @@ void MassCapture::launchMassCapture()
     m_captureTimer->setSingleShot(false);
     m_captureTimer->setInterval((1000 * m_rotationTime) / m_settings.value(S_PHOTONUMBER).toInt()); // delay between each shot in ms
 
-    connect(m_camera, &QPhoto::QCamera::finished, this, &MassCapture::onCaptured);
     connect(m_captureTimer, &QTimer::timeout, [=]() {
         qDebug() << "launching capture";
         if(m_index >= m_target) {
@@ -67,8 +66,8 @@ void MassCapture::launchMassCapture()
             m_index++;
             qDebug() << "capture n°" << QString::number(m_index);
             QString path = m_collection->getFilePath(m_idCostume, "turntable", "jpg", m_index);
-            m_pathIndex.insert(path, m_index);
             m_camera->captureToFile(path);
+            emit progress(m_index, path);
         } else {
             qDebug() << "camera problem";
             m_morphology->cancelTurnMessage()->launch();
@@ -76,25 +75,7 @@ void MassCapture::launchMassCapture()
         }
         qDebug() << "exiting timer timeout routine";
     });
-    m_pathIndex.clear();
     m_captureTimer->start();
-}
-
-void MassCapture::onCaptured(int status, QString path, QStringList errors)
-{
-    qDebug() << "Captured " << path << " with status " << QString::number(status);
-    if(status != QPhoto::QCamera::OK) {
-        m_problem = CameraProblem;
-        m_captureTimer->stop(); // stop trying to capture photos
-        m_morphology->cancelTurnMessage()->launch();
-        m_index--;
-        emit problem(CameraProblem, errors.join("\n"));
-    } else if(m_pathIndex.contains(path)) {
-        emit progress(m_pathIndex.value(path)-1, path);
-    } else {
-        qWarning() << "Camera captured a photo for an unknown reason";
-    }
-    qDebug() << "exiting captured routine";
 }
 
 void MassCapture::resume()
