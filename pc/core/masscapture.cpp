@@ -67,7 +67,7 @@ void MassCapture::launchMassCapture()
             qDebug() << "capture n°" << QString::number(m_index);
             QString path = m_collection->getFilePath(m_idCostume, "turntable", "jpg", m_index);
             m_camera->captureToFile(path);
-            emit progress(m_index, path);
+            emit progress(m_index-1, path);
         } else {
             qDebug() << "camera problem";
             m_morphology->cancelTurnMessage()->launch();

@@ -15,8 +15,8 @@ QTurntable::QTurntable(QWidget *parent) :
     m_fit = false;
 
     m_resize_preview = true;
-    m_preview_dimension.first = 1024;
-    m_preview_dimension.second = 768;
+    m_preview_dimension.first = 2000;
+    m_preview_dimension.second = 1500;
 }
 
 void QTurntable::wheelEvent(QWheelEvent *e)
