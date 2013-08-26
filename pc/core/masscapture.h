@@ -32,13 +32,8 @@ signals:
     void progress(int value, QString photoPath);
     // Indicate that work has been done with success
     void done();
-    // Indicate that a problem happened. Execution is stopped until resume() is called. To cancel, destroy the object
+    // Indicate that a problem happened. Execution is stopped and the object can be destroyed.
     void problem(MassCapture::Problem problem, QString description);
-
-public slots:
-    // If a problem happened, try to resume execution
-    void resume();
-
 
 private slots:
     void launchMassCapture();

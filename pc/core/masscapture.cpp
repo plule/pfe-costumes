@@ -7,7 +7,6 @@ MassCapture::MassCapture(QObject *parent) :
 
 MassCapture::~MassCapture()
 {
-    m_morphology->cancelTurnMessage()->launch();
 }
 
 void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *morphology, Collection *collection, int idCostume, int nbPhoto)
@@ -23,17 +22,8 @@ void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *mor
     m_captureTimer = new QTimer(this);
 
     qDebug() << "Mass Capture object created";
-    if(m_settings.value(S_AUTOMATEDROTATION).toBool()) {
-        m_morphology->completeTurnMessage(m_rotationTime);
-        QTimer *delayStart = new QTimer(this);
-        delayStart->setSingleShot(true);
-        delayStart->setInterval(m_settings.value(S_ROTATIONDELAY).toInt()*1000);
-        connect(delayStart, &QTimer::timeout, this, &MassCapture::launchMassCapture);
-        delayStart->start();
-    } else {
-        connect(m_camera, &QPhoto::QCamera::finished, this, &MassCapture::launchMassCapture);
-        m_camera->captureToFile("/tmp/dummy.jpg"); // ensure camera is initialized
-    }
+    connect(m_camera, &QPhoto::QCamera::finished, this, &MassCapture::launchMassCapture);
+    m_camera->captureToFile("/tmp/dummy.jpg"); // ensure camera is initialized
 }
 
 void MassCapture::setCamera(QPhoto::QCamera *camera)
@@ -59,8 +49,6 @@ void MassCapture::launchMassCapture()
         if(m_index >= m_target) {
             qDebug() << "capture finished without problem";
             m_captureTimer->stop();
-            if(m_settings.value(S_AUTOMATEDROTATION).toBool())
-                m_morphology->cancelTurnMessage()->launch();
             emit done();
         } else if(m_camera && m_camera->isConnected()) {
             m_index++;
@@ -70,21 +58,9 @@ void MassCapture::launchMassCapture()
             emit progress(m_index-1, path);
         } else {
             qDebug() << "camera problem";
-            m_morphology->cancelTurnMessage()->launch();
             emit problem(CameraProblem, tr("Camera seems to be disconnected"));
         }
         qDebug() << "exiting timer timeout routine";
     });
     m_captureTimer->start();
-}
-
-void MassCapture::resume()
-{
-    if(m_camera && m_camera->isConnected()) {
-        m_captureTimer->start(); // resume photos capture
-        m_problem = NoProblem;
-    } else {
-        m_problem = CameraProblem;
-        emit problem(CameraProblem, tr("Camera seems to be disconnected."));
-    }
 }

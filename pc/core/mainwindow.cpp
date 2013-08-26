@@ -416,22 +416,8 @@ void MainWindow::onMassCaptureProblem(MassCapture::Problem problem, QString desc
         errorDialog.setInformativeText(tr("Do you wish to try to continue the capture?"));
         errorDialog.setDetailedText(description);
         errorDialog.setIcon(QMessageBox::Warning);
-        errorDialog.setStandardButtons(QMessageBox::Retry | QMessageBox::Abort);
-        connect(&errorDialog, SIGNAL(accepted()), synchroniser, SLOT(resume()));
-        connect(&errorDialog, SIGNAL(rejected()), synchroniser, SLOT(deleteLater()));
-        switch(errorDialog.exec()) {
-        case QMessageBox::Retry:
-            if(problem == MassCapture::CameraProblem) {
-                m_settingsForm->refreshCameraList();
-                setCamera(m_settingsForm->getCamera());
-                synchroniser->setCamera(m_settingsForm->getCamera());
-            }
-            synchroniser->resume();
-            break;
-        case QMessageBox::Abort:
-            synchroniser->deleteLater();
-            break;
-        }
+        errorDialog.setStandardButtons(QMessageBox::Abort);
+        connect(&errorDialog, SIGNAL(finished(int)), synchroniser, SLOT(deleteLater()));
     }
 }
 
