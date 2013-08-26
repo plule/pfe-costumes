@@ -5,21 +5,15 @@
 #include <QString>
 #include <QDebug>
 #include <QFile>
-#include <QThread>
 #include <QTimer>
 #include <QApplication>
 #include <QStringList>
+#include <QThread>
 #include <gphoto2/gphoto2-camera.h>
 
 #define LEGACY_GPHOTO
 
-/*qDebug() << #fn;\*/
-#define GP_CALL(ret, fn, ...) ret = fn(__VA_ARGS__);
-/*emit wait_for_camera_answer();\
-    ret = fn(__VA_ARGS__);\
-    emit camera_answered();*/
-
-#define R_GP_CALL(ret, fn, ...) GP_CALL(ret, fn, __VA_ARGS__);\
+#define R_GP_CALL(ret, fn, ...) ret = fn(__VA_ARGS__);\
     if(ret < GP_OK) {return handleError(ret, #fn );}
 
 namespace QPhoto
@@ -41,11 +35,6 @@ public:
     QString getAbout();
     CameraAbilities getAbilities();
 
-    /**
-     * @brief getWatchdog
-     * @return The watchdog that will timeout when camera is lost
-     */
-    //QTimer *getWatchdog();
     /**
      * @brief getModel
      * @return Description of the camera model
@@ -85,7 +74,7 @@ protected:
     friend void message_func(GPContext *context, const char *, void *data);
     friend unsigned int progress_start_func(GPContext *context, float target, const char *, void *data);
 #endif
-    int _captureToFile(QFile *file);
+    int captureToFile(QFile *file);
 
 private:
     Camera *m_camera;
@@ -93,9 +82,6 @@ private:
     CameraAbilities m_abilities;
     QString m_model;
     QString m_port;
-    //GPPortInfo *portinfo;
-    //QThread m_camThread; // Each camera has its own thread to avoid global lock
-    //QTimer *m_watchdog; // Each camera has a watchdog to monitor potentially lockable function
     QStringList m_errors;
     bool m_busy;
     bool m_connected;
@@ -118,7 +104,6 @@ public slots:
 protected slots:
     //void _onTimeout();
     void appendError(QString error);
-    void _captureToFile(QString path, int nbTry=3);
 
 signals:
     /* GPhoto2 signals */
@@ -168,11 +153,6 @@ signals:
      * The QCamera object is now useless and broken. You must disconnect and reconnect the camera
      * and recreate the QCamera object.
      */
-    //void connectionLost();
-
-    /* Internal signals */
-    //void camera_answered();
-    //void wait_for_camera_answer();
 };
 }
 #endif
