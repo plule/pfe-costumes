@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>525</width>
-    <height>654</height>
+    <height>593</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -197,48 +197,17 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
-           <widget class="QDoubleSpinBox" name="turnDurationSpin">
-            <property name="suffix">
-             <string>s</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="automatedRotationLabel">
-            <property name="text">
-             <string>Automated rotation control</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QCheckBox" name="automatedRotationCheck">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="delayLabel">
-            <property name="text">
-             <string>Delay before capture (if rotation is automated)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QSpinBox" name="delaySpin">
-            <property name="suffix">
-             <string>s</string>
-            </property>
-            <property name="value">
-             <number>15</number>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="0">
            <widget class="QLabel" name="turnDurationLabel">
             <property name="text">
              <string>Turn duration</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QDoubleSpinBox" name="turnDurationSpin">
+            <property name="suffix">
+             <string>s</string>
             </property>
            </widget>
           </item>
@@ -485,22 +454,6 @@
     <hint type="destinationlabel">
      <x>327</x>
      <y>145</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>automatedRotationCheck</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>delaySpin</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>425</x>
-     <y>408</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>435</x>
-     <y>430</y>
     </hint>
    </hints>
   </connection>

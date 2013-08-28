@@ -33,15 +33,6 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
     ui->rotationSpeedSpin->setValue(m_settings.value(S_RPM).toDouble());
     ui->turnDurationSpin->setValue(60.0/m_settings.value(S_RPM).toDouble());
 
-    if(!m_settings.value(S_AUTOMATEDROTATION).isValid())
-        m_settings.setValue(S_AUTOMATEDROTATION,false);
-    ui->automatedRotationCheck->setChecked(m_settings.value(S_AUTOMATEDROTATION).toBool());
-
-    ui->delaySpin->setEnabled(m_settings.value(S_AUTOMATEDROTATION).toBool());
-    if(!m_settings.value(S_ROTATIONDELAY).isValid())
-        m_settings.setValue(S_ROTATIONDELAY,15);
-    ui->delaySpin->setValue(m_settings.value(S_ROTATIONDELAY).toInt());
-
     /* Model dimension */
     if(!m_settings.value(S_MODELWIDTH).isValid())
         m_settings.setValue(S_MODELWIDTH,100);

@@ -4,8 +4,6 @@
 #define S_RAWEXTENSION "rawextension"
 #define S_PHOTONUMBER "photonumber"
 #define S_RPM "rpm"
-#define S_AUTOMATEDROTATION "automatedrotation"
-#define S_ROTATIONDELAY "rotationdelay"
 #define S_MODELWIDTH "modelwidth"
 #define S_MODELDEPTH "modeldepth"
 #define S_XBEEPORT "xbeeport"
