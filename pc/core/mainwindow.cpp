@@ -396,8 +396,13 @@ void MainWindow::setCamera(QPhoto::QCamera *camera)
         if(camera != 0) {
             connect(camera, SIGNAL(progress_start(QString,int)), this, SLOT(startWork(QString,int)));
             connect(camera, SIGNAL(progress_update(int)), this->ui->workBar, SLOT(setValue(int)));
-
             connect(camera, SIGNAL(error(QString)), this->statusBar(), SLOT(showMessage(QString)));
+            connect(camera, &QPhoto::QCamera::finished, [=](int status){
+                if(status == QPhoto::QCamera::Error || status == QPhoto::QCamera::Timeout || status == QPhoto::QCamera::NotConnected) {
+                    // Camera failed capture multiple time, better try to reconnect next time
+                    m_camera = 0;
+                }
+            });
         }
     }
 }
