@@ -195,17 +195,6 @@ QString QCamera::getSummary()
 	return QString(cameratext.text);
 }
 
-void QCamera::captureToCamera(QString *cameraPath)
-{
-	CameraFilePath camera_file_path;
-    // TODO : ensure memory is set to card
-    if(gp_camera_capture(m_camera, GP_CAPTURE_IMAGE, &camera_file_path, m_context) < GP_OK)
-        return;
-	cameraPath->clear();
-	cameraPath->append(camera_file_path.folder);
-	cameraPath->append(camera_file_path.name);
-}
-
 int QCamera::captureToFile(QFile *localFile)
 {
 	CameraFilePath camera_file_path;
@@ -236,32 +225,35 @@ int QCamera::captureToFile(QFile *localFile)
     return GP_OK;
 }
 
-void QCamera::captureToFile(const char *path, int nbTry)
+int QCamera::captureToFile(const char *path, int nbTry)
 {
     m_busy = true;
     m_errors.clear();
     if(isConnected()) {
         QFile localFile(path);
+        int ret;
         for(int i = 0; i < nbTry; i++) {
-            int ret = captureToFile(&localFile);
+            ret = captureToFile(&localFile);
             if( ret == GP_OK) {
                 m_busy = false;
                 emit finished(OK, path, m_errors);
-                return;
+                return ret;
             }
             this->thread()->sleep(0.5);
         }
         m_busy = false;
         emit finished(Error, path, m_errors);
+        return ret; // last error
     } else {
         m_busy = false;
         emit finished(NotConnected, path, m_errors);
+        return -1; // generic error
     }
 }
 
-void QCamera::captureToFile(QString path, int nbTry)
+int QCamera::captureToFile(QString path, int nbTry)
 {
-    captureToFile(path.toStdString().c_str(), nbTry);
+    return captureToFile(path.toStdString().c_str(), nbTry);
 }
 
 void QCamera::appendError(QString error)

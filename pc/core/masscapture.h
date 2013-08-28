@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <cmath>
 #include <QTemporaryFile>
+#include <QThread>
 #include "camerahandler/qcamera.h"
 #include "common/arduinocommunication.h"
 #include "common/collection.h"

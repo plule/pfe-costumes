@@ -404,21 +404,20 @@ void MainWindow::setCamera(QPhoto::QCamera *camera)
 
 void MainWindow::onMassCaptureProblem(MassCapture::Problem problem, QString description)
 {
-    MassCapture *synchroniser = (MassCapture *)sender();
-    if(synchroniser != 0) {
-        QMessageBox errorDialog;
-        if(problem == MassCapture::CameraProblem)
-            errorDialog.setText(tr("The camera has encountered a problem."));
-        else if(problem == MassCapture::RotationProblem)
-            errorDialog.setText(tr("The rotating model has encountered a problem."));
-        else
-            errorDialog.setText(tr("An unknown problem occured."));
-        errorDialog.setInformativeText(tr("Do you wish to try to continue the capture?"));
-        errorDialog.setDetailedText(description);
-        errorDialog.setIcon(QMessageBox::Warning);
-        errorDialog.setStandardButtons(QMessageBox::Abort);
-        connect(&errorDialog, SIGNAL(finished(int)), synchroniser, SLOT(deleteLater()));
-    }
+    qDebug() << "Mass capture had a problem";
+    QMessageBox errorDialog;
+    if(problem == MassCapture::CameraProblem)
+        errorDialog.setText(tr("The camera has encountered a problem."));
+    else if(problem == MassCapture::RotationProblem)
+        errorDialog.setText(tr("The rotating model has encountered a problem."));
+    else
+        errorDialog.setText(tr("An unknown problem occured."));
+    errorDialog.setDetailedText(description);
+    errorDialog.setIcon(QMessageBox::Warning);
+    errorDialog.setStandardButtons(QMessageBox::Abort);
+    sender()->deleteLater();
+    m_progressDialog->reset();
+    errorDialog.exec();
 }
 
 void MainWindow::on_newCostume_clicked()

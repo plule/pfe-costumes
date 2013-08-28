@@ -22,8 +22,12 @@ void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *mor
     m_captureTimer = new QTimer(this);
 
     qDebug() << "Mass Capture object created";
-    connect(m_camera, &QPhoto::QCamera::finished, this, &MassCapture::launchMassCapture);
-    m_camera->captureToFile("/tmp/dummy.jpg"); // ensure camera is initialized
+    if(m_camera->captureToFile("/tmp/dummy.jpg") >= 0) // ensure camera is initialized
+        launchMassCapture();
+    else {
+        qDebug() << "failed to initialize camera";
+        emit problem(CameraProblem, tr("Camera seems disconnected."));
+    }
 }
 
 void MassCapture::setCamera(QPhoto::QCamera *camera)
@@ -38,7 +42,6 @@ void MassCapture::setCamera(QPhoto::QCamera *camera)
 
 void MassCapture::launchMassCapture()
 {
-    disconnect(m_camera, 0, this, 0);
     qDebug() << "camera synced and capture launched";
     m_index = 0;
     m_captureTimer->setSingleShot(false);
@@ -51,12 +54,18 @@ void MassCapture::launchMassCapture()
             m_captureTimer->stop();
             emit done();
         } else if(m_camera && m_camera->isConnected()) {
-            m_index++;
             qDebug() << "capture n°" << QString::number(m_index);
             QString path = m_collection->getFilePath(m_idCostume, "turntable", "jpg", m_index);
-            m_camera->captureToFile(path);
-            emit progress(m_index-1, path);
+            int ret = m_camera->captureToFile(path);
+            if(ret < 0) {
+                qDebug() << "Mass capture failed";
+                m_captureTimer->stop();
+                emit problem(CameraProblem, tr("Capture failed"));
+            } else {
+                emit progress(m_index++, path);
+            }
         } else {
+            m_captureTimer->stop();
             qDebug() << "camera problem";
             emit problem(CameraProblem, tr("Camera seems to be disconnected"));
         }

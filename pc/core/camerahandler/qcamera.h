@@ -90,7 +90,6 @@ private:
     int buildCamera(const char *m_model, const char *m_port, CameraAbilitiesList *abilitiesList, GPPortInfoList *portinfolist);
 
 public slots:
-    void captureToCamera(QString *camerapath); // TODO delete ?
     /**
      * @brief captureToFile capture a photo to a file.
      * The format depends on camera's configuration.
@@ -98,8 +97,8 @@ public slots:
      * @param path destination path
      * @param nbTry number of retry
      */
-    void captureToFile(const char *path, int nbTry=3);
-    void captureToFile(QString path, int nbTry=3);
+    int captureToFile(const char *path, int nbTry=3);
+    int captureToFile(QString path, int nbTry=3);
 
 protected slots:
     //void _onTimeout();
