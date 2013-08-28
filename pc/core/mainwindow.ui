@@ -55,8 +55,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>620</width>
-             <height>551</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_4"/>
@@ -232,20 +232,6 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
               <item>
-               <widget class="QPushButton" name="suzanneButton">
-                <property name="text">
-                 <string>Load Default Model 1</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="manButton">
-                <property name="text">
-                 <string>Load Default Model 2</string>
-                </property>
-               </widget>
-              </item>
-              <item>
                <widget class="QGroupBox" name="captureBox">
                 <property name="title">
                  <string>Capture</string>
@@ -255,23 +241,6 @@
                   <widget class="QPushButton" name="massCaptureButton">
                    <property name="text">
                     <string>Launch mass capture</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="resources/icons/icons.qrc">
-                     <normaloff>:/icons/camera.png</normaloff>:/icons/camera.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>16</width>
-                     <height>16</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="captureButton">
-                   <property name="text">
-                    <string>Recapture current view</string>
                    </property>
                    <property name="icon">
                     <iconset resource="resources/icons/icons.qrc">
@@ -396,13 +365,6 @@
                     </layout>
                    </item>
                   </layout>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="rotateToViewButton">
-                   <property name="text">
-                    <string>Rotate Model</string>
-                   </property>
-                  </widget>
                  </item>
                 </layout>
                </widget>

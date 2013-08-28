@@ -69,12 +69,6 @@ public slots:
     void onMassCaptureProblem(MassCapture::Problem problem, QString description);
     
 private slots:
-    void onCaptureDone(int status, QString path, QStringList errorList);
-
-    void on_captureButton_clicked();
-
-    void on_suzanneButton_pressed();
-
     void on_actionNew_Collection_triggered();
 
     void on_actionOpen_Collection_triggered();
@@ -85,13 +79,9 @@ private slots:
 
     void on_saveButton_clicked();
 
-    void on_manButton_clicked();
-
     void on_massCaptureButton_clicked();
 
     void on_actionSettings_triggered();
-
-    void on_rotateToViewButton_clicked();
 
 private:
     QWidget *createAdjustmentGroup(QString arduinoId);

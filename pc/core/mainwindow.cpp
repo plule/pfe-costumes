@@ -350,44 +350,6 @@ void MainWindow::onModelDataChanged(const QModelIndex &topLeft, const QModelInde
     }
 }
 
-void MainWindow::onCaptureDone(int status, QString path, QStringList errorList)
-{
-    disconnect(m_cameraConnection);
-    switch(status) {
-    case QPhoto::QCamera::OK:
-    {
-        QString filename = convertRaw(path);
-        ui->turntable->setCurrentPicture(filename);
-        ui->collectionTable2->setDirty(ui->collectionTable2->loadedItem(), true);
-        updateSaveButton();
-        break;
-    }
-    case QPhoto::QCamera::Error:
-        displayError(tr("Failed to capture photo."), errorList.join("\n"));
-        break;
-    case QPhoto::QCamera::Timeout:
-        displayError(tr("Lost connection to the camera, you should disconnect and reconnect it."));
-        break;
-    }
-}
-
-void MainWindow::on_captureButton_clicked()
-{
-    if(m_camera != 0 && m_camera->isConnected()) {
-        QString filename = ui->turntable->getCurrentFileName(); // TODO if empty
-        QString path = m_collection->getTempStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
-        m_cameraConnection =  connect(m_camera, &QPhoto::QCamera::finished, this, &MainWindow::onCaptureDone);//[=](int status, QString path, QStringList errorList);
-        m_camera->captureToFile(path);
-    } else {
-        m_settingsForm->refreshCameraList();
-        setCamera(m_settingsForm->getCamera());
-        if(m_camera == 0)
-            this->displayError(tr("No camera connected"));
-        else
-            on_captureButton_clicked();
-    }
-}
-
 void MainWindow::setCamera(QPhoto::QCamera *camera)
 {
     if(camera != m_camera) {
@@ -435,46 +397,6 @@ void MainWindow::on_newCostume_clicked()
     ui->collectionTable2->selectionModel()->clear();
     ui->collectionTable2->setCurrentItem(item);
     m_mapper.toLast();
-}
-
-void MainWindow::on_suzanneButton_pressed()
-{
-    ui->turntable->setNumber(36);
-    this->startWork(tr("Loading views"), 36);
-    for(int i=1; i<=36; ++i)
-    {
-        QString filename = QString("%1.jpg").arg(QString::number(i), 3, QLatin1Char('0'));
-        QString dest = m_collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
-        QFile::remove(dest);
-        QFile::copy(":/default-model/suzanne/"+filename, dest);
-        QFile::setPermissions(dest, QFileDevice::ReadOwner|QFileDevice::WriteOwner);
-        ui->turntable->setPicture(i-1, filename);
-        this->ui->workBar->setValue(i);
-    }
-    ui->turntable->setView(0);
-    ui->turntable->fitInView();
-    ui->angleBox->setSingleStep(ui->turntable->getAngleStep());
-    updateSaveButton();
-}
-
-void MainWindow::on_manButton_clicked()
-{
-    ui->turntable->setNumber(36);
-    this->startWork(tr("Loading views"), 36);
-    for(int i=1; i<=36; ++i)
-    {
-        QString filename = QString("%1.jpg").arg(QString::number(i), 3, QLatin1Char('0'));
-        QString dest = m_collection->getStorageDir(getCurrentId(), "turntable").absoluteFilePath(filename);
-        QFile::remove(dest);
-        QFile::copy(":/default-model/man/"+filename, dest);
-        QFile::setPermissions(dest, QFileDevice::ReadOwner|QFileDevice::WriteOwner);
-        ui->turntable->setPicture(i-1, filename);
-        this->ui->workBar->setValue(i);
-    }
-    ui->turntable->setView(0);
-    ui->turntable->fitInView();
-    ui->angleBox->setSingleStep(ui->turntable->getAngleStep());
-    updateSaveButton();
 }
 
 void MainWindow::on_actionNew_Collection_triggered()
@@ -589,11 +511,6 @@ void MainWindow::on_massCaptureButton_clicked()
 void MainWindow::on_actionSettings_triggered()
 {
     m_settingsForm->show();
-}
-
-void MainWindow::on_rotateToViewButton_clicked()
-{
-    m_arduinoCommunication->rotationMessage(ui->viewDial->value())->launch();
 }
 
 QWidget *MainWindow::createAdjustmentGroup(QString arduinoId)
