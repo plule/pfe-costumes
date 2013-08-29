@@ -28,5 +28,16 @@ bool QImagePreviewWindow::setPicture(QString path)
 
 void QImagePreviewWindow::resizeEvent(QResizeEvent *e)
 {
+    (void)e;
     ui->graphicsView->fitInView(m_pixmapItem, Qt::KeepAspectRatio);
+}
+
+void QImagePreviewWindow::on_closeButton_clicked()
+{
+    this->hide();
+}
+
+void QImagePreviewWindow::on_recaptureButton_clicked()
+{
+    emit recaptureRequired();
 }

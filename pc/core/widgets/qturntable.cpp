@@ -89,7 +89,7 @@ void QTurntable::zoom(int factor)
     }
 }
 
-void QTurntable::loadDirs(QList<QDir> dirs, bool force)
+void QTurntable::loadDirs(QList<QDir> dirs)
 {
     relativePaths = dirs;
     QSet<QString> filenamesSet;

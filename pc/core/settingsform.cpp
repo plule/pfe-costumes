@@ -261,6 +261,7 @@ void SettingsForm::on_testPortButton_clicked()
 
 void SettingsForm::on_servoPosSpin_valueChanged(int position)
 {
+    (void)position;
     m_motorSliderChanged = true;
 }
 
@@ -284,6 +285,7 @@ void SettingsForm::on_renameButton_clicked()
 {
     Transaction *transaction = m_xbee->renameMessage(ui->modelCalibBox->itemData(ui->modelCalibBox->currentIndex()).toString(), ui->renameEdit->text());
     connect(transaction, &Transaction::finished, [=](int id){
+        (void)id;
         m_xbee->helloMessage()->launch();
     });
     transaction->launch();

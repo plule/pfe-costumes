@@ -5,6 +5,8 @@
 TARGET = DcRawQT
 TEMPLATE = lib
 CONFIG += staticlib
+QMAKE_CXXFLAGS += -w # dcraw is fuuuuull of warnings...
+
 DEFINES += DCRAWQT_LIBRARY \
     __MINGW__ \
     USE_CIMG \

@@ -157,7 +157,7 @@ public slots:
      * @param dirs
      * @param force
      */
-    virtual void loadDirs(QList<QDir> dirs, bool force=false);
+    virtual void loadDirs(QList<QDir> dirs);
 
 private:
     int computeZoom();

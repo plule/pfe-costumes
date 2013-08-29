@@ -20,7 +20,15 @@ public:
     bool setPicture(QString path);
 
     virtual void resizeEvent(QResizeEvent *e);
+
+signals:
+    void recaptureRequired();
     
+private slots:
+    void on_closeButton_clicked();
+
+    void on_recaptureButton_clicked();
+
 private:
     Ui::QImagePreviewWindow *ui;
     QGraphicsScene m_scene;
