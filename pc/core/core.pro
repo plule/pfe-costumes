@@ -53,6 +53,10 @@ DEFINES += DCRAWQT_LIBRARY \
 LIBS += -lgphoto2 -lgphoto2_port ../3rdparty/DcRawQT/libDcRawQT.a ../3rdparty/qextserialport/libqextserialport.a
 
 TARGET = ../mannequinage
+target.path = /usr/bin
+desktop.path = /usr/share/applications
+desktop.files += mannequinage.desktop
+INSTALLS += target desktop
 
 FORMS += \
     mainwindow.ui \

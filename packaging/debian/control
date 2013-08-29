@@ -1,0 +1,15 @@
+Source: mannequinage
+Section: multiverse/graphics
+Priority: extra
+Maintainer: Pierre Lulé <pierre@lule.fr>
+Build-Depends: debhelper (>= 8.0.0), qt5-default, libgphoto2-2-dev, libqt5sql5-sqlite
+Standards-Version: 3.9.4
+Homepage: https://github.com/plule/pfe-costumes
+#Vcs-Git: git://git.debian.org/collab-maint/mannequinage.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/mannequinage.git;a=summary
+
+Package: mannequinage
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Costume numerisation project
+ This software allows someone to capture a rotating model in order to have a 360° rotating view. Moreover it allows to control a mechanical model.
