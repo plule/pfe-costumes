@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     common/transaction.cpp \
     widgets/qellipseslider.cpp \
     common/qlistmodel.cpp \
-    common/arduinocommunication.cpp
+    common/arduinocommunication.cpp \
+    widgets/qimagepreviewwindow.cpp
 
 HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
@@ -39,7 +40,8 @@ HEADERS += camerahandler/camerahandler.h \
     widgets/qellipseslider.h \
     common/qlistmodel.h \
     common/arduinocommunication.h \
-    includes/settings.h
+    includes/settings.h \
+    widgets/qimagepreviewwindow.h
 
 CONFIG += c++11 qt warn_on release debug
 
@@ -55,7 +57,8 @@ TARGET = ../mannequinage
 FORMS += \
     mainwindow.ui \
     settingsform.ui \
-    widgets/qellipseslider.ui
+    widgets/qellipseslider.ui \
+    widgets/qimagepreviewwindow.ui
 
 TRANSLATIONS = resources/core_fr.ts
 

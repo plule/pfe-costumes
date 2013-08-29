@@ -26,6 +26,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_settingsForm, SIGNAL(cameraChanged(QPhoto::QCamera*)), this, SLOT(setCamera(QPhoto::QCamera*)));
     setCamera(m_settingsForm->getCamera());
 
+    // Image Preview Window
+    m_imagePreview = new QImagePreviewWindow(this);
+
     // Arduino comm configuration and ui init
     m_arduinoCommunication->setPort(m_settingsForm->getXbeePort());
 
@@ -554,4 +557,20 @@ QWidget *MainWindow::createAdjustmentGroup(QString arduinoId)
         slider->setBaseOffset(m_settingsForm->getModelWidth(), m_settingsForm->getModelDepth());
     }
     return group;
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    if(m_camera != 0) {
+        m_camera->captureToFile("/tmp/preview.jpg");
+        m_imagePreview->setPicture("/tmp/preview.jpg");
+        m_imagePreview->show();
+    } else {
+        m_settingsForm->refreshCameraList();
+        setCamera(m_settingsForm->getCamera());
+        if(m_camera != 0) {
+            on_pushButton_clicked();
+        } else
+            this->displayError(tr("No camera connected"), "");
+    }
 }

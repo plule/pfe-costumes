@@ -28,6 +28,7 @@
 #include "widgets/qloadedlistwidget.h"
 #include "widgets/qturntable.h"
 #include "widgets/qellipseslider.h"
+#include "widgets/qimagepreviewwindow.h"
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
 #include "common/collection.h"
@@ -83,11 +84,14 @@ private slots:
 
     void on_actionSettings_triggered();
 
+    void on_pushButton_clicked();
+
 private:
     QWidget *createAdjustmentGroup(QString arduinoId);
 
     Ui::MainWindow *ui;
     SettingsForm *m_settingsForm;
+    QImagePreviewWindow *m_imagePreview;
     QProgressDialog *m_progressDialog;
     QPhoto::CameraHandler *m_handler;
     QList<QPixmap> *m_pics;
