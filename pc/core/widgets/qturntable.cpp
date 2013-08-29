@@ -74,6 +74,13 @@ void QTurntable::resizeEvent(QResizeEvent *event)
         fitInView();
 }
 
+QPixmap QTurntable::createPixmap(QString path)
+{
+    ExifData *exifData = exif_data_new_from_file(path.toStdString().c_str());
+    QPixmap pic(path);
+    // TODO finir
+}
+
 void QTurntable::zoom(int factor)
 {
     m_fit = false;

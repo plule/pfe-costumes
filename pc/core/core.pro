@@ -50,7 +50,7 @@ DEFINES += DCRAWQT_LIBRARY \
     USE_CIMG \
     NODEPS
 
-LIBS += -lgphoto2 -lgphoto2_port ../3rdparty/DcRawQT/libDcRawQT.a ../3rdparty/qextserialport/libqextserialport.a
+LIBS += -lgphoto2 -lgphoto2_port -lexif ../3rdparty/DcRawQT/libDcRawQT.a ../3rdparty/qextserialport/libqextserialport.a
 
 TARGET = ../mannequinage
 target.path = /usr/bin

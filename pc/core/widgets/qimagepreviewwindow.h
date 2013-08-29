@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
+#include <QDebug>
+#include <libexif/exif-data.h>
 
 namespace Ui {
 class QImagePreviewWindow;
@@ -21,9 +23,13 @@ public:
 
     virtual void resizeEvent(QResizeEvent *e);
 
+
 signals:
     void recaptureRequired();
     
+protected:
+    QPixmap createPixmap(QString path);
+
 private slots:
     void on_closeButton_clicked();
 
