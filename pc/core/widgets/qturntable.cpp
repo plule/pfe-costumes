@@ -74,13 +74,6 @@ void QTurntable::resizeEvent(QResizeEvent *event)
         fitInView();
 }
 
-QPixmap QTurntable::createPixmap(QString path)
-{
-    ExifData *exifData = exif_data_new_from_file(path.toStdString().c_str());
-    QPixmap pic(path);
-    // TODO finir
-}
-
 void QTurntable::zoom(int factor)
 {
     m_fit = false;
@@ -178,7 +171,7 @@ void QTurntable::setNumber(int n)
 
 void QTurntable::addPicture(QString path)
 {
-    QPixmap pic(getPathOf(path));
+    QPixmap pic = ExifPixmap::createPixmap(getPathOf(path));
     QGraphicsPixmapItem *item = new QGraphicsPixmapItem(pic);
     this->scene()->addItem(item);
     m_pixmaps.append(QPair<QString,QGraphicsPixmapItem*>(path,item));
@@ -187,7 +180,7 @@ void QTurntable::addPicture(QString path)
 
 void QTurntable::setPicture(int index, QString path)
 {
-    QPixmap pic(getPathOf(path));
+    QPixmap pic = ExifPixmap::createPixmap(getPathOf(path));
     if(m_resize_preview)
         pic = pic.scaled(m_preview_dimension.first, m_preview_dimension.second, Qt::KeepAspectRatio);
     if(index >= m_pixmaps.size())

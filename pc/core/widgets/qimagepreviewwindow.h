@@ -6,6 +6,7 @@
 #include <QGraphicsPixmapItem>
 #include <QDebug>
 #include <libexif/exif-data.h>
+#include "common/exifpixmap.h"
 
 namespace Ui {
 class QImagePreviewWindow;
@@ -26,9 +27,6 @@ public:
 
 signals:
     void recaptureRequired();
-    
-protected:
-    QPixmap createPixmap(QString path);
 
 private slots:
     void on_closeButton_clicked();

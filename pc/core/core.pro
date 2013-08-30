@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     widgets/qellipseslider.cpp \
     common/qlistmodel.cpp \
     common/arduinocommunication.cpp \
-    widgets/qimagepreviewwindow.cpp
+    widgets/qimagepreviewwindow.cpp \
+    common/exifpixmap.cpp
 
 HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
@@ -41,7 +42,8 @@ HEADERS += camerahandler/camerahandler.h \
     common/qlistmodel.h \
     common/arduinocommunication.h \
     includes/settings.h \
-    widgets/qimagepreviewwindow.h
+    widgets/qimagepreviewwindow.h \
+    common/exifpixmap.h
 
 CONFIG += c++11 qt warn_on release debug
 

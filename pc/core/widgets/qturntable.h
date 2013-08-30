@@ -10,7 +10,7 @@
 #include <QStringList>
 #include <QDir>
 #include <QSet>
-#include <libexif/exif-data.h>
+#include "common/exifpixmap.h"
 
 #include "math.h"
 
@@ -60,13 +60,6 @@ public:
 
 protected:
     virtual void resizeEvent(QResizeEvent *event);
-
-    /**
-     * @brief createPixmap creates a displayable and maybe rotated pixmap
-     * @param path
-     * @return
-     */
-    QPixmap createPixmap(QString path);
 
 signals:
     /**
