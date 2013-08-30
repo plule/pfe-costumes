@@ -88,6 +88,14 @@
                 </color>
                </brush>
               </property>
+              <property name="sceneRect">
+               <rectf>
+                <x>-3000.000000000000000</x>
+                <y>-3000.000000000000000</y>
+                <width>6000.000000000000000</width>
+                <height>6000.000000000000000</height>
+               </rectf>
+              </property>
               <property name="dragMode">
                <enum>QGraphicsView::ScrollHandDrag</enum>
               </property>
