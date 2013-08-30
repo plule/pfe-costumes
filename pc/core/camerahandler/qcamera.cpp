@@ -105,7 +105,6 @@ void progress_update_func(GPContext *context, unsigned int id, float current, vo
 {
 	(void)context;
     (void)id; // no multiple camera at a time, useless
-    qDebug() << current;
 	QCamera* camera = static_cast<QCamera*>(data);
     emit camera->progress_update(int(current));
 }

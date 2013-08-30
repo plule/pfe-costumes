@@ -25,7 +25,6 @@ public:
     explicit QTurntable(QWidget *parent = 0);
     virtual void wheelEvent(QWheelEvent *event);
     int getZoomStep();
-    int getAngleStep();
 
     /**
      * @brief getNumber
@@ -68,11 +67,6 @@ signals:
      */
     void zoomChanged(int zoom);
     /**
-     * @brief angleChanged is emitted when angle of view changed
-     * @param angle
-     */
-    void angleChanged(int angle);
-    /**
      * @brief loadStart is emitted when loading of a serie of pic started
      * @param task textual description of the task
      * @param target max value
@@ -87,6 +81,18 @@ signals:
      * @brief loadComplete is emitted when the pictures are all loaded
      */
     void loadComplete();
+
+    /**
+     * @brief viewChanged is emitted when the viewed picture is changed
+     * @param view the new view
+     */
+    void viewChanged(int view);
+
+    /**
+     * @brief numberChanged is emitted when the total number of pictures of the turntable is changed
+     * @param number the new number of pictures
+     */
+    void numberChanged(int number);
     
 public slots:
     /**
@@ -121,11 +127,6 @@ public slots:
      * @param path
      */
     virtual void setPictureAndView(int index, QString path);
-    /**
-     * @brief setAngle rotate the model
-     * @param angle between 0-360
-     */
-    virtual void setAngle(int angle);
 
     /**
      * @brief fitInView fits the picture in the view.
@@ -176,7 +177,7 @@ private:
     QGraphicsPixmapItem *m_current_pixmap;
     bool m_resize_preview;
     QPair<int,int> m_preview_dimension;
-    int m_current_angle;
+    int m_current_view;
     int m_zoom;
     int m_min_zoom,m_max_zoom;
     double m_zoom_step;

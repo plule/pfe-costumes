@@ -13,6 +13,24 @@ MainWindow::MainWindow(QWidget *parent) :
     QIcon::setThemeName("humility-icons"); // TODO fix this.
     ui->setupUi(this);
 
+    // Additional more complexe connections
+    ui->viewDial->setMinimum(0);
+    connect(ui->turntable, &QTurntable::viewChanged, [=](int view){
+        if(ui->turntable->getNumber() > 0)
+            ui->angleBox->setValue(view*360/ui->turntable->getNumber());
+    });
+    connect(ui->turntable, &QTurntable::numberChanged, [=](int number){
+        if(number > 0) {
+            ui->angleBox->setSingleStep(360/number);
+            ui->angleBox->setValue(ui->turntable->getView()*360/number);
+            ui->viewDial->setMaximum(number-1);
+        }
+    });
+    void (QSpinBox:: *spinboxSignal)(int) = &QSpinBox::valueChanged;
+    connect(ui->angleBox, spinboxSignal, [=](int angle){
+        ui->turntable->setView(ui->turntable->getNumber()*angle/360);
+    });
+
     // Camera handler and arduino communication modules
     m_handler = new QPhoto::CameraHandler();
     m_arduinoCommunication = new ArduinoCommunication(this);

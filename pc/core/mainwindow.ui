@@ -310,7 +310,7 @@
                         <number>0</number>
                        </property>
                        <property name="maximum">
-                        <number>359</number>
+                        <number>35</number>
                        </property>
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
@@ -644,15 +644,15 @@
    <header location="global">widgets/qturntable.h</header>
    <slots>
     <signal>zoomChanged(int)</signal>
-    <signal>angleChanged(int)</signal>
     <signal>loadStart(QString,int)</signal>
     <signal>loadUpdate(int)</signal>
     <signal>loadComplete()</signal>
+    <signal>viewChanged(int)</signal>
+    <signal>numberChanged(int)</signal>
     <slot>setView(int)</slot>
     <slot>fitInView()</slot>
     <slot>resetScale()</slot>
     <slot>setZoom(int)</slot>
-    <slot>setAngle(int)</slot>
     <slot>zoomIn()</slot>
     <slot>zoomOut()</slot>
    </slots>
@@ -675,7 +675,7 @@
  <connections>
   <connection>
    <sender>turntable</sender>
-   <signal>angleChanged(int)</signal>
+   <signal>viewChanged(int)</signal>
    <receiver>viewDial</receiver>
    <slot>setValue(int)</slot>
    <hints>
@@ -685,7 +685,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>784</x>
-     <y>462</y>
+     <y>414</y>
     </hint>
    </hints>
   </connection>
@@ -693,11 +693,11 @@
    <sender>viewDial</sender>
    <signal>valueChanged(int)</signal>
    <receiver>turntable</receiver>
-   <slot>setAngle(int)</slot>
+   <slot>setView(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>784</x>
-     <y>462</y>
+     <y>414</y>
     </hint>
     <hint type="destinationlabel">
      <x>338</x>
@@ -717,39 +717,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>848</x>
-     <y>462</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>angleBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>turntable</receiver>
-   <slot>setAngle(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>784</x>
-     <y>530</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>338</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>turntable</sender>
-   <signal>angleChanged(int)</signal>
-   <receiver>angleBox</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>338</x>
-     <y>149</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>784</x>
-     <y>530</y>
+     <y>414</y>
     </hint>
    </hints>
   </connection>
@@ -761,7 +729,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>848</x>
-     <y>530</y>
+     <y>449</y>
     </hint>
     <hint type="destinationlabel">
      <x>338</x>
@@ -781,7 +749,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>848</x>
-     <y>530</y>
+     <y>449</y>
     </hint>
    </hints>
   </connection>
@@ -793,7 +761,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>848</x>
-     <y>462</y>
+     <y>414</y>
     </hint>
     <hint type="destinationlabel">
      <x>338</x>

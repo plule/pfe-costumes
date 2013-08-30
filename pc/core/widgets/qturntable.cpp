@@ -6,7 +6,7 @@ QTurntable::QTurntable(QWidget *parent) :
     this->setScene(new QGraphicsScene());
     //m_current_pixmap = this->scene()->addPixmap(QPixmap());
     //m_current_pixmap->setTransformationMode(Qt::SmoothTransformation);
-    m_current_angle = -1;
+    m_current_view = -1;
     m_zoom = 1;
     m_zoom_step = 1.25;
     m_min_zoom = 1;
@@ -36,11 +36,6 @@ int QTurntable::getZoomStep()
     return 360 / m_pixmaps.size();
 }
 
-int QTurntable::getAngleStep()
-{
-    return 3;
-}
-
 int QTurntable::getNumber()
 {
     return m_pixmaps.size();
@@ -48,7 +43,7 @@ int QTurntable::getNumber()
 
 int QTurntable::getView()
 {
-    return m_current_angle*getNumber()/360;
+    return m_current_view;
 }
 
 QString QTurntable::getCurrentFileName()
@@ -110,8 +105,8 @@ void QTurntable::loadDirs(QList<QDir> dirs)
         }
         emit loadComplete();
     }
-    if((m_current_angle == -1) | (getView() >= files.size()))
-        setAngle(0);
+    if((m_current_view == -1) || (getView() >= files.size()))
+        setView(0);
     if(m_fit)
         fitInView();
 }
@@ -170,8 +165,7 @@ void QTurntable::setNumber(int n)
         this->scene()->addItem(m_pixmaps[i].second);
     }
     m_current_pixmap = 0;
-    /*if(n == 0)
-        m_pixmaps.value(n).second->setPixmap(QPixmap());*/
+    emit numberChanged(n);
 }
 
 void QTurntable::addPicture(QString path)
@@ -193,17 +187,11 @@ void QTurntable::setPicture(int index, QString path)
     QFileInfo infos(getPathOf(path));
     m_pixmaps[index].first = infos.fileName();
     m_pixmaps[index].second->setPixmap(pic);
-    qDebug() << "index " << QString::number(index) << " view " << QString::number(getView());
     if(index == getView()) {
         m_current_pixmap = m_pixmaps[index].second;
         m_current_pixmap->setVisible(true);
     }
-    /*m_pixmaps[index] = QPair<QString,QPixmap>(path,pic);
-    if(index == m_current)
-    {
-        m_current_pixmap->setPixmap(pic);
-    }*/
-    if(m_current_angle < 0)
+    if(m_current_view < 0)
         setView(0);
 }
 
@@ -216,31 +204,23 @@ void QTurntable::setCurrentPicture(QString path)
 
 void QTurntable::setView(int view)
 {
-    setAngle(view*360/getNumber());
+    if(view < m_pixmaps.size() && view != getView()) {
+        if(m_current_pixmap != 0) {
+            m_current_pixmap->setVisible(false); // TODO segfault
+        }
+        m_current_pixmap = m_pixmaps[view].second;
+        m_current_pixmap->setVisible(true);
+        m_current_view = view;
+        if(m_fit)
+            fitInView();
+        emit viewChanged(view);
+    }
 }
 
 void QTurntable::setPictureAndView(int index, QString path)
 {
-    qDebug() << "view " << QString::number(index) << " path " << path;
     setPicture(index, path);
     setView(index);
-}
-
-void QTurntable::setAngle(int angle)
-{
-    if(getView() < m_pixmaps.size() && angle != m_current_angle) {
-        if(m_current_pixmap != 0) {
-            m_current_pixmap->setVisible(false); // TODO segfault
-        }
-        m_current_pixmap = m_pixmaps[getView()].second;
-        m_current_pixmap->setVisible(true);
-        m_current_angle = angle;
-        //m_current_pixmap->setPixmap(m_pixmaps[m_current].second);
-        if(m_fit)
-            fitInView();
-        emit angleChanged(angle);
-    }
-    //setView(round(((double)m_pixmaps.size() * (double)angle) / 360.0));
 }
 
 void QTurntable::fitInView()
