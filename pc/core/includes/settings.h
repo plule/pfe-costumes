@@ -9,5 +9,6 @@
 #define S_XBEEPORT "xbeeport"
 #define S_CAMERA "camera"
 #define S_COLLECTION "collection"
+#define S_BACKGROUNDCOLOR "backgroundcolor"
 
 #endif // SETTINGS_H

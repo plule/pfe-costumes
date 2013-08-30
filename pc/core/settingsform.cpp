@@ -42,6 +42,16 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
         m_settings.setValue(S_MODELDEPTH,124);
     ui->modelDepthBox->setValue(m_settings.value(S_MODELDEPTH).toInt());
 
+    /* Appearance */
+    if(!m_settings.value(S_BACKGROUNDCOLOR).isValid())
+        m_settings.setValue(S_BACKGROUNDCOLOR, QColor(0,0,0));
+    m_colorDialog.setCurrentColor(m_settings.value(S_BACKGROUNDCOLOR).value<QColor>());
+    const QString COLOR_STYLE("QPushButton { background-color : %1}");
+    ui->backgroundColorButton->setStyleSheet(COLOR_STYLE.arg(m_settings.value(S_BACKGROUNDCOLOR).value<QColor>().name()));
+    connect(&m_colorDialog, &QColorDialog::colorSelected, [=](const QColor& color){
+        ui->backgroundColorButton->setStyleSheet(COLOR_STYLE.arg(color.name()));
+    });
+
     /* Calibration tab */
     ui->modelCalibBox->setModel(m_xbee->model());
     for(int i = 0; i < m_xbee->getMotorsNumber(); i++) {
@@ -208,6 +218,11 @@ void SettingsForm::apply()
         emit modelDepthChanged(newModelDepth);
     }
 
+    if(m_settings.value(S_BACKGROUNDCOLOR).value<QColor>() != m_colorDialog.currentColor()) {
+        m_settings.setValue(S_BACKGROUNDCOLOR, m_colorDialog.currentColor());
+        emit backgroundColorChanged(m_colorDialog.currentColor());
+    }
+
     if(m_camera != 0)
         m_settings.setValue(S_CAMERA, m_camera->getModel());
     if(m_xbeePort != "")
@@ -215,7 +230,6 @@ void SettingsForm::apply()
     if(ui->rawExtensionEdit->text() != "")
         m_settings.setValue(S_RAWEXTENSION, ui->rawExtensionEdit->text());
 
-    qDebug() << ui->captureNumber->value();
     m_settings.setValue(S_PHOTONUMBER,ui->captureNumber->value());
     m_settings.setValue(S_RPM,ui->rotationSpeedSpin->value());
 }
@@ -227,6 +241,7 @@ void SettingsForm::cancel()
     ui->captureNumber->setValue(m_settings.value(S_PHOTONUMBER).toInt());
     ui->modelDepthBox->setValue(m_settings.value(S_MODELDEPTH).toInt());
     ui->modelWidthBox->setValue(m_settings.value(S_MODELWIDTH).toInt());
+    m_colorDialog.setCurrentColor(m_settings.value(S_BACKGROUNDCOLOR).value<QColor>());
 }
 
 void SettingsForm::on_detectCamerasButton_clicked()
@@ -301,4 +316,9 @@ void SettingsForm::on_rotationSpeedSpin_valueChanged(double rpm)
 {
     if(rpm > 0)
         ui->turnDurationSpin->setValue(60.0/rpm);
+}
+
+void SettingsForm::on_backgroundColorButton_clicked()
+{
+    m_colorDialog.show();
 }

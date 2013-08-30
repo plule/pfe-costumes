@@ -41,3 +41,9 @@ void QImagePreviewWindow::on_recaptureButton_clicked()
 {
     emit recaptureRequired();
 }
+
+
+void QImagePreviewWindow::setBackgroundColor(QColor color)
+{
+    ui->graphicsView->setBackgroundBrush(QBrush(color));
+}

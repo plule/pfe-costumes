@@ -116,6 +116,11 @@ void QTurntable::loadDirs(QList<QDir> dirs)
         fitInView();
 }
 
+void QTurntable::setBackgroundColor(QColor color)
+{
+    setBackgroundBrush(QBrush(color));
+}
+
 int QTurntable::computeZoom()
 {
     qreal sc = transform().m11();

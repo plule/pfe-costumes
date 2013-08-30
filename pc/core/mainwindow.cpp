@@ -32,6 +32,12 @@ MainWindow::MainWindow(QWidget *parent) :
     // Arduino comm configuration and ui init
     m_arduinoCommunication->setPort(m_settingsForm->getXbeePort());
 
+    // Monitor background color changes
+    m_imagePreview->setBackgroundColor(m_settings.value(S_BACKGROUNDCOLOR).value<QColor>());
+    ui->turntable->setBackgroundColor(m_settings.value(S_BACKGROUNDCOLOR).value<QColor>());
+    connect(m_settingsForm, &SettingsForm::backgroundColorChanged, m_imagePreview, &QImagePreviewWindow::setBackgroundColor);
+    connect(m_settingsForm, &SettingsForm::backgroundColorChanged, ui->turntable, &QTurntable::setBackgroundColor);
+
     // This timer check 5 time a second if there is motor distance messages to send to the arduinos.
     // It will send only one message each time (to avoid overflowing arduino's serial)
     m_motorTimer = new QTimer(this);

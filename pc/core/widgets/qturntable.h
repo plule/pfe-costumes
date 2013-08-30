@@ -161,6 +161,12 @@ public slots:
      */
     virtual void loadDirs(QList<QDir> dirs);
 
+    /**
+     * @brief setBackgroundColor changes the image view background color
+     * @param color
+     */
+    virtual void setBackgroundColor(QColor color);
+
 private:
     int computeZoom();
     QString getPathOf(QString filename);

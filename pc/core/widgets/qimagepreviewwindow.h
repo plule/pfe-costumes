@@ -28,7 +28,11 @@ public:
 signals:
     void recaptureRequired();
 
+public slots:
+    void setBackgroundColor(QColor color);
+
 private slots:
+
     void on_closeButton_clicked();
 
     void on_recaptureButton_clicked();

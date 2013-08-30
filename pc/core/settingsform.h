@@ -2,6 +2,7 @@
 #define SETTINGSFORM_H
 
 #include <QDialog>
+#include <QColorDialog>
 #include <QList>
 #include <QSettings>
 #include <QMessageBox>
@@ -36,6 +37,7 @@ signals:
     void xbeePortChanged(QString port);
     void modelWidthChanged(int modelWidth);
     void modelDepthChanged(int modelDepth);
+    void backgroundColorChanged(QColor color);
     
 public slots:
     void apply();
@@ -60,6 +62,8 @@ private slots:
 
     void on_rotationSpeedSpin_valueChanged(double rpm);
 
+    void on_backgroundColorButton_clicked();
+
 private:
     QString guessXbeePort(QList<QString> candidates);
     QPhoto::QCamera *guessCamera(QList<QPhoto::QCamera*> candidates);
@@ -80,6 +84,8 @@ private:
 
     QSettings m_settings;
     QString m_xbeePort;
+
+    QColorDialog m_colorDialog;
 };
 
 #endif // SETTINGSFORM_H
