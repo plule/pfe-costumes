@@ -84,7 +84,7 @@ private slots:
 
     void on_actionSettings_triggered();
 
-    void on_pushButton_clicked();
+    void on_capturePreviewButton_clicked();
 
 private:
     QWidget *createAdjustmentGroup(QString arduinoId);

@@ -263,7 +263,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushButton">
+                  <widget class="QPushButton" name="capturePreviewButton">
                    <property name="text">
                     <string>Capture Preview Image</string>
                    </property>

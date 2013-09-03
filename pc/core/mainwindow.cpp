@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_progressDialog = new QProgressDialog();
 
     // Ui init and tweaks
-    QIcon::setThemeName("humility-icons"); // TODO fix this.
     ui->setupUi(this);
 
     // Additional more complexe connections
@@ -46,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Image Preview Window
     m_imagePreview = new QImagePreviewWindow(this);
+    connect(m_imagePreview, &QImagePreviewWindow::recaptureRequired, this, &MainWindow::on_capturePreviewButton_clicked);
 
     // Arduino comm configuration and ui init
     m_arduinoCommunication->setPort(m_settingsForm->getXbeePort());
@@ -583,7 +583,7 @@ QWidget *MainWindow::createAdjustmentGroup(QString arduinoId)
     return group;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_capturePreviewButton_clicked()
 {
     if(m_camera != 0) {
         m_camera->captureToFile("/tmp/preview.jpg");
@@ -593,7 +593,7 @@ void MainWindow::on_pushButton_clicked()
         m_settingsForm->refreshCameraList();
         setCamera(m_settingsForm->getCamera());
         if(m_camera != 0) {
-            on_pushButton_clicked();
+            on_capturePreviewButton_clicked();
         } else
             this->displayError(tr("No camera connected"), "");
     }
