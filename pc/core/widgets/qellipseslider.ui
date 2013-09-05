@@ -85,7 +85,7 @@ QGroupBox::title#mainGroup {
            <string notr="true"/>
           </property>
           <property name="suffix">
-           <string>cm</string>
+           <string>mm</string>
           </property>
           <property name="minimum">
            <number>400</number>

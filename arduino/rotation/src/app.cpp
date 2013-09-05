@@ -1,70 +1,38 @@
-#include <Arduino.h>
-//#include "../../../interfaces/interfaces.h"
 #include "../../common/communication.h"
 
-#define NBLED 6
-#define LIMIT 400
-
-extern HardwareSerial Serial;
-int i=0;
-int ledOn=4;
-int led=13;
-
-int leds[] = {12,11,10,9,8,7,6,5};
-unsigned char grayValue;
-unsigned char value;
-//int led=13;
+int relayPin = 7;
+int led = 13;
 
 void setup()
 {
     pinMode(led, OUTPUT);
-    pinMode(ledOn, OUTPUT);
-    digitalWrite(ledOn, HIGH);
-    Serial.begin(9600);
+    pinMode(relayPin, OUTPUT);
     digitalWrite(led, HIGH);
-    init_ard(ROLE_ROTATION);
+    init_ard(ROLE_ROTATION); // init the id and send the hello message
     digitalWrite(led, LOW);
 }
 
-unsigned char grayToBinary(unsigned char num)
+/*
+ * React to a message (called by common communication.cpp file)
+ */
+bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs)
 {
-    unsigned char mask;
-    for (mask = num >> 1; mask != 0; mask = mask >> 1)
-    {
-        num = num ^ mask;
+    bool ok = false;
+    switch(type) {
+    case MSG_TURN:
+        ok = true;
+        digitalWrite(relayPin, HIGH);
+        break;
+    case MSG_CANCEL_TURN:
+        ok = true;
+        digitalWrite(relayPin, LOW);
+        break;
+    default:
+        break;
     }
-    return num;
+    return ok;
 }
 
 void loop()
 {
-    unsigned long us;
-    int i;
-
-    grayValue = 0;
-    for(i=0; i < NBLED; i++) {
-        int led = leds[i];
-        pinMode(led, OUTPUT);
-        digitalWrite(led, HIGH);
-        delayMicroseconds(20);
-        us = micros();
-        pinMode(led, INPUT);
-        while(digitalRead(led) == HIGH){};
-        unsigned long delta = micros() - us;
-        Serial.println(delta);
-        if(delta > LIMIT) {
-            bitSet(grayValue, NBLED-i-1);
-        } else {
-            bitClear(grayValue, NBLED-i-1);
-        }
-    }
-    //float angle = (float)grayToBinary(grayValue) / (float)pow(2,NBLED);
-    Serial.println(grayToBinary(grayValue));//,3);
-    delay(100);
-}
-
-bool handleMessage(MSG_TYPE type, int idMsg, char *expe, HardwareSerial serial)
-{
-    return true;
-    //DBG("fio");
 }
