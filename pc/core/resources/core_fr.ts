@@ -116,7 +116,7 @@
     </message>
     <message>
         <location filename="../mainwindow.ui" line="70"/>
-        <location filename="../mainwindow.ui" line="237"/>
+        <location filename="../mainwindow.ui" line="245"/>
         <source>Capture</source>
         <translation>Capture</translation>
     </message>
@@ -137,7 +137,7 @@
         <translation type="obsolete">Captures multiples</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="243"/>
+        <location filename="../mainwindow.ui" line="251"/>
         <source>Launch mass capture</source>
         <translation>Capture 360°</translation>
     </message>
@@ -147,7 +147,7 @@
         <translation type="obsolete">De : </translation>
     </message>
     <message utf8="true">
-        <location filename="../mainwindow.ui" line="336"/>
+        <location filename="../mainwindow.ui" line="344"/>
         <source>°</source>
         <translation>°</translation>
     </message>
@@ -173,12 +173,12 @@
         <translation type="obsolete">Autofocus</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="280"/>
+        <location filename="../mainwindow.ui" line="288"/>
         <source>View</source>
         <translation>Vue</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="372"/>
+        <location filename="../mainwindow.ui" line="380"/>
         <source>%</source>
         <translation>%</translation>
     </message>
@@ -195,12 +195,12 @@
         <translation type="obsolete">Rotation automatique</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="412"/>
+        <location filename="../mainwindow.ui" line="442"/>
         <source>Informations</source>
         <translation>Informations</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="628"/>
+        <location filename="../mainwindow.ui" line="658"/>
         <source>Settings</source>
         <translation>Paramêtres</translation>
     </message>
@@ -241,27 +241,37 @@
         <translation type="obsolete">%p%</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="260"/>
+        <location filename="../mainwindow.ui" line="268"/>
         <source>Capture Preview Image</source>
         <translation>Capturer un aperçu</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="453"/>
+        <location filename="../mainwindow.ui" line="400"/>
+        <source>Turntable</source>
+        <translation>Plateau tournant</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="409"/>
+        <source>Launch/Stop rotation</source>
+        <translation>Démarrer/Arrêter la rotation</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="483"/>
         <source>File</source>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="464"/>
+        <location filename="../mainwindow.ui" line="494"/>
         <source>toolBar</source>
         <translation>Barre d&apos;état</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="610"/>
+        <location filename="../mainwindow.ui" line="640"/>
         <source>New Collection</source>
         <translation>Nouvelle Collection</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="619"/>
+        <location filename="../mainwindow.ui" line="649"/>
         <source>Open Collection</source>
         <translation>Ouvrir Collection</translation>
     </message>
@@ -274,43 +284,43 @@
         <translation type="obsolete">L&apos;appareil photo ne répond plus, vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="510"/>
-        <location filename="../mainwindow.cpp" line="574"/>
+        <location filename="../mainwindow.cpp" line="538"/>
+        <location filename="../mainwindow.cpp" line="602"/>
         <source>No camera connected</source>
         <translation>Aucun appareil photo détecté</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="206"/>
+        <location filename="../mainwindow.cpp" line="234"/>
         <source>Choose file(s)</source>
         <translation>Selectionner des fichiers</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="77"/>
+        <location filename="../mainwindow.cpp" line="101"/>
         <source>Distance motor message from known model for unknown motor</source>
         <translation>Message de changement de position de moteur venant d&apos;un mannequin pour un moteur inconnu</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="79"/>
+        <location filename="../mainwindow.cpp" line="103"/>
         <source>Distance motor message from unknown model</source>
         <translation>Message de changement de position venant d&apos;un mannequin inconnu</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="91"/>
+        <location filename="../mainwindow.cpp" line="116"/>
         <source>Model %1 connected</source>
         <translation>Mannequin %1 branché</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="99"/>
+        <location filename="../mainwindow.cpp" line="126"/>
         <source>Model %1 disconnected</source>
         <translation>Mannequin %1 débranché</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="241"/>
+        <location filename="../mainwindow.cpp" line="269"/>
         <source>Save Collection</source>
         <translation>Sauvegarder la Collection</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="242"/>
+        <location filename="../mainwindow.cpp" line="270"/>
         <source>The collection has unsaved changes.
 Do you want to save the modifications?</source>
         <translation>La collection a des modification non enregistrées.\nVoulez vous sauvegarder ?</translation>
@@ -332,17 +342,17 @@ Do you want to save the modifications?</source>
         <translation type="obsolete">La connection avec l&apos;appareil photo a été perdu. Vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="380"/>
+        <location filename="../mainwindow.cpp" line="408"/>
         <source>The camera has encountered a problem.</source>
         <translation>L&apos;appareil photo a eu un problème.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="382"/>
+        <location filename="../mainwindow.cpp" line="410"/>
         <source>The rotating model has encountered a problem.</source>
         <translation>Le mannequin a eu un problème.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="384"/>
+        <location filename="../mainwindow.cpp" line="412"/>
         <source>An unknown problem occured.</source>
         <translation>Un problème inconnu est survennu.</translation>
     </message>
@@ -351,12 +361,12 @@ Do you want to save the modifications?</source>
         <translation type="obsolete">Voulez-vous essayer de continuer les prises de vue ?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="483"/>
+        <location filename="../mainwindow.cpp" line="511"/>
         <source>Mass capture...</source>
         <translation>Prises de vue en cours...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="484"/>
+        <location filename="../mainwindow.cpp" line="512"/>
         <source>Abort Capture</source>
         <translation>Abandonner les prises de vue</translation>
     </message>
@@ -365,7 +375,7 @@ Do you want to save the modifications?</source>
         <translation type="obsolete">Échec des captures</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="396"/>
+        <location filename="../mainwindow.cpp" line="424"/>
         <source>New Costume</source>
         <translation>Nouveau Costume</translation>
     </message>
@@ -374,12 +384,12 @@ Do you want to save the modifications?</source>
         <translation type="obsolete">Chargement des vues</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="410"/>
+        <location filename="../mainwindow.cpp" line="438"/>
         <source>New collection</source>
         <translation>Nouvelle collection</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="438"/>
+        <location filename="../mainwindow.cpp" line="466"/>
         <source>Open collection</source>
         <translation>Ouvrir collection</translation>
     </message>
@@ -419,9 +429,8 @@ Do you want to save the modifications?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/qellipseslider.ui" line="88"/>
         <source>cm</source>
-        <translation>cm</translation>
+        <translation type="obsolete">cm</translation>
     </message>
     <message>
         <location filename="../widgets/qellipseslider.ui" line="101"/>
@@ -438,15 +447,16 @@ Do you want to save the modifications?</source>
         <translation>Côté</translation>
     </message>
     <message>
+        <location filename="../widgets/qellipseslider.ui" line="88"/>
         <location filename="../widgets/qellipseslider.ui" line="164"/>
         <location filename="../widgets/qellipseslider.ui" line="194"/>
-        <location filename="../widgets/qellipseslider.ui" line="251"/>
-        <location filename="../widgets/qellipseslider.ui" line="281"/>
+        <location filename="../widgets/qellipseslider.ui" line="249"/>
+        <location filename="../widgets/qellipseslider.ui" line="279"/>
         <source>mm</source>
         <translation>mm</translation>
     </message>
     <message>
-        <location filename="../widgets/qellipseslider.ui" line="215"/>
+        <location filename="../widgets/qellipseslider.ui" line="213"/>
         <source>Front</source>
         <translation>Avant</translation>
     </message>
@@ -490,6 +500,16 @@ Do you want to save the modifications?</source>
         <source>Preview</source>
         <translation>Aperçu</translation>
     </message>
+    <message>
+        <location filename="../widgets/qimagepreviewwindow.ui" line="48"/>
+        <source>Recapture</source>
+        <translation>Recapturer</translation>
+    </message>
+    <message>
+        <location filename="../widgets/qimagepreviewwindow.ui" line="65"/>
+        <source>Close Preview</source>
+        <translation>Fermer l&apos;aperçu</translation>
+    </message>
 </context>
 <context>
     <name>QPhoto::CameraHandler</name>
@@ -519,7 +539,7 @@ Do you want to save the modifications?</source>
 <context>
     <name>QTurntable</name>
     <message>
-        <location filename="../widgets/qturntable.cpp" line="106"/>
+        <location filename="../widgets/qturntable.cpp" line="101"/>
         <source>Loading 360Â° view</source>
         <translation>Chargement de la vue 360°</translation>
     </message>
@@ -615,7 +635,7 @@ Do you want to save the modifications?</source>
     </message>
     <message>
         <location filename="../settingsform.ui" line="220"/>
-        <location filename="../settingsform.ui" line="278"/>
+        <location filename="../settingsform.ui" line="301"/>
         <source>Model</source>
         <translation>Mannequin</translation>
     </message>
@@ -636,52 +656,62 @@ Do you want to save the modifications?</source>
         <translation>Profondeur du mannequin (défaut : 124mm)</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="270"/>
+        <location filename="../settingsform.ui" line="269"/>
+        <source>Appearance</source>
+        <translation>Apparence</translation>
+    </message>
+    <message>
+        <location filename="../settingsform.ui" line="275"/>
+        <source>Previews&apos; background color</source>
+        <translation>Couleur de fond des aperçus</translation>
+    </message>
+    <message>
+        <location filename="../settingsform.ui" line="293"/>
         <source>Model Calibration</source>
         <translation>Calibration des mannequins</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="288"/>
+        <location filename="../settingsform.ui" line="311"/>
         <source>Motor</source>
         <translation>Moteur</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="302"/>
+        <location filename="../settingsform.ui" line="325"/>
         <source>Servo Position</source>
         <translation>Position du moteur</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="336"/>
+        <location filename="../settingsform.ui" line="359"/>
         <source>Store closed position</source>
         <translation>Enregistrer la position fermée</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="343"/>
+        <location filename="../settingsform.ui" line="366"/>
         <source>Store opened position</source>
         <translation>Enregistrer la position ouverte</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="357"/>
+        <location filename="../settingsform.ui" line="380"/>
         <source>Rename Model</source>
         <translation>Renommer le mannequin</translation>
     </message>
     <message>
-        <location filename="../settingsform.cpp" line="48"/>
+        <location filename="../settingsform.cpp" line="58"/>
         <source>Front</source>
         <translation>Avant</translation>
     </message>
     <message>
-        <location filename="../settingsform.cpp" line="48"/>
+        <location filename="../settingsform.cpp" line="58"/>
         <source>Side</source>
         <translation>Côté</translation>
     </message>
     <message>
-        <location filename="../settingsform.cpp" line="253"/>
+        <location filename="../settingsform.cpp" line="268"/>
         <source>The port seems to be valid</source>
         <translation>Le port semble être valide</translation>
     </message>
     <message>
-        <location filename="../settingsform.cpp" line="256"/>
+        <location filename="../settingsform.cpp" line="271"/>
         <source>The port seems to be invalid</source>
         <translation>Le port semple être invalide</translation>
     </message>
