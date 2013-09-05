@@ -105,14 +105,17 @@ MainWindow::MainWindow(QWidget *parent) :
     });
 
     // When a new arduino is detected, a group of QEllipseSlider is created (one per module)
-    connect(m_arduinoCommunication, &ArduinoCommunication::arduinoDetected, [=](QString arduino,QString name){
-        QWidget *adjGroup = createAdjustmentGroup(arduino);
-        if(ui->ardListCombo->itemData(ui->ardListCombo->currentIndex()).toString() != arduino) // do not hide if it's the current arduino
-            adjGroup->setVisible(false);
-        m_adjustmentGroups.insert(arduino,adjGroup);
-        ui->adjustmentScroll->layout()->addWidget(adjGroup);
-        m_arduinoCommunication->motorsPositionMessage(arduino)->launch();
-        statusBar()->showMessage(tr("Model %1 connected").arg(name));
+    connect(m_arduinoCommunication, &ArduinoCommunication::arduinoDetected, [=](QString arduino,QString name, ARD_ROLE role){
+        if(role == ROLE_MORPHOLOGY) {
+            QWidget *adjGroup = createAdjustmentGroup(arduino);
+            if(ui->ardListCombo->itemData(ui->ardListCombo->currentIndex()).toString() != arduino) // do not hide if it's the current arduino
+                adjGroup->setVisible(false);
+            m_adjustmentGroups.insert(arduino,adjGroup);
+            ui->adjustmentScroll->layout()->addWidget(adjGroup);
+            m_arduinoCommunication->motorsPositionMessage(arduino)->launch();
+            statusBar()->showMessage(tr("Model %1 connected").arg(name));
+        }
+        ui->turntableButton->setDisabled(m_arduinoCommunication->listTurntables().isEmpty());
     });
 
     // When an arduino is disconnected, its QEllipseSlider group is distroyed
@@ -122,6 +125,7 @@ MainWindow::MainWindow(QWidget *parent) :
             m_adjustmentGroups.remove(arduino);
             statusBar()->showMessage(tr("Model %1 disconnected").arg(name));
         }
+        ui->turntableButton->setDisabled(m_arduinoCommunication->listTurntables().isEmpty());
     });
 
 
@@ -596,5 +600,15 @@ void MainWindow::on_capturePreviewButton_clicked()
             on_capturePreviewButton_clicked();
         } else
             this->displayError(tr("No camera connected"), "");
+    }
+}
+
+void MainWindow::on_turntableButton_toggled(bool checked)
+{
+    if(m_arduinoCommunication->listTurntables().size() > 0) {
+        if(checked)
+            m_arduinoCommunication->startRotation()->launch();
+        else
+            m_arduinoCommunication->stopRotation()->launch();
     }
 }

@@ -117,13 +117,19 @@ public:
 
     /**
      * @brief listModel
-     * @return the list of all the known models' id
+     * @return the list of all the known mannequins' id
      */
     QList<QString> listModel();
 
     /**
+     * @brief listRotationControl list all the known turntables
+     * @return
+     */
+    QList<QString> listTurntables();
+
+    /**
      * @brief model
-     * @return the model listing all the ids. In Qt::DisplayRole is stored displayable value
+     * @return the model (qt model) listing all the ids. In Qt::DisplayRole is stored displayable value
      * In Qt::UserRole is stored the ids
      */
     QAbstractListModel *model();
@@ -145,7 +151,7 @@ signals:
      */
     void angleChanged(QString arduino, int angle);
 
-    void arduinoDetected(QString arduino, QString name);
+    void arduinoDetected(QString arduino, QString name, ARD_ROLE role);
     void arduinoLost(QString arduino, QString name);
     
 public slots:
@@ -191,19 +197,20 @@ public slots:
      * @param time is the total time required for the operation
      * @return
      */
-    Transaction *completeTurnMessage(int time, int angle=0);
+    Transaction *startRotation();
 
     /**
      * @brief cancelTurnMessage sends a message to stop a rotation
      * @return
      */
-    Transaction *cancelTurnMessage();
+    Transaction *stopRotation();
     
 private slots:
     void onDataAvailable();
     void checkAliveDevices();
     void cleanUpDeadDevices();
     void deleteTransaction(int transaction);
+    QList<QString> listDevicesOfType(ARD_ROLE role);
     void _sendMessage(MSG_TYPE type, int id, QString dest, QList<QVariant> datas = QList<QVariant>());
 
 private:

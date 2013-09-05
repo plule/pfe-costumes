@@ -86,6 +86,8 @@ private slots:
 
     void on_capturePreviewButton_clicked();
 
+    void on_turntableButton_toggled(bool checked);
+
 private:
     QWidget *createAdjustmentGroup(QString arduinoId);
 

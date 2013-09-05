@@ -100,16 +100,26 @@ Transaction *ArduinoCommunication::renameMessage(QString arduino, QString name)
     return createTransaction(MSG_RENAME, arduino, arguments);
 }
 
-QList<QString> ArduinoCommunication::listModel()
+QList<QString> ArduinoCommunication::listDevicesOfType(ARD_ROLE role)
 {
     QList<QString> list;
     const int rows = m_arduinosModel.rowCount();
     for(int i = 0; i < rows; i++) {
         QModelIndex index = m_arduinosModel.index(i);
-        if(index.data(ROLE_ROLE) == ROLE_MORPHOLOGY)
+        if(index.data(ROLE_ROLE) == role)
             list.append(index.data(ID_ROLE).toString());
     }
     return list;
+}
+
+QList<QString> ArduinoCommunication::listModel()
+{
+    return listDevicesOfType(ROLE_MORPHOLOGY);
+}
+
+QList<QString> ArduinoCommunication::listTurntables()
+{
+    return listDevicesOfType(ROLE_ROTATION);
 }
 
 QAbstractListModel *ArduinoCommunication::model()
@@ -157,21 +167,18 @@ Transaction *ArduinoCommunication::motorsPositionMessage(QString arduino)
     return createTransaction(MSG_GET_MORPHOLOGY, arduino);
 }
 
-Transaction *ArduinoCommunication::completeTurnMessage(int time, int angle)
+Transaction *ArduinoCommunication::startRotation()
 {
-    QList<QVariant> args;
-    args.append(time);
-    args.append(angle);
     if(m_arduinosModel.rowCount() > 0)
-        return createTransaction(MSG_TURN, m_arduinosModel.index(0).data(ID_ROLE).toString(), args);
+        return createTransaction(MSG_TURN, listTurntables().first());
     else
         return new Transaction(this);
 }
 
-Transaction *ArduinoCommunication::cancelTurnMessage()
+Transaction *ArduinoCommunication::stopRotation()
 {
     if(m_arduinosModel.rowCount() > 0)
-        return createTransaction(MSG_CANCEL_TURN, m_arduinosModel.index(0).data(ID_ROLE).toString());
+        return createTransaction(MSG_CANCEL_TURN, listTurntables().first());
     else
         return new Transaction(this);
 }
@@ -204,8 +211,10 @@ void ArduinoCommunication::cleanUpDeadDevices()
     for(int i = 0; i < m_arduinosModel.rowCount(); i++) {
         if(!m_arduinosModel.index(i).data(ANSWERED_ROLE).toBool())
         {
-            emit arduinoLost(m_arduinosModel.index(i).data(ID_ROLE).toString(),m_arduinosModel.index(i).data(NAME_ROLE).toString());
+            QString id = m_arduinosModel.index(i).data(ID_ROLE).toString();
+            QString name = m_arduinosModel.index(i).data(NAME_ROLE).toString();
             m_arduinosModel.removeRow(i);
+            emit arduinoLost(id, name);
         }
     }
     m_pinging = false;
@@ -262,8 +271,9 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
                 datas.insert(NAME_ROLE,name);
                 datas.insert(ID_ROLE,id);
                 datas.insert(ANSWERED_ROLE,true);
+                datas.insert(ROLE_ROLE, role);
                 m_arduinosModel.insertWithDatas(0,datas);
-                emit arduinoDetected(id,name);
+                emit arduinoDetected(id,name, role);
             }
         } else {
             qWarning() << "Invalid hello message from model";
