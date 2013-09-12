@@ -74,7 +74,7 @@ protected:
     friend void message_func(GPContext *context, const char *, void *data);
     friend unsigned int progress_start_func(GPContext *context, float target, const char *, void *data);
 #endif
-    int captureToFile(QFile *file);
+    int captureToFile(QFile *file, int nbTry=3);
 
 private:
     Camera *m_camera;
@@ -93,12 +93,33 @@ public slots:
     /**
      * @brief captureToFile capture a photo to a file.
      * The format depends on camera's configuration.
-     * Users should watch for the signal "finished" after calling this.
      * @param path destination path
      * @param nbTry number of retry
      */
-    int captureToFile(const char *path, int nbTry=3);
     int captureToFile(QString path, int nbTry=3);
+
+    /**
+     * @brief captureToCamera capture a photo and store it in camera's intern storage
+     * @param nbTry number of retry
+     * @return the path stored in the camera, or "" if capture failed
+     */
+    QPair<QString,QString> captureToCamera(int nbTry=3);
+
+    /**
+     * @brief getFile download a camera file to a local file
+     * @param remoteFile path of the file of the camera
+     * @param localFile file to download to
+     * @return
+     */
+    int getFile(QString folder, QString name, QFile *localFile);
+
+    /**
+     * @brief deleteFile remove a file from camera's storage
+     * @param folder
+     * @param name
+     * @return
+     */
+    int deleteFile(QString folder, QString name);
 
 protected slots:
     //void _onTimeout();
@@ -143,15 +164,9 @@ signals:
     /**
      * @brief finished is emited some time after calling a capture.
      * @param status indicate if the capture succeded
-     * @param path path of the saved photo (this path is the one given to captureToFile)
      * @param errors encountered errors
      */
-    void finished(int status, QString path, QStringList errors);
-    /**
-     * @brief connectionLost This signal is emited when the camera stopped working.
-     * The QCamera object is now useless and broken. You must disconnect and reconnect the camera
-     * and recreate the QCamera object.
-     */
+    void finished(int status, QStringList errors);
 };
 }
 #endif

@@ -194,65 +194,77 @@ QString QCamera::getSummary()
 	return QString(cameratext.text);
 }
 
-int QCamera::captureToFile(QFile *localFile)
+int QCamera::getFile(QString folder, QString name, QFile *localFile)
 {
-	CameraFilePath camera_file_path;
-	CameraFile *file;
-	int ret;
-	int fd;
-    R_GP_CALL(ret, gp_camera_capture, m_camera, GP_CAPTURE_IMAGE, &camera_file_path, m_context);
+    CameraFile *file;
+    int fd,ret;
 
     if(!localFile->open(QIODevice::WriteOnly))
         return -1;
-    fd = localFile->handle();
 
+    fd = localFile->handle();
     ret = gp_file_new_from_fd(&file, fd);
     if (ret < GP_OK) {
         localFile->close();
         return handleError(ret, "file new");
     }
 
-    ret = gp_camera_file_get(m_camera, camera_file_path.folder, camera_file_path.name, GP_FILE_TYPE_NORMAL, file, m_context);
+    ret = gp_camera_file_get(m_camera, folder.toStdString().c_str(), name.toStdString().c_str(), GP_FILE_TYPE_NORMAL, file, m_context);
     if(ret < GP_OK) {
         localFile->close();
         return handleError(ret, "file get");
     }
 
     localFile->close();
-
-    R_GP_CALL(ret, gp_camera_file_delete, m_camera, camera_file_path.folder, camera_file_path.name, m_context);
     return GP_OK;
 }
 
-int QCamera::captureToFile(const char *path, int nbTry)
+int QCamera::deleteFile(QString folder, QString name)
 {
-    m_busy = true;
-    m_errors.clear();
-    if(isConnected()) {
-        QFile localFile(path);
-        int ret;
-        for(int i = 0; i < nbTry; i++) {
-            ret = captureToFile(&localFile);
-            if( ret == GP_OK) {
-                m_busy = false;
-                emit finished(OK, path, m_errors);
-                return ret;
-            }
-            this->thread()->sleep(0.5);
-        }
-        m_busy = false;
-        emit finished(Error, path, m_errors);
-        return ret; // last error
-    } else {
-        m_busy = false;
-        emit finished(NotConnected, path, m_errors);
-        return -1; // generic error
-    }
+    int ret;
+    R_GP_CALL(ret, gp_camera_file_delete, m_camera, folder.toStdString().c_str(), name.toStdString().c_str(), m_context);
+    return GP_OK;
+}
+
+int QCamera::captureToFile(QFile *localFile, int nbTry)
+{
+    QPair<QString,QString> path = captureToCamera(nbTry);
+    int ret;
+    ret = getFile(path.first, path.second, localFile);
+    if(ret == GP_OK)
+        return deleteFile(path.first, path.second);
+    return ret;
 }
 
 int QCamera::captureToFile(QString path, int nbTry)
 {
-    return captureToFile(path.toStdString().c_str(), nbTry);
+    QFile localFile(path);
+    return captureToFile(&localFile, nbTry);
+}
+
+QPair<QString, QString> QCamera::captureToCamera(int nbTry)
+{
+    m_busy = true;
+    m_errors.clear();
+    if(isConnected()) {
+        int ret;
+        CameraFilePath camera_file_path;
+        for(int i=0; i<nbTry; i++) {
+            ret = gp_camera_capture(m_camera, GP_CAPTURE_IMAGE, &camera_file_path, m_context);
+            if(ret == GP_OK) {
+                m_busy = false;
+                emit finished(OK, m_errors);
+                return QPair<QString,QString>(QString(camera_file_path.folder), QString(camera_file_path.name));
+            }
+            this->thread()->sleep(0.5);
+        }
+        m_busy = false;
+        return QPair<QString,QString>();
+    } else {
+        m_busy = false;
+        emit finished(NotConnected, m_errors);
+        return QPair<QString, QString>(); // generic error
+    }
 }
 
 void QCamera::appendError(QString error)
