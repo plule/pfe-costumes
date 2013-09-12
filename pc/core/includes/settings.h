@@ -10,5 +10,6 @@
 #define S_CAMERA "camera"
 #define S_COLLECTION "collection"
 #define S_BACKGROUNDCOLOR "backgroundcolor"
+#define S_DELAYEDDOWNLOAD "delayeddownload"
 
 #endif // SETTINGS_H

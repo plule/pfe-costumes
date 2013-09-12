@@ -33,6 +33,11 @@ SettingsForm::SettingsForm(QPhoto::CameraHandler *handler, ArduinoCommunication 
     ui->rotationSpeedSpin->setValue(m_settings.value(S_RPM).toDouble());
     ui->turnDurationSpin->setValue(60.0/m_settings.value(S_RPM).toDouble());
 
+    /* Delayed download */
+    if(!m_settings.value(S_DELAYEDDOWNLOAD).isValid())
+        m_settings.setValue(S_DELAYEDDOWNLOAD,false);
+    ui->delayedDownloadCheck->setChecked(m_settings.value(S_DELAYEDDOWNLOAD).toBool());
+
     /* Model dimension */
     if(!m_settings.value(S_MODELWIDTH).isValid())
         m_settings.setValue(S_MODELWIDTH,100);
@@ -232,6 +237,7 @@ void SettingsForm::apply()
 
     m_settings.setValue(S_PHOTONUMBER,ui->captureNumber->value());
     m_settings.setValue(S_RPM,ui->rotationSpeedSpin->value());
+    m_settings.setValue(S_DELAYEDDOWNLOAD, ui->delayedDownloadCheck->isChecked());
 }
 
 void SettingsForm::cancel()
