@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>525</width>
-    <height>687</height>
+    <height>688</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -208,6 +208,9 @@
            <widget class="QDoubleSpinBox" name="turnDurationSpin">
             <property name="suffix">
              <string>s</string>
+            </property>
+            <property name="maximum">
+             <double>10000.000000000000000</double>
             </property>
            </widget>
           </item>

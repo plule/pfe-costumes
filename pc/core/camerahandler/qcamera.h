@@ -11,7 +11,7 @@
 #include <QThread>
 #include <gphoto2/gphoto2-camera.h>
 
-#define LEGACY_GPHOTO
+//#define LEGACY_GPHOTO
 
 #define R_GP_CALL(ret, fn, ...) ret = fn(__VA_ARGS__);\
     if(ret < GP_OK) {return handleError(ret, #fn );}

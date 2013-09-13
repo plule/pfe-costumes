@@ -528,7 +528,12 @@ void MainWindow::on_massCaptureButton_clicked()
         connect(synchroniser, SIGNAL(destroyed()), ui->workBar, SLOT(reset()));
         connect(synchroniser, SIGNAL(destroyed()), m_progressDialog, SLOT(reset()));
         connect(m_progressDialog, SIGNAL(canceled()), synchroniser, SLOT(deleteLater()));
-        synchroniser->massCapture(m_camera, m_arduinoCommunication, m_collection, getCurrentId(), m_settings.value(S_PHOTONUMBER).toInt());
+        synchroniser->massCapture(m_camera,
+                                  m_arduinoCommunication,
+                                  m_collection,
+                                  getCurrentId(),
+                                  m_settings.value(S_PHOTONUMBER).toInt(),
+                                  m_settings.value(S_DELAYEDDOWNLOAD).toBool());
     } else {
         m_settingsForm->refreshCameraList();
         setCamera(m_settingsForm->getCamera());

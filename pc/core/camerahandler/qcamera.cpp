@@ -250,7 +250,9 @@ QPair<QString, QString> QCamera::captureToCamera(int nbTry)
         int ret;
         CameraFilePath camera_file_path;
         for(int i=0; i<nbTry; i++) {
+            qDebug() << "ready to capture";
             ret = gp_camera_capture(m_camera, GP_CAPTURE_IMAGE, &camera_file_path, m_context);
+            qDebug() << "captured";
             if(ret == GP_OK) {
                 m_busy = false;
                 emit finished(OK, m_errors);

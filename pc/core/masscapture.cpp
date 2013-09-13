@@ -9,7 +9,7 @@ MassCapture::~MassCapture()
 {
 }
 
-void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *morphology, Collection *collection, int idCostume, int nbPhoto)
+void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *morphology, Collection *collection, int idCostume, int nbPhoto, bool delayedDownload)
 {
     m_step = 360.0 / nbPhoto;
     m_target = nbPhoto;
@@ -20,6 +20,7 @@ void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *mor
     m_problem = NoProblem;
     m_rotationTime = round(60.0 / m_settings.value(S_RPM).toDouble());
     m_captureTimer = new QTimer(this);
+    m_delayedDownload = delayedDownload;
 
     qDebug() << "Mass Capture object created";
     if(m_camera->captureToFile("/tmp/dummy.jpg") >= 0) // ensure camera is initialized
@@ -52,11 +53,38 @@ void MassCapture::launchMassCapture()
         if(m_index >= m_target) {
             qDebug() << "capture finished without problem";
             m_captureTimer->stop();
+
+            if(m_delayedDownload) {
+                qDebug() << "downloading";
+                for(int i = 0; i < m_cameraPaths.size(); i++) {
+                    QString localPath = m_collection->getFilePath(m_idCostume, "turntable", "jpg", i);
+                    QFile localFile(localPath);
+                    qDebug() << localPath;
+                    qDebug() << m_cameraPaths.value(i);
+                    m_camera->getFile(m_cameraPaths.value(i).first, m_cameraPaths.value(i).second, &localFile);
+                    emit progress(i, localPath);
+                }
+            }
+
             emit done();
         } else if(m_camera && m_camera->isConnected()) {
             qDebug() << "capture n°" << QString::number(m_index);
-            QString path = m_collection->getFilePath(m_idCostume, "turntable", "jpg", m_index);
-            int ret = m_camera->captureToFile(path);
+            int ret;
+            QString path = "";
+            if(!m_delayedDownload) {
+                path = m_collection->getFilePath(m_idCostume, "turntable", "jpg", m_index);
+                ret = m_camera->captureToFile(path);
+            } else {
+                qDebug() << "capture to camera";
+                QPair<QString,QString> cameraPath = m_camera->captureToCamera();
+                qDebug() << cameraPath;
+                if(cameraPath.first != "") {
+                    m_cameraPaths.insert(m_index,cameraPath);
+                    ret = GP_OK;
+                } else {
+                    ret = -1;
+                }
+            }
             if(ret < 0) {
                 qDebug() << "Mass capture failed";
                 m_captureTimer->stop();

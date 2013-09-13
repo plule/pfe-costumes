@@ -24,7 +24,7 @@ class MassCapture : public QObject
 public:
     explicit MassCapture(QObject *parent = 0);
     ~MassCapture();
-    void massCapture(QPhoto::QCamera *camera, ArduinoCommunication *morphology, Collection *collection, int idCostume, int nbPhoto);
+    void massCapture(QPhoto::QCamera *camera, ArduinoCommunication *morphology, Collection *collection, int idCostume, int nbPhoto, bool delayedCapture);
     void setCamera(QPhoto::QCamera *camera);
     enum Problem {CameraProblem, RotationProblem, NoProblem};
     
@@ -45,12 +45,14 @@ private:
     float m_step;
     int m_rotationTime;
     int m_currentAngle;
+    bool m_delayedDownload;
     QPhoto::QCamera *m_camera;
     ArduinoCommunication *m_morphology;
     Collection *m_collection;
     QSettings m_settings;
     Problem m_problem;
     QTimer *m_captureTimer;
+    QList<QPair<QString,QString> > m_cameraPaths;
     int m_idCostume;
 };
 
