@@ -48,7 +48,7 @@ class MainWindow : public QMainWindow
     Q_PROPERTY(int m_currentCostumeId READ getCurrentCostumeId WRITE setCurrentCostumeId USER true)
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(bool noedit = false, QWidget *parent = 0);
     ~MainWindow();
 
     int getCurrentCostumeId() const;
@@ -103,6 +103,7 @@ private:
     ArduinoCommunication *m_arduinoCommunication;
     QSettings m_settings;
     int m_currentCostumeId;
+    bool m_noedit;
     DcRawQT m_rawHandler;
     QPhoto::QCamera *m_camera;
     QMetaObject::Connection m_cameraConnection;

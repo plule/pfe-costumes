@@ -26,7 +26,9 @@ int main(int argc, char *argv[])
     translator_qt.load("qt_" + QLocale::system().name(),QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     a.installTranslator(&translator_qt);
 
-    MainWindow w;
+    bool noedit = (argc > 1 && strcmp("--visu", argv[1]) == 0);
+
+    MainWindow w(noedit);
     w.show();
     return a.exec();
 }

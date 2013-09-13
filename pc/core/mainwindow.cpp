@@ -1,14 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(bool noedit, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     m_collection = 0;
     m_camera = 0;
     m_progressDialog = new QProgressDialog();
-
+    m_noedit = noedit;
     // Ui init and tweaks
     ui->setupUi(this);
 
@@ -156,6 +156,19 @@ MainWindow::MainWindow(QWidget *parent) :
         loadCollection(m_settings.value(S_COLLECTION).toString());
     else
         on_actionNew_Collection_triggered();
+
+    // Disable controls if noedit mode
+    if(m_noedit) {
+        ui->newCostume->setVisible(false);
+        ui->saveButton->setVisible(false);
+        ui->removeButton->setVisible(false);
+        ui->captureBox->setVisible(false);
+        ui->turntableBox->setVisible(false);
+        ui->tab->removeTab(0);
+        ui->infoTab->setEnabled(false);
+        ui->actionNew_Collection->setVisible(false);
+        ui->actionSettings->setVisible(false);
+    }
 
     showMaximized();
     ui->turntable->fitInView();
@@ -366,7 +379,10 @@ QString MainWindow::convertRaw(QString path)
 
 void MainWindow::updateSaveButton()
 {
-    ui->saveButton->setEnabled(m_collection->isDirty());
+    if(!m_noedit)
+        ui->saveButton->setEnabled(m_collection->isDirty());
+    else
+        ui->saveButton->setEnabled(false);
 }
 
 // Do not expect more than one change at a time.
