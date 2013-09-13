@@ -2,7 +2,7 @@ Source: mannequinage
 Section: multiverse/graphics
 Priority: extra
 Maintainer: Pierre Lulé <pierre@lule.fr>
-Build-Depends: debhelper (>= 8.0.0), qt5-default, libgphoto2-2-dev, libqt5sql5-sqlite, libexif-dev
+Build-Depends: debhelper (>= 8.0.0), qt5-default, libgphoto2-6-dev, libqt5sql5-sqlite, libexif-dev
 Standards-Version: 3.9.4
 Homepage: https://github.com/plule/pfe-costumes
 #Vcs-Git: git://git.debian.org/collab-maint/mannequinage.git
@@ -10,6 +10,7 @@ Homepage: https://github.com/plule/pfe-costumes
 
 Package: mannequinage
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libexif12
+Depends: ${shlibs:Depends}, ${misc:Depends}, libexif12, libgphoto2-6, qt5-default, libqt5sql5-sqlite
 Description: Costume numerisation project
- This software allows someone to capture a rotating model in order to have a 360° rotating view. Moreover it allows to control a mechanical model.
+ This software allows someone to capture a rotating model in order to have a
+ 360° rotating view. Moreover it allows to control a mechanical model.

@@ -5,14 +5,20 @@ VPATH = ..
 
 QT += widgets sql
 
-QMAKE_CXXFLAGS_DEBUG += -pg
+QMAKE_CXXFLAGS_DEBUG +=
 
-QMAKE_LFLAGS_DEBUG += -pg
+QMAKE_LFLAGS_DEBUG +=
 
-SOURCES += main.cpp \
-    camerahandler/camerahandler.cpp \
+SOURCES += main.cpp
+TARGET = ../mannequinage
+target.path = /usr/bin
+desktop.path = /usr/share/applications
+desktop.files += mannequinage.desktop
+desktop.files += mannequinage-visu.desktop
+INSTALLS += target desktop
+
+SOURCES += camerahandler/camerahandler.cpp \
     camerahandler/qcamera.cpp \
-    mainwindow.cpp \
     common/collection.cpp \
     common/uniqueproxymodel.cpp \
     widgets/qloadedlistwidget.cpp \
@@ -24,11 +30,11 @@ SOURCES += main.cpp \
     common/qlistmodel.cpp \
     common/arduinocommunication.cpp \
     widgets/qimagepreviewwindow.cpp \
-    common/exifpixmap.cpp
+    common/exifpixmap.cpp \
+    mainwindow.cpp
 
 HEADERS += camerahandler/camerahandler.h \
     camerahandler/qcamera.h \
-    mainwindow.h \
     common/collection.h \
     common/uniqueproxymodel.h \
     includes/interfaces.h \
@@ -43,7 +49,8 @@ HEADERS += camerahandler/camerahandler.h \
     common/arduinocommunication.h \
     includes/settings.h \
     widgets/qimagepreviewwindow.h \
-    common/exifpixmap.h
+    common/exifpixmap.h \
+    mainwindow.h
 
 CONFIG += c++11 qt warn_on release debug
 
@@ -54,17 +61,11 @@ DEFINES += DCRAWQT_LIBRARY \
 
 LIBS += -lgphoto2 -lgphoto2_port -lexif ../3rdparty/DcRawQT/libDcRawQT.a ../3rdparty/qextserialport/libqextserialport.a
 
-TARGET = ../mannequinage
-target.path = /usr/bin
-desktop.path = /usr/share/applications
-desktop.files += mannequinage.desktop
-INSTALLS += target desktop
-
 FORMS += \
-    mainwindow.ui \
     settingsform.ui \
     widgets/qellipseslider.ui \
-    widgets/qimagepreviewwindow.ui
+    widgets/qimagepreviewwindow.ui \
+    mainwindow.ui \
 
 TRANSLATIONS = resources/core_fr.ts
 

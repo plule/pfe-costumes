@@ -1,5 +1,12 @@
+mannequinage (0.3) unstable; urgency=low
+
+  * packaged with visualisator mode
+
+ -- pierre <pierre@lule.fr>  Fri, 13 Sep 2013 16:35:39 +0200
+
 mannequinage (0.1) unstable; urgency=low
 
+  [ Pierre Lulé ]
   * Initial Release.
   * packaging test
 
