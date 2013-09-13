@@ -284,8 +284,8 @@
         <translation type="obsolete">L&apos;appareil photo ne répond plus, vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="538"/>
-        <location filename="../mainwindow.cpp" line="602"/>
+        <location filename="../mainwindow.cpp" line="543"/>
+        <location filename="../mainwindow.cpp" line="607"/>
         <source>No camera connected</source>
         <translation>Aucun appareil photo détecté</translation>
     </message>
@@ -397,17 +397,17 @@ Do you want to save the modifications?</source>
 <context>
     <name>MassCapture</name>
     <message>
-        <location filename="../masscapture.cpp" line="29"/>
+        <location filename="../masscapture.cpp" line="30"/>
         <source>Camera seems disconnected.</source>
         <translation>L&apos;appareil photo semble être déconnecté.</translation>
     </message>
     <message>
-        <location filename="../masscapture.cpp" line="63"/>
+        <location filename="../masscapture.cpp" line="91"/>
         <source>Capture failed</source>
         <translation>Impossible de prendre la photo</translation>
     </message>
     <message>
-        <location filename="../masscapture.cpp" line="70"/>
+        <location filename="../masscapture.cpp" line="98"/>
         <source>Camera seems to be disconnected</source>
         <translation>L&apos;appareil photo semple être déconnecté</translation>
     </message>
@@ -613,7 +613,7 @@ Do you want to save the modifications?</source>
     <message>
         <location filename="../settingsform.ui" line="193"/>
         <source>rpm</source>
-        <translation>tr/s</translation>
+        <translation>tr/min</translation>
     </message>
     <message>
         <location filename="../settingsform.ui" line="210"/>
@@ -635,83 +635,88 @@ Do you want to save the modifications?</source>
     </message>
     <message>
         <location filename="../settingsform.ui" line="220"/>
-        <location filename="../settingsform.ui" line="301"/>
+        <source>Delayed download (check if capture is too slow)</source>
+        <translation>Téléchargement différé (utile si la capture est trop lente)</translation>
+    </message>
+    <message>
+        <location filename="../settingsform.ui" line="237"/>
+        <location filename="../settingsform.ui" line="318"/>
         <source>Model</source>
         <translation>Mannequin</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="226"/>
+        <location filename="../settingsform.ui" line="243"/>
         <source>Model&apos;s structure width (default : 100mm)</source>
         <translation>Largeur du mannequin (défaut : 100mm)</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="233"/>
-        <location filename="../settingsform.ui" line="253"/>
+        <location filename="../settingsform.ui" line="250"/>
+        <location filename="../settingsform.ui" line="270"/>
         <source>mm</source>
         <translation>mm</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="246"/>
+        <location filename="../settingsform.ui" line="263"/>
         <source>Model&apos;s structure depth (default : 124mm)</source>
         <translation>Profondeur du mannequin (défaut : 124mm)</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="269"/>
+        <location filename="../settingsform.ui" line="286"/>
         <source>Appearance</source>
         <translation>Apparence</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="275"/>
+        <location filename="../settingsform.ui" line="292"/>
         <source>Previews&apos; background color</source>
         <translation>Couleur de fond des aperçus</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="293"/>
+        <location filename="../settingsform.ui" line="310"/>
         <source>Model Calibration</source>
         <translation>Calibration des mannequins</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="311"/>
+        <location filename="../settingsform.ui" line="328"/>
         <source>Motor</source>
         <translation>Moteur</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="325"/>
+        <location filename="../settingsform.ui" line="342"/>
         <source>Servo Position</source>
         <translation>Position du moteur</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="359"/>
+        <location filename="../settingsform.ui" line="376"/>
         <source>Store closed position</source>
         <translation>Enregistrer la position fermée</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="366"/>
+        <location filename="../settingsform.ui" line="383"/>
         <source>Store opened position</source>
         <translation>Enregistrer la position ouverte</translation>
     </message>
     <message>
-        <location filename="../settingsform.ui" line="380"/>
+        <location filename="../settingsform.ui" line="397"/>
         <source>Rename Model</source>
         <translation>Renommer le mannequin</translation>
     </message>
     <message>
-        <location filename="../settingsform.cpp" line="58"/>
+        <location filename="../settingsform.cpp" line="63"/>
         <source>Front</source>
         <translation>Avant</translation>
     </message>
     <message>
-        <location filename="../settingsform.cpp" line="58"/>
+        <location filename="../settingsform.cpp" line="63"/>
         <source>Side</source>
         <translation>Côté</translation>
     </message>
     <message>
-        <location filename="../settingsform.cpp" line="268"/>
+        <location filename="../settingsform.cpp" line="274"/>
         <source>The port seems to be valid</source>
         <translation>Le port semble être valide</translation>
     </message>
     <message>
-        <location filename="../settingsform.cpp" line="271"/>
+        <location filename="../settingsform.cpp" line="277"/>
         <source>The port seems to be invalid</source>
         <translation>Le port semple être invalide</translation>
     </message>
