@@ -436,14 +436,17 @@ void MainWindow::onMassCaptureProblem(MassCapture::Problem problem, QString desc
 
 void MainWindow::on_newCostume_clicked()
 {
-    int newId = m_collection->newCostume();
-    QListWidgetItem *item = new QListWidgetItem(tr("New Costume"), ui->collectionTable2);
-    item->setData(Qt::UserRole, newId);
-    item->setIcon(QIcon::fromTheme("x-office-document"));
-    ui->collectionTable2->setDirty(item, true);
-    ui->collectionTable2->selectionModel()->clear();
-    ui->collectionTable2->setCurrentItem(item);
-    m_mapper.toLast();
+    QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Confirmation"), tr("Add a costume?"),QMessageBox::Yes|QMessageBox::No);
+    if(reply== QMessageBox::Yes) {
+        int newId = m_collection->newCostume();
+        QListWidgetItem *item = new QListWidgetItem(tr("New Costume"), ui->collectionTable2);
+        item->setData(Qt::UserRole, newId);
+        item->setIcon(QIcon::fromTheme("x-office-document"));
+        ui->collectionTable2->setDirty(item, true);
+        ui->collectionTable2->selectionModel()->clear();
+        ui->collectionTable2->setCurrentItem(item);
+        m_mapper.toLast();
+    }
 }
 
 void MainWindow::on_actionNew_Collection_triggered()
@@ -486,9 +489,14 @@ void MainWindow::on_actionOpen_Collection_triggered()
 
 void MainWindow::on_removeButton_clicked()
 {
-    foreach(QListWidgetItem *item, ui->collectionTable2->selectedItems()) {
-        m_collection->deleteCostume(item->data(Qt::UserRole).toInt());
-        ui->collectionTable2->setItemHidden(item, true);
+    int nbSelected = ui->collectionTable2->selectedItems().count();
+    QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Confirmation"), tr("Are you sure you want to delete these %n costume(s)?", "", nbSelected),
+                                                              QMessageBox::Yes|QMessageBox::No);
+    if(reply== QMessageBox::Yes) {
+        foreach(QListWidgetItem *item, ui->collectionTable2->selectedItems()) {
+            m_collection->deleteCostume(item->data(Qt::UserRole).toInt());
+            ui->collectionTable2->setItemHidden(item, true);
+        }
     }
 }
 

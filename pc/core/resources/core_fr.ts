@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="fr_FR">
+<TS version="2.1" language="fr_FR">
 <context>
     <name>Collection</name>
     <message>
@@ -146,7 +146,7 @@
         <oldsource>De : </oldsource>
         <translation type="obsolete">De : </translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="../mainwindow.ui" line="344"/>
         <source>°</source>
         <translation>°</translation>
@@ -284,13 +284,13 @@
         <translation type="obsolete">L&apos;appareil photo ne répond plus, vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="543"/>
-        <location filename="../mainwindow.cpp" line="607"/>
+        <location filename="../mainwindow.cpp" line="567"/>
+        <location filename="../mainwindow.cpp" line="631"/>
         <source>No camera connected</source>
         <translation>Aucun appareil photo détecté</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="234"/>
+        <location filename="../mainwindow.cpp" line="247"/>
         <source>Choose file(s)</source>
         <translation>Selectionner des fichiers</translation>
     </message>
@@ -315,15 +315,38 @@
         <translation>Mannequin %1 débranché</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="269"/>
+        <location filename="../mainwindow.cpp" line="282"/>
         <source>Save Collection</source>
         <translation>Sauvegarder la Collection</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="270"/>
+        <location filename="../mainwindow.cpp" line="283"/>
         <source>The collection has unsaved changes.
 Do you want to save the modifications?</source>
         <translation>La collection a des modification non enregistrées.\nVoulez vous sauvegarder ?</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="439"/>
+        <location filename="../mainwindow.cpp" line="493"/>
+        <source>Confirmation</source>
+        <translation>Confirmation</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="439"/>
+        <source>Add a costume?</source>
+        <translation>Ajouter un nouveau costume ?</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../mainwindow.cpp" line="493"/>
+        <source>Are you sure you want to delete these %n costume(s)?</source>
+        <translation>
+            <numerusform>Êtes-vous sûr de vouloir supprimer %n costume ?</numerusform>
+            <numerusform>Êtes-vous sûr de vouloir supprimer %n costumes ?</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete the costume(s)?</source>
+        <translation type="vanished">Voulez-vous vraiment supprimer ce(s) costume(s) ?</translation>
     </message>
     <message>
         <source>Conversion error</source>
@@ -342,17 +365,17 @@ Do you want to save the modifications?</source>
         <translation type="obsolete">La connection avec l&apos;appareil photo a été perdu. Vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="408"/>
+        <location filename="../mainwindow.cpp" line="424"/>
         <source>The camera has encountered a problem.</source>
         <translation>L&apos;appareil photo a eu un problème.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="410"/>
+        <location filename="../mainwindow.cpp" line="426"/>
         <source>The rotating model has encountered a problem.</source>
         <translation>Le mannequin a eu un problème.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="412"/>
+        <location filename="../mainwindow.cpp" line="428"/>
         <source>An unknown problem occured.</source>
         <translation>Un problème inconnu est survennu.</translation>
     </message>
@@ -361,12 +384,12 @@ Do you want to save the modifications?</source>
         <translation type="obsolete">Voulez-vous essayer de continuer les prises de vue ?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="511"/>
+        <location filename="../mainwindow.cpp" line="535"/>
         <source>Mass capture...</source>
         <translation>Prises de vue en cours...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="512"/>
+        <location filename="../mainwindow.cpp" line="536"/>
         <source>Abort Capture</source>
         <translation>Abandonner les prises de vue</translation>
     </message>
@@ -375,7 +398,7 @@ Do you want to save the modifications?</source>
         <translation type="obsolete">Échec des captures</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="424"/>
+        <location filename="../mainwindow.cpp" line="442"/>
         <source>New Costume</source>
         <translation>Nouveau Costume</translation>
     </message>
@@ -384,12 +407,12 @@ Do you want to save the modifications?</source>
         <translation type="obsolete">Chargement des vues</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="438"/>
+        <location filename="../mainwindow.cpp" line="457"/>
         <source>New collection</source>
         <translation>Nouvelle collection</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="466"/>
+        <location filename="../mainwindow.cpp" line="485"/>
         <source>Open collection</source>
         <translation>Ouvrir collection</translation>
     </message>
@@ -402,12 +425,12 @@ Do you want to save the modifications?</source>
         <translation>L&apos;appareil photo semble être déconnecté.</translation>
     </message>
     <message>
-        <location filename="../masscapture.cpp" line="91"/>
+        <location filename="../masscapture.cpp" line="94"/>
         <source>Capture failed</source>
         <translation>Impossible de prendre la photo</translation>
     </message>
     <message>
-        <location filename="../masscapture.cpp" line="98"/>
+        <location filename="../masscapture.cpp" line="101"/>
         <source>Camera seems to be disconnected</source>
         <translation>L&apos;appareil photo semple être déconnecté</translation>
     </message>
@@ -539,8 +562,12 @@ Do you want to save the modifications?</source>
 <context>
     <name>QTurntable</name>
     <message>
-        <location filename="../widgets/qturntable.cpp" line="101"/>
         <source>Loading 360Â° view</source>
+        <translation type="vanished">Chargement de la vue 360°</translation>
+    </message>
+    <message>
+        <location filename="../widgets/qturntable.cpp" line="101"/>
+        <source>Loading 360° view</source>
         <translation>Chargement de la vue 360°</translation>
     </message>
 </context>
