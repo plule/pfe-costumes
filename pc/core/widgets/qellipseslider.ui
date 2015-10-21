@@ -230,7 +230,7 @@ QGroupBox::title#mainGroup {
              <item>
               <widget class="QSlider" name="frontMotorSlider">
                <property name="maximum">
-                <number>50</number>
+                <number>25</number>
                </property>
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -249,7 +249,7 @@ QGroupBox::title#mainGroup {
                 <string>mm</string>
                </property>
                <property name="maximum">
-                <number>50</number>
+                <number>25</number>
                </property>
               </widget>
              </item>
