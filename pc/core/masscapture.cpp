@@ -95,7 +95,7 @@ void MassCapture::launchMassCapture()
         if(status == GP_OK) {
             m_captureIndexes.remove(m_captureIndex);
 
-            emit progress(m_target - m_captureIndexes.count(), m_lastCapturePath);
+            emit progress(m_target - m_captureIndexes.count() - 1, m_lastCapturePath);
 
             if(m_captureIndexes.empty()) {
                 m_captureTimer->stop();
