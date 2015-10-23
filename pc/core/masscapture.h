@@ -7,6 +7,8 @@
 #include <cmath>
 #include <QTemporaryFile>
 #include <QThread>
+#include <QtConcurrent/QtConcurrentRun>
+#include <QMetaObject>
 #include "camerahandler/qcamera.h"
 #include "common/arduinocommunication.h"
 #include "common/collection.h"
@@ -40,12 +42,17 @@ private slots:
     void launchMassCapture();
 
 private:
-    int m_index;
     int m_target;
     float m_step;
     int m_rotationTime;
-    int m_currentAngle;
+    int m_currentIndex;
+    int m_captureIndex;
     bool m_delayedDownload;
+    bool m_readyForNextCapture;
+    QMetaObject::Connection m_timerConnection;
+    QMetaObject::Connection m_cameraConnection;
+    QString m_lastCapturePath;
+    QSet<int> m_captureIndexes;
     QPhoto::QCamera *m_camera;
     ArduinoCommunication *m_morphology;
     Collection *m_collection;

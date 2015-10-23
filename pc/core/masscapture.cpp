@@ -8,6 +8,9 @@ MassCapture::MassCapture(QObject *parent) :
 
 MassCapture::~MassCapture()
 {
+    // Avoid risks of having asynchronous called to destroyed object
+    QObject::disconnect(m_cameraConnection);
+    QObject::disconnect(m_timerConnection);
 }
 
 void MassCapture::massCapture(QPhoto::QCamera *camera, ArduinoCommunication *morphology, Collection *collection, int idCostume, int nbPhoto, bool delayedDownload)
@@ -63,7 +66,7 @@ void MassCapture::launchMassCapture()
     m_readyForNextCapture = true;
 
     // Timer called at each interesting capture position
-    connect(m_captureTimer, &QTimer::timeout, [=]() {
+    m_timerConnection = connect(m_captureTimer, &QTimer::timeout, [=]() {
         // Update turntable position
         m_currentIndex = (m_currentIndex + 1)%m_target;
 
@@ -88,7 +91,7 @@ void MassCapture::launchMassCapture()
     });
 
     // At each downloaded picture, report progress and remove captured index from the todo list
-    connect(m_camera, &QPhoto::QCamera::downloaded, [=](int status, QStringList errors) {
+    m_cameraConnection = connect(m_camera, &QPhoto::QCamera::downloaded, [=](int status, QStringList errors) {
         if(status == GP_OK) {
             m_captureIndexes.remove(m_captureIndex);
 

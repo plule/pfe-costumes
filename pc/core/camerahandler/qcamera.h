@@ -74,7 +74,7 @@ protected:
     friend void message_func(GPContext *context, const char *, void *data);
     friend unsigned int progress_start_func(GPContext *context, float target, const char *, void *data);
 #endif
-    int captureToFile(QFile *file, int nbTry=3);
+    int captureToQFile(QFile *file, int nbTry=3);
 
 private:
     Camera *m_camera;
@@ -167,6 +167,13 @@ signals:
      * @param errors encountered errors
      */
     void finished(int status, QStringList errors);
+
+    /**
+     * @brief downloaded is emited after calling CaptureToFile when download is done or failed
+     * @param status
+     * @param errors
+     */
+    void downloaded(int status, QStringList errors);
 };
 }
 #endif

@@ -226,7 +226,7 @@ int QCamera::deleteFile(QString folder, QString name)
     return GP_OK;
 }
 
-int QCamera::captureToFile(QFile *localFile, int nbTry)
+int QCamera::captureToQFile(QFile *localFile, int nbTry)
 {
     QPair<QString,QString> path = captureToCamera(nbTry);
     int ret;
@@ -239,7 +239,9 @@ int QCamera::captureToFile(QFile *localFile, int nbTry)
 int QCamera::captureToFile(QString path, int nbTry)
 {
     QFile localFile(path);
-    return captureToFile(&localFile, nbTry);
+    int ret = captureToQFile(&localFile, nbTry);
+    emit downloaded(ret, m_errors);
+    return ret;
 }
 
 QPair<QString, QString> QCamera::captureToCamera(int nbTry)
