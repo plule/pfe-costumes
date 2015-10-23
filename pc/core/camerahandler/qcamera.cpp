@@ -212,18 +212,24 @@ int QCamera::getFile(QString folder, QString name, QFile *localFile)
     ret = gp_camera_file_get(m_camera, folder.toStdString().c_str(), name.toStdString().c_str(), GP_FILE_TYPE_NORMAL, file, m_context);
     if(ret < GP_OK) {
         localFile->close();
+        gp_file_unref(file);
         return handleError(ret, "file get");
     }
 
     localFile->close();
+    gp_file_unref(file);
+    CameraFileInfo info;
+    gp_camera_file_get_info(m_camera, folder.toStdString().c_str(), name.toStdString().c_str(), &info, m_context);
+    if(!(info.file.fields & GP_FILE_INFO_STATUS && info.file.status == GP_FILE_STATUS_DOWNLOADED ))
+        gp_camera_file_delete(m_camera, folder.toStdString().c_str(), name.toStdString().c_str(), m_context);
+
     return GP_OK;
 }
 
 int QCamera::deleteFile(QString folder, QString name)
 {
-    int ret;
-    R_GP_CALL(ret, gp_camera_file_delete, m_camera, folder.toStdString().c_str(), name.toStdString().c_str(), m_context);
-    return GP_OK;
+    qDebug() << "deleting " << folder << name;
+    return handleError(gp_camera_file_delete(m_camera, folder.toStdString().c_str(), name.toStdString().c_str(), m_context), "delete");
 }
 
 int QCamera::captureToQFile(QFile *localFile, int nbTry)
@@ -232,7 +238,7 @@ int QCamera::captureToQFile(QFile *localFile, int nbTry)
     int ret;
     ret = getFile(path.first, path.second, localFile);
     if(ret == GP_OK)
-        return deleteFile(path.first, path.second);
+        deleteFile(path.first, path.second);
     return ret;
 }
 
@@ -250,16 +256,37 @@ QPair<QString, QString> QCamera::captureToCamera(int nbTry)
     m_errors.clear();
     if(isConnected()) {
         int ret;
-        CameraFilePath camera_file_path;
         for(int i=0; i<nbTry; i++) {
-            qDebug() << "ready to capture";
-            ret = gp_camera_capture(m_camera, GP_CAPTURE_IMAGE, &camera_file_path, m_context);
-            qDebug() << "captured";
-            if(ret == GP_OK) {
+            qDebug() << "trigger";
+            ret = gp_camera_trigger_capture(m_camera, m_context);;
+            if(ret != GP_OK) {
                 m_busy = false;
-                emit finished(OK, m_errors);
-                return QPair<QString,QString>(QString(camera_file_path.folder), QString(camera_file_path.name));
+                emit finished(Error, m_errors);
+                return QPair<QString, QString>();
             }
+
+            CameraEventType event;
+            void *data;
+            do {
+                qDebug() << "wait for event";
+                ret = gp_camera_wait_for_event(m_camera, 3000, &event, &data, m_context);
+                qDebug() << event;
+                if(ret != GP_OK || event == GP_EVENT_TIMEOUT)
+                {
+                    m_busy = false;
+                    emit finished(Error, m_errors);
+                    return QPair<QString, QString>();
+                }
+            } while(event != GP_EVENT_FILE_ADDED);
+
+            CameraFilePath *camera_file_path = (CameraFilePath*)data;
+            qDebug() << camera_file_path->folder << camera_file_path->name;
+            emit finished(OK, m_errors);
+            return QPair<QString, QString>(camera_file_path->folder, camera_file_path->name);
+            /*if(ret == GP_OK) {
+                m_busy = false;
+                return QPair<QString,QString>();//(QString(camera_file_path.folder), QString(camera_file_path.name));
+            }*/
             this->thread()->sleep(0.5);
         }
         m_busy = false;
