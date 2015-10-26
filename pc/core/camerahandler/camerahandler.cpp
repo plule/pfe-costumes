@@ -72,7 +72,7 @@ int CameraHandler::deinit()
 
     for(int i = 0; i < MAX_CAMERA; i++) {
         if(m_cameras[i] != NULL) {
-            delete m_cameras[i];
+            m_cameras[i]->deleteLater();
             m_cameras[i] = NULL;
         }
     }
@@ -95,7 +95,7 @@ CameraHandler::CameraHandler()
 CameraHandler::~CameraHandler()
 {
 	for(int i = 0; i < getNbCameras(); i++) {
-        delete m_cameras[i];
+        m_cameras[i]->deleteLater();
         m_cameras[i] = NULL;
 	}
 }
