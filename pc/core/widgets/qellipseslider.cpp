@@ -30,6 +30,11 @@ QEllipseSlider::QEllipseSlider(QWidget *parent) :
     m_lastFrontMotor = -1;
     m_lastSideMotor = -1;
     updateSlidersPositions();
+
+    ui->frontMotorSlider->setBoundEditable(true);
+    ui->frontMotorSlider->setBoundLimits(1000, 2000);
+    ui->sideMotorSlider->setBoundEditable(true);
+    ui->sideMotorSlider->setBoundLimits(1000,2000);
 }
 
 QEllipseSlider::~QEllipseSlider()
@@ -118,6 +123,12 @@ void QEllipseSlider::setSideSliderEnabled(bool enabled)
 void QEllipseSlider::setFrontSliderEnabled(bool enabled)
 {
     ui->frontGroup->setEnabled(enabled);
+}
+
+void QEllipseSlider::setBoundEditEnabled(bool enabled)
+{
+    ui->frontMotorSlider->setBoundEditable(enabled);
+    ui->sideMotorSlider->setBoundEditable(enabled);
 }
 
 int QEllipseSlider::maxSideMotor() const

@@ -106,6 +106,7 @@ public slots:
      */
     void setSideSliderEnabled(bool enabled);
     void setFrontSliderEnabled(bool enabled);
+    void setBoundEditEnabled(bool enabled);
 
 
 protected slots:

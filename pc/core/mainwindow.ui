@@ -21,7 +21,7 @@
     <item>
      <widget class="QTabWidget" name="tab">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="adjustmentTab">
        <attribute name="title">
@@ -46,6 +46,13 @@
          </layout>
         </item>
         <item>
+         <widget class="QCheckBox" name="enableBoundEditCheckbox">
+          <property name="text">
+           <string>Edit motors bounds</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QScrollArea" name="scrollArea">
           <property name="widgetResizable">
            <bool>true</bool>
@@ -55,8 +62,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>620</width>
-             <height>551</height>
+             <width>630</width>
+             <height>557</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_4"/>
@@ -234,8 +241,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>231</width>
-               <height>586</height>
+               <width>216</width>
+               <height>611</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -475,7 +482,7 @@
      <x>0</x>
      <y>0</y>
      <width>891</width>
-     <height>29</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuA">

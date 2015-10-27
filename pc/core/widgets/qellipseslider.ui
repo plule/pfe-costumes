@@ -143,7 +143,7 @@ QGroupBox::title#mainGroup {
            <item>
             <layout class="QHBoxLayout" name="sideMotorLayout">
              <item>
-              <widget class="QSlider" name="sideMotorSlider">
+              <widget class="QBoundedSlider" name="sideMotorSlider">
                <property name="maximum">
                 <number>50</number>
                </property>
@@ -228,7 +228,7 @@ QGroupBox::title#mainGroup {
            <item>
             <layout class="QHBoxLayout" name="frontMotorLayout">
              <item>
-              <widget class="QSlider" name="frontMotorSlider">
+              <widget class="QBoundedSlider" name="frontMotorSlider">
                <property name="maximum">
                 <number>25</number>
                </property>
@@ -308,6 +308,13 @@ QGroupBox::title#mainGroup {
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QBoundedSlider</class>
+   <extends>QSlider</extends>
+   <header location="global">widgets/qboundedslider.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../resources/icons/icons.qrc"/>
  </resources>

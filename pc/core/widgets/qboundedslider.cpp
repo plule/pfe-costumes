@@ -11,19 +11,13 @@ QBoundedSlider::QBoundedSlider(QWidget *parent) :
     connect(ui->slider, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged(int)));
     connect(ui->slider, SIGNAL(rangeChanged(int,int)), this, SIGNAL(rangeChanged(int,int)));
 
-    // spin to slider signals
+    // spins signal forwarding
     connect(ui->lowerBoundSpin, SIGNAL(valueChanged(int)),
-            this, SLOT(setMinimum(int)));
+            this, SIGNAL(lowerBoundChanged(int)));
     connect(ui->upperBoundSpin, SIGNAL(valueChanged(int)),
-            this, SLOT(setMaximum(int)));
+            this, SIGNAL(upperBoundChanged(int)));
 
-    // spin to spin signals
-    connect(ui->lowerBoundSpin, SIGNAL(valueChanged(int)),
-            this, SLOT(setUpperboundMinimum(int)));
-    connect(ui->upperBoundSpin, SIGNAL(valueChanged(int)),
-            this, SLOT(setLowerboundMaximum(int)));
-
-    setEditable(false);
+    setBoundEditable(false);
 }
 
 QBoundedSlider::~QBoundedSlider()
@@ -66,31 +60,32 @@ void QBoundedSlider::setMinimum(int min)
     ui->slider->setMinimum(min);
 }
 
-void QBoundedSlider::setAbsoluteMaximum(int max)
+void QBoundedSlider::setLowerBound(int value)
 {
-    ui->upperBoundSpin->setMaximum(max);
+    ui->lowerBoundSpin->setValue(value);
 }
 
-void QBoundedSlider::setAbsoluteMinimum(int min)
+void QBoundedSlider::setUpperBound(int value)
 {
-    ui->lowerBoundSpin->setMinimum(min);
+    ui->upperBoundSpin->setValue(value);
 }
 
-void QBoundedSlider::setLowerboundMaximum(int max)
+void QBoundedSlider::setBoundLimits(int min, int max)
 {
-    ui->lowerBoundSpin->setMaximum(max);
+    ui->lowerBoundSpin->setRange(min, max);
+    ui->upperBoundSpin->setRange(min, max);
 }
 
-void QBoundedSlider::setUpperboundMinimum(int min)
-{
-    ui->upperBoundSpin->setMinimum(min);
-}
-
-void QBoundedSlider::setEditable(bool editable)
+void QBoundedSlider::setBoundEditable(bool editable)
 {
     m_editable = editable;
     ui->lowerBoundSpin->setVisible(editable);
     ui->upperBoundSpin->setVisible(editable);
+}
+
+void QBoundedSlider::setOrientation(Qt::Orientation orientation)
+{
+    ui->slider->setOrientation(orientation);
 }
 
 bool QBoundedSlider::editable() const

@@ -26,17 +26,18 @@ public slots:
     void setValue(int value);
     void setMaximum(int max);
     void setMinimum(int min);
-    void setAbsoluteMaximum(int max);
-    void setAbsoluteMinimum(int min);
-    void setEditable(bool editable);
 
-protected slots:
-    void setUpperboundMinimum(int min);
-    void setLowerboundMaximum(int max);
+    void setLowerBound(int value);
+    void setUpperBound(int value);
+    void setBoundEditable(bool editable);
+    void setBoundLimits(int min, int max);
+    void setOrientation(Qt::Orientation orientation);
 
 signals:
     void rangeChanged(int min, int max);
     void valueChanged(int value);
+    void lowerBoundChanged(int value);
+    void upperBoundChanged(int value);
 
 private:
     Ui::QBoundedSlider *ui;

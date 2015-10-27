@@ -608,6 +608,10 @@ QWidget *MainWindow::createAdjustmentGroup(QString arduinoId)
             break;
         }
 
+        // Handle motor's bound edition
+        slider->setBoundEditEnabled(false);
+        connect(ui->enableBoundEditCheckbox, &QCheckBox::toggled, slider, &QEllipseSlider::setBoundEditEnabled);
+
         // Handle model's dimension change
         connect(m_settingsForm, &SettingsForm::modelDepthChanged, slider, &QEllipseSlider::setFrontBaseOffset);
         connect(m_settingsForm, &SettingsForm::modelWidthChanged, slider, &QEllipseSlider::setSideBaseOffset);
