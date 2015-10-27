@@ -167,6 +167,11 @@ Transaction *ArduinoCommunication::motorsPositionMessage(QString arduino)
     return createTransaction(MSG_GET_MORPHOLOGY, arduino);
 }
 
+Transaction *ArduinoCommunication::motorsBoundMessage(QString arduino)
+{
+    return createTransaction(MSG_GET_RAW_MOTOR_BOUNDS, arduino);
+}
+
 Transaction *ArduinoCommunication::startRotation()
 {
     if(m_arduinosModel.rowCount() > 0)
@@ -307,6 +312,14 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
             emit(motorDistanceChanged(message.expe, message.data.at(0).toInt(), message.data.at(1).toInt(), calibrated));
         } else
             qWarning() << "Invalid servo pos message.";
+        break;
+    }
+    case MSG_RAW_MOTOR_BOUNDS:
+    {
+        if(message.data.size() == 3) {
+            emit(motorBoundsChanged(message.expe, message.data.at(0).toInt(), message.data.at(1).toInt(), message.data.at(2).toInt()));
+        } else
+            qWarning() << "Invalid servo bounds message.";
         break;
     }
     default:

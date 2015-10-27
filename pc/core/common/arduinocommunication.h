@@ -145,6 +145,15 @@ signals:
     void motorDistanceChanged(QString arduino, int motor, int distance, bool calibrated);
 
     /**
+     * @brief motorBoundsChanged is emitted when an arduino indicate bounds of a motor
+     * @param arduino
+     * @param motor
+     * @param umin
+     * @param umax
+     */
+    void motorBoundsChanged(QString arduino, int motor, int umin, int umax);
+
+    /**
      * @brief angleChanged is emitted when the angle of the turntable changed
      * @param arduino
      * @param angle
@@ -185,7 +194,7 @@ public slots:
     Transaction *rotationMessage(int angle);
 
     /**
-     * @brief motorsPositionMessage sends a message to get position of all motors of the arduino
+     * @brief motorsPositionMessage creates a message to get position of all motors of the arduino
      *
      * @param arduino
      * @return the message (sendable with ->launch)
@@ -193,9 +202,16 @@ public slots:
     Transaction *motorsPositionMessage(QString arduino);
 
     /**
-     * @brief completeTurnMessage sends a message to do a complete rotation.
+     * @brief motorsBoundMessage creates a message to get the bound of all motors of the arduino
+     * @param arduino
+     * @return the message (sendable with ->launch)
+     */
+    Transaction *motorsBoundMessage(QString arduino);
+
+    /**
+     * @brief completeTurnMessage creates a message to do a complete rotation.
      * @param time is the total time required for the operation
-     * @return
+     * @returnthe message (sendable with ->launch)
      */
     Transaction *startRotation();
 

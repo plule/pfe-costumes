@@ -28,6 +28,8 @@ typedef enum {
     MSG_CANCEL_TURN, // Stop the complete rotation
     MSG_ANGLE, // Send current rotation angle
     MSG_SET_RAW_MOTOR, // Set motor position by giving microsec (for calibration only)
+    MSG_GET_RAW_MOTOR_BOUNDS, // Ask to get raw position of the motors in microsec
+    MSG_RAW_MOTOR_BOUNDS, // Send the raw position of a servomotor in microsec
     MSG_SET_CLOSE, // Set starting position of a motor
     MSG_SET_OPEN, // Set stopping position of a motor
     MSG_RENAME, // Set the name of a model

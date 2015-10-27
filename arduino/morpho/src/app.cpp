@@ -281,6 +281,17 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
             morpho_motors[atoi(pargs[0])].servo.writeMicroseconds(atoi(pargs[1]));
         }
         break;
+    case MSG_GET_RAW_MOTOR_BOUNDS:
+    {
+        if(nargs == 0) {
+            int i;
+            for(i=0; i<MOTOR_NUMBER; i++) {
+                sendMessage(MSG_RAW_MOTOR_BOUNDS,0,ARD_MASTER,i,morpho_motors[i].umin, morpho_motors[i].umax);
+            }
+            ok = true;
+        }
+        break;
+    }
     default:
         break;
     }
