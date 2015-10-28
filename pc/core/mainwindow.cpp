@@ -631,7 +631,7 @@ QWidget *MainWindow::createAdjustmentGroup(QString arduinoId)
         }
 
         // Handle motor's bound edition
-        slider->setBoundEditEnabled(false);
+        slider->setBoundEditEnabled(ui->enableBoundEditCheckbox->isChecked());
         connect(ui->enableBoundEditCheckbox, &QCheckBox::toggled, slider, &QEllipseSlider::setBoundEditEnabled);
 
         // Handle model's dimension change
