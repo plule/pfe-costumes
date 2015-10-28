@@ -97,6 +97,8 @@ public:
 public slots:
     void setSideMotorValue(int value);
     void setFrontMotorValue(int value);
+    void setSideMotorBounds(int umin, int umax);
+    void setFrontMotorBounds(int umin, int umax);
     void setFrontBlockOffset(int frontBlockOffset);
     void setSideBlockOffset(int sideBlockOffset);
     void setFrontBaseOffset(int frontBaseOffset);
@@ -116,6 +118,10 @@ protected slots:
 signals:
     void sideMotorValueChanged(int value);
     void frontMotorValueChanged(int value);
+    void sideMotorLowerBoundsChanged(int umin);
+    void sideMotorUpperBoundsChanged(int umax);
+    void frontMotorLowerBoundsChanged(int umin);
+    void frontMotorUpperBoundsChanged(int umax);
 
 protected:
     double calculateEllipsePerimeter(double side, double front);

@@ -162,12 +162,12 @@ Transaction *ArduinoCommunication::rotationMessage(int angle)
         return new Transaction(this);
 }
 
-Transaction *ArduinoCommunication::motorsPositionMessage(QString arduino)
+Transaction *ArduinoCommunication::getMotorsPositionMessage(QString arduino)
 {
     return createTransaction(MSG_GET_MORPHOLOGY, arduino);
 }
 
-Transaction *ArduinoCommunication::motorsBoundMessage(QString arduino)
+Transaction *ArduinoCommunication::getMotorsBoundMessage(QString arduino)
 {
     return createTransaction(MSG_GET_RAW_MOTOR_BOUNDS, arduino);
 }

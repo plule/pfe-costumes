@@ -199,14 +199,14 @@ public slots:
      * @param arduino
      * @return the message (sendable with ->launch)
      */
-    Transaction *motorsPositionMessage(QString arduino);
+    Transaction *getMotorsPositionMessage(QString arduino);
 
     /**
      * @brief motorsBoundMessage creates a message to get the bound of all motors of the arduino
      * @param arduino
      * @return the message (sendable with ->launch)
      */
-    Transaction *motorsBoundMessage(QString arduino);
+    Transaction *getMotorsBoundMessage(QString arduino);
 
     /**
      * @brief completeTurnMessage creates a message to do a complete rotation.

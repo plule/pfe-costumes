@@ -32,9 +32,14 @@ QEllipseSlider::QEllipseSlider(QWidget *parent) :
     updateSlidersPositions();
 
     ui->frontMotorSlider->setBoundEditable(true);
-    ui->frontMotorSlider->setBoundLimits(1000, 2000);
+    ui->frontMotorSlider->setBoundLimits(500, 2500);
     ui->sideMotorSlider->setBoundEditable(true);
-    ui->sideMotorSlider->setBoundLimits(1000,2000);
+    ui->sideMotorSlider->setBoundLimits(500,2500);
+
+    connect(ui->frontMotorSlider, SIGNAL(lowerBoundChanged(int)), this, SIGNAL(frontMotorLowerBoundsChanged(int)));
+    connect(ui->frontMotorSlider, SIGNAL(upperBoundChanged(int)), this, SIGNAL(frontMotorUpperBoundsChanged(int)));
+    connect(ui->sideMotorSlider, SIGNAL(lowerBoundChanged(int)), this, SIGNAL(sideMotorLowerBoundsChanged(int)));
+    connect(ui->sideMotorSlider, SIGNAL(upperBoundChanged(int)), this, SIGNAL(sideMotorUpperBoundsChanged(int)));
 }
 
 QEllipseSlider::~QEllipseSlider()
@@ -172,6 +177,18 @@ void QEllipseSlider::setFrontMotorValue(int value)
 {
     setFrontSize(value+getFrontOffset(), perimeterLocked());
     updateSlidersPositions();
+}
+
+void QEllipseSlider::setSideMotorBounds(int umin, int umax)
+{
+    ui->sideMotorSlider->setLowerBound(umin);
+    ui->sideMotorSlider->setUpperBound(umax);
+}
+
+void QEllipseSlider::setFrontMotorBounds(int umin, int umax)
+{
+    ui->frontMotorSlider->setLowerBound(umin);
+    ui->frontMotorSlider->setUpperBound(umax);
 }
 
 void QEllipseSlider::onPerimeterChanged(int value)

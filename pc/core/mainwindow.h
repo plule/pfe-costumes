@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QDebug>
 #include <QMetaObject>
+#include <QQueue>
 #include <QDir>
 #include <QList>
 #include <QPair>
@@ -108,7 +109,10 @@ private:
     QPhoto::QCamera *m_camera;
     QMetaObject::Connection m_cameraConnection;
     QTimer *m_motorTimer;
-    QHash<QPair<QString,int>,int> m_dirtyMotors; // stores the modified sliders and the asked value
+    QQueue<Transaction*> m_outbox; // messages waiting to be sent
+    /*QHash<QPair<QString,int>,int> m_dirtyMotors; // stores the modified sliders and the asked value
+    QHash<QPair<QString,int>, int> m_dirtyLowerBounds; // stores the modified motors' bounds
+    QHash<QPair<QString,int>, int> m_dirtyUpperBounds;*/
     QMap<QString,QWidget*> m_adjustmentGroups; // stores the adjustment groups by slider's id
 
     void loadCollection(QString path);
