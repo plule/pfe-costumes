@@ -15,6 +15,9 @@ static const MOTOR_TYPE morpho_motors_role[] = {
 ArduinoCommunication::ArduinoCommunication(QObject *parent) :
     QObject(parent)
 {
+    for(int i=1; i<=MAX_ID; i++)
+        m_idPool.append(i);
+
     m_pinging = false;
     m_lastMessage = 0;
     m_port = 0;
@@ -228,6 +231,7 @@ void ArduinoCommunication::cleanUpDeadDevices()
 void ArduinoCommunication::deleteTransaction(int id)
 {
     if(m_transactions.contains(id)) {
+        qDebug() << "deregister transaction " << id;
         m_transactions.take(id)->deleteLater();
     }
 }
@@ -328,21 +332,24 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
 
 Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, QString dest, QList<QVariant> datas)
 {
-    int id = 0;
-    while(m_transactions.contains(id) && id++ <= MAX_ID);
-    if(id==MAX_ID) {
-        qWarning() << "Transactions pool full";
-        return new Transaction(this);
-    }
-
-    Transaction *transaction = new Transaction(type, id, dest, datas, this);
-    connect(transaction, SIGNAL(send(MSG_TYPE,int,QString,QList<QVariant>)), this, SLOT(_sendMessage(MSG_TYPE,int,QString,QList<QVariant>)));
-    connect(transaction, SIGNAL(finished(int)), transaction, SLOT(deleteLater()));
-    if(dest != DEST_BROADCAST) { // not a broadcast, so we watch for answer
-        connect(transaction, SIGNAL(finished(int)), this, SLOT(deleteTransaction(int)));
+    Transaction *transaction;
+    if(dest == DEST_BROADCAST)
+        transaction = new Transaction(type, 0, dest, datas, this);
+    else
+    {
+        int id = m_idPool.takeFirst();
+        transaction = new Transaction(type, id, dest, datas, this);
         m_transactions.insert(id, transaction);
+        connect(transaction, &Transaction::destroyed, [=](){
+            m_transactions.remove(id);
+            m_idPool.append(id);
+        });
         transaction->watchForAck();
     }
+
+    connect(transaction, SIGNAL(send(MSG_TYPE,int,QString,QList<QVariant>)), this, SLOT(_sendMessage(MSG_TYPE,int,QString,QList<QVariant>)));
+    connect(transaction, SIGNAL(finished(int)), transaction, SLOT(deleteLater()));
+
     return transaction;
 }
 

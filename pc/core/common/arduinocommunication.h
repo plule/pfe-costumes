@@ -13,6 +13,7 @@
 #include <QThread>
 #include <QString>
 #include <QPersistentModelIndex>
+#include <QStack>
 #include "qlistmodel.h"
 #include "qextserialport.h"
 #include "transaction.h"
@@ -240,6 +241,7 @@ private:
     //QList<Arduino> m_arduinos;
     QListModel m_arduinosModel;
     QTimer m_aliveTimer;
+    QStack<int> m_idPool;
     QHash<int, Transaction*> m_transactions;
     int m_lastMessage;
     bool m_pinging;
