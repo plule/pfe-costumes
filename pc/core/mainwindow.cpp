@@ -56,17 +56,6 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
     connect(m_settingsForm, &SettingsForm::backgroundColorChanged, m_imagePreview, &QImagePreviewWindow::setBackgroundColor);
     connect(m_settingsForm, &SettingsForm::backgroundColorChanged, ui->turntable, &QTurntable::setBackgroundColor);
 
-    // This timer check 5 time a second if there is motor distance messages to send to the arduinos.
-    // It will send only one message each time (to avoid overflowing arduino's serial)
-    m_motorTimer = new QTimer(this);
-    m_motorTimer->setSingleShot(false);
-    connect(m_motorTimer, &QTimer::timeout, [=](){
-        while(!m_outbox.isEmpty())
-            m_outbox.dequeue()->launch();
-    });
-
-    m_motorTimer->start(200);
-
     // Handle messages from the arduino
 
     // Update slider's position according to arduino's messages
@@ -321,7 +310,6 @@ MainWindow::~MainWindow()
     delete ui;
     delete m_handler;
     delete m_progressDialog;
-    delete m_motorTimer;
 }
 
 void MainWindow::startWork(QString work, int target)
@@ -604,25 +592,25 @@ QWidget *MainWindow::createAdjustmentGroup(QString arduinoId)
         case FRONT_MOTOR:
             slider->setProperty("front_motor",i);
             connect(slider, &QEllipseSlider::frontMotorValueChanged, [=](int distance){
-                m_outbox.enqueue(m_arduinoCommunication->motorDistanceMessage(arduinoId, i, distance));
+                m_arduinoCommunication->motorDistanceMessage(arduinoId, i, distance)->launch();
             });
             connect(slider, &QEllipseSlider::frontMotorLowerBoundsChanged, [=](int umin){
-                m_outbox.enqueue(m_arduinoCommunication->setClosePosition(arduinoId, i, umin));
+                m_arduinoCommunication->setClosePosition(arduinoId, i, umin)->launch();
             });
             connect(slider, &QEllipseSlider::frontMotorUpperBoundsChanged, [=](int umax){
-                m_outbox.enqueue(m_arduinoCommunication->setOpenPosition(arduinoId, i, umax));
+                m_arduinoCommunication->setOpenPosition(arduinoId, i, umax)->launch();
             });
             break;
         case SIDE_MOTOR:
             slider->setProperty("side_motor",i);
             connect(slider, &QEllipseSlider::sideMotorValueChanged, [=](int distance){
-                m_outbox.enqueue(m_arduinoCommunication->motorDistanceMessage(arduinoId, i, distance));
+                m_arduinoCommunication->motorDistanceMessage(arduinoId, i, distance)->launch();
             });
             connect(slider, &QEllipseSlider::sideMotorLowerBoundsChanged, [=](int umin){
-                m_outbox.enqueue(m_arduinoCommunication->setClosePosition(arduinoId, i, umin));
+                m_arduinoCommunication->setClosePosition(arduinoId, i, umin)->launch();
             });
             connect(slider, &QEllipseSlider::sideMotorUpperBoundsChanged, [=](int umax){
-                m_outbox.enqueue(m_arduinoCommunication->setOpenPosition(arduinoId, i, umax));
+                m_arduinoCommunication->setOpenPosition(arduinoId, i, umax)->launch();
             });
             break;
         default:
