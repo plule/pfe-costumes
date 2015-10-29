@@ -32,7 +32,7 @@ public:
     
 signals:
     // Indicate that a new photo has been taken. Value is between 0 and nbPhoto-1
-    void progress(int value, QString photoPath);
+    void progress(int value, int index, QString photoPath);
     // Indicate that work has been done with success
     void done();
     // Indicate that a problem happened. Execution is stopped and the object can be destroyed.

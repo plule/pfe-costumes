@@ -541,12 +541,12 @@ void MainWindow::on_massCaptureButton_clicked()
         connect(synchroniser, SIGNAL(done()), synchroniser, SLOT(deleteLater()));
         connect(synchroniser, SIGNAL(problem(MassCapture::Problem, QString)), this, SLOT(onMassCaptureProblem(MassCapture::Problem, QString)));
 
-        connect(synchroniser, &MassCapture::progress, [=](int index,QString path){
+        connect(synchroniser, &MassCapture::progress, [=](int progress, int index,QString path){
             QString filename = convertRaw(path);
             ui->turntable->setPictureAndView(index, filename);
         });
 
-        connect(synchroniser, SIGNAL(progress(int,QString)), m_progressDialog, SLOT(setValue(int)));
+        connect(synchroniser, SIGNAL(progress(int,int,QString)), m_progressDialog, SLOT(setValue(int)));
         connect(synchroniser, SIGNAL(destroyed()), ui->workBar, SLOT(reset()));
         connect(synchroniser, SIGNAL(destroyed()), m_progressDialog, SLOT(reset()));
         connect(m_progressDialog, SIGNAL(canceled()), synchroniser, SLOT(deleteLater()));
