@@ -240,8 +240,7 @@ private:
     //QList<Arduino> m_arduinos;
     QListModel m_arduinosModel;
     QTimer m_aliveTimer;
-    QHash<int, Transaction*> m_watchers;
-    //QVector<Transaction*> m_watchers;
+    QHash<int, Transaction*> m_transactions;
     int m_lastMessage;
     bool m_pinging;
 };
