@@ -24,8 +24,10 @@ Transaction::Transaction(MSG_TYPE type, int id, QString dest, QList<QVariant> da
 
 Transaction::~Transaction()
 {
-    delete m_ackTimer;
-    delete m_doneTimer;
+    if(m_ackTimer != NULL)
+        m_ackTimer->deleteLater();
+    if(m_doneTimer != NULL)
+        m_doneTimer->deleteLater();
 }
 
 void Transaction::setAck()
