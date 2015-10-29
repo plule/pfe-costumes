@@ -260,7 +260,8 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
             int umin = atoi(pargs[1]);
             morpho_motors[motor].umin = umin;
             eeprom_write_word(uminAddress(motor), umin);
-            storeCrc(motor);;
+            storeCrc(motor);
+            setDistance(motor, morpho_motors[motor].distance);
             DBG("close");
             ok = true;
         }
@@ -272,6 +273,7 @@ bool handleMessage(MSG_TYPE type, int idMsg, char *expe, char **pargs, int nargs
             morpho_motors[motor].umax = umax;
             eeprom_write_word(umaxAddress(motor), umax);
             storeCrc(motor);
+            setDistance(motor, morpho_motors[motor].distance);
             DBG("open");
             ok = true;
         }
