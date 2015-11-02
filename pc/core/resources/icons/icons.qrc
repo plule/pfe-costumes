@@ -16,5 +16,7 @@
         <file>open.png</file>
         <file>new.png</file>
         <file>lock.png</file>
+        <file>stock-vchain-24.png</file>
+        <file>stock-vchain-broken-24.png</file>
     </qresource>
 </RCC>
