@@ -289,67 +289,83 @@
         <translation type="obsolete">L&apos;appareil photo ne répond plus, vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="577"/>
-        <location filename="../mainwindow.cpp" line="657"/>
+        <location filename="../mainwindow.cpp" line="565"/>
+        <location filename="../mainwindow.cpp" line="691"/>
         <source>No camera connected</source>
         <translation>Aucun appareil photo détecté</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="257"/>
+        <location filename="../mainwindow.cpp" line="246"/>
         <source>Choose file(s)</source>
         <translation>Selectionner des fichiers</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="89"/>
-        <location filename="../mainwindow.cpp" line="110"/>
         <source>Distance motor message from known model for unknown motor</source>
-        <translation>Message de changement de position de moteur venant d&apos;un mannequin pour un moteur inconnu</translation>
+        <translation type="vanished">Message de changement de position de moteur venant d&apos;un mannequin pour un moteur inconnu</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="91"/>
-        <location filename="../mainwindow.cpp" line="112"/>
         <source>Distance motor message from unknown model</source>
-        <translation>Message de changement de position venant d&apos;un mannequin inconnu</translation>
+        <translation type="vanished">Message de changement de position venant d&apos;un mannequin inconnu</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="126"/>
+        <location filename="../mainwindow.cpp" line="115"/>
         <source>Model %1 connected</source>
         <translation>Mannequin %1 branché</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="136"/>
+        <location filename="../mainwindow.cpp" line="125"/>
         <source>Model %1 disconnected</source>
         <translation>Mannequin %1 débranché</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="292"/>
+        <location filename="../mainwindow.cpp" line="281"/>
         <source>Save Collection</source>
         <translation>Sauvegarder la Collection</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="293"/>
+        <location filename="../mainwindow.cpp" line="282"/>
         <source>The collection has unsaved changes.
 Do you want to save the modifications?</source>
         <translation>La collection a des modification non enregistrées.\nVoulez vous sauvegarder ?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="449"/>
-        <location filename="../mainwindow.cpp" line="503"/>
+        <location filename="../mainwindow.cpp" line="437"/>
+        <location filename="../mainwindow.cpp" line="491"/>
         <source>Confirmation</source>
         <translation>Confirmation</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="449"/>
+        <location filename="../mainwindow.cpp" line="437"/>
         <source>Add a costume?</source>
         <translation>Ajouter un nouveau costume ?</translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="503"/>
+        <location filename="../mainwindow.cpp" line="491"/>
         <source>Are you sure you want to delete these %n costume(s)?</source>
         <translation>
             <numerusform>Êtes-vous sûr de vouloir supprimer %n costume ?</numerusform>
             <numerusform>Êtes-vous sûr de vouloir supprimer %n costumes ?</numerusform>
         </translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="602"/>
+        <source>Left</source>
+        <translation>Gauche</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="606"/>
+        <source>Right</source>
+        <translation>Droite</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="610"/>
+        <source>Front</source>
+        <translation>Avant</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="614"/>
+        <source>Back</source>
+        <translation>Arrière</translation>
     </message>
     <message>
         <source>Are you sure you want to delete the costume(s)?</source>
@@ -372,17 +388,17 @@ Do you want to save the modifications?</source>
         <translation type="obsolete">La connection avec l&apos;appareil photo a été perdu. Vous devriez le débrancher et le rebrancher.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="434"/>
+        <location filename="../mainwindow.cpp" line="422"/>
         <source>The camera has encountered a problem.</source>
         <translation>L&apos;appareil photo a eu un problème.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="436"/>
+        <location filename="../mainwindow.cpp" line="424"/>
         <source>The rotating model has encountered a problem.</source>
         <translation>Le mannequin a eu un problème.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="438"/>
+        <location filename="../mainwindow.cpp" line="426"/>
         <source>An unknown problem occured.</source>
         <translation>Un problème inconnu est survennu.</translation>
     </message>
@@ -391,12 +407,12 @@ Do you want to save the modifications?</source>
         <translation type="obsolete">Voulez-vous essayer de continuer les prises de vue ?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="545"/>
+        <location filename="../mainwindow.cpp" line="533"/>
         <source>Mass capture...</source>
         <translation>Prises de vue en cours...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="546"/>
+        <location filename="../mainwindow.cpp" line="534"/>
         <source>Abort Capture</source>
         <translation>Abandonner les prises de vue</translation>
     </message>
@@ -405,7 +421,7 @@ Do you want to save the modifications?</source>
         <translation type="obsolete">Échec des captures</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="452"/>
+        <location filename="../mainwindow.cpp" line="440"/>
         <source>New Costume</source>
         <translation>Nouveau Costume</translation>
     </message>
@@ -414,12 +430,12 @@ Do you want to save the modifications?</source>
         <translation type="obsolete">Chargement des vues</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="467"/>
+        <location filename="../mainwindow.cpp" line="455"/>
         <source>New collection</source>
         <translation>Nouvelle collection</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="495"/>
+        <location filename="../mainwindow.cpp" line="483"/>
         <source>Open collection</source>
         <translation>Ouvrir collection</translation>
     </message>
@@ -550,6 +566,14 @@ Do you want to save the modifications?</source>
     </message>
 </context>
 <context>
+    <name>QLinkedBoundedSliders</name>
+    <message>
+        <location filename="../widgets/qlinkedboundedsliders.ui" line="20"/>
+        <source>Form</source>
+        <translation>Fenêtre</translation>
+    </message>
+</context>
+<context>
     <name>QPhoto::CameraHandler</name>
     <message numerus="yes">
         <location filename="../camerahandler/camerahandler.cpp" line="65"/>
@@ -572,6 +596,14 @@ Do you want to save the modifications?</source>
     <message>
         <source>Connection with camera lost. Disconnect and reconnect it.</source>
         <translation type="obsolete">L&apos;appareil photo ne répond plus, vous devriez le débrancher et le rebrancher.</translation>
+    </message>
+</context>
+<context>
+    <name>QSliderGroup</name>
+    <message>
+        <location filename="../widgets/qslidergroup.ui" line="14"/>
+        <source>Form</source>
+        <translation>Fenêtre</translation>
     </message>
 </context>
 <context>

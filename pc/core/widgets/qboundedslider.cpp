@@ -92,3 +92,8 @@ bool QBoundedSlider::editable() const
 {
     return m_editable;
 }
+
+void QBoundedSlider::setName(QString name)
+{
+    ui->nameLabel->setText(name);
+}

@@ -82,8 +82,11 @@ typedef enum {
 
 /* Morphology */
 typedef enum {
+    SINGLE_MOTOR,
+    LEFT_MOTOR,
+    RIGHT_MOTOR,
     FRONT_MOTOR,
-    SIDE_MOTOR,
+    BACK_MOTOR,
     INVALID_MOTOR
 } MOTOR_TYPE;
 

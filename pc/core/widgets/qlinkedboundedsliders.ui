@@ -103,28 +103,8 @@
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="spacing">
-      <number>0</number>
-     </property>
      <item>
-      <widget class="QBoundedSlider" name="slider1" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-         <horstretch>0</horstretch>
-         <verstretch>1</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QBoundedSlider" name="slider2" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-         <horstretch>0</horstretch>
-         <verstretch>1</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
+      <widget class="QBoundedSlider" name="slider1" native="true"/>
      </item>
      <item>
       <spacer name="horizontalSpacer">
@@ -138,6 +118,9 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QBoundedSlider" name="slider2" native="true"/>
      </item>
     </layout>
    </item>

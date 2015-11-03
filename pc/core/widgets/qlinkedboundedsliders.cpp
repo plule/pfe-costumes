@@ -33,6 +33,26 @@ int QLinkedBoundedSliders::slider2Value()
     return ui->slider2->value();
 }
 
+void QLinkedBoundedSliders::setSlider1Name(QString name)
+{
+    ui->slider1->setName(name);
+}
+
+void QLinkedBoundedSliders::setSlider2Name(QString name)
+{
+    ui->slider2->setName(name);
+}
+
+QBoundedSlider *QLinkedBoundedSliders::slider1()
+{
+    return ui->slider1;
+}
+
+QBoundedSlider *QLinkedBoundedSliders::slider2()
+{
+    return ui->slider2;
+}
+
 void QLinkedBoundedSliders::setBoundEditable(bool editable)
 {
     ui->slider1->setBoundEditable(editable);

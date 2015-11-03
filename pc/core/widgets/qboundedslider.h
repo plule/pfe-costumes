@@ -19,6 +19,7 @@ public:
     int minimum() const;
     int value() const;
     bool editable() const;
+    void setName(QString name);
 
 
 public slots:

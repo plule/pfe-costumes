@@ -60,7 +60,7 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
 
     // Update slider's position according to arduino's messages
     connect(m_arduinoCommunication, &ArduinoCommunication::motorDistanceChanged, [=](QString arduino, int motor, int distance, bool calibrated){
-        if(m_adjustmentGroups.contains(arduino)) {
+        /*if(m_adjustmentGroups.contains(arduino)) {
             QWidget *group = m_adjustmentGroups.value(arduino);
             for(int i=0; i<group->layout()->count(); ++i) {
                 QEllipseSlider *ellipseSlider = (QEllipseSlider *)group->layout()->itemAt(i)->widget();
@@ -78,12 +78,12 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
             qWarning() << tr("Distance motor message from known model for unknown motor");
         } else {
             qWarning() << tr("Distance motor message from unknown model");
-        }
+        }*/
     });
 
     // Update bounds' values according to arduino's messages
     connect(m_arduinoCommunication, &ArduinoCommunication::motorBoundsChanged, [=](QString arduino, int motor, int umin, int umax){
-        if(m_adjustmentGroups.contains(arduino)) {
+        /*if(m_adjustmentGroups.contains(arduino)) {
             QWidget *group = m_adjustmentGroups.value(arduino);
             for(int i=0; i<group->layout()->count(); ++i) {
                 QEllipseSlider *ellipseSlider = (QEllipseSlider *)group->layout()->itemAt(i)->widget();
@@ -99,7 +99,7 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
             qWarning() << tr("Distance motor message from known model for unknown motor");
         } else {
             qWarning() << tr("Distance motor message from unknown model");
-        }
+        }*/
     });
 
     // When a new arduino is detected, a group of QEllipseSlider is created (one per module)
@@ -576,14 +576,60 @@ QWidget *MainWindow::createAdjustmentGroup(QString arduinoId)
     QGroupBox *group = new QGroupBox(this);
     QVBoxLayout *layout = new QVBoxLayout(group);
 
-    QHash<QString,QEllipseSlider*> module_sliders;
+    QHash<QString,QSliderGroup*> slider_groups;
     for(int i=0; i < m_arduinoCommunication->getMotorsNumber(); i++) {
         QString name = QString(m_arduinoCommunication->getMotorName(i));
-        QEllipseSlider *slider;
+
+        QBoundedSlider *slider;
+        if(m_arduinoCommunication->getMotorType(i) == SINGLE_MOTOR) {
+            slider = new QBoundedSlider(this);
+            slider->setName(name);
+            layout->addWidget(slider);
+        }
+        else { // Motor group (front, back, left, right)
+            QSliderGroup *slider_group;
+            if(slider_groups.contains(name))
+                slider_group = slider_groups.value(name);
+            else {
+                slider_group = new QSliderGroup(this);
+                slider_group->setName(name);
+                slider_groups.insert(name, slider_group);
+                layout->addWidget(slider_group);
+            }
+            switch(m_arduinoCommunication->getMotorType(i)) {
+            case LEFT_MOTOR:
+                slider = slider_group->sliders1()->slider1();
+                slider->setName(tr("Left"));
+                break;
+            case RIGHT_MOTOR:
+                slider = slider_group->sliders1()->slider2();
+                slider->setName(tr("Right"));
+                break;
+            case FRONT_MOTOR:
+                slider = slider_group->sliders2()->slider1();
+                slider->setName(tr("Front"));
+                break;
+            case BACK_MOTOR:
+                slider = slider_group->sliders2()->slider2();
+                slider->setName(tr("Back"));
+                break;
+            case SINGLE_MOTOR:
+            case INVALID_MOTOR:
+                qWarning() << "Invalid motor declared.";
+                break;
+            }
+        }
+        connect(ui->enableBoundEditCheckbox, SIGNAL(toggled(bool)), slider, SLOT(setBoundEditable(bool)));
+        slider->setBoundEditable(ui->enableBoundEditCheckbox->isChecked());
+    }
+    return group;
+    /*for(int i=0; i < m_arduinoCommunication->getMotorsNumber(); i++) {
+        QString name = QString(m_arduinoCommunication->getMotorName(i));
+        QLinkedBoundedSliders *slider;
         if(module_sliders.contains(name))
             slider = module_sliders.value(name);
         else {
-            slider = new QEllipseSlider(this);
+            slider = new QLinkedBoundedSliders(this);
             slider->setName(name);
             module_sliders.insert(name, slider);
             layout->addWidget(slider);
@@ -626,7 +672,7 @@ QWidget *MainWindow::createAdjustmentGroup(QString arduinoId)
         connect(m_settingsForm, &SettingsForm::modelDepthChanged, slider, &QEllipseSlider::setFrontBaseOffset);
         connect(m_settingsForm, &SettingsForm::modelWidthChanged, slider, &QEllipseSlider::setSideBaseOffset);
         slider->setBaseOffset(m_settingsForm->getModelWidth(), m_settingsForm->getModelDepth());
-    }
+    }*/
     return group;
 }
 

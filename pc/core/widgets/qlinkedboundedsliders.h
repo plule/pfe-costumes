@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTimer>
+#include "widgets/qboundedslider.h"
 
 namespace Ui {
 class QLinkedBoundedSliders;
@@ -18,6 +19,10 @@ public:
 
     int slider1Value();
     int slider2Value();
+    void setSlider1Name(QString name);
+    void setSlider2Name(QString name);
+    QBoundedSlider *slider1();
+    QBoundedSlider *slider2();
 
 public slots:
     void setBoundEditable(bool editable);
