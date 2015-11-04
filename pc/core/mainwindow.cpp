@@ -105,10 +105,10 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
     // When a new arduino is detected, a group of QEllipseSlider is created (one per module)
     connect(m_arduinoCommunication, &ArduinoCommunication::arduinoDetected, [=](QString arduino,QString name, ARD_ROLE role){
         if(role == ROLE_MORPHOLOGY) {
-            QWidget *adjGroup = createAdjustmentGroup(arduino);
+            QWidget *adjGroup = createArduinoWidgetsGroup(arduino);
             if(ui->ardListCombo->itemData(ui->ardListCombo->currentIndex()).toString() != arduino) // do not hide if it's the current arduino
                 adjGroup->setVisible(false);
-            m_adjustmentGroups.insert(arduino,adjGroup);
+            m_arduinoWidgetsGroup.insert(arduino,adjGroup);
             ui->adjustmentScroll->layout()->addWidget(adjGroup);
             m_arduinoCommunication->getMotorsPositionMessage(arduino)->launch(); // Request current motors' positions
             m_arduinoCommunication->getMotorsBoundMessage(arduino)->launch(); // Request current motors' bounds
@@ -119,9 +119,9 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
 
     // When an arduino is disconnected, its QEllipseSlider group is distroyed
     connect(m_arduinoCommunication, &ArduinoCommunication::arduinoLost, [=](QString arduino,QString name) {
-        if(m_adjustmentGroups.contains(arduino)) {
-            m_adjustmentGroups.value(arduino)->deleteLater();
-            m_adjustmentGroups.remove(arduino);
+        if(m_arduinoWidgetsGroup.contains(arduino)) {
+            m_arduinoWidgetsGroup.value(arduino)->deleteLater();
+            m_arduinoWidgetsGroup.remove(arduino);
             statusBar()->showMessage(tr("Model %1 disconnected").arg(name));
         }
         ui->turntableButton->setDisabled(m_arduinoCommunication->listTurntables().isEmpty());
@@ -133,9 +133,9 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
     connect(ui->ardListCombo, signal, [=](int index){
         //int index = ui->ardListCombo->currentIndex();
         QString arduino = ui->ardListCombo->itemData(index, Qt::UserRole).toString();
-        if(index >= 0 && m_adjustmentGroups.contains(arduino)) {
-            QWidget *newGroup = m_adjustmentGroups.value(arduino);
-            foreach(QWidget *group, m_adjustmentGroups) {
+        if(index >= 0 && m_arduinoWidgetsGroup.contains(arduino)) {
+            QWidget *newGroup = m_arduinoWidgetsGroup.value(arduino);
+            foreach(QWidget *group, m_arduinoWidgetsGroup) {
                 if(newGroup != group)
                     group->setVisible(false);
                 else
@@ -571,7 +571,7 @@ void MainWindow::on_actionSettings_triggered()
     m_settingsForm->show();
 }
 
-QWidget *MainWindow::createAdjustmentGroup(QString arduinoId)
+QWidget *MainWindow::createArduinoWidgetsGroup(QString arduinoId)
 {
     QGroupBox *group = new QGroupBox(this);
     QVBoxLayout *layout = new QVBoxLayout(group);
