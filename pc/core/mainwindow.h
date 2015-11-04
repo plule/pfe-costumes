@@ -112,6 +112,7 @@ private:
     QPhoto::QCamera *m_camera;
     QMetaObject::Connection m_cameraConnection;
     QMap<QString,QWidget*> m_arduinoWidgetsGroup; // stores the adjustment groups by slider's id
+    QHash<QPair<QString, int>, QBoundedSlider*> m_motorsSliders;
 
     void loadCollection(QString path);
     int getCurrentId();

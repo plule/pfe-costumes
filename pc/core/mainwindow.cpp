@@ -60,6 +60,11 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
 
     // Update slider's position according to arduino's messages
     connect(m_arduinoCommunication, &ArduinoCommunication::motorDistanceChanged, [=](QString arduino, int motor, int distance, bool calibrated){
+        if(m_motorsSliders.contains(QPair<QString, int>(arduino, motor)))
+        {
+            QBoundedSlider *slider = m_motorsSliders.value(QPair<QString,int>(arduino, motor));
+            slider->setValue(distance);
+        }
         /*if(m_adjustmentGroups.contains(arduino)) {
             QWidget *group = m_adjustmentGroups.value(arduino);
             for(int i=0; i<group->layout()->count(); ++i) {
@@ -83,6 +88,12 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
 
     // Update bounds' values according to arduino's messages
     connect(m_arduinoCommunication, &ArduinoCommunication::motorBoundsChanged, [=](QString arduino, int motor, int umin, int umax){
+        if(m_motorsSliders.contains(QPair<QString, int>(arduino, motor)))
+        {
+            QBoundedSlider *slider = m_motorsSliders.value(QPair<QString,int>(arduino, motor));
+            slider->setLowerBound(umin);
+            slider->setUpperBound(umax);
+        }
         /*if(m_adjustmentGroups.contains(arduino)) {
             QWidget *group = m_adjustmentGroups.value(arduino);
             for(int i=0; i<group->layout()->count(); ++i) {
@@ -117,13 +128,20 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
         ui->turntableButton->setDisabled(m_arduinoCommunication->listTurntables().isEmpty());
     });
 
-    // When an arduino is disconnected, its QEllipseSlider group is distroyed
+    // When an arduino is disconnected, its widgets group is destroyed and the corresponding widgets are uneregistered
     connect(m_arduinoCommunication, &ArduinoCommunication::arduinoLost, [=](QString arduino,QString name) {
         if(m_arduinoWidgetsGroup.contains(arduino)) {
             m_arduinoWidgetsGroup.value(arduino)->deleteLater();
             m_arduinoWidgetsGroup.remove(arduino);
             statusBar()->showMessage(tr("Model %1 disconnected").arg(name));
         }
+
+        QPair<QString, int> motor;
+        foreach(motor, m_motorsSliders.keys()) {
+            if(motor.first == arduino)
+                m_motorsSliders.remove(motor);
+        }
+
         ui->turntableButton->setDisabled(m_arduinoCommunication->listTurntables().isEmpty());
     });
 
@@ -619,6 +637,12 @@ QWidget *MainWindow::createArduinoWidgetsGroup(QString arduinoId)
                 break;
             }
         }
+
+        slider->setBoundLimits(500, 2500);
+
+        // Register the new slider to associate it with its motor
+        m_motorsSliders.insert(QPair<QString, int>(arduinoId, i), slider);
+
         connect(ui->enableBoundEditCheckbox, SIGNAL(toggled(bool)), slider, SLOT(setBoundEditable(bool)));
 
         connect(slider, &QBoundedSlider::valueChanged, [=](int distance){
