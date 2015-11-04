@@ -645,8 +645,8 @@ QWidget *MainWindow::createArduinoWidgetsGroup(QString arduinoId)
 
         connect(ui->enableBoundEditCheckbox, SIGNAL(toggled(bool)), slider, SLOT(setBoundEditable(bool)));
 
-        connect(slider, &QBoundedSlider::valueChanged, [=](int distance){
-            m_arduinoCommunication->motorDistanceMessage(arduinoId, i, distance)->launch();
+        connect(slider, &QBoundedSlider::sliderReleased, [=](){
+            m_arduinoCommunication->motorDistanceMessage(arduinoId, i, slider->value())->launch();
         });
 
         connect(slider, &QBoundedSlider::lowerBoundChanged, [=](int umin){
