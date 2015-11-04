@@ -93,7 +93,7 @@ private slots:
     void on_turntableButton_toggled(bool checked);
 
 private:
-    QWidget *createAdjustmentGroup(QString arduinoId);
+    QWidget *createArduinoWidgetsGroup(QString arduinoId);
 
     Ui::MainWindow *ui;
     SettingsForm *m_settingsForm;
@@ -111,7 +111,7 @@ private:
     DcRawQT m_rawHandler;
     QPhoto::QCamera *m_camera;
     QMetaObject::Connection m_cameraConnection;
-    QMap<QString,QWidget*> m_adjustmentGroups; // stores the adjustment groups by slider's id
+    QMap<QString,QWidget*> m_arduinoWidgetsGroup; // stores the adjustment groups by slider's id
 
     void loadCollection(QString path);
     int getCurrentId();
