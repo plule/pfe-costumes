@@ -639,6 +639,7 @@ QWidget *MainWindow::createArduinoWidgetsGroup(QString arduinoId)
         }
 
         slider->setBoundLimits(500, 2500);
+        slider->setRange(0, 50);
 
         // Register the new slider to associate it with its motor
         m_motorsSliders.insert(QPair<QString, int>(arduinoId, i), slider);
