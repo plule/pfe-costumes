@@ -620,6 +620,19 @@ QWidget *MainWindow::createArduinoWidgetsGroup(QString arduinoId)
             }
         }
         connect(ui->enableBoundEditCheckbox, SIGNAL(toggled(bool)), slider, SLOT(setBoundEditable(bool)));
+
+        connect(slider, &QBoundedSlider::valueChanged, [=](int distance){
+            m_arduinoCommunication->motorDistanceMessage(arduinoId, i, distance)->launch();
+        });
+
+        connect(slider, &QBoundedSlider::lowerBoundChanged, [=](int umin){
+            m_arduinoCommunication->setClosePosition(arduinoId, i, umin)->launch();
+        });
+
+        connect(slider, &QBoundedSlider::upperBoundChanged, [=](int umax){
+            m_arduinoCommunication->setOpenPosition(arduinoId, i, umax)->launch();
+        });
+
         slider->setBoundEditable(ui->enableBoundEditCheckbox->isChecked());
     }
     return group;
