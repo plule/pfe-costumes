@@ -39,7 +39,6 @@ signals:
     void valueChanged(int value);
     void lowerBoundChanged(int value);
     void upperBoundChanged(int value);
-    void sliderReleased();
 
 private:
     Ui::QBoundedSlider *ui;

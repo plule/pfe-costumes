@@ -10,7 +10,6 @@ QBoundedSlider::QBoundedSlider(QWidget *parent) :
     // slider signal forwarding
     connect(ui->slider, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged(int)));
     connect(ui->slider, SIGNAL(rangeChanged(int,int)), this, SIGNAL(rangeChanged(int,int)));
-    connect(ui->slider, SIGNAL(sliderReleased()), this, SIGNAL(sliderReleased()));
 
     // spins signal forwarding
     connect(ui->lowerBoundSpin, SIGNAL(valueChanged(int)),
