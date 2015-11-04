@@ -255,6 +255,7 @@ void ArduinoCommunication::handleMessage(QString message)
 
 void ArduinoCommunication::handleMessage(ArduinoMessage message)
 {
+    qDebug() << message.toString();
     if(message.type != MSG_ACK && message.type != MSG_DEBUG)
         _sendMessage(MSG_ACK, message.id, message.expe);
     switch(message.type) {

@@ -32,7 +32,68 @@ struct ArduinoMessage
 
     QString toString() {
         QString ret = "from %1 to %2 : (%3)";
-        return ret.arg(expe, dest, QString::number(type));
+        QString type_str;
+        switch(type) {
+        case MSG_ACK:
+            type_str = "ack";
+            break;
+        case MSG_DONE:
+            type_str = "done";
+            break;
+        case MSG_DISCOVER:
+            type_str = "discover";
+            break;
+        case MSG_HELLO:
+            type_str = "hello";
+            break;
+        case MSG_SET_MORPHOLOGY:
+            type_str = "set morphology";
+            break;
+        case MSG_GET_MORPHOLOGY:
+            type_str = "get morphology";
+            break;
+        case MSG_MORPHOLOGY:
+            type_str = "morphology";
+            break;
+        case MSG_SET_ANGLE:
+            type_str = "set angle";
+            break;
+        case MSG_TURN:
+            type_str = "turn";
+            break;
+        case MSG_CANCEL_TURN:
+            type_str = "cancel turn";
+            break;
+        case MSG_ANGLE:
+            type_str = "angle";
+            break;
+        case MSG_SET_RAW_MOTOR:
+            type_str = "set raw motor";
+            break;
+        case MSG_GET_RAW_MOTOR_BOUNDS:
+            type_str = "get raw motor bounds";
+            break;
+        case MSG_RAW_MOTOR_BOUNDS:
+            type_str = "raw motor bounds";
+            break;
+        case MSG_SET_CLOSE:
+            type_str = "close";
+            break;
+        case MSG_SET_OPEN:
+            type_str = "open";
+            break;
+        case MSG_RENAME:
+            type_str = "rename";
+            break;
+        case MSG_DEBUG:
+            type_str = "debug";
+            break;
+        case MSG_INVALID:
+            type_str = "invalid";
+            break;
+        }
+
+        return ret.arg(expe, dest, type_str);
     }
 };
 
