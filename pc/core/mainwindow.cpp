@@ -63,7 +63,16 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
         if(m_motorsSliders.contains(QPair<QString, int>(arduino, motor)))
         {
             QBoundedSlider *slider = m_motorsSliders.value(QPair<QString,int>(arduino, motor));
+
+            QLinkedBoundedSliders *linkedSlider = dynamic_cast<QLinkedBoundedSliders*>(slider->parentWidget());
+
+            if(linkedSlider != NULL)
+                linkedSlider->setLinked(false);
+
             slider->setValue(distance);
+
+            if(linkedSlider != NULL)
+                linkedSlider->setLinked(linkedSlider->slider1()->value() == linkedSlider->slider2()->value());
         }
         /*if(m_adjustmentGroups.contains(arduino)) {
             QWidget *group = m_adjustmentGroups.value(arduino);

@@ -76,3 +76,8 @@ void QLinkedBoundedSliders::setGlobalBounds(int min, int max)
     ui->slider1->setBoundLimits(min, max);
     ui->slider2->setBoundLimits(min, max);
 }
+
+void QLinkedBoundedSliders::setLinked(bool linked)
+{
+    ui->linkButton->setChecked(linked);
+}

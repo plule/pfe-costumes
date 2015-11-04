@@ -29,6 +29,7 @@ public slots:
     void setSlider1Bounds(int min, int max);
     void setSlider2Bounds(int min, int max);
     void setGlobalBounds(int min, int max);
+    void setLinked(bool linked);
 
 signals:
     void slider1ValueChanged(int value);
