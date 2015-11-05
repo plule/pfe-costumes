@@ -76,26 +76,6 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
             if(linkedSlider != NULL)
                 linkedSlider->setLinked(linkedSlider->slider1()->value() == linkedSlider->slider2()->value());
         }
-        /*if(m_adjustmentGroups.contains(arduino)) {
-            QWidget *group = m_adjustmentGroups.value(arduino);
-            for(int i=0; i<group->layout()->count(); ++i) {
-                QEllipseSlider *ellipseSlider = (QEllipseSlider *)group->layout()->itemAt(i)->widget();
-                if(ellipseSlider->property("side_motor").toInt() == motor) {
-                    ellipseSlider->setSideSliderEnabled(calibrated);
-                    ellipseSlider->setSideMotorValue(distance);
-                    return;
-                }
-                if(ellipseSlider->property("front_motor").toInt() == motor) {
-                    ellipseSlider->setFrontSliderEnabled(calibrated);
-                    ellipseSlider->setFrontMotorValue(distance);
-                    return;
-                }
-            }
-            qWarning() << tr("Distance motor message from known model for unknown motor");
-        } else {
-            qWarning() << tr("Distance motor message from unknown model");
-        }*/
-    });
 
     // Update bounds' values according to arduino's messages
     connect(m_arduinoCommunication, &ArduinoCommunication::motorBoundsChanged, [=](QString arduino, int motor, int umin, int umax){
@@ -107,23 +87,6 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
             slider->setUpperBound(umax);
             slider->blockSignals(false);
         }
-        /*if(m_adjustmentGroups.contains(arduino)) {
-            QWidget *group = m_adjustmentGroups.value(arduino);
-            for(int i=0; i<group->layout()->count(); ++i) {
-                QEllipseSlider *ellipseSlider = (QEllipseSlider *)group->layout()->itemAt(i)->widget();
-                if(ellipseSlider->property("side_motor").toInt() == motor) {
-                    ellipseSlider->setSideMotorBounds(umin, umax);
-                    return;
-                }
-                if(ellipseSlider->property("front_motor").toInt() == motor) {
-                    ellipseSlider->setFrontMotorBounds(umin, umax);
-                    return;
-                }
-            }
-            qWarning() << tr("Distance motor message from known model for unknown motor");
-        } else {
-            qWarning() << tr("Distance motor message from unknown model");
-        }*/
     });
 
     // When a new arduino is detected, a group of QEllipseSlider is created (one per module)
@@ -673,57 +636,7 @@ QWidget *MainWindow::createArduinoWidgetsGroup(QString arduinoId)
 
         slider->setBoundEditable(ui->enableBoundEditCheckbox->isChecked());
     }
-    return group;
-    /*for(int i=0; i < m_arduinoCommunication->getMotorsNumber(); i++) {
-        QString name = QString(m_arduinoCommunication->getMotorName(i));
-        QLinkedBoundedSliders *slider;
-        if(module_sliders.contains(name))
-            slider = module_sliders.value(name);
-        else {
-            slider = new QLinkedBoundedSliders(this);
-            slider->setName(name);
-            module_sliders.insert(name, slider);
-            layout->addWidget(slider);
-        }
-        switch(m_arduinoCommunication->getMotorType(i)) {
-        case FRONT_MOTOR:
-            slider->setProperty("front_motor",i);
-            connect(slider, &QEllipseSlider::frontMotorValueChanged, [=](int distance){
-                m_arduinoCommunication->motorDistanceMessage(arduinoId, i, distance)->launch();
-            });
-            connect(slider, &QEllipseSlider::frontMotorLowerBoundsChanged, [=](int umin){
-                m_arduinoCommunication->setClosePosition(arduinoId, i, umin)->launch();
-            });
-            connect(slider, &QEllipseSlider::frontMotorUpperBoundsChanged, [=](int umax){
-                m_arduinoCommunication->setOpenPosition(arduinoId, i, umax)->launch();
-            });
-            break;
-        case SIDE_MOTOR:
-            slider->setProperty("side_motor",i);
-            connect(slider, &QEllipseSlider::sideMotorValueChanged, [=](int distance){
-                m_arduinoCommunication->motorDistanceMessage(arduinoId, i, distance)->launch();
-            });
-            connect(slider, &QEllipseSlider::sideMotorLowerBoundsChanged, [=](int umin){
-                m_arduinoCommunication->setClosePosition(arduinoId, i, umin)->launch();
-            });
-            connect(slider, &QEllipseSlider::sideMotorUpperBoundsChanged, [=](int umax){
-                m_arduinoCommunication->setOpenPosition(arduinoId, i, umax)->launch();
-            });
-            break;
-        default:
-            qWarning() << "Malformed interface.h";
-            break;
-        }
 
-        // Handle motor's bound edition
-        slider->setBoundEditEnabled(ui->enableBoundEditCheckbox->isChecked());
-        connect(ui->enableBoundEditCheckbox, &QCheckBox::toggled, slider, &QEllipseSlider::setBoundEditEnabled);
-
-        // Handle model's dimension change
-        connect(m_settingsForm, &SettingsForm::modelDepthChanged, slider, &QEllipseSlider::setFrontBaseOffset);
-        connect(m_settingsForm, &SettingsForm::modelWidthChanged, slider, &QEllipseSlider::setSideBaseOffset);
-        slider->setBaseOffset(m_settingsForm->getModelWidth(), m_settingsForm->getModelDepth());
-    }*/
     return group;
 }
 
