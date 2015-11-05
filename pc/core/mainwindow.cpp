@@ -76,6 +76,7 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
             if(linkedSlider != NULL)
                 linkedSlider->setLinked(linkedSlider->slider1()->value() == linkedSlider->slider2()->value());
         }
+    });
 
     // Update bounds' values according to arduino's messages
     connect(m_arduinoCommunication, &ArduinoCommunication::motorBoundsChanged, [=](QString arduino, int motor, int umin, int umax){
