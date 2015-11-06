@@ -75,7 +75,8 @@
     </qresource>
     <qresource prefix="/pics">
         <file>buste.png</file>
-        <file>mannequin.png</file>
         <file>round-select.png</file>
+        <file>size-arrow.png</file>
+        <file>mannequin.png</file>
     </qresource>
 </RCC>

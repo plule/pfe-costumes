@@ -433,7 +433,13 @@ void MainWindow::updateDressForm()
     foreach(motor, m_motorsSliders.keys()) {
         int id = motor.second;
         QBoundedSlider *slider = m_motorsSliders.value(motor);
-        bool s = slider->hovered();
+        bool s;
+
+        QLinkedBoundedSliders *linkedSlider = dynamic_cast<QLinkedBoundedSliders*>(slider->parentWidget());
+        if(linkedSlider != NULL) // If slider is linked to another, also display the selection of the other
+            s = slider->hovered() || (linkedSlider->getLinked() && (linkedSlider->slider1()->hovered() || linkedSlider->slider2()->hovered()));
+        else
+            s = slider->hovered();
 
         MOTOR_GROUP group = m_arduinoCommunication->getMotorGroup(id);
         MOTOR_TYPE type = m_arduinoCommunication->getMotorType(id);
@@ -497,6 +503,7 @@ void MainWindow::updateDressForm()
             }
             break;
         case SIZE_GROUP:
+            ui->dress->SetSizeSelected(s);
             break;
         case INVALID_GROUP:
             break;

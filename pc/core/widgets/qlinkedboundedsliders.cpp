@@ -53,6 +53,11 @@ QBoundedSlider *QLinkedBoundedSliders::slider2()
     return ui->slider2;
 }
 
+bool QLinkedBoundedSliders::getLinked()
+{
+    return ui->linkButton->isChecked();
+}
+
 void QLinkedBoundedSliders::setBoundEditable(bool editable)
 {
     ui->slider1->setBoundEditable(editable);

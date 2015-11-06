@@ -23,6 +23,7 @@ public:
     void setSlider2Name(QString name);
     QBoundedSlider *slider1();
     QBoundedSlider *slider2();
+    bool getLinked();
 
 public slots:
     void setBoundEditable(bool editable);
