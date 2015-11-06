@@ -53,22 +53,37 @@
          </widget>
         </item>
         <item>
-         <widget class="QScrollArea" name="scrollArea">
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="adjustmentScroll">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>630</width>
-             <height>557</height>
-            </rect>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_4"/>
-          </widget>
-         </widget>
+         <layout class="QHBoxLayout" name="adjustmentLayout">
+          <item>
+           <widget class="QScrollArea" name="scrollArea">
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="adjustmentScroll">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>310</width>
+               <height>555</height>
+              </rect>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_4"/>
+            </widget>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDressFormVisu" name="dress" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <zorder>scrollArea</zorder>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -696,6 +711,12 @@
     <slot>load(int)</slot>
     <slot>load(QListWidgetItem*)</slot>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>QDressFormVisu</class>
+   <extends>QWidget</extends>
+   <header location="global">widgets/qdressformvisu.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

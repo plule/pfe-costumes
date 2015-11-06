@@ -12,6 +12,12 @@ static const MOTOR_TYPE morpho_motors_role[] = {
 };
 #undef X
 
+#define X(pin, role, group, string) group,
+static const MOTOR_GROUP morpho_motors_group[] = {
+    #include "morphology.h"
+};
+#undef X
+
 ArduinoCommunication::ArduinoCommunication(QObject *parent) :
     QObject(parent)
 {
@@ -55,6 +61,13 @@ MOTOR_TYPE ArduinoCommunication::getMotorType(int id)
     if(id >= 0 && id < MOTOR_NUMBER)
         return morpho_motors_role[id];
     return INVALID_MOTOR;
+}
+
+MOTOR_GROUP ArduinoCommunication::getMotorGroup(int id)
+{
+    if(id >= 0 && id < MOTOR_NUMBER)
+        return morpho_motors_group[id];
+    return INVALID_GROUP;
 }
 
 int ArduinoCommunication::getMotorsNumber()

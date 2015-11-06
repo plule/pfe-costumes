@@ -7,6 +7,8 @@ QBoundedSlider::QBoundedSlider(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    m_hovered = false;
+
     // slider signal forwarding
     connect(ui->slider, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged(int)));
     connect(ui->slider, SIGNAL(rangeChanged(int,int)), this, SIGNAL(rangeChanged(int,int)));
@@ -38,6 +40,11 @@ int QBoundedSlider::minimum() const
 int QBoundedSlider::value() const
 {
     return ui->slider->value();
+}
+
+bool QBoundedSlider::hovered()
+{
+    return m_hovered;
 }
 
 void QBoundedSlider::setRange(int min, int max)
@@ -86,6 +93,20 @@ void QBoundedSlider::setBoundEditable(bool editable)
 void QBoundedSlider::setOrientation(Qt::Orientation orientation)
 {
     ui->slider->setOrientation(orientation);
+}
+
+void QBoundedSlider::enterEvent(QEvent *event)
+{
+    m_hovered = true;
+    emit hoveredChanged(true);
+    QWidget::enterEvent(event);
+}
+
+void QBoundedSlider::leaveEvent(QEvent *event)
+{
+    m_hovered = false;
+    emit hoveredChanged(false);
+    QWidget::leaveEvent(event);
 }
 
 bool QBoundedSlider::editable() const

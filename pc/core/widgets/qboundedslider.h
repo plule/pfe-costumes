@@ -2,6 +2,7 @@
 #define QBOUNDEDSLIDER_H
 
 #include <QWidget>
+#include <QDebug>
 
 namespace Ui {
 class QBoundedSlider;
@@ -20,6 +21,7 @@ public:
     int value() const;
     bool editable() const;
     void setName(QString name);
+    bool hovered();
 
 
 public slots:
@@ -39,10 +41,16 @@ signals:
     void valueChanged(int value);
     void lowerBoundChanged(int value);
     void upperBoundChanged(int value);
+    void hoveredChanged(bool hovered);
+
+protected:
+    virtual void enterEvent(QEvent *event);
+    virtual void leaveEvent(QEvent *event);
 
 private:
     Ui::QBoundedSlider *ui;
     bool m_editable;
+    bool m_hovered;
 };
 
 #endif // QBOUNDEDSLIDER_H

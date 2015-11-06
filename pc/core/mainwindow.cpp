@@ -427,6 +427,83 @@ void MainWindow::onMassCaptureProblem(MassCapture::Problem problem, QString desc
     errorDialog.exec();
 }
 
+void MainWindow::updateDressForm()
+{
+    QPair<QString, int> motor;
+    foreach(motor, m_motorsSliders.keys()) {
+        int id = motor.second;
+        QBoundedSlider *slider = m_motorsSliders.value(motor);
+        bool s = slider->hovered();
+
+        MOTOR_GROUP group = m_arduinoCommunication->getMotorGroup(id);
+        MOTOR_TYPE type = m_arduinoCommunication->getMotorType(id);
+
+        switch(group) {
+        case BUST_GROUP:
+            switch(type) {
+            case FRONT_MOTOR:
+                ui->dress->setBustFrontSelected(s);
+                break;
+            case BACK_MOTOR:
+                ui->dress->setBustBackSelected(s);
+                break;
+            case LEFT_MOTOR:
+                ui->dress->setBustLeftSelected(s);
+                break;
+            case RIGHT_MOTOR:
+                ui->dress->setBustRightSelected(s);
+                break;
+            case SINGLE_MOTOR:
+            case INVALID_MOTOR:
+                break;
+            }
+           break;
+        case WAIST_GROUP:
+            switch(type) {
+            case FRONT_MOTOR:
+                ui->dress->setWaistFrontSelected(s);
+                break;
+            case BACK_MOTOR:
+                ui->dress->setWaistBackSelected(s);
+                break;
+            case LEFT_MOTOR:
+                ui->dress->setWaistLeftSelected(s);
+                break;
+            case RIGHT_MOTOR:
+                ui->dress->setWaistRightSelected(s);
+                break;
+            case SINGLE_MOTOR:
+            case INVALID_MOTOR:
+                break;
+            }
+            break;
+        case HIPS_GROUP:
+            switch(type) {
+            case FRONT_MOTOR:
+                ui->dress->setHipsFrontSelected(s);
+                break;
+            case BACK_MOTOR:
+                ui->dress->setHipsBackSelected(s);
+                break;
+            case LEFT_MOTOR:
+                ui->dress->setHipsLeftSelected(s);
+                break;
+            case RIGHT_MOTOR:
+                ui->dress->setHipsRightSelected(s);
+                break;
+            case SINGLE_MOTOR:
+            case INVALID_MOTOR:
+                break;
+            }
+            break;
+        case SIZE_GROUP:
+            break;
+        case INVALID_GROUP:
+            break;
+        }
+    }
+}
+
 void MainWindow::on_newCostume_clicked()
 {
     QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Confirmation"), tr("Add a costume?"),QMessageBox::Yes|QMessageBox::No);
@@ -634,6 +711,8 @@ QWidget *MainWindow::createArduinoWidgetsGroup(QString arduinoId)
         connect(slider, &QBoundedSlider::upperBoundChanged, [=](int umax){
             m_arduinoCommunication->setOpenPosition(arduinoId, i, umax)->launch();
         });
+
+        connect(slider, SIGNAL(hoveredChanged(bool)), this, SLOT(updateDressForm()));
 
         slider->setBoundEditable(ui->enableBoundEditCheckbox->isChecked());
     }

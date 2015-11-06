@@ -72,6 +72,7 @@ public slots:
     void populateList();
     void setCamera(QPhoto::QCamera *m_camera);
     void onMassCaptureProblem(MassCapture::Problem problem, QString description);
+    void updateDressForm();
     
 private slots:
     void on_actionNew_Collection_triggered();

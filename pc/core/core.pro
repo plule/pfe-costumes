@@ -12,7 +12,8 @@ QMAKE_LFLAGS_DEBUG +=
 SOURCES += main.cpp \
     widgets/qboundedslider.cpp \
     widgets/qlinkedboundedsliders.cpp \
-    widgets/qslidergroup.cpp
+    widgets/qslidergroup.cpp \
+    widgets/qdressformvisu.cpp
 TARGET = ../mannequinage
 target.path = /usr/bin
 desktop.path = /usr/share/applications
@@ -56,7 +57,8 @@ HEADERS += camerahandler/camerahandler.h \
     mainwindow.h \
     widgets/qboundedslider.h \
     widgets/qlinkedboundedsliders.h \
-    widgets/qslidergroup.h
+    widgets/qslidergroup.h \
+    widgets/qdressformvisu.h
 
 CONFIG += c++11 qt warn_on release debug
 
@@ -74,7 +76,8 @@ FORMS += \
     mainwindow.ui \
     widgets/qboundedslider.ui \
     widgets/qlinkedboundedsliders.ui \
-    widgets/qslidergroup.ui
+    widgets/qslidergroup.ui \
+    widgets/qdressformvisu.ui
 
 TRANSLATIONS = resources/core_fr.ts
 
