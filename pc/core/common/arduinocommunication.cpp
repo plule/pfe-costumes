@@ -49,6 +49,10 @@ ArduinoCommunication::ArduinoCommunication(QObject *parent) :
     m_transactionLauncher.start(100);
 }
 
+ArduinoCommunication::~ArduinoCommunication()
+{
+}
+
 const QString ArduinoCommunication::getMotorName(int id)
 {
     if(id >= 0 && id < MOTOR_NUMBER)
@@ -160,6 +164,22 @@ QAbstractListModel *ArduinoCommunication::model()
     return &m_arduinosModel;
 }
 
+void ArduinoCommunication::deregisterTransaction(Transaction *transaction)
+{
+    qDebug() << "deregistering " << transaction->getId();
+    QMutexLocker lock1(&m_idPoolMutex);
+    if(!m_idPool.contains(transaction->getId()))
+        m_idPool.append(transaction->getId());
+    QMutexLocker lock2(&m_transactionsMutex);
+    if(m_transactions.contains(transaction->getId()))
+        m_transactions.take(transaction->getId());
+    QMutexLocker lock3(&m_transactionsQueueMutex);
+    m_transactionsQueue.removeAll(transaction);
+
+    qDebug() << "deregistered " << transaction->getId();
+    transaction->deleteLater();
+}
+
 Transaction *ArduinoCommunication::helloMessage()
 {
     return createTransaction(MSG_DISCOVER);
@@ -167,11 +187,14 @@ Transaction *ArduinoCommunication::helloMessage()
 
 Transaction *ArduinoCommunication::motorDistanceMessage(QString arduino, int motor, int distance)
 {
+    QList<Transaction *> legacyTransactions;
     m_transactionsMutex.lock();
     foreach(Transaction *transaction, m_transactions)
         if(transaction->getType() == MSG_SET_MORPHOLOGY && transaction->getDest() == arduino && transaction->getDatas().first().toInt() == motor)
-            transaction->deleteLater();
+            legacyTransactions.append(transaction);
     m_transactionsMutex.unlock();
+    foreach(Transaction *transaction, legacyTransactions)
+        deregisterTransaction(transaction);
 
     QList<QVariant> args;
     args.append(motor);
@@ -274,6 +297,7 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
     qDebug() << message.toString();
     if(message.type != MSG_ACK && message.type != MSG_DEBUG)
         _sendMessage(MSG_ACK, message.id, message.expe);
+    Transaction *t;
     switch(message.type) {
     case MSG_HELLO:
     {
@@ -316,16 +340,22 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
         }
         break;
     case MSG_ACK:
+        t = NULL;
         m_transactionsMutex.lock();
         if(m_transactions.contains(message.id) && m_transactions.value(message.id)->valid())
-            m_transactions.value(message.id)->setAck();
+            t = m_transactions.value(message.id);
         m_transactionsMutex.unlock();
+        if(t!=NULL)
+            t->setAck();
         break;
     case MSG_DONE:
+        t = NULL;
         m_transactionsMutex.lock();
         if(m_transactions.contains(message.id) && m_transactions.value(message.id)->valid())
-            m_transactions.value(message.id)->setDone(true);
+            t = m_transactions.value(message.id);
         m_transactionsMutex.unlock();
+        if(t!=NULL)
+            t->setDone(true);
         break;
     case MSG_MORPHOLOGY:
     {
@@ -365,14 +395,6 @@ Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, QString dest
         m_transactions.insert(id, transaction);
         m_transactionsMutex.unlock();
 
-        connect(transaction, &Transaction::destroyed, [=](){
-            QMutexLocker lock1(&m_idPoolMutex);
-            m_idPool.append(id);
-            QMutexLocker lock2(&m_transactionsMutex);
-            m_transactions.take(id);
-            QMutexLocker lock3(&m_transactionsQueueMutex);
-            m_transactionsQueue.removeAll(transaction);
-        });
         transaction->watchForAck();
     }
 
@@ -381,7 +403,9 @@ Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, QString dest
         m_transactionsQueue.enqueue(transaction);
     });
 
-    connect(transaction, SIGNAL(finished(int)), transaction, SLOT(deleteLater()));
+    connect(transaction, &Transaction::finished, [=](){
+        deregisterTransaction(transaction);
+    });
 
     return transaction;
 }

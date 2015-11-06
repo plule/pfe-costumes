@@ -115,6 +115,8 @@ class ArduinoCommunication : public QObject
 public:
     explicit ArduinoCommunication(QObject *parent = 0);
 
+    ~ArduinoCommunication();
+
     /**
      * @brief getMotorsName
      * @return Morphology motor names. (compile time determined by interface/morphology.h)
@@ -205,6 +207,8 @@ public:
      * In Qt::UserRole is stored the ids
      */
     QAbstractListModel *model();
+
+    void deregisterTransaction(Transaction *transaction);
 
 
 signals:
