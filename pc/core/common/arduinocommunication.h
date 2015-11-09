@@ -131,6 +131,13 @@ public:
     MOTOR_TYPE getMotorType(int id);
 
     /**
+     * @brief getMotorGroup
+     * @param id
+     * @return the group of a motor (bust, waist, hips, size)
+     */
+    MOTOR_GROUP getMotorGroup(int id);
+
+    /**
      * @brief getMotorsNumber
      * @return Number of morphology motor. (compile time determined by interface/morphology.h
      */

@@ -87,6 +87,14 @@ typedef enum {
     INVALID_MOTOR
 } MOTOR_TYPE;
 
+typedef enum {
+    BUST_GROUP,
+    WAIST_GROUP,
+    HIPS_GROUP,
+    SIZE_GROUP,
+    INVALID_GROUP
+} MOTOR_GROUP;
+
 #define X(pin, role, define, string) define ## role,
 enum MORPHO_MOTORS {
     #include "morphology.h"

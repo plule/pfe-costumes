@@ -10,7 +10,8 @@ QMAKE_CXXFLAGS_DEBUG +=
 QMAKE_LFLAGS_DEBUG +=
 
 SOURCES += main.cpp \
-    widgets/qboundedslider.cpp
+    widgets/qboundedslider.cpp \
+    widgets/qdressformvisu.cpp
 TARGET = ../mannequinage
 target.path = /usr/bin
 desktop.path = /usr/share/applications
@@ -52,7 +53,8 @@ HEADERS += camerahandler/camerahandler.h \
     widgets/qimagepreviewwindow.h \
     common/exifpixmap.h \
     mainwindow.h \
-    widgets/qboundedslider.h
+    widgets/qboundedslider.h \
+    widgets/qdressformvisu.h
 
 CONFIG += c++11 qt warn_on release debug
 
@@ -68,7 +70,8 @@ FORMS += \
     widgets/qellipseslider.ui \
     widgets/qimagepreviewwindow.ui \
     mainwindow.ui \
-    widgets/qboundedslider.ui
+    widgets/qboundedslider.ui \
+    widgets/qdressformvisu.ui
 
 TRANSLATIONS = resources/core_fr.ts
 
