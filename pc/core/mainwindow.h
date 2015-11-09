@@ -90,7 +90,7 @@ private slots:
     void on_turntableButton_toggled(bool checked);
 
 private:
-    QWidget *createArduinoWidgetsGroup(QString arduinoId);
+    QWidget *createAdjustmentGroup(QString arduinoId);
 
     Ui::MainWindow *ui;
     SettingsForm *m_settingsForm;
