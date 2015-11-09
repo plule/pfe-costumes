@@ -51,6 +51,8 @@ public:
      */
     QList<QVariant> getDatas() const;
 
+    QString toString();
+
 signals:
     // Message has been received by the device
     void received();
@@ -81,7 +83,7 @@ protected slots:
 
 private:
     QString typeToString();
-    QString toString();
+
 
     MSG_TYPE m_type;
     int m_id;

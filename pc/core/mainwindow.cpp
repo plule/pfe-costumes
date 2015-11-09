@@ -60,8 +60,8 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
 
     // Update slider's position according to arduino's messages
     connect(m_arduinoCommunication, &ArduinoCommunication::motorDistanceChanged, [=](QString arduino, int motor, int distance, bool calibrated){
-        if(m_adjustmentGroups.contains(arduino)) {
-            QWidget *group = m_adjustmentGroups.value(arduino);
+        if(m_arduinoWidgetsGroup.contains(arduino)) {
+            QWidget *group = m_arduinoWidgetsGroup.value(arduino);
             for(int i=0; i<group->layout()->count(); ++i) {
                 QEllipseSlider *ellipseSlider = (QEllipseSlider *)group->layout()->itemAt(i)->widget();
                 if(ellipseSlider->property("side_motor").toInt() == motor) {
@@ -83,8 +83,8 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
 
     // Update bounds' values according to arduino's messages
     connect(m_arduinoCommunication, &ArduinoCommunication::motorBoundsChanged, [=](QString arduino, int motor, int umin, int umax){
-        if(m_adjustmentGroups.contains(arduino)) {
-            QWidget *group = m_adjustmentGroups.value(arduino);
+        if(m_arduinoWidgetsGroup.contains(arduino)) {
+            QWidget *group = m_arduinoWidgetsGroup.value(arduino);
             for(int i=0; i<group->layout()->count(); ++i) {
                 QEllipseSlider *ellipseSlider = (QEllipseSlider *)group->layout()->itemAt(i)->widget();
                 if(ellipseSlider->property("side_motor").toInt() == motor) {
@@ -108,7 +108,7 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
             QWidget *adjGroup = createAdjustmentGroup(arduino);
             if(ui->ardListCombo->itemData(ui->ardListCombo->currentIndex()).toString() != arduino) // do not hide if it's the current arduino
                 adjGroup->setVisible(false);
-            m_adjustmentGroups.insert(arduino,adjGroup);
+            m_arduinoWidgetsGroup.insert(arduino,adjGroup);
             ui->adjustmentScroll->layout()->addWidget(adjGroup);
             m_arduinoCommunication->getMotorsPositionMessage(arduino)->launch(); // Request current motors' positions
             m_arduinoCommunication->getMotorsBoundMessage(arduino)->launch(); // Request current motors' bounds
@@ -119,9 +119,9 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
 
     // When an arduino is disconnected, its QEllipseSlider group is distroyed
     connect(m_arduinoCommunication, &ArduinoCommunication::arduinoLost, [=](QString arduino,QString name) {
-        if(m_adjustmentGroups.contains(arduino)) {
-            m_adjustmentGroups.value(arduino)->deleteLater();
-            m_adjustmentGroups.remove(arduino);
+        if(m_arduinoWidgetsGroup.contains(arduino)) {
+            m_arduinoWidgetsGroup.value(arduino)->deleteLater();
+            m_arduinoWidgetsGroup.remove(arduino);
             statusBar()->showMessage(tr("Model %1 disconnected").arg(name));
         }
         ui->turntableButton->setDisabled(m_arduinoCommunication->listTurntables().isEmpty());
@@ -133,9 +133,9 @@ MainWindow::MainWindow(bool noedit, QWidget *parent) :
     connect(ui->ardListCombo, signal, [=](int index){
         //int index = ui->ardListCombo->currentIndex();
         QString arduino = ui->ardListCombo->itemData(index, Qt::UserRole).toString();
-        if(index >= 0 && m_adjustmentGroups.contains(arduino)) {
-            QWidget *newGroup = m_adjustmentGroups.value(arduino);
-            foreach(QWidget *group, m_adjustmentGroups) {
+        if(index >= 0 && m_arduinoWidgetsGroup.contains(arduino)) {
+            QWidget *newGroup = m_arduinoWidgetsGroup.value(arduino);
+            foreach(QWidget *group, m_arduinoWidgetsGroup) {
                 if(newGroup != group)
                     group->setVisible(false);
                 else

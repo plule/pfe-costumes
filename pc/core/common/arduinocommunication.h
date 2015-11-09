@@ -14,6 +14,9 @@
 #include <QString>
 #include <QPersistentModelIndex>
 #include <QStack>
+#include <QQueue>
+#include <QMutex>
+#include <QMutexLocker>
 #include "qlistmodel.h"
 #include "qextserialport.h"
 #include "transaction.h"
@@ -287,7 +290,6 @@ private slots:
     void onDataAvailable();
     void checkAliveDevices();
     void cleanUpDeadDevices();
-    void deleteTransaction(int transaction);
     QList<QString> listDevicesOfType(ARD_ROLE role);
     void _sendMessage(MSG_TYPE type, int id, QString dest, QList<QVariant> datas = QList<QVariant>());
 
@@ -302,8 +304,13 @@ private:
     //QList<Arduino> m_arduinos;
     QListModel m_arduinosModel;
     QTimer m_aliveTimer;
+    QTimer m_transactionLauncher;
+    QHash<int,Transaction*> m_transactions;
+    QQueue<Transaction*> m_transactionsQueue;
     QStack<int> m_idPool;
-    QHash<int, Transaction*> m_transactions;
+    QMutex m_transactionsQueueMutex;
+    QMutex m_idPoolMutex;
+    QMutex m_transactionsMutex;
     int m_lastMessage;
     bool m_pinging;
 };

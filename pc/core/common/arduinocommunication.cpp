@@ -24,6 +24,23 @@ ArduinoCommunication::ArduinoCommunication(QObject *parent) :
     m_aliveTimer.setInterval(5000);
     connect(&m_aliveTimer, SIGNAL(timeout()), this, SLOT(checkAliveDevices()));
     m_aliveTimer.start();
+
+    m_transactionLauncher.setSingleShot(false);
+    connect(&m_transactionLauncher, &QTimer::timeout, [=](){
+        Transaction *t = NULL;
+        m_transactionsQueueMutex.lock();
+        int count = m_transactionsQueue.count();
+        if(!m_transactionsQueue.empty())
+            t = m_transactionsQueue.dequeue();
+        m_transactionsQueueMutex.unlock();
+
+        if(t != NULL) {
+            qDebug() << "(" << count << ") Sending " << t->toString();
+            _sendMessage(t->getType(), t->getId(), t->getDest(), t->getDatas());
+        }
+    });
+
+    m_transactionLauncher.start(100);
 }
 
 const QString ArduinoCommunication::getMotorName(int id)
@@ -137,12 +154,12 @@ Transaction *ArduinoCommunication::helloMessage()
 
 Transaction *ArduinoCommunication::motorDistanceMessage(QString arduino, int motor, int distance)
 {
-    for(int i=0; i<MAX_ID; i++) {
-        Transaction *transaction = m_transactions.value(i);
-        if(transaction != 0 && transaction->getDest() == arduino && transaction->getDatas().size() >= 1 && transaction->getDatas().first().toInt() == motor) {
-            m_transactions.take(i)->deleteLater();
-        }
-    }
+    m_transactionsMutex.lock();
+    foreach(Transaction *transaction, m_transactions)
+        if(transaction->getType() == MSG_SET_MORPHOLOGY && transaction->getDest() == arduino && transaction->getDatas().first().toInt() == motor)
+            transaction->deleteLater();
+    m_transactionsMutex.unlock();
+
     QList<QVariant> args;
     args.append(motor);
     args.append(distance);
@@ -151,12 +168,6 @@ Transaction *ArduinoCommunication::motorDistanceMessage(QString arduino, int mot
 
 Transaction *ArduinoCommunication::rotationMessage(int angle)
 {
-    for(int i=0; i<MAX_ID; i++) {
-        if(m_transactions.contains(i) && m_transactions.value(i)->getType() == MSG_SET_ANGLE) {
-            deleteTransaction(i);
-        }
-    }
-
     QList<QVariant> args;
     args.append(angle);
     if(m_arduinosModel.rowCount() > 0)
@@ -228,14 +239,6 @@ void ArduinoCommunication::cleanUpDeadDevices()
     m_pinging = false;
 }
 
-void ArduinoCommunication::deleteTransaction(int id)
-{
-    if(m_transactions.contains(id)) {
-        qDebug() << "deregister transaction " << id;
-        m_transactions.take(id)->deleteLater();
-    }
-}
-
 void ArduinoCommunication::handleMessage(QString message)
 {
     QStringList spl = message.split(ARG_SEP);
@@ -297,17 +300,19 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
     case MSG_ANGLE:
         if(!message.data.empty()) {
             emit angleChanged(message.expe, message.data.first().toInt());
-            if(m_transactions.contains(message.id) && m_transactions.value(message.id)->valid())
-                m_transactions.value(message.id)->setProgress(message.data.first().toInt());
         }
         break;
     case MSG_ACK:
+        m_transactionsMutex.lock();
         if(m_transactions.contains(message.id) && m_transactions.value(message.id)->valid())
             m_transactions.value(message.id)->setAck();
+        m_transactionsMutex.unlock();
         break;
     case MSG_DONE:
+        m_transactionsMutex.lock();
         if(m_transactions.contains(message.id) && m_transactions.value(message.id)->valid())
             m_transactions.value(message.id)->setDone(true);
+        m_transactionsMutex.unlock();
         break;
     case MSG_MORPHOLOGY:
     {
@@ -338,17 +343,31 @@ Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, QString dest
         transaction = new Transaction(type, 0, dest, datas, this);
     else
     {
+        m_idPoolMutex.lock();
         int id = m_idPool.takeFirst();
+        m_idPoolMutex.unlock();
         transaction = new Transaction(type, id, dest, datas, this);
+
+        m_transactionsMutex.lock();
         m_transactions.insert(id, transaction);
+        m_transactionsMutex.unlock();
+
         connect(transaction, &Transaction::destroyed, [=](){
-            m_transactions.remove(id);
+            QMutexLocker lock1(&m_idPoolMutex);
             m_idPool.append(id);
+            QMutexLocker lock2(&m_transactionsMutex);
+            m_transactions.take(id);
+            QMutexLocker lock3(&m_transactionsQueueMutex);
+            m_transactionsQueue.removeAll(transaction);
         });
         transaction->watchForAck();
     }
 
-    connect(transaction, SIGNAL(send(MSG_TYPE,int,QString,QList<QVariant>)), this, SLOT(_sendMessage(MSG_TYPE,int,QString,QList<QVariant>)));
+    connect(transaction, &Transaction::send, [=](){
+        QMutexLocker lock(&m_transactionsQueueMutex);
+        m_transactionsQueue.enqueue(transaction);
+    });
+
     connect(transaction, SIGNAL(finished(int)), transaction, SLOT(deleteLater()));
 
     return transaction;
