@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>397</width>
-    <height>290</height>
+    <height>503</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,9 +23,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>10</y>
+     <y>0</y>
      <width>381</width>
-     <height>271</height>
+     <height>491</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -50,8 +50,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>181</x>
-     <y>101</y>
+     <x>111</x>
+     <y>316</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -72,8 +72,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>182</x>
-     <y>179</y>
+     <x>112</x>
+     <y>394</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -94,8 +94,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>183</x>
-     <y>217</y>
+     <x>113</x>
+     <y>432</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -116,8 +116,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>287</x>
-     <y>104</y>
+     <x>246</x>
+     <y>80</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -138,8 +138,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>180</y>
+     <x>249</x>
+     <y>156</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -160,8 +160,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>287</x>
-     <y>219</y>
+     <x>246</x>
+     <y>195</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -182,8 +182,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>107</y>
+     <x>124</x>
+     <y>90</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -204,8 +204,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>65</x>
-     <y>178</y>
+     <x>119</x>
+     <y>161</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -226,8 +226,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>65</x>
-     <y>219</y>
+     <x>119</x>
+     <y>202</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -248,9 +248,9 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>107</x>
-     <y>107</y>
-     <width>10</width>
+     <x>263</x>
+     <y>317</y>
+     <width>31</width>
      <height>31</height>
     </rect>
    </property>
@@ -273,9 +273,9 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>105</x>
-     <y>180</y>
-     <width>10</width>
+     <x>264</x>
+     <y>390</y>
+     <width>31</width>
      <height>31</height>
     </rect>
    </property>
@@ -298,9 +298,9 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>111</x>
-     <y>220</y>
-     <width>10</width>
+     <x>265</x>
+     <y>434</y>
+     <width>31</width>
      <height>31</height>
     </rect>
    </property>
@@ -312,6 +312,28 @@
    </property>
    <property name="scaledContents">
     <bool>true</bool>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="SizeLabel">
+   <property name="geometry">
+    <rect>
+     <x>42</x>
+     <y>357</y>
+     <width>151</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../resources/pics/pics.qrc">:/pics/size-arrow.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>false</bool>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>

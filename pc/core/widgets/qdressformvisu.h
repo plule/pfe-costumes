@@ -28,6 +28,7 @@ public slots:
     void setHipsBackSelected(bool s);
     void setHipsLeftSelected(bool s);
     void setHipsRightSelected(bool s);
+    void SetSizeSelected(bool s);
 
 private:
     Ui::QDressFormVisu *ui;

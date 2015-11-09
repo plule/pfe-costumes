@@ -18,6 +18,7 @@ QDressFormVisu::QDressFormVisu(QWidget *parent) :
     ui->WaistFrontLabel->setVisible(false);
     ui->WaistLeftLabel->setVisible(false);
     ui->WaistRightLabel->setVisible(false);
+    ui->SizeLabel->setVisible(false);
 }
 
 QDressFormVisu::~QDressFormVisu()
@@ -83,4 +84,9 @@ void QDressFormVisu::setHipsLeftSelected(bool s)
 void QDressFormVisu::setHipsRightSelected(bool s)
 {
     ui->HipsRightLabel->setVisible(s);
+}
+
+void QDressFormVisu::SetSizeSelected(bool s)
+{
+    ui->SizeLabel->setVisible(s);
 }
