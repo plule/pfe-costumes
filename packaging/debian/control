@@ -1,14 +1,14 @@
-Source: mannequinage
+Source: mannequinage-commerce
 Section: multiverse/graphics
 Priority: extra
 Maintainer: Pierre Lulé <pierre@lule.fr>
-Build-Depends: debhelper (>= 8.0.0), qt5-default, libgphoto2-6-dev, libqt5sql5-sqlite, libexif-dev
+Build-Depends: debhelper (>= 8.0.0), qt5-default, libgphoto2-dev, libqt5sql5-sqlite, libexif-dev
 Standards-Version: 3.9.4
 Homepage: https://github.com/plule/pfe-costumes
 #Vcs-Git: git://git.debian.org/collab-maint/mannequinage.git
 #Vcs-Browser: http://git.debian.org/?p=collab-maint/mannequinage.git;a=summary
 
-Package: mannequinage
+Package: mannequinage-commerce
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, libexif12, libgphoto2-6, qt5-default, libqt5sql5-sqlite
 Description: Costume numerisation project

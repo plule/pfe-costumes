@@ -14,7 +14,7 @@ SOURCES += main.cpp \
     widgets/qlinkedboundedsliders.cpp \
     widgets/qslidergroup.cpp \
     widgets/qdressformvisu.cpp
-TARGET = ../mannequinage
+TARGET = ../mannequinage-commerce
 target.path = /usr/bin
 desktop.path = /usr/share/applications
 desktop.files += mannequinage.desktop
