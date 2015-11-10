@@ -157,46 +157,27 @@ void serialEvent() {
     int idMsg = atoi(idMsg_s);
     MSG_TYPE type = (MSG_TYPE)atoi(type_s);
 
-    /* Parse arguments */
-    char *parg = strtok(NULL, ARG_SEP_S);
-    char *pargs[MAX_ARGS];
-    int nargs = 0;
-    while(parg != NULL && nargs < MAX_ARGS) {
-        pargs[nargs] = parg;
-        nargs++;
-        parg = strtok(NULL, ARG_SEP_S);
-    }
-    if(type == MSG_DISCOVER)
-        sendMessage(MSG_HELLO, 0, expe, Role, Name);
-    else if(type == MSG_RENAME && strcmp(dest,Id) == 0) {
-        sendMessage(MSG_ACK, idMsg, expe);
-        setName(pargs[0]);
-        DBG("renamed");
-        DBG(Name);
-    } else if(strcmp(dest, Id) == 0 && type != MSG_ACK) {
-        if(handleMessage(type, idMsg, expe, pargs, nargs))
+    if(strcmp(expe, ARD_MASTER) == 0){ // Only answer to its master
+        /* Parse arguments */
+        char *parg = strtok(NULL, ARG_SEP_S);
+        char *pargs[MAX_ARGS];
+        int nargs = 0;
+        while(parg != NULL && nargs < MAX_ARGS) {
+            pargs[nargs] = parg;
+            nargs++;
+            parg = strtok(NULL, ARG_SEP_S);
+        }
+        if(type == MSG_DISCOVER)
+            sendMessage(MSG_HELLO, 0, expe, Role, Name);
+        else if(type == MSG_RENAME && strcmp(dest,Id) == 0) {
             sendMessage(MSG_ACK, idMsg, expe);
+            setName(pargs[0]);
+            DBG("renamed");
+            DBG(Name);
+        } else if(strcmp(dest, Id) == 0 && type != MSG_ACK) {
+            if(handleMessage(type, idMsg, expe, pargs, nargs))
+                sendMessage(MSG_ACK, idMsg, expe);
+        }
     }
     digitalWrite(13, LOW);
-
-    /*digitalWrite(13, HIGH);
-    char dest[9] = {0};
-    char expe[9] = {0};
-    Serial.readBytesUntil(ARG_SEP, dest,9);
-    Serial.readBytesUntil(ARG_SEP, expe,9);
-
-    dest[8] = 0;
-    expe[8] = 0;
-    int idMsg = Serial.parseInt();
-    MSG_TYPE type = (MSG_TYPE)Serial.parseInt();
-    if(type == MSG_DISCOVER)
-    {
-        sendMessage(MSG_HELLO, 0, ARD_MASTER, Role);
-    } else if(strcmp(dest, Id) == 0 && type != MSG_ACK)
-    {
-        if(handleMessage(type, idMsg, expe, Serial))
-            sendMessage(MSG_ACK, idMsg, expe);
-    }
-    Serial.readStringUntil(MSG_SEP);
-    digitalWrite(13,LOW);*/
 }
