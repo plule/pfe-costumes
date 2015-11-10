@@ -377,6 +377,13 @@ void ArduinoCommunication::handleMessage(ArduinoMessage message)
     default:
         qDebug() << "Unknown message";
     }
+
+    for(int i = 0; i < m_arduinosModel.rowCount(); i++) {
+        QModelIndex index = m_arduinosModel.index(i);
+        if(index.data(ID_ROLE).toString() == message.expe) {
+            m_arduinosModel.setData(index, true, ANSWERED_ROLE);
+        }
+    }
 }
 
 Transaction *ArduinoCommunication::createTransaction(MSG_TYPE type, QString dest, QList<QVariant> datas)
