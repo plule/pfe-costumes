@@ -1,3 +1,10 @@
+mannequinage (0.4) unstable; urgency=medium
+
+  * Interface and firmware upgrade.
+  * 
+
+ -- pierre <pierre@lule.fr>  Tue, 10 Nov 2015 16:27:30 +0100
+
 mannequinage (0.3) unstable; urgency=low
 
   * packaged with visualisator mode

@@ -1,7 +1,3 @@
-PC :
+cf. http://www.guim.info/dokuwiki/debian/creer_paquet
 
-copy interface/*.h to pc/core/includes/ (erase symlink)
-pc -> mannequinage-X.X.tar.gz
-
-http://www.guim.info/dokuwiki/debian/creer_paquet
-
+debian/ folder is here : pc/core/debian/
