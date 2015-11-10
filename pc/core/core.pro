@@ -17,8 +17,8 @@ SOURCES += main.cpp \
 TARGET = ../mannequinage-commerce
 target.path = /usr/bin
 desktop.path = /usr/share/applications
-desktop.files += mannequinage.desktop
-desktop.files += mannequinage-visu.desktop
+desktop.files += mannequinage-commerce.desktop
+desktop.files += mannequinage-commerce-visu.desktop
 INSTALLS += target desktop
 
 SOURCES += camerahandler/camerahandler.cpp \
