@@ -1,7 +1,8 @@
-mannequinage-commerce (0.4) UNRELEASED; urgency=medium
+mannequinage-commerce (0.4) unstable; urgency=medium
 
+  [ pierre ]
   * Forked to support new type of dress form
-  * 
+  * Update interface and firmware
 
  -- pierre <pierre@lule.fr>  Mon, 09 Nov 2015 11:21:33 +0100
 
