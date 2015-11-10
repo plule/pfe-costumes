@@ -211,14 +211,6 @@ void QEllipseSlider::updateSlidersPositions()
         m_lastFrontMotor = front;
     }
 
-    // Block signals to avoid ping pong of rounded values
-    ui->sideMotorSlider->blockSignals(true);
-    ui->sideMotorSpinBox->blockSignals(true);
-    ui->frontMotorSlider->blockSignals(true);
-    ui->frontMotorSpinBox->blockSignals(true);
-    ui->perimeterSlider->blockSignals(true);
-    ui->perimeterSpinBox->blockSignals(true);
-
     // Do the update
     ui->sideMotorSlider->setValue(side);
     ui->sideMotorSpinBox->setValue(side);
@@ -227,13 +219,6 @@ void QEllipseSlider::updateSlidersPositions()
     ui->perimeterSlider->setValue(round(perimeter()));
     ui->perimeterSpinBox->setValue(round(perimeter()));
 
-    // Release the signals
-    ui->sideMotorSlider->blockSignals(false);
-    ui->sideMotorSpinBox->blockSignals(false);
-    ui->frontMotorSlider->blockSignals(false);
-    ui->frontMotorSpinBox->blockSignals(false);
-    ui->perimeterSlider->blockSignals(false);
-    ui->perimeterSpinBox->blockSignals(false);
     if(side < ui->sideMotorSlider->minimum() || side > ui->sideMotorSlider->maximum()
             || front < ui->frontMotorSlider->minimum() || front > ui->frontMotorSlider->maximum())
         ui->warningLabel->setText(tr("Unreachable %1").arg(m_valueName.toLower()));
