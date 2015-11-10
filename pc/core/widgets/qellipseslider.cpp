@@ -299,6 +299,16 @@ int QEllipseSlider::frontMotorValue()
     return round(frontSize()-getFrontOffset());
 }
 
+QBoundedSlider *QEllipseSlider::sideMotor()
+{
+    return ui->sideMotorSlider;
+}
+
+QBoundedSlider *QEllipseSlider::frontMotor()
+{
+    return ui->frontMotorSlider;
+}
+
 double QEllipseSlider::sideSize() const
 {
     return m_sideSize;

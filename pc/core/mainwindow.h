@@ -30,6 +30,7 @@
 #include "widgets/qturntable.h"
 #include "widgets/qellipseslider.h"
 #include "widgets/qimagepreviewwindow.h"
+#include "widgets/qboundedslider.h"
 #include "camerahandler/camerahandler.h"
 #include "camerahandler/qcamera.h"
 #include "common/collection.h"
@@ -90,7 +91,7 @@ private slots:
     void on_turntableButton_toggled(bool checked);
 
 private:
-    QWidget *createAdjustmentGroup(QString arduinoId);
+    QWidget *createArduinoWidgetsGroup(QString arduinoId);
 
     Ui::MainWindow *ui;
     SettingsForm *m_settingsForm;
@@ -109,6 +110,7 @@ private:
     QPhoto::QCamera *m_camera;
     QMetaObject::Connection m_cameraConnection;
     QMap<QString,QWidget*> m_arduinoWidgetsGroup; // stores the adjustment groups by slider's id
+    QHash<QPair<QString, int>, QBoundedSlider*> m_motorsSliders;
 
     void loadCollection(QString path);
     int getCurrentId();

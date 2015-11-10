@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QDebug>
+#include "widgets/qboundedslider.h"
 
 namespace Ui {
 class QEllipseSlider;
@@ -93,6 +94,9 @@ public:
      */
     int sideMotorValue();
     int frontMotorValue();
+
+    QBoundedSlider *sideMotor();
+    QBoundedSlider *frontMotor();
 
 public slots:
     void setSideMotorValue(int value);
