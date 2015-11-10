@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>397</width>
-    <height>503</height>
+    <width>295</width>
+    <height>471</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,10 +22,10 @@
   <widget class="QLabel" name="dressformLabel">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>0</x>
      <y>0</y>
-     <width>381</width>
-     <height>491</height>
+     <width>281</width>
+     <height>471</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -50,8 +50,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>111</x>
-     <y>316</y>
+     <x>52</x>
+     <y>308</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -72,8 +72,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>112</x>
-     <y>394</y>
+     <x>55</x>
+     <y>383</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -94,8 +94,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>113</x>
-     <y>432</y>
+     <x>54</x>
+     <y>424</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -116,9 +116,9 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>246</x>
-     <y>80</y>
-     <width>41</width>
+     <x>191</x>
+     <y>70</y>
+     <width>30</width>
      <height>31</height>
     </rect>
    </property>
@@ -138,9 +138,9 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>249</x>
-     <y>156</y>
-     <width>41</width>
+     <x>194</x>
+     <y>146</y>
+     <width>30</width>
      <height>31</height>
     </rect>
    </property>
@@ -160,9 +160,9 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>246</x>
-     <y>195</y>
-     <width>41</width>
+     <x>191</x>
+     <y>185</y>
+     <width>30</width>
      <height>31</height>
     </rect>
    </property>
@@ -182,8 +182,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>124</x>
-     <y>90</y>
+     <x>65</x>
+     <y>78</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -204,8 +204,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>119</x>
-     <y>161</y>
+     <x>60</x>
+     <y>149</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -226,8 +226,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>119</x>
-     <y>202</y>
+     <x>60</x>
+     <y>190</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -248,8 +248,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>263</x>
-     <y>317</y>
+     <x>204</x>
+     <y>309</y>
      <width>31</width>
      <height>31</height>
     </rect>
@@ -273,8 +273,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>264</x>
-     <y>390</y>
+     <x>205</x>
+     <y>382</y>
      <width>31</width>
      <height>31</height>
     </rect>
@@ -298,8 +298,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>265</x>
-     <y>434</y>
+     <x>206</x>
+     <y>426</y>
      <width>31</width>
      <height>31</height>
     </rect>
@@ -320,8 +320,8 @@
   <widget class="QLabel" name="SizeLabel">
    <property name="geometry">
     <rect>
-     <x>42</x>
-     <y>357</y>
+     <x>-17</x>
+     <y>349</y>
      <width>151</width>
      <height>71</height>
     </rect>
