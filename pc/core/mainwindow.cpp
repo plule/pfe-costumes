@@ -580,16 +580,13 @@ QWidget *MainWindow::createArduinoWidgetsGroup(QString arduinoId)
 
             switch(m_arduinoCommunication->getMotorGroup(i)){
             case BUST_GROUP:
-                connect(slider, SIGNAL(hoveredChanged(bool)), ui->dress, SLOT(setBustLeftSelected(bool)));
-                connect(slider, SIGNAL(hoveredChanged(bool)), ui->dress, SLOT(setBustRightSelected(bool)));
+                connect(slider, SIGNAL(hoveredChanged(bool)), ui->dress, SLOT(setBustSideSelected(bool)));
                 break;
             case WAIST_GROUP:
-                connect(slider, SIGNAL(hoveredChanged(bool)), ui->dress, SLOT(setWaistLeftSelected(bool)));
-                connect(slider, SIGNAL(hoveredChanged(bool)), ui->dress, SLOT(setWaistRightSelected(bool)));
+                connect(slider, SIGNAL(hoveredChanged(bool)), ui->dress, SLOT(setWaistSideSelected(bool)));
                 break;
             case HIPS_GROUP:
-                connect(slider, SIGNAL(hoveredChanged(bool)), ui->dress, SLOT(setHipsLeftSelected(bool)));
-                connect(slider, SIGNAL(hoveredChanged(bool)), ui->dress, SLOT(setHipsRightSelected(bool)));
+                connect(slider, SIGNAL(hoveredChanged(bool)), ui->dress, SLOT(setHipsSideSelected(bool)));
                 break;
             }
 

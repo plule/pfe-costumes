@@ -17,18 +17,11 @@ public:
 
 public slots:
     void setBustFrontSelected(bool s);
-    void setBustBackSelected(bool s);
-    void setBustLeftSelected(bool s);
-    void setBustRightSelected(bool s);
+    void setBustSideSelected(bool s);
     void setWaistFrontSelected(bool s);
-    void setWaistBackSelected(bool s);
-    void setWaistLeftSelected(bool s);
-    void setWaistRightSelected(bool s);
+    void setWaistSideSelected(bool s);
     void setHipsFrontSelected(bool s);
-    void setHipsBackSelected(bool s);
-    void setHipsLeftSelected(bool s);
-    void setHipsRightSelected(bool s);
-    void SetSizeSelected(bool s);
+    void setHipsSideSelected(bool s);
 
 private:
     Ui::QDressFormVisu *ui;
