@@ -70,7 +70,7 @@ typedef enum {
 /*
  * Id of the master
  */
-#define ARD_MASTER "1"
+#define ARD_MASTER "2"
 
 #define MSG_SEP '\n'
 #define ARG_SEP '|'
